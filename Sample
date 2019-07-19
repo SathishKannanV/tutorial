@@ -8,15 +8,11 @@ package com.aetna.prvrte.rteintranet.dao;
 
 
 
+import java.util.List;
+
 import java.util.Map;
 
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Repository;
-
-import com.aetna.prvrte.rteintranet.adapter.UserSecurityAdapter;
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
@@ -24,63 +20,95 @@ import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 /**
 
- * @author N657186
+ * @author N624926
 
- *
+ *Cognizant_Offshore
 
  */
 
-@Repository
+public interface UserDAO {
 
-public class RteSecurityDAOImpl implements RteSecurityDAO {
 
-	
-
-	private UserSecurityAdapter userSecurityAdapter;	
 
 	
 
 	/**
 
-	 * @param userSecurityAdapter the userSecurityAdapter to set
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
 
 	 */
 
-	@Autowired(required=true)
+	Map getUserLookUpTable(RbrcDTO rbrcDTO) throws ApplicationException ;
 
-	public void setUserSecurityAdapter(UserSecurityAdapter userSecurityAdapter) {
 
-		this.userSecurityAdapter = userSecurityAdapter;
-
-	}
 
 
 
 	/**
 
-	 * @return the userSecurityAdapter
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
 
 	 */
 
-	public UserSecurityAdapter getUserSecurityAdapter() {
+	Map addNewUser(RbrcDTO rbrcDTO)throws ApplicationException ;
 
-		return userSecurityAdapter;
 
-	}
+
+	/**
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	Map deleteUser(RbrcDTO rbrcDTO)throws ApplicationException ;
+
+
 
 	
 
+	/**
+
+	 * @param editedRbrcDTO
+
+	 * @param rbrcDtoList
+
+	 * @param index
+
+	 * @param dbUpdatedInd
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+		Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList,
+
+				int index, char dbUpdatedInd)throws ApplicationException ;
 
 
 
 
-	@Override
 
-	public Map getUserSecurityLevel(String userId) throws ApplicationException {
 
-		return userSecurityAdapter.getUserSecurityLevel(userId);
 
-	}
+
 
 
 
