@@ -1,9 +1,3 @@
-/**
-
- * 
-
- */
-
 package com.aetna.prvrte.rteintranet.dto;
 
 
@@ -12,281 +6,463 @@ import java.io.Serializable;
 
 
 
-/**
-
- * 
-
- * @author N726899
-
- * Cognizant_Offshore
-
- */
-
-public class AdasvctDTO implements Serializable {
+public class LongRunTransactionDTO implements Serializable{
 
 
-
-	/**
-
-	 * Constant serialized ID used for compatibility. 
-
-	 */
 
 	private static final long serialVersionUID = 1L;
 
-	/**
+	private String startDate ="";
 
-	 * String of adaCd
+	private String startHrs="";
 
-	 */
+	private String startMns="";
 
-	private String adaCd = "";
+	private String startSecs="";
 
-	/**
+	private String endDate ="";
 
-	 * String of svcTypeCd
+	private String endHrs="";
 
-	 */
+	private String endMns="";
 
-	private String svcTypeCd = "";
+	private String endSecs="";
 
-	/**
+	private String secondsCalc = "";
 
-	 * String of effective date(yyyy-MM-dd)
+	private String minutesCalc = "";
 
-	 */
+	private String module = "";
 
-	private String effDate = "";
+	private String startTimestamp = "";
 
-	/**
+	private String endTimestamp = "";
 
-	 * String of expiration date(yyyy-MM-dd)
+	private String convrsnCDResult="";
 
-	 */
+	private String vanIDCDResult="";
 
-	private String expDate = "";
+	private String typCDResult="";
 
-	/**
+	private String loadNameResult="";
 
-	 * String of record posted date(yyyy-MM-dd)
+	private String resultSecondsResult="";
 
-	 */
+	private String result3CNT="";
 
-	private String postedDate = "";
+	private String result3StartTime="";
 
-	/**
+	private String result3EndTime="";
 
-	 * char of index to update the record.
+	private String result3TimeTaken="";
 
-	 */
+	private String report = "";
 
-	private char updatedInd;
+	private char   updatedInd;
 
+	
 
-
-	/**
-
-	 * Default Constructor.
-
-	 */
-
-	public AdasvctDTO() {
+	public LongRunTransactionDTO() {
 
 		super();
+
+		// TODO Auto-generated constructor stub
 
 	}
 
 	
 
-	/**
+	
 
-	 * Creates a new AdasvctDTO
 
-	 * 
 
-	 * @param adaCd
+	
 
-	 *            the value for {@link adaCd}
 
-	 * @param svcTypeCd
 
-	 *            the value for {@link svcTypeCd}
 
-	 * @param effDate
 
-	 *            the value for {@link effDate}
 
-	 * @param expDate
 
-	 *            the value for {@link expDate}
+	public LongRunTransactionDTO(String startDate, String startHrs,
 
-	 * @param postedDate
+			String startMns, String startSecs, String endDate, String endHrs,
 
-	 *            the value for {@link postedDate}
+			String endMns, String endSecs, String secondsCalc,
 
-	 * @param updatedInd
+			String minutesCalc, String module, String startTimestamp,
 
-	 *            the value for {@link updatedInd}
+			String endTimestamp, String convrsnCDResult, String vanIDCDResult,
 
-	 */
+			String typCDResult, String loadNameResult,
 
-	public AdasvctDTO(String adaCd, String svcTypeCd, String effDate,
+			String resultSecondsResult, String result3cnt,
 
-			String expDate, String postedDate, char updatedInd) {
+			String result3StartTime, String result3EndTime,
+
+			String result3TimeTaken, String report, char updatedInd) {
 
 		super();
 
-		this.adaCd = adaCd;
+		this.startDate = startDate;
 
-		this.effDate = effDate;
+		this.startHrs = startHrs;
 
-		this.expDate = expDate;
+		this.startMns = startMns;
 
-		this.postedDate = postedDate;
+		this.startSecs = startSecs;
 
-		this.svcTypeCd = svcTypeCd;
+		this.endDate = endDate;
+
+		this.endHrs = endHrs;
+
+		this.endMns = endMns;
+
+		this.endSecs = endSecs;
+
+		this.secondsCalc = secondsCalc;
+
+		this.minutesCalc = minutesCalc;
+
+		this.module = module;
+
+		this.startTimestamp = startTimestamp;
+
+		this.endTimestamp = endTimestamp;
+
+		this.convrsnCDResult = convrsnCDResult;
+
+		this.vanIDCDResult = vanIDCDResult;
+
+		this.typCDResult = typCDResult;
+
+		this.loadNameResult = loadNameResult;
+
+		this.resultSecondsResult = resultSecondsResult;
+
+		result3CNT = result3cnt;
+
+		this.result3StartTime = result3StartTime;
+
+		this.result3EndTime = result3EndTime;
+
+		this.result3TimeTaken = result3TimeTaken;
+
+		this.report = report;
 
 		this.updatedInd = updatedInd;
 
 	}
 
-	
+	public String getResult3EndTime() {
 
-	/**
-
-	 * @return the adaCd
-
-	 */
-
-	public String getAdaCd() {
-
-		return adaCd;
+		return result3EndTime;
 
 	}
 
 
 
-	/**
+	public void setResult3EndTime(String result3EndTime) {
 
-	 * @param adaCd the adaCd to set
-
-	 */
-
-	public void setAdaCd(String adaCd) {
-
-		this.adaCd = adaCd;
+		this.result3EndTime = result3EndTime;
 
 	}
 
 
 
-	/**
 
-	 * @return the svcTypeCd
 
-	 */
 
-	public String getSvcTypeCd() {
 
-		return svcTypeCd;
+
+
+
+
+
+
+
+
+	public String getStartDate() {
+
+		return startDate;
+
+	}
+
+	public void setStartDate(String startDate) {
+
+		this.startDate = startDate;
+
+	}
+
+	public String getStartHrs() {
+
+		return startHrs;
+
+	}
+
+	public void setStartHrs(String startHrs) {
+
+		this.startHrs = startHrs;
+
+	}
+
+	public String getStartMns() {
+
+		return startMns;
+
+	}
+
+	public void setStartMns(String startMns) {
+
+		this.startMns = startMns;
+
+	}
+
+	public String getStartSecs() {
+
+		return startSecs;
+
+	}
+
+	public void setStartSecs(String startSecs) {
+
+		this.startSecs = startSecs;
+
+	}
+
+	public String getEndDate() {
+
+		return endDate;
+
+	}
+
+	public void setEndDate(String endDate) {
+
+		this.endDate = endDate;
+
+	}
+
+	public String getEndHrs() {
+
+		return endHrs;
+
+	}
+
+	public void setEndHrs(String endHrs) {
+
+		this.endHrs = endHrs;
+
+	}
+
+	public String getEndMns() {
+
+		return endMns;
+
+	}
+
+	public void setEndMns(String endMns) {
+
+		this.endMns = endMns;
+
+	}
+
+	public String getEndSecs() {
+
+		return endSecs;
+
+	}
+
+	public void setEndSecs(String endSecs) {
+
+		this.endSecs = endSecs;
+
+	}
+
+	public String getSecondsCalc() {
+
+		return secondsCalc;
+
+	}
+
+	public void setSecondsCalc(String secondsCalc) {
+
+		this.secondsCalc = secondsCalc;
+
+	}
+
+	public String getMinutesCalc() {
+
+		return minutesCalc;
+
+	}
+
+	public void setMinutesCalc(String minutesCalc) {
+
+		this.minutesCalc = minutesCalc;
+
+	}
+
+	public String getModule() {
+
+		return module;
+
+	}
+
+	public void setModule(String module) {
+
+		this.module = module;
 
 	}
 
 
 
-	/**
+	public String getStartTimestamp() {
 
-	 * @param svcTypeCd the svcTypeCd to set
-
-	 */
-
-	public void setSvcTypeCd(String svcTypeCd) {
-
-		this.svcTypeCd = svcTypeCd;
+		return startTimestamp;
 
 	}
 
 
 
-	/**
+	public void setStartTimestamp(String startTimestamp) {
 
-	 * @return the effDate
-
-	 */
-
-	public String getEffDate() {
-
-		return effDate;
+		this.startTimestamp = startTimestamp;
 
 	}
 
 
 
-	/**
+	public String getEndTimestamp() {
 
-	 * @param effDate the effDate to set
-
-	 */
-
-	public void setEffDate(String effDate) {
-
-		this.effDate = effDate;
+		return endTimestamp;
 
 	}
 
 
 
-	/**
+	public void setEndTimestamp(String endTimestamp) {
 
-	 * @return the expDate
-
-	 */
-
-	public String getExpDate() {
-
-		return expDate;
+		this.endTimestamp = endTimestamp;
 
 	}
 
 
 
-	/**
 
-	 * @param expDate the expDate to set
 
-	 */
 
-	public void setExpDate(String expDate) {
 
-		this.expDate = expDate;
+	public String getConvrsnCDResult() {
+
+		return convrsnCDResult;
 
 	}
 
 
 
-	/**
 
-	 * @return the postedDate
 
-	 */
 
-	public String getPostedDate() {
 
-		return postedDate;
+	public void setConvrsnCDResult(String convrsnCDResult) {
+
+		this.convrsnCDResult = convrsnCDResult;
 
 	}
 
 
 
-	/**
 
-	 * @param postedDate the postedDate to set
 
-	 */
 
-	public void setPostedDate(String postedDate) {
 
-		this.postedDate = postedDate;
+	public String getVanIDCDResult() {
+
+		return vanIDCDResult;
+
+	}
+
+
+
+
+
+
+
+	public void setVanIDCDResult(String vanIDCDResult) {
+
+		this.vanIDCDResult = vanIDCDResult;
+
+	}
+
+
+
+
+
+
+
+	public String getTypCDResult() {
+
+		return typCDResult;
+
+	}
+
+
+
+
+
+
+
+	public void setTypCDResult(String typCDResult) {
+
+		this.typCDResult = typCDResult;
+
+	}
+
+
+
+
+
+
+
+	public String getLoadNameResult() {
+
+		return loadNameResult;
+
+	}
+
+
+
+
+
+
+
+	public void setLoadNameResult(String loadNameResult) {
+
+		this.loadNameResult = loadNameResult;
+
+	}
+
+
+
+
+
+
+
+	public String getResultSecondsResult() {
+
+		return resultSecondsResult;
+
+	}
+
+
+
+
+
+
+
+	public void setResultSecondsResult(String resultSecondsResult) {
+
+		this.resultSecondsResult = resultSecondsResult;
 
 	}
 
@@ -317,6 +493,100 @@ public class AdasvctDTO implements Serializable {
 		this.updatedInd = updatedInd;
 
 	}
+
+
+
+
+
+
+
+	public String getResult3CNT() {
+
+		return result3CNT;
+
+	}
+
+
+
+
+
+
+
+	public void setResult3CNT(String result3cnt) {
+
+		result3CNT = result3cnt;
+
+	}
+
+
+
+
+
+
+
+	public String getResult3StartTime() {
+
+		return result3StartTime;
+
+	}
+
+
+
+
+
+
+
+	public void setResult3StartTime(String result3StartTime) {
+
+		this.result3StartTime = result3StartTime;
+
+	}
+
+
+
+
+
+
+
+	public String getResult3TimeTaken() {
+
+		return result3TimeTaken;
+
+	}
+
+
+
+
+
+
+
+	public void setResult3TimeTaken(String result3TimeTaken) {
+
+		this.result3TimeTaken = result3TimeTaken;
+
+	}
+
+	
+
+	public String getReport() {
+
+		return report;
+
+	}
+
+
+
+	public void setReport(String report) {
+
+		this.report = report;
+
+	}
+
+	
+
+	
+
+	
 
 }
 
