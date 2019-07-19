@@ -2,81 +2,113 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-import java.util.List;
+
+
+public class Subscriber {
 
 
 
-import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+	String ssn;
 
+	Name name;
 
+	String dob;
 
-public class ServiceTypeSet {
+	String gender;
 
+	String coverageTerminationDate;
 
-
-	String serviceTypeCTR;
-
-	List<String> serviceTypeCode;
-
-	public String getServiceTypeCTR() {
-
-		
-
-		return serviceTypeCTR;
-
-	}
-
-	public void setServiceTypeCTR(String serviceTypeCTR) {
+	public String getSsn() {
 
 		
 
-		this.serviceTypeCTR = serviceTypeCTR;
+		return ssn;
 
 	}
 
-	public List<String> getServiceTypeCode() {
+	public void setSsn(String ssn) {
 
 		
 
-		return this.serviceTypeCode;
+		this.ssn = ssn;
 
 	}
 
-	public void setServiceTypeCode(List<String> serviceTypeCode) {
+	public Name getName() {
 
-		this.serviceTypeCode = serviceTypeCode;
+		return name;
+
+	}
+
+	public void setName(Name name) {
+
+		this.name = name;
 
 	}
 
-	public StringBuilder getServiceType(){
-
-
-
-		int popCount;
-
-		StringBuilder type = new StringBuilder();
-
-        popCount = getServiceTypeCode().size();
-
-       
-
-		for(int i=0; i<popCount; i++) {
-
-			type.append(RteIntranetUtils.spaceFiller(2, getServiceTypeCode().get(i)));
-
-		}
-
-		for(int i=popCount; i<99; i++) {
-
-			type.append(RteIntranetUtils.spaceFiller(2));
-
-	}
+	public String getDob() {
 
 		
 
-		return type;
+		return dob;
 
-	
+	}
+
+	public void setDob(String dob) {
+
+		dob=dob.replaceAll("-", "");
+
+		
+
+		this.dob = dob;
+
+	}
+
+	public String getGender() {
+
+		
+
+		return gender;
+
+	}
+
+	public void setGender(String gender) {
+
+		
+
+		this.gender = gender;
+
+	}
+
+	public String getCoverageTerminationDate() {
+
+		
+
+		return coverageTerminationDate;
+
+	}
+
+	public void setCoverageTerminationDate(String coverageTerminationDate) {
+
+		coverageTerminationDate=coverageTerminationDate.replaceAll("-", "");
+
+		
+
+		this.coverageTerminationDate = coverageTerminationDate;
+
+	}
+
+	public StringBuilder getSubscriber(){
+
+		return new StringBuilder(getSsn())
+
+		.append(name.getName())
+
+		.append(getDob())
+
+		.append(getGender())
+
+		.append(getCoverageTerminationDate());
 
 	}
 
