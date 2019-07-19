@@ -8,13 +8,21 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 
 
+import java.sql.ResultSet;
+
 import java.sql.SQLException;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
+
 import java.util.HashMap;
 
 import java.util.LinkedHashMap;
+
+import java.util.LinkedList;
+
+import java.util.List;
 
 import java.util.Map;
 
@@ -30,13 +38,19 @@ import org.apache.commons.logging.LogFactory;
 
 import org.springframework.dao.DataAccessException;
 
+import org.springframework.jdbc.core.RowMapper;
+
 import org.springframework.jdbc.core.SqlOutParameter;
 
 import org.springframework.jdbc.core.SqlParameter;
 
+import org.springframework.jdbc.core.SqlReturnResultSet;
+
 import org.springframework.jdbc.object.StoredProcedure;
 
 
+
+import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
@@ -45,6 +59,8 @@ import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 import com.aetna.prvrte.rteintranet.util.DBConstants;
 
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+
+import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
 
 
 
@@ -60,11 +76,11 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
  */
 
-public class AdasvctDeleteAdapter extends StoredProcedure {
+public class AdasvctDisplayAdapter extends StoredProcedure {
 
-	
 
-	public AdasvctDeleteAdapter() {}
+
+	public AdasvctDisplayAdapter() {}
 
 
 
@@ -74,9 +90,7 @@ public class AdasvctDeleteAdapter extends StoredProcedure {
 
 	 */
 
-	private final Log log = LogFactory.getLog(AdasvctAddAdapter.class);
-
-
+	private final Log log = LogFactory.getLog(AdasvctDisplayAdapter.class);
 
 	/*
 
@@ -84,49 +98,89 @@ public class AdasvctDeleteAdapter extends StoredProcedure {
 
 	 */
 
-	public AdasvctDeleteAdapter(DataSource datasource, String adasvctStoredProc)
+	@SuppressWarnings("rawtypes")
+
+	public AdasvctDisplayAdapter(DataSource datasource, String storedProc)
 
 			throws SQLException {
 
-		super(datasource, adasvctStoredProc);
+		super(datasource, storedProc);
 
-		log.info(" ------------------> " + adasvctStoredProc);
+		System.out.println(" AdasvctDisplayAdapter ------------------> " + storedProc);
+
+		log.info("Loaded Stored procedure of AdasvctAdapter : " + storedProc);
 
 		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_ADA_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_EFF_DT, Types.DATE));
+		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
 
 		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
+
+
+		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR4, new RowMapper() {
+
+			/*
+
+			 * (non-Javadoc)
+
+			 * 
+
+			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet , int)
+
+			 */
+
+			public Object mapRow(final ResultSet rs, final int arg1)
+
+					throws SQLException {
+
+				AdasvctVO adasvctVO = new AdasvctVO();
+
+				adasvctVO.setExpDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_EXP_DT)));
+
+				adasvctVO.setAdaCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_ADA_CD)));
+
+				adasvctVO.setPostedDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_POSTED_DT)));
+
+				adasvctVO.setSvcTypeCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.SVCTYP_CD)));
+
+				adasvctVO.setEffDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_EFF_DT)));
+
+				adasvctVO.setUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+
+				return adasvctVO;
+
+			}
+
+		}));
+
 	}
 
-
+	
 
 	/**
 
-	 * Method to delete the ADASVCT data from data store.
+	 * Method to get the ADASVCT list from data store.
 
 	 * 
 
-	 * @param adaCd
+	 * @param adasvctDTO
 
-	 *            String of adaCd.
+	 * 			adasvctDTO object.
 
-	 * @param expDate
+	 * 
 
-	 *            String of expiration data of adaCd.
+	 * @return Map of ADASVCT list and success or error message.
 
-	 * @return Map of flag to delete the data from ADASVCT list and success or
+	 * 
 
-	 *         error message.
-
-	 * @exception ApplicationException
-
-	 *             if deletion fails.
+	 * @exception ApplicationException if data not found in data store.
 
 	 */
 
-	public Map<String, Object> deleteAdasvct(String adaCd, String effDate) throws ApplicationException {
+	@SuppressWarnings("unchecked")
+
+	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 
@@ -138,21 +192,25 @@ public class AdasvctDeleteAdapter extends StoredProcedure {
 
 		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
 
-		String newMessage = "";
+		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
 
-		boolean isAdasvctDeleted = false;
+		String newMessage = "";
 
 		try {
 
+			String queryAdaCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getAdaCd());
+
+			String querySvcTypeCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getSvcTypeCd());
+
 			
 
-			params.put(DBConstants.LS_ADASVCT_ADA_CD, RteIntranetUtils.getTrimmedString(adaCd));
+			params.put(DBConstants.LS_ADASVCT_ADA_CD, queryAdaCd);
 
-			params.put(DBConstants.LS_ADASVCT_EFF_DT, RteIntranetUtils.getTrimmedString(effDate));
+			params.put(DBConstants.LS_SVCTYP_CD, querySvcTypeCd);
 
+			
 
-
-			log.info("Params to put new adavsct : " + params);
+			log.info("Params for getting Adasvct LookUp List : " + params);
 
 			Map<String, Object> results = execute(params);
 
@@ -160,45 +218,55 @@ public class AdasvctDeleteAdapter extends StoredProcedure {
 
 			
 
-			if ("0".equals(sqlCode)){
+			if ("0".equals(sqlCode)) {
 
-				isAdasvctDeleted = true;
+				adasvctList = (ArrayList<AdasvctVO>) results.get(DBConstants.READ_CURSOR4);
+
+				newMessage = "Data found on database for ADA Cd: " + queryAdaCd + " or Service Type Cd: " + querySvcTypeCd;
+
+				log.warn("-----------------------------> " + "Adasvct LookUp List count : [" + adasvctList.size() + "]");
+
+				if (adasvctList.isEmpty()) {
+
+					newMessage = "No Data on database for ADA Cd: " + queryAdaCd + " or Service Type Cd: " + querySvcTypeCd;
+
+				}
 
 			} else {
 
-				newMessage = ApplicationConstants.DELETE_ROW_FAILS + sqlCode;
+				log.warn("-----------------------------> "	+ "Problem in DB2. Sqlcode: " + sqlCode);
+
+				newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
 
 			}
 
-				
+			
 
 			resultMap.put("adasvctMsg", newMessage);
 
-			resultMap.put("isAdasvctDeleted", isAdasvctDeleted);
+			resultMap.put("adasvctList", adasvctList);
 
 			return resultMap;
 
+			
+
 		} catch (DataAccessException dae) {
 
-			log.error("AdasvctDeleteAdapter : Data access excpetion occured "
+			log.error("AdasvctDisplayAdapter : Data access excpetion occured " + dae);
 
-					+ dae);
-
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS,
-
-					dae.getMessage(), dae);
+			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
 
 		} catch (Exception exception) {
 
-			log.error("AdasvctDeleteAdapter : generic error occured  "
+			log.error("AdasvctDisplayAdapter : generic error occured  " + exception);
 
-					+ exception);
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
 
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,
+		} finally {
 
-					exception.getMessage(), exception);
 
-		} 
+
+		}
 
 	}
 
