@@ -4,133 +4,71 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-public class EDIHeader {
+public class EDIProvider {
 
 
 
-	String transactionType;
+	String providerID;
 
-	String vanId;
+	String qualifier;
 
-	String conversation;
+	Entity entity;
 
-	String versionRels;
-
-	String typeOfSearch;
-
-	String eligilibilityServiceDate;
-
-	public String getTransactionType() {
-
-		return transactionType;
-
-	}
-
-	public void setTransactionType(String transactionType) {
+	public String getProviderID() {
 
 		
 
-		this.transactionType = transactionType;
+		return providerID;
 
 	}
 
-	public String getVanId() {
+	public void setProviderID(String providerID) {
 
 		
 
-		return vanId;
+		this.providerID = providerID;
 
 	}
 
-	public void setVanId(String vanId) {
+	public String getQualifier() {
 
 		
 
-		this.vanId = vanId;
+		return qualifier;
 
 	}
 
-	public String getConversation() {
+	public void setQualifier(String qualifier) {
 
 		
 
-		return conversation;
+		this.qualifier = qualifier;
 
 	}
 
-	public void setConversation(String conversation) {
+	public Entity getEntity() {
 
-		
-
-		this.conversation = conversation;
+		return entity;
 
 	}
 
-	public String getVersionRels() {
+	public void setEntity(Entity entity) {
 
-		
-
-		return versionRels;
+		this.entity = entity;
 
 	}
 
-	public void setVersionRels(String versionRels) {
+	public StringBuilder getProvider(){
 
-		
+		return new StringBuilder(getProviderID())
 
-		this.versionRels = versionRels;
+		.append(getQualifier())
 
-	}
-
-	public String getTypeOfSearch() {
-
-		
-
-		return typeOfSearch;
-
-	}
-
-	public void setTypeOfSearch(String typeOfSearch) {
-
-		
-
-		this.typeOfSearch = typeOfSearch;
-
-	}
-
-	public String getEligilibilityServiceDate() {
-
-		
-
-		return eligilibilityServiceDate;
-
-	}
-
-	public void setEligilibilityServiceDate(String eligilibilityServiceDate) {
-
-		eligilibilityServiceDate=eligilibilityServiceDate.replaceAll("-", "");
-
-		this.eligilibilityServiceDate = eligilibilityServiceDate;
+		.append(entity.getEntity());
 
 	}
 
 	
-
-	public StringBuilder getHeader(){
-
-		return new StringBuilder(getTransactionType())
-
-		.append(getVanId())
-
-		.append(getConversation())
-
-		.append(getVersionRels())
-
-		.append(getTypeOfSearch())
-
-		.append(getEligilibilityServiceDate());
-
-	}
 
 }
 
