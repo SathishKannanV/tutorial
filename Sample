@@ -1,268 +1,104 @@
 package com.aetna.prvrte.rteintranet.adapter;
-
-
-
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
 import java.sql.Types;
-
 import java.util.ArrayList;
-
 import java.util.HashMap;
-
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
 import java.util.List;
-
 import java.util.Map;
-
-
 
 import javax.sql.DataSource;
 
-
-
 import org.apache.commons.logging.Log;
-
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.dao.DataAccessException;
-
 import org.springframework.jdbc.core.RowMapper;
-
 import org.springframework.jdbc.core.SqlOutParameter;
-
 import org.springframework.jdbc.core.SqlParameter;
-
 import org.springframework.jdbc.core.SqlReturnResultSet;
-
 import org.springframework.jdbc.object.StoredProcedure;
 
 
-
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-
-import com.aetna.prvrte.rteintranet.vo.UserVO;
-
-
-
-public class UserSecurityAdapter extends StoredProcedure{
+import com.aetna.prvrte.rteintranet.util.DBConstants;
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
 
 
-	private final Log log = LogFactory.getLog(UserSecurityAdapter.class);
-
-	private static final String LS_SITE_CD = "LS_SITE_CD";
-
-	private static final String LS_RIDER_CD = "LS_RIDER_CD";
-
-	private static final String LS_SVCTYP_CD = "LS_SVCTYP_CD";
-
-	private static final String LS_SQL_TYPE = "LS_SQL_TYPE";
-
-	private static final String LS_SQLCODE = "LS_SQLCODE";
-
-	//Defaulting to the Stored Procedure's search with site, rider and service code option.
-
-	private static final String siteCd = "ZZZZ";
-
-	private static final String svcTypeCd = "99999";
-
-	private static final int searchCd = 3;    
-
-	private static final String READ_CURSOR3 = "READ_CURSOR3";
-
-
-
-	
-
-	
-
-	public UserSecurityAdapter(DataSource datasource, String storedProc) {
-
+public class VanIdAdapter extends StoredProcedure {
+	public VanIdAdapter() {}
+	private final Log log = LogFactory.getLog(VanIdAdapter.class);
+	@SuppressWarnings("rawtypes")
+	public VanIdAdapter(DataSource datasource, String storedProc)
+			throws SQLException {
 		super(datasource, storedProc);
+		//System.out.println(" AdasvctDisplayAdapter ------------------> " + storedProc);
+		log.info("Loaded Stored procedure of VanIdAdapter : " + storedProc);
+		declareParameter(new SqlParameter(DBConstants.RTEGENL_DB2VW_NM, Types.CHAR));
+		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
-		System.out.println("-------------------->"+storedProc);
-
-		declareParameter(new SqlParameter(LS_SITE_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(LS_RIDER_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(LS_SVCTYP_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(LS_SQL_TYPE, Types.DECIMAL));
-
-		declareParameter(new SqlOutParameter(LS_SQLCODE, Types.CHAR));
-
-		
-
-		declareParameter(new SqlReturnResultSet(READ_CURSOR3, new RowMapper(){
-
-			
-
-			/* (non-Javadoc)
-
-			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-
+		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR4, new RowMapper() {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet , int)
 			 */
-
-			public Object mapRow(final ResultSet rs, final int arg1)
-
+			public HashMap<String, String> mapRow(final ResultSet rs, final int arg1)
 					throws SQLException {
-
-				
-
-				UserVO currentUser =new UserVO();
-
-				currentUser.setAetnaId(rs.getString("RIDER_CD"));
-
-				currentUser.setDateSecLevPosted(rs.getString("RBRC_SRCE_PSTD_DT"));
-
-				currentUser.setName(rs.getString("RBRC_DESC_TXT"));
-
-				currentUser.setSecurityLevel(rs.getString("RBRC_IONTWK_CD"));
-
-				return currentUser;
-
+				//VanVo vanvo = new VanVo();
+				HashMap<String, String> vanIds = new HashMap<String, String>();
+				vanIds.put(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RTEGENL_VALUE_CD)), RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RTEGENL_DESC_TXT)));
+				return vanIds;
 			}
-
-
-
 		}));
-
-
-
 	}
-
 	
-
 	@SuppressWarnings("unchecked")
-
-	public Map getUserSecurityLevel (String userId) throws ApplicationException {
-
-		log.debug("Entered UserSecurityAdapter  - getUserSecurityLevel");
-
-		Map<String, String> params = new java.util.HashMap<String, String>();
-
-		params.put(LS_SITE_CD, siteCd);
-
-		params.put(LS_RIDER_CD, userId.toLowerCase());
-
-		params.put(LS_SVCTYP_CD, svcTypeCd);
-
-		params.put(LS_SQL_TYPE, String.valueOf(searchCd));
-
-		log.debug(params);
-
-		Map results = null;
-
-		List<UserVO> userList = new LinkedList<UserVO>();
-
-		Map userDetailsMap = new HashMap();
-
-		UserVO currUser = new UserVO();
-
-		String newMessage="";
-
+	public Map<String, Object> getVanList() throws ApplicationException {
+		if (log.isDebugEnabled()) {
+			log.warn("---- Entering getVanLookUpList ---");
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
+		List<HashMap<String, String>> vanlist = new ArrayList<HashMap<String, String>>();
+		String newMessage = "";
 		try {
-
-			log.warn("UserSecurityAdapter: Executing stored procedure : " + "user id : " + userId);
-
-					
-
-			results = execute(params);
-
-			log.warn("UserSecurityAdapter: Executed stored procedure");
-
-			String sqlCode =  String.valueOf(results
-
-					.get(LS_SQLCODE));
-
+			String org1 = RteIntranetUtils.getTrimmedString("EDIVANID");
 			
-
-			if(results != null){
-
-				if ("0".equals(sqlCode)){					
-
-				
-
-				userList = (ArrayList<UserVO>) results
-
-						.get(READ_CURSOR3);	
-
-				if(userList!=null){
-
-				currUser = userList.get(0);
-
-				
-
-				if ("Unknown User".equalsIgnoreCase(currUser.getName())){
-
-					newMessage = "Unable to find ---> " + currUser.getAetnaId() +
-
-									 " <--- on the RTE Security table. Contact RTE P&E to fix. Read Only rights granted.";
-
-				} else {
-
-					newMessage = "Welcome " + currUser.getName();
-
-				}
-
-				}else{
-
-					log.info("result set is empty");
-
-					newMessage = "Unable to find ---> " + currUser.getAetnaId() +
-
-							 " <--- on the RTE Security table. Contact RTE P&E to fix. Read Only rights granted.";
-
-				}
-
-			}else{
-
-				
-
-				
-
-				 newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
-
-			}
-
-			}
-
-			userDetailsMap.put("userMessage", newMessage);
-
-			userDetailsMap.put("user", currUser);
-
-			log.warn("End: UserSecurityAdapter  - getUserSecurityLevel");
-
-			return userDetailsMap;
-
 			
-
-		}catch (DataAccessException dae) {
-
-			log.error("UserSecurityAdapter : Data access excpetion occured "+dae);
-
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS,dae.getMessage(),dae);
-
-		}catch (Exception exception){
-
-			log.error("UserSecurityAdapter : generic error occured  "+exception);
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
+			params.put(DBConstants.RTEGENL_DB2VW_NM, org1);
+			
+			
+			log.info("Params for getting Van List : " + params);
+			Map<String, Object> results = execute(params);
+			String sqlCode = String.valueOf(results.get(DBConstants.LS_SQLCODE));
+			
+			if ("0".equals(sqlCode)) {
+				vanlist =  (List<HashMap<String, String>>) results.get(DBConstants.READ_CURSOR4);
+				
+			if (vanlist.isEmpty()) {
+					newMessage = "No Data on database for Van: ";
+				}
+			} else {
+				log.warn("-----------------------------> "	+ "Problem in DB2. Sqlcode: " + sqlCode);
+				newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
+			}
+			
+			resultMap.put("vanMsg", newMessage);
+			resultMap.put("vanList", vanlist);
+			return resultMap;
+			
+		} catch (DataAccessException dae) {
+			log.error("VanAdapter : Data access excpetion occured " + dae);
+			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
+		} catch (Exception exception) {
+			log.error("VanAdapter : generic error occured  " + exception);
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
+		} finally {
 
 		}
-
-		
-
 	}
-
-	
-
 }
-
