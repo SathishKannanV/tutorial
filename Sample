@@ -12,6 +12,12 @@ import java.util.Map;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Repository;
+
+import com.aetna.prvrte.rteintranet.adapter.UserSecurityAdapter;
+
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 
@@ -24,11 +30,57 @@ import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
  */
 
-public interface RteSecurityDAO {
+@Repository
+
+public class RteSecurityDAOImpl implements RteSecurityDAO {
+
+	
+
+	private UserSecurityAdapter userSecurityAdapter;	
+
+	
+
+	/**
+
+	 * @param userSecurityAdapter the userSecurityAdapter to set
+
+	 */
+
+	@Autowired(required=true)
+
+	public void setUserSecurityAdapter(UserSecurityAdapter userSecurityAdapter) {
+
+		this.userSecurityAdapter = userSecurityAdapter;
+
+	}
 
 
 
-	Map getUserSecurityLevel(String userId)throws ApplicationException;
+	/**
+
+	 * @return the userSecurityAdapter
+
+	 */
+
+	public UserSecurityAdapter getUserSecurityAdapter() {
+
+		return userSecurityAdapter;
+
+	}
+
+	
+
+
+
+
+
+	@Override
+
+	public Map getUserSecurityLevel(String userId) throws ApplicationException {
+
+		return userSecurityAdapter.getUserSecurityLevel(userId);
+
+	}
 
 
 
