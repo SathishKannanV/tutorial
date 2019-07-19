@@ -6,68 +6,83 @@ package com.aetna.prvrte.rteintranet.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import com.aetna.prvrte.rteintranet.adapter.AdasvctDisplayAdapter;
+import com.aetna.prvrte.rteintranet.adapter.AdasvctAddAdapter;
+import com.aetna.prvrte.rteintranet.adapter.AdasvctDeleteAdapter;
+import com.aetna.prvrte.rteintranet.adapter.VanIdAdapter;
 import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-/**
- * 
- * <h1>RteAdasvctDAO</h1> The RteAdasvctDAO is responsible for handling the
- * storage, retrieval, and search data from/to data store.
- * 
- * @author N726899 Cognizant_Offshore
+/*
+ * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO
+ * @author N726899
+ * Cognizant_Offshore
  * 
  */
-public interface RteAdasvctDAO {
-	/**
-	 * Method to get the ADASVCT list from data store.
-	 * 
-	 * @param adasvctDTO
-	 * 			adasvctDTO object.
-	 * @return Map of ADASVCT list and success or error message.
-	 * 
-	 * @exception ApplicationException if data not found in data store.
+@Repository
+public class RteAdasvctDAOImpl implements RteAdasvctDAO {
+	/*
+	 * Instance of AdasvctDisplayAdapter.
 	 */
-	Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException;
-	/**
-	 * Method to add new ADASVCT to data store.
-	 * 
-	 * @param adasvctDTO
-	 *            adasvctDTO object.
-	 * @return Map of added ADASVCT data and success or error message.
-	 * 
-	 * @exception ApplicationException
-	 *                if insertion fails.
+	@Autowired(required = true)
+	private AdasvctDisplayAdapter adasvctDisplayAdapter;
+	/*
+	 * Instance of VanAdapter.
 	 */
-	Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException;
-	/**
-	 * Method to delete the ADASVCT data from data store.
-	 * 
-	 * @param adaCd
-	 *            String of adaCd.
-	 * @param expDate
-	 *            String of expiration data of adaCd.
-	 * @return Map of flag to delete the data from ADASVCT list and success or
-	 *         error message.
-	 * @exception ApplicationException
-	 *             if deletion fails.
+	@Autowired(required = true)
+	private VanIdAdapter vanAdapter;
+	/*
+	 * Instance of AdasvctAddAdapter.
 	 */
-	Map<String, Object> deleteAdasvct(String adaCd, String expDate)throws ApplicationException;
-	
-	/**
-	 * Method to add/update list of ADASVCT to data store.
-	 * 
-	 * @param adasvctDTO
-	 *            adasvctDTO object.
-	 * @param adasvctDTOList
-	 *            list of adasvctDTO object.
-	 * @param index
-	 *            index to update the data
-	 * @return Map of flag to delete the data from ADASVCT list, success or
-	 *         error message and list of ADASVCT.
-	 * @exception ApplicationException
-	 *                if insertion or update fails.
+	@Autowired(required = true)
+	private AdasvctAddAdapter adasvctAddAdapter;
+	/*
+	 * Instance of AdasvctDeleteAdapter.
 	 */
-	Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,	List<AdasvctDTO> adasvctDTOList, int index)throws ApplicationException;
-	Map<String, Object> getVanList()throws ApplicationException;
-	
+	@Autowired(required = true)
+	private AdasvctDeleteAdapter adasvctDeleteAdapter;
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#getAdasvctLookUpList(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
+	 */
+	@Override
+	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
+			return adasvctDisplayAdapter.getAdasvctLookUpList(adasvctDTO);
+		
+	}
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#getVanList()
+	 */
+	@Override
+	public Map<String, Object> getVanList() throws ApplicationException {
+			return vanAdapter.getVanList();
+		
+	}
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#addAdasvct(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
+	 */
+	@Override
+	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException {
+		return adasvctAddAdapter.addAdasvctToDb(adasvctDTO);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#deleteAdasvct(java.util.List, java.lang.String[])
+	 */
+	@Override
+	public Map<String, Object> deleteAdasvct(String adaCd, String effDate) throws ApplicationException {
+		return adasvctDeleteAdapter.deleteAdasvct(adaCd, effDate);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#addUpdateAdasvct(java.util.List, java.lang.String[])
+	 */
+	@Override
+	public Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,List<AdasvctDTO> adasvctDTOList, int index)
+			throws ApplicationException {
+		return adasvctAddAdapter.addUpdateAdasvct(adasvctDTO, adasvctDTOList, index);
+	}
 }
