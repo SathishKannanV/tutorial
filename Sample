@@ -2,25 +2,47 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 
 
+import java.sql.ResultSet;
+
 import java.sql.SQLException;
 
 import java.sql.Types;
 
+
+
+import java.util.ArrayList;
+
 import java.util.HashMap;
+
+import java.util.LinkedList;
+
+import java.util.List;
 
 import java.util.Map;
 
+
+
 import javax.sql.DataSource;
+
+
 
 import org.apache.commons.logging.Log;
 
 import org.apache.commons.logging.LogFactory;
 
+import org.springframework.dao.DataAccessException;
+
+import org.springframework.jdbc.core.RowMapper;
+
 import org.springframework.jdbc.core.SqlOutParameter;
 
 import org.springframework.jdbc.core.SqlParameter;
 
+import org.springframework.jdbc.core.SqlReturnResultSet;
+
 import org.springframework.jdbc.object.StoredProcedure;
+
+
 
 import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
@@ -32,6 +54,8 @@ import com.aetna.prvrte.rteintranet.util.DBConstants;
 
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
+import com.aetna.prvrte.rteintranet.vo.RbrcVO;
+
 
 
 /**
@@ -42,7 +66,9 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
  */
 
-public class UserDeleteAdapter extends StoredProcedure{
+public class UserDisplayAdapter extends StoredProcedure{
+
+
 
 	/**
 
@@ -50,9 +76,9 @@ public class UserDeleteAdapter extends StoredProcedure{
 
 	 */
 
-	private final Log log = LogFactory.getLog(UserDeleteAdapter.class);
+	private final Log log = LogFactory.getLog(UserDisplayAdapter.class);
 
-
+	
 
 	/**
 
@@ -66,21 +92,77 @@ public class UserDeleteAdapter extends StoredProcedure{
 
 	 */
 
-	public UserDeleteAdapter(DataSource datasource, String storedProc) {
+	public UserDisplayAdapter(DataSource datasource, String storedProc) {
 
 		super(datasource, storedProc);
+
+		
 
 		declareParameter(new SqlParameter(DBConstants.LS_SITE_CD, Types.CHAR));
 
 		declareParameter(new SqlParameter(DBConstants.LS_RIDER_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));		
 
-		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_SQL_TYPE, Types.DECIMAL));
 
 		
 
 		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
+
+		
+
+		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR3, new RowMapper(){
+
+			
+
+			/* (non-Javadoc)
+
+			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
+
+			 */
+
+			public Object mapRow(final ResultSet rs, final int arg1)
+
+					throws SQLException {
+
+				char updatedInd = ApplicationConstants.UPDATE_IND_N; //Used by RBrCDisplay, not on database
+
+				RbrcDTO rbrcDTO = new RbrcDTO();
+
+				rbrcDTO.setDbSiteCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.SITE_CD)));
+
+				rbrcDTO.setDbRiderCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RIDER_CD)));
+
+				rbrcDTO.setDbSvcTypeCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_SVCTYP_CD)));
+
+				rbrcDTO.setDbPostedDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_SRCE_PSTD_DT)));
+
+				rbrcDTO.setDbDescTxt(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_DESC_TXT)));
+
+				rbrcDTO.setDbIONtwkCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_IONTWK_CD)));
+
+				rbrcDTO.setDbTOSCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.TOS_CD)));
+
+				rbrcDTO.setDbHMOSrcBnInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_HMOSRCBN_IND)));
+
+				rbrcDTO.setTextSendInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_TXT_SND_CD)));
+
+				rbrcDTO.setPrevCareInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.PREV_CARE_IND)));
+
+				rbrcDTO.setGenderCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.GENDER_CD)));
+
+				rbrcDTO.setDbUpdatedInd(updatedInd);
+
+				return rbrcDTO;
+
+			}
+
+
+
+		}));
+
+
 
 	}
 
@@ -90,61 +172,73 @@ public class UserDeleteAdapter extends StoredProcedure{
 
 	/**
 
-	 * Method to delete the Rbrc data from data store.
+	 * Method to get the RBRC list from data store.
 
 	 * 
 
 	 * @param rbrcDTO
 
+	 * 			rbrcDTO parameter
+
 	 * 
 
-	 * @return Map of flag to delete the data from Rbrc list and success or
+	 * @return Map of RBRC list and success or error message.
 
-	 *         error message.
+	 * 
 
-	 * @exception ApplicationException
-
-	 *             if deletion fails.
+	 * @exception ApplicationException if data not found in data store.
 
 	 */
 
 	@SuppressWarnings("unchecked")
 
-	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException {
+	public Map getUserLookUpTable (RbrcDTO rbrcDTO) throws ApplicationException {
 
-		
+		log.warn("Entered UserDisplayAdapter  - getUserLookUpTable");
 
-		log.warn("Entered UserDeleteAdapter  - deleteUser");
-
-		boolean isRbrcDeleted = false;
-
-		String newMessage ="";
-
-		Map results = null;
+		int searchCd =3;
 
 		Map<String, String> params = new java.util.LinkedHashMap<String, String>();
 
+		String siteCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd());
+
+		String riderCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbRiderCd());
+
+		String svcTypeCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd());
+
+		if (riderCode.equals(""))
+
+			searchCd = 2;  
+
 		Map rbrcMap = new HashMap();
 
-		params.put(DBConstants.LS_SITE_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd()));
+		params.put(DBConstants.LS_SITE_CD, siteCode);
 
-		params.put(DBConstants.LS_RIDER_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbRiderCd()));
+		params.put(DBConstants.LS_RIDER_CD, riderCode);
 
-		params.put(DBConstants.LS_SVCTYP_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd()));
+		params.put(DBConstants.LS_SVCTYP_CD, svcTypeCode);		
 
-		params.put(DBConstants.LS_TOS_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbTOSCd()));
+		params.put(DBConstants.LS_SQL_TYPE, String.valueOf(searchCd));		
+
+		log.warn(params);
 
 		
 
-		log.warn(params);	
+		Map results = null;		
+
+		List<RbrcVO>rbrcList= new LinkedList<RbrcVO>();
+
+		String newMessage="";
 
 		try {
 
+			log.warn("UserDisplayAdapter: Executing stored procedure : ");
+
+					
+
 			results = execute(params);
 
-			log.warn("UserDeleteAdapter: Executed stored procedure");
-
-			
+			log.warn("UserDisplayAdapter: Executed stored procedure");
 
 			String sqlCode =  String.valueOf(results
 
@@ -152,27 +246,43 @@ public class UserDeleteAdapter extends StoredProcedure{
 
 			
 
-			if (ApplicationConstants.ZERO_0.equalsIgnoreCase(sqlCode)) 
+			rbrcList = (List<RbrcVO>) results
 
-				isRbrcDeleted = true;
+					.get(DBConstants.READ_CURSOR3);	
 
-			else {
+	
 
-				newMessage = "Deleting of rows failed with a SQLCODE code of " + sqlCode;
+			if (rbrcList.isEmpty()){
 
-			}
+				
 
-			rbrcMap.put("rbrcMsg", newMessage);
+				if (ApplicationConstants.ZERO_0.equals(sqlCode)) {
 
-			rbrcMap.put("isRbrcDeleted", isRbrcDeleted);
+
+
+					newMessage = "No Data on database for User ID: " + riderCode ;
+
+				} else {
+
+					newMessage = "Problem in DB2. SQL Code: " + sqlCode + " || You asked for UserId  " + riderCode;
+
+				}			  		  		  
+
+			} else {
+
+				newMessage = rbrcList.size() + " Row(s) found for requested User. " + riderCode;
+
+				}
+
+			rbrcMap.put("newMessage", newMessage);
+
+			rbrcMap.put("rbrcList",rbrcList);
 
 			return rbrcMap;
 
 		}catch (Exception exception){
 
-			
-
-			log.error("UserDeleteAdapter : generic error occured  "+exception);
+			log.error("UserDisplayAdapter : generic error occured  "+exception);
 
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
@@ -180,7 +290,9 @@ public class UserDeleteAdapter extends StoredProcedure{
 
 	}
 
-	
+		
+
+
 
 }
 
