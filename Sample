@@ -6,19 +6,95 @@ import java.util.Map;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Repository;
+
+
+
+import com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpAdapter;
+
+import com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport2Adapter;
+
+import com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport3Adapter;
+
+import com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport4Adapter;
+
 import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 
 
-public interface LongRunTransLookUpDAO {
+@Repository
+
+public class LongRunTransLookUpDAOImpl implements LongRunTransLookUpDAO {
 
 
 
-	Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO) throws ApplicationException;
+	@Autowired(required = true)
+
+	private LongRunTransLookUpAdapter longRunTransLookUpAdapter;
+
+
+
+	@Autowired(required = true)
+
+	private LongRunTransLookUpReport2Adapter longRunTransLookUpReport2Adapter;
+
+
+
+	@Autowired(required = true)
+
+	private LongRunTransLookUpReport3Adapter longRunTransLookUpReport3Adapter;
 
 	
+
+	@Autowired(required = true)
+
+	private LongRunTransLookUpReport4Adapter longRunTransLookUpReport4Adapter;
+
+
+
+	@Override
+
+	public Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO)
+
+			throws ApplicationException {
+
+
+
+		
+
+		if (longrunTransDTO.getReport().equals("Report3")){
+
+			return longRunTransLookUpReport3Adapter
+
+					.getLongrunTransLookUpTable(longrunTransDTO);
+
+		} else if (longrunTransDTO.getReport().equals("Report1")){
+
+			return longRunTransLookUpAdapter
+
+					.getLongrunTransLookUpTable(longrunTransDTO);
+
+		} else if (longrunTransDTO.getReport().equals("Report4")){
+
+			return longRunTransLookUpReport4Adapter
+
+					.getLongrunTransLookUpTable(longrunTransDTO);
+
+		}else{
+
+			return longRunTransLookUpReport2Adapter
+
+					.getLongrunTransLookUpTable(longrunTransDTO);
+
+		}
+
+	}
+
+
 
 }
 
