@@ -2,17 +2,11 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 
 
-import java.sql.Date;
-
 import java.sql.SQLException;
 
 import java.sql.Types;
 
 import java.util.HashMap;
-
-import java.util.LinkedList;
-
-import java.util.List;
 
 import java.util.Map;
 
@@ -48,7 +42,7 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
  */
 
-public class UserAddAdapter extends StoredProcedure{
+public class UserDeleteAdapter extends StoredProcedure{
 
 	/**
 
@@ -56,9 +50,9 @@ public class UserAddAdapter extends StoredProcedure{
 
 	 */
 
-	private final Log log = LogFactory.getLog(UserAddAdapter.class);
+	private final Log log = LogFactory.getLog(UserDeleteAdapter.class);
 
-	
+
 
 	/**
 
@@ -72,11 +66,9 @@ public class UserAddAdapter extends StoredProcedure{
 
 	 */
 
-	public UserAddAdapter(DataSource datasource, String storedProc) throws SQLException{
+	public UserDeleteAdapter(DataSource datasource, String storedProc) {
 
 		super(datasource, storedProc);
-
-		
 
 		declareParameter(new SqlParameter(DBConstants.LS_SITE_CD, Types.CHAR));
 
@@ -84,27 +76,11 @@ public class UserAddAdapter extends StoredProcedure{
 
 		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SRCE_PSTD_DT, Types.DATE));
-
-		declareParameter(new SqlParameter(DBConstants.LS_DESC_TXT, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_IONTWK_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));		
-
-		declareParameter(new SqlParameter(DBConstants.LS_HMOSRCBN_IND, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_TXT_SND_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.PREV_CARE_IND, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.GENDER_CD, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));
 
 		
 
-		declareParameter(new SqlOutParameter(DBConstants.LS_ADD_UPDATE, Types.DECIMAL));
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));		
+		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
 	}
 
@@ -114,31 +90,33 @@ public class UserAddAdapter extends StoredProcedure{
 
 	/**
 
-	 * Method to add new RBRC to data store.
+	 * Method to delete the Rbrc data from data store.
 
 	 * 
 
 	 * @param rbrcDTO
 
-	 *            rbrcDTO object.
-
-	 * @return Map of added RBRC data and success or error message.
-
 	 * 
+
+	 * @return Map of flag to delete the data from Rbrc list and success or
+
+	 *         error message.
 
 	 * @exception ApplicationException
 
-	 *                if insertion fails.
+	 *             if deletion fails.
 
 	 */
 
 	@SuppressWarnings("unchecked")
 
-	public Map addNewUser(RbrcDTO rbrcDTO) throws ApplicationException {
+	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException {
 
 		
 
-		log.warn("Entered UserAddAdapter  - addNewUser");
+		log.warn("Entered UserDeleteAdapter  - deleteUser");
+
+		boolean isRbrcDeleted = false;
 
 		String newMessage ="";
 
@@ -147,14 +125,6 @@ public class UserAddAdapter extends StoredProcedure{
 		Map<String, String> params = new java.util.LinkedHashMap<String, String>();
 
 		Map rbrcMap = new HashMap();
-
-		Date todaysDate = new Date(System.currentTimeMillis());
-
-		String postedDate = todaysDate.toString();
-
-		rbrcDTO.setDbPostedDate(postedDate);
-
-		rbrcDTO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
 
 		params.put(DBConstants.LS_SITE_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd()));
 
@@ -162,21 +132,9 @@ public class UserAddAdapter extends StoredProcedure{
 
 		params.put(DBConstants.LS_SVCTYP_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd()));
 
-		params.put(DBConstants.LS_SRCE_PSTD_DT, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbPostedDate()));
-
-		params.put(DBConstants.LS_DESC_TXT, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbDescTxt()));
-
-		params.put(DBConstants.LS_IONTWK_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbIONtwkCd()));
-
 		params.put(DBConstants.LS_TOS_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbTOSCd()));
 
-		params.put(DBConstants.LS_HMOSRCBN_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbHMOSrcBnInd()));
-
-		params.put(DBConstants.LS_TXT_SND_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getTextSendInd()));
-
-		params.put(DBConstants.PREV_CARE_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getPrevCareInd()));
-
-		params.put(DBConstants.GENDER_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getGenderCd()));
+		
 
 		log.warn(params);	
 
@@ -184,202 +142,45 @@ public class UserAddAdapter extends StoredProcedure{
 
 			results = execute(params);
 
-			log.warn("UserAddAdapter: Executed stored procedure");
-
-			String actionCode =  String.valueOf(results
-
-					.get(DBConstants.LS_ADD_UPDATE));
-
-			String sqlCode =  String.valueOf(results
-
-					.get(DBConstants.LS_SQLCODE));
-
-			if (ApplicationConstants.ZERO_0.equalsIgnoreCase(sqlCode)) {
-
-				List<RbrcDTO> rbrcList = new LinkedList<RbrcDTO>();
-
-				rbrcList.add(rbrcDTO);
-
-				rbrcMap.put("rbrcList", rbrcList);
-
-				if (ApplicationConstants.ZERO_0.equalsIgnoreCase(actionCode)) {
-
-					newMessage = "This row added to the database";
-
-				}else {
-
-					newMessage ="Row already exists on the database. It was updated with these values.";					
-
-					rbrcDTO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_Y); 
-
-				}				
-
-				}
-
-			else {
-
-				newMessage = "Unable to add row to the database. SQLCODE = " + sqlCode;
-
-			}
+			log.warn("UserDeleteAdapter: Executed stored procedure");
 
 			
 
-			rbrcMap.put("rbrcMessage", newMessage);
-
-		return rbrcMap;
-
-	}catch (Exception exception){
-
-		log.error("UserAddAdapter : generic error occured  "+exception);
-
-		throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
-
-	}
-
-
-
-}
-
-
-
-	/**
-
-	 * Method to add/update list of RBRC to data store.
-
-	 * 
-
-	 * @param modifiedRbrc
-
-	 *            
-
-	 * @param rbrcDtoList
-
-	 *            list of RbrcDTO object.
-
-	 * @param index
-
-	 *            index to update the data
-
-	 * @param updateInd
-
-	 * 			  update indicator to update the data
-
-	 * @return Map of flag to delete the data from RBRC list, success or
-
-	 *         error message and list of RBRC.
-
-	 * @exception ApplicationException
-
-	 *                if insertion or update fails.
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	public Map addUpdateUser(RbrcDTO modifiedRbrc,
-
-			List<RbrcDTO> rbrcDtoList, int index, char updateInd) throws ApplicationException{
-
-		log.warn("Entered UserAddAdapter  - addUpdateUser");
-
-		boolean isRbrcAddOrUpdated = false;
-
-		String newMessage ="";
-
-		Map results = null;
-
-		Map<String, String> params = new java.util.LinkedHashMap<String, String>();
-
-		Map rbrcMap = new HashMap();
-
-		params.put(DBConstants.LS_SITE_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbSiteCd()));
-
-		params.put(DBConstants.LS_RIDER_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbRiderCd()));
-
-		params.put(DBConstants.LS_SVCTYP_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbSvcTypeCd()));
-
-		params.put(DBConstants.LS_SRCE_PSTD_DT, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbPostedDate()));
-
-		params.put(DBConstants.LS_DESC_TXT, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbDescTxt()));
-
-		params.put(DBConstants.LS_IONTWK_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbIONtwkCd()));
-
-		params.put(DBConstants.LS_TOS_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbTOSCd()));
-
-		params.put(DBConstants.LS_HMOSRCBN_IND, RteIntranetUtils.getTrimmedString(modifiedRbrc.getDbHMOSrcBnInd()));
-
-		params.put(DBConstants.LS_TXT_SND_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getTextSendInd()));
-
-		params.put(DBConstants.PREV_CARE_IND, RteIntranetUtils.getTrimmedString(modifiedRbrc.getPrevCareInd()));
-
-		params.put(DBConstants.GENDER_CD, RteIntranetUtils.getTrimmedString(modifiedRbrc.getGenderCd()));		
-
-		log.warn(params);	
-
-		try {
-
-			results = execute(params);
-
-			log.warn("UserAddAdapter: Executed stored procedure");
-
-			String actionCode =  String.valueOf(results
-
-					.get(DBConstants.LS_ADD_UPDATE));
-
 			String sqlCode =  String.valueOf(results
 
 					.get(DBConstants.LS_SQLCODE));
 
-			if (ApplicationConstants.ZERO_0.equalsIgnoreCase(sqlCode)) {
+			
 
-				isRbrcAddOrUpdated = true;
+			if (ApplicationConstants.ZERO_0.equalsIgnoreCase(sqlCode)) 
 
-				if (ApplicationConstants.ZERO_0.equalsIgnoreCase(actionCode)) {
+				isRbrcDeleted = true;
 
-					
+			else {
 
-					if (updateInd == ApplicationConstants.COPY)						
-
-						rbrcDtoList.set(index, modifiedRbrc);						
-
-					else
-
-						rbrcDtoList.add(modifiedRbrc);
-
-				}
-
-				else
-
-					rbrcDtoList.set(index, modifiedRbrc);
-
-				
-
-			} else {
-
-				newMessage = "Adding/updating of rows failed with a SQLCODE code of " + sqlCode;
+				newMessage = "Deleting of rows failed with a SQLCODE code of " + sqlCode;
 
 			}
 
-			rbrcMap.put("rbrcMsg",newMessage);
+			rbrcMap.put("rbrcMsg", newMessage);
 
-			rbrcMap.put("rbrcDtoList",rbrcDtoList);
-
-			rbrcMap.put("isRbrcAddOrUpdated", isRbrcAddOrUpdated);
+			rbrcMap.put("isRbrcDeleted", isRbrcDeleted);
 
 			return rbrcMap;
 
 		}catch (Exception exception){
 
-			log.error("UserAddAdapter : generic error occured  "+exception);
+			
+
+			log.error("UserDeleteAdapter : generic error occured  "+exception);
 
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
 		}
 
-
-
 	}
 
-
+	
 
 }
+
