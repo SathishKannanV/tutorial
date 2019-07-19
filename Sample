@@ -2,55 +2,61 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-
-
-public class EntityIndicator {
+public class Gender {
 
 
 
-	String individualInst;
+	String male;
 
-	String nonIndividualInst;
+	String female;
 
-	public String getIndividualInst() {
+	String unknown;
 
-		
+	public String getMale() {
 
-		return individualInst;
+		return male;
 
 	}
 
-	public void setIndividualInst(String individualInst) {
+	public void setMale(String male) {
 
-		
-
-		this.individualInst = individualInst;
+		this.male = male;
 
 	}
 
-	public String getNonIndividualInst() {
+	public String getFemale() {
 
-		
-
-		return nonIndividualInst;
+		return female;
 
 	}
 
-	public void setNonIndividualInst(String nonIndividualInst) {
+	public void setFemale(String female) {
 
-		
-
-		this.nonIndividualInst = nonIndividualInst;
+		this.female = female;
 
 	}
 
-	
+	public String getUnknown() {
 
-	public StringBuilder getEntityIndicator(){
+		return unknown;
 
-		return new StringBuilder(getIndividualInst())
+	}
 
-		.append(getNonIndividualInst());
+	public void setUnknown(String unknown) {
+
+		this.unknown = unknown;
+
+	}
+
+	public StringBuilder getGender(){
+
+		return new StringBuilder(getMale())
+
+		.append(getFemale())
+
+		.append(getUnknown());
+
+		
 
 	}
 
