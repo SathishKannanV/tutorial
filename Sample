@@ -16,10 +16,6 @@ import java.util.HashMap;
 
 import java.util.LinkedHashMap;
 
-import java.util.LinkedList;
-
-import java.util.List;
-
 import java.util.Map;
 
 
@@ -42,8 +38,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 
 
-import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
-
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
@@ -51,8 +45,6 @@ import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 import com.aetna.prvrte.rteintranet.util.DBConstants;
 
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
-
-import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
 
 
 
@@ -68,11 +60,13 @@ import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
 
  */
 
-public class AdasvctAddAdapter extends StoredProcedure {
+public class AdasvctDeleteAdapter extends StoredProcedure {
+
+	
+
+	public AdasvctDeleteAdapter() {}
 
 
-
-	public AdasvctAddAdapter() {}
 
 	/*
 
@@ -82,7 +76,7 @@ public class AdasvctAddAdapter extends StoredProcedure {
 
 	private final Log log = LogFactory.getLog(AdasvctAddAdapter.class);
 
-	
+
 
 	/*
 
@@ -90,7 +84,7 @@ public class AdasvctAddAdapter extends StoredProcedure {
 
 	 */
 
-	public AdasvctAddAdapter(DataSource datasource, String adasvctStoredProc)
+	public AdasvctDeleteAdapter(DataSource datasource, String adasvctStoredProc)
 
 			throws SQLException {
 
@@ -100,81 +94,63 @@ public class AdasvctAddAdapter extends StoredProcedure {
 
 		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_ADA_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
-
 		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_EFF_DT, Types.DATE));
-
-		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_EXP_DT, Types.DATE));
-
-		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_POSTED_DT, Types.DATE));
-
-		
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_ADD_UPDATE, Types.DECIMAL));
 
 		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
 	}
 
+
+
 	/**
 
-	 * Method to add new ADASVCT to data store.
+	 * Method to delete the ADASVCT data from data store.
 
 	 * 
 
-	 * @param adasvctDTO
+	 * @param adaCd
 
-	 *            adasvctDTO object.
+	 *            String of adaCd.
 
-	 * @return Map of added ADASVCT data and success or error message.
+	 * @param expDate
 
-	 * 
+	 *            String of expiration data of adaCd.
+
+	 * @return Map of flag to delete the data from ADASVCT list and success or
+
+	 *         error message.
 
 	 * @exception ApplicationException
 
-	 *                if insertion fails.
+	 *             if deletion fails.
 
 	 */
 
-	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO)throws ApplicationException {
+	public Map<String, Object> deleteAdasvct(String adaCd, String effDate) throws ApplicationException {
 
-		char updatedInd = ApplicationConstants.UPDATE_IND_Y;
+		if (log.isDebugEnabled()) {
 
-		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
+			log.warn("---- Entering getAdasvctLookUpList ---");
 
-		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
+		}
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 
+		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
+
 		String newMessage = "";
+
+		boolean isAdasvctDeleted = false;
 
 		try {
 
-			String postedDate = RteIntranetUtils.getTodaysDate();
-
-			String adaCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getAdaCd());
-
-			String svcTypeCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getSvcTypeCd());
-
-			String effDate = RteIntranetUtils.getTrimmedString(adasvctDTO.getEffDate());
-
-			String expDate = RteIntranetUtils.getTrimmedString(adasvctDTO.getExpDate());
-
 			
 
-			//query params		
+			params.put(DBConstants.LS_ADASVCT_ADA_CD, RteIntranetUtils.getTrimmedString(adaCd));
 
-			params.put(DBConstants.LS_ADASVCT_ADA_CD, adaCd);
+			params.put(DBConstants.LS_ADASVCT_EFF_DT, RteIntranetUtils.getTrimmedString(effDate));
 
-			params.put(DBConstants.LS_SVCTYP_CD, svcTypeCd);
 
-			params.put(DBConstants.LS_ADASVCT_EFF_DT, effDate);
-
-			params.put(DBConstants.LS_ADASVCT_EXP_DT, expDate);
-
-			params.put(DBConstants.LS_ADASVCT_POSTED_DT, postedDate);
-
-			
 
 			log.info("Params to put new adavsct : " + params);
 
@@ -184,189 +160,43 @@ public class AdasvctAddAdapter extends StoredProcedure {
 
 			
 
-			if ("0".equals(sqlCode)) {
+			if ("0".equals(sqlCode)){
 
-				String actionCode = String.valueOf(results.get(DBConstants.LS_ADD_UPDATE));
-
-				if ("0".equals(actionCode)) {
-
-					newMessage = ApplicationConstants.ROW_ADDED;
-
-				} else {
-
-					newMessage = ApplicationConstants.ROW_ALREADY_EXISTS;
-
-					updatedInd = ApplicationConstants.COPY;
-
-				}
-
-				AdasvctVO adasvctVO = new AdasvctVO(adaCd, svcTypeCd, effDate, expDate, postedDate, updatedInd);
-
-				adasvctList.add(adasvctVO);
+				isAdasvctDeleted = true;
 
 			} else {
 
-				newMessage = ApplicationConstants.ADD_ROW_FAILS + sqlCode;
+				newMessage = ApplicationConstants.DELETE_ROW_FAILS + sqlCode;
 
 			}
 
-			
+				
 
 			resultMap.put("adasvctMsg", newMessage);
 
-			resultMap.put("adasvctList", adasvctList);
-
-		} catch (DataAccessException dae) {
-
-			log.error("AdasvctAddAdapter : Data access excpetion occured "	+ dae);
-
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
-
-		} catch (Exception exception) {
-
-			log.error("AdasvctAddAdapter : generic error occured  " + exception);
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
-
-		} 
-
-		return resultMap;
-
-	}
-
-	
-
-	/**
-
-	 * Method to add/update list of ADASVCT to data store.
-
-	 * 
-
-	 * @param adasvctDTO
-
-	 *            adasvctDTO object.
-
-	 * @param adasvctDTOList
-
-	 *            list of adasvctDTO object.
-
-	 * @param index
-
-	 *            index to update the data
-
-	 * @return Map of flag to delete the data from ADASVCT list, success or
-
-	 *         error message and list of ADASVCT.
-
-	 * @exception ApplicationException
-
-	 *                if insertion or update fails.
-
-	 */
-
-	public Map<String, Object> addUpdateAdasvct(AdasvctDTO existingAdasvct,List<AdasvctDTO> adasvctDTOList, int index) throws ApplicationException {
-
-		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
-
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		String newMessage = "";
-
-		String sqlCode ="";
-
-		boolean isAdasvctAddorUpdated = false;
-
-		boolean isAddUpdateCleanUp = false;
-
-		String postedDate = RteIntranetUtils.getTodaysDate();
-
-		
-
-		String adaCd = RteIntranetUtils.getTrimmedString(existingAdasvct.getAdaCd());
-
-		String svcTypeCd = RteIntranetUtils.getTrimmedString(existingAdasvct.getSvcTypeCd());
-
-		String effDate = RteIntranetUtils.getTrimmedString(existingAdasvct.getEffDate());
-
-		String expDate = RteIntranetUtils.getTrimmedString(existingAdasvct.getExpDate());
-
-		
-
-		params.put(DBConstants.LS_ADASVCT_ADA_CD, adaCd);
-
-		params.put(DBConstants.LS_SVCTYP_CD, svcTypeCd);
-
-		params.put(DBConstants.LS_ADASVCT_EFF_DT, effDate);
-
-		params.put(DBConstants.LS_ADASVCT_EXP_DT, expDate);
-
-		params.put(DBConstants.LS_ADASVCT_POSTED_DT, postedDate);
-
-
-
-		log.info("Params to put new adavsct : " + params);
-
-		try{
-
-			Map<String, Object> results = execute(params);
-
-			sqlCode = String.valueOf(results.get(DBConstants.LS_SQLCODE));
-
-			String actionCode =  String.valueOf(results.get(DBConstants.LS_ADD_UPDATE));
-
-			AdasvctDTO aAdasvct = new AdasvctDTO(adaCd, svcTypeCd, effDate,
-
-								expDate, postedDate, ApplicationConstants.UPDATE_IND_Y);
-
-			if ("0".equalsIgnoreCase(sqlCode)) {
-
-				isAddUpdateCleanUp = true;
-
-				if ("1".equalsIgnoreCase(actionCode)) {
-
-					if (existingAdasvct.getUpdatedInd() == ApplicationConstants.COPY){
-
-						adasvctDTOList.set(index, aAdasvct);	
-
-					} else {
-
-						adasvctDTOList.add(aAdasvct);
-
-					}
-
-				} else
-
-					adasvctDTOList.set(index, aAdasvct);
-
-			} else {
-
-				isAdasvctAddorUpdated = true;
-
-				newMessage = ApplicationConstants.ADD_UPDATE_ROW_FAILS + sqlCode;
-
-			}
-
-			resultMap.put("adasvctMsg", newMessage);
-
-			resultMap.put("adasvctList", adasvctDTOList);
-
-			resultMap.put("isAdasvctAddorUpdated", isAdasvctAddorUpdated);
-
-			resultMap.put("isAddUpdateCleanUp", isAddUpdateCleanUp);
+			resultMap.put("isAdasvctDeleted", isAdasvctDeleted);
 
 			return resultMap;
 
-		}catch (DataAccessException dae) {
+		} catch (DataAccessException dae) {
 
-			log.error("AdasvctAddAdapter : Data access excpetion occured "	+ dae);
+			log.error("AdasvctDeleteAdapter : Data access excpetion occured "
 
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
+					+ dae);
+
+			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS,
+
+					dae.getMessage(), dae);
 
 		} catch (Exception exception) {
 
-			log.error("AdasvctAddAdapter : generic error occured  " + exception);
+			log.error("AdasvctDeleteAdapter : generic error occured  "
 
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
+					+ exception);
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,
+
+					exception.getMessage(), exception);
 
 		} 
 
