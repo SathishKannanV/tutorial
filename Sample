@@ -8,10 +8,6 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 
 
-
-
-
-
 import java.sql.ResultSet;
 
 import java.sql.SQLException;
@@ -19,8 +15,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import java.util.HashMap;
-
-import java.util.LinkedHashMap;
 
 import java.util.LinkedList;
 
@@ -50,15 +44,15 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 
 
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
-
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
-import com.aetna.prvrte.rteintranet.util.DBConstants;
-
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+
+import com.aetna.prvrte.rteintranet.vo.SbmsnrVO;
+
+import com.aetna.prvrte.rteintranet.vo.SubmsnVO;
 
 
 
@@ -66,39 +60,57 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
 /**
 
- * @author N657186
+ * @author N731694
 
  * Cognizant_Offshore
 
  */
 
-public class RbrcLookUpAdapter extends StoredProcedure{
+public class SbmsnrAdapter extends StoredProcedure{
 
-	private final Log log = LogFactory.getLog(RbrcLookUpAdapter.class);
+
+
+	private final Log log = LogFactory.getLog(SbmsnrAdapter.class);
+
+	private static final String CNVRSTN_CD = "CNVRSTN_CD";
+
+	private static final String VAN_ID_CD = "VAN_ID_CD";
+
+	private static final String IN_TY_CD = "IN_TY_CD";
+
+	private static final String IN_PSTD_DT = "IN_PSTD_DT";
 
 	
 
-	public RbrcLookUpAdapter(DataSource datasource, String storedProc) {
+	private static final String OUT_CODE = "OUT_CODE";
+
+	private static final String READ_CURSOR = "READ_CURSOR3";
+
+	
+
+	
+
+ 	public SbmsnrAdapter(DataSource datasource, String storedProc) {
 
 		super(datasource, storedProc);
 
 		
 
-		declareParameter(new SqlParameter(DBConstants.LS_SITE_CD, Types.CHAR));
+		declareParameter(new SqlParameter(CNVRSTN_CD, Types.CHAR));   
 
-		declareParameter(new SqlParameter(DBConstants.LS_RIDER_CD, Types.CHAR));
+		declareParameter(new SqlParameter(VAN_ID_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
+		declareParameter(new SqlParameter(IN_TY_CD, Types.CHAR));
 
-		
-
-		declareParameter(new SqlParameter(DBConstants.LS_SQL_TYPE, Types.DECIMAL));
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
+		declareParameter(new SqlParameter(IN_PSTD_DT, Types.CHAR));
 
 		
 
-		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR1, new RowMapper(){
+		declareParameter(new SqlOutParameter(OUT_CODE, Types.INTEGER));
+
+		
+
+		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper(){
 
 			
 
@@ -110,37 +122,145 @@ public class RbrcLookUpAdapter extends StoredProcedure{
 
 			public Object mapRow(final ResultSet rs, final int arg1)
 
-					throws SQLException {
+					throws SQLException 
 
-				char updatedInd = ApplicationConstants.UPDATE_IND_N; //Used by RBrCDisplay, not on database
+					{
 
-				RbrcDTO rbrcDTO = new RbrcDTO();
+						SbmsnrVO sbmsnrVO=new SbmsnrVO();
 
-				rbrcDTO.setDbSiteCd(rs.getString("SITE_CD"));
+						
 
-				rbrcDTO.setDbRiderCd(rs.getString("RIDER_CD"));
+						sbmsnrVO.setAlphaSearchInd(rs.getString("SBMSNR_ALPHSRC_IND"));
 
-				rbrcDTO.setDbSvcTypeCd(rs.getString("RBRC_SVCTYP_CD"));
+						sbmsnrVO.setSbmtPvdrLastName(rs.getString("SBMSNR_SBPRLAST_NM"));
 
-				rbrcDTO.setDbPostedDate(rs.getString("RBRC_SRCE_PSTD_DT"));
+						sbmsnrVO.setSbmtPvdrFirstName(rs.getString("SBMSNR_SBPR_FST_NM"));
 
-				rbrcDTO.setDbDescTxt(rs.getString("RBRC_DESC_TXT"));
+						sbmsnrVO.setSbmtPvdrMidName(rs.getString("SBMSNR_SBPRMID_NM"));
 
-				rbrcDTO.setDbIONtwkCd(rs.getString("RBRC_IONTWK_CD"));
+						sbmsnrVO.setSbmtPvdrTitle(rs.getString("SBMSNR_SBPRTITL_NM"));
 
-				rbrcDTO.setDbTOSCd(rs.getString("TOS_CD"));
+						
 
-				rbrcDTO.setDbHMOSrcBnInd(rs.getString("RBRC_HMOSRCBN_IND"));
+						
 
-				rbrcDTO.setTextSendInd(rs.getString("RBRC_TXT_SND_CD"));
+						sbmsnrVO.setSbmtPvdrAddr1(rs.getString("SBMSNR_SPADDR1_TXT"));
 
-				rbrcDTO.setPrevCareInd(rs.getString("PREV_CARE_IND"));
+						sbmsnrVO.setSbmtPvdrAddr2(rs.getString("SBMSNR_SPADDR2_TXT"));
 
-				rbrcDTO.setGenderCd(rs.getString("GENDER_CD"));
+						sbmsnrVO.setSbmtPvdrCity(rs.getString("SBMSNR_SBPRCITY_NM"));
 
-				rbrcDTO.setDbUpdatedInd(updatedInd);
+						sbmsnrVO.setSbmtPvdrState(rs.getString("SBMSNR_SBPRV_ST_CD"));
 
-				return rbrcDTO;
+						sbmsnrVO.setSbmPvdrZipCd(rs.getString("SBMSNR_SBPR_ZIP_CD"));
+
+						
+
+						
+
+						sbmsnrVO.setSpCommunication1No(rs.getString("SBMSNR_SPRVCOMM_NO"));
+
+						sbmsnrVO.setAssistantPhoneNo(rs.getString("SBMSNR_ASTNCPHN_NO"));
+
+						sbmsnrVO.setRespTypeCd(rs.getString("SBMSNR_RSPNS_TY_CD"));
+
+						sbmsnrVO.setEffDate(rs.getString("SBMSNR_EFF_DT"));
+
+						sbmsnrVO.setRespTime(rs.getString("SBMSNR_RSPNS_TM"));
+
+						
+
+						
+
+						
+
+						sbmsnrVO.setPostedDt(rs.getString("SBMSNR_PSTD_DT"));
+
+						sbmsnrVO.setClaimOfficeCd(rs.getString("SBMSNR_CLMOFF_CD"));
+
+						sbmsnrVO.setProviderTypeCd(rs.getString("SBMSNR_PRVTY_CD"));
+
+						sbmsnrVO.setPostedTime(rs.getString("SBMSNR_PSTD_TM"));
+
+						sbmsnrVO.setProductName(rs.getString("SBMSNR_UNTPRVAS_NM"));
+
+						
+
+						sbmsnrVO.setSbmsnrTypeCd(rs.getString("SBMSNR_TY_CD"));
+
+						sbmsnrVO.setPayorCobCd(rs.getString("SBMSNR_PAYORCOB_CD"));
+
+						sbmsnrVO.setMedUnitIdCd(rs.getString("MEDUNIT_ID_CD"));
+
+						sbmsnrVO.setSubsIdQualCd(rs.getString("SBMSNR_SBSCRBIQ_CD"));
+
+						sbmsnrVO.setDepIdQualCode(rs.getString("SBMSNR_DPNDNTIQ_CD"));
+
+						
+
+						sbmsnrVO.setTransactionTypeCd(rs.getString("SBMSNR_TRNSCTNT_CD"));
+
+						sbmsnrVO.setConvIdCode(rs.getString("SUBMSN_CNVRSTN_CD"));
+
+						sbmsnrVO.setVanIdCd(rs.getString("SUBMSN_VAN_ID_CD"));
+
+						sbmsnrVO.setTranType(rs.getString("SUBMSN_TY_CD"));
+
+						sbmsnrVO.setEmployeeId(rs.getString("SBMSNR_EMPLOYE_IDN"));
+
+						
+
+						sbmsnrVO.setSpCommNoQualCd(rs.getString("SBMSNR_SPCNQLF_CD"));
+
+						sbmsnrVO.setSubsPhoneNo(rs.getString("SBMSNR_SBSCRBRT_NO"));
+
+						sbmsnrVO.setDepsPhoneNo(rs.getString("SBMSNR_DPNDNTTL_NO"));
+
+						sbmsnrVO.setPatientAddr1(rs.getString("SBMSNR_PTNTAD1_TXT"));
+
+						sbmsnrVO.setPatientAddr2(rs.getString("SBMSNR_PTNTAD2_TXT"));
+
+						
+
+						sbmsnrVO.setPatientCity(rs.getString("SBMSNR_PTNTCITY_NM"));
+
+						sbmsnrVO.setPatientState(rs.getString("SBMSNR_PTNTST_CD"));
+
+						sbmsnrVO.setPatientZipCd(rs.getString("SBMSNR_PTNTZIP_CD"));
+
+						sbmsnrVO.setClaimOfficeName(rs.getString("CLMOFF_NM"));
+
+						sbmsnrVO.setClaimOfficeAddr1(rs.getString("CLMOFF_ADDRLN1_TXT"));
+
+						
+
+						sbmsnrVO.setClaimOfficeAddr2(rs.getString("CLMOFF_ADDRLN2_TXT"));
+
+						sbmsnrVO.setClaimOffLocationCd(rs.getString("CLMOFF_LOC_CD"));
+
+						sbmsnrVO.setClaimOfficeState(rs.getString("CLMOFF_ST_CD"));
+
+						sbmsnrVO.setClaimOfficeZipCd(rs.getString("CLMOFF_ZIP_CD"));
+
+						sbmsnrVO.setCobPrimSecCd(rs.getString("COB_PRIM_SEC_CD"));
+
+						
+
+						
+
+						
+
+						sbmsnrVO.setCobCarrierName(rs.getString("CUMBOC_CARRIER_NM"));
+
+						sbmsnrVO.setCobPolicyNo(rs.getString("CUMBOC_POLICY_NO"));
+
+						sbmsnrVO.setCobEffDate(rs.getString("CUMBOC_EFFECTIV_DT"));
+
+						sbmsnrVO.setCobExpDate(rs.getString("CUMBOC_EXPIRATN_DT"));
+
+						sbmsnrVO.setFamilyLevelInd(rs.getString("SBMNSR_FAMLVL_IND"));
+
+						return sbmsnrVO;
 
 			}
 
@@ -154,221 +274,123 @@ public class RbrcLookUpAdapter extends StoredProcedure{
 
 	
 
-	/**
+	
 
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
-
-	 */
+	
 
 	@SuppressWarnings("unchecked")
 
-	public Map getRbrcLookUp (RbrcDTO rbrcDTO) throws ApplicationException {
+	public Map getSbmsnrEvntTracking (String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
 
-		log.warn("Entered RbrcLookUpAdapter  - getRbrcLookUp");
+		log.debug("Entered SbrsrxbAdapter  - getSbrsrxbEvntTracking");
 
-		//It fetches rbrc lookup based on the criteria selected by user
+	
 
-		Map<String, String> params = new LinkedHashMap<String, String>();
+		Map<String, String> params = new java.util.HashMap<String, String>();
 
-		Map rbrcMap = new HashMap();
+		Map sbmsnrMap = new HashMap();
 
-		int searchCd ;
+		params.put(CNVRSTN_CD, RteIntranetUtils.getTrimmedString(convIdCode));
 
-		String siteCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd());
+		params.put(VAN_ID_CD, RteIntranetUtils.getTrimmedString(vanIdCd));
 
-		String riderCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbRiderCd());
+		params.put(IN_TY_CD, RteIntranetUtils.getTrimmedString(typeCd));
 
-		String svcTypeCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd());
-
-		
-
-		if (!siteCode.equals("")) {
-
-			if (!riderCode.equals("")) {
-
-				if (!svcTypeCode.equals("")) {
-
-					searchCd = 3;
-
-				} else {
-
-					searchCd = 4;
-
-				}		
-
-			} else {		
-
-				if (!svcTypeCode.equals("")) {
-
-					searchCd = 2;
-
-				} else { 
-
-					searchCd = 1;
-
-					}		
-
-				}
-
-		} else {
-
-				searchCd = 0;
-
-		}
+		params.put(IN_PSTD_DT, RteIntranetUtils.getTrimmedString(postedDt));
 
 		
 
-		params.put(DBConstants.LS_SITE_CD, siteCode);
+	
 
-		params.put(DBConstants.LS_RIDER_CD, riderCode);
+		
 
-		params.put(DBConstants.LS_SVCTYP_CD, svcTypeCode);		
-
-		params.put(DBConstants.LS_SQL_TYPE, String.valueOf(searchCd));
-
-		log.warn(params);
+		log.debug(params);
 
 		Map results = null;
 
 		
 
-		List<RbrcDTO> rbrcList  = new LinkedList<RbrcDTO>();
+		List<SbmsnrVO> sbmsnrList= new LinkedList<SbmsnrVO>();
 
 		String newMessage="";
 
-		int noOfElements;
+	
 
 		try {
 
-			log.warn("RbrcLookUpAdapter: Executing stored procedure : " + "siteCode : " + siteCode + " ; riderCode : "+riderCode
-
-					+"; svcTypeCode : "+ svcTypeCode +"; searchCd : "+ searchCd);
-
-					
-
 			results = execute(params);
 
-			log.warn("RbrcLookUpAdapter: Executed stored procedure");
+			log.debug("SbmsnrAdapter: Executed stored procedure");
 
 			String sqlCode =  String.valueOf(results
 
-					.get(DBConstants.LS_SQLCODE));
+					.get(OUT_CODE));
 
-			
+			sbmsnrList = (List<SbmsnrVO>) results
 
-			rbrcList = (List<RbrcDTO>) results
-
-					.get(DBConstants.READ_CURSOR1);	
+					.get(READ_CURSOR);	
 
 	
 
-			noOfElements = rbrcList.size();
+			if ("0".equals(sqlCode))
 
-			//if (null != results) {
+			{
 
-			if (rbrcList.isEmpty()){
+				if (null==sbmsnrList ||sbmsnrList.isEmpty()) {
 
-				
+				newMessage = "No Data for Conversation ID: " + convIdCode + 
 
-				if ("0".equals(sqlCode)) {
+							" Van Id: " +  vanIdCd + 
 
-					newMessage = "No Data for ";
+							" Tran Type: " + typeCd + 
 
-					newMessage = getMessage(newMessage, siteCode, riderCode, svcTypeCode);
-
-				} else {
-
-					newMessage = "Problem in DB2. sqlcode: " + sqlCode; 
-
-					newMessage = getMessage(newMessage, siteCode, riderCode, svcTypeCode);
-
-				}			  		  		  
-
-			} else {
-
-				if (noOfElements > 1) {
-
-			    	newMessage = noOfElements + " Rows found for ";
-
-				} else {
-
-			    newMessage = noOfElements + " Row found for ";
+							" or Posted Date: " + postedDt;
 
 				}
 
-				newMessage = getMessage(newMessage, siteCode, riderCode, svcTypeCode);
+			else
+
+			{
+
+				newMessage = "Data found for Conversation ID: " + convIdCode +
+
+					" Van Id: " +  vanIdCd + 
+
+					" Tran Type: " + typeCd + 
+
+					" and Posted Date: " + postedDt;
 
 			}
 
-			/*}else{
+		} else {
 
-				newMessage = "You must enter a Site Code with or without combination of Rider Code and/or Service Type Code on the Look Up page.";
+			
 
-			}*/
+		    	newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
 
-			rbrcMap.put("rbrcMessage", newMessage);
+		}
 
-			rbrcMap.put("rbrcList",rbrcList);
+				
 
-			return rbrcMap;
+			
+
+			sbmsnrMap.put("newMessage", newMessage);
+
+			sbmsnrMap.put("sbmsnrList",sbmsnrList);
+
+			return sbmsnrMap;
 
 		}catch (Exception exception){
 
-			log.error("RbrcLookUpAdapter : generic error occured  "+exception);
+			log.error("SbmsnrAdapter : generic error occured  "+exception);
 
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
 		}
 
-		
-
 	}
 
-	
 
-	/**
-
-	 * @param newMessage
-
-	 * @param querySiteCd
-
-	 * @param queryRiderCd
-
-	 * @param querySvcTypeCd
-
-	 * @return
-
-	 */
-
-	public String getMessage (String newMessage, String querySiteCd, String queryRiderCd, String querySvcTypeCd) {
-
-		String getMessage = newMessage;
-
-	    if (!"".equals(querySiteCd)) 
-
-		    getMessage = getMessage + " Site  : " + querySiteCd;
-
-		    if (!"".equals(queryRiderCd))
-
-  		    getMessage = getMessage + " Rider  : " + queryRiderCd;
-
-	    if (!"".equals(querySvcTypeCd))
-
-		    getMessage = getMessage + " Service Type  : " + querySvcTypeCd;
-
-		return getMessage;
-
-}
-
-	
-
-	
-
-	
 
 }
 
