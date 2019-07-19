@@ -1,1 +1,176 @@
-package com.aetna.prvrte.rteintranet.copybookbean;public class IndividualData {	String entityId="1P";	String lastName;	String firstName;	String middleName;	String titleDesc;	public String getEntityId() {				return entityId;	}	public void setEntityId(String entityId) {				this.entityId = entityId;	}	public String getLastName() {				return lastName;	}	public void setLastName(String lastName) {				this.lastName = lastName;	}	public String getFirstName() {				return firstName;	}	public void setFirstName(String firstName) {				this.firstName = firstName;	}	public String getMiddleName() {				return middleName;	}	public void setMiddleName(String middleName) {				this.middleName = middleName;	}	public String getTitleDesc() {				return titleDesc;	}	public void setTitleDesc(String titleDesc) {				this.titleDesc = titleDesc;	}	public StringBuilder getIndividual(){		return new StringBuilder(getEntityId())		.append(getLastName())		.append(getFirstName())		.append(getMiddleName())		.append(getTitleDesc());	}}
+package com.aetna.prvrte.rteintranet.copybookbean;
+
+
+
+public class MedicalCriteriaEntity {
+
+
+
+	EDIHeader header;
+
+	EDIProvider provider;
+
+	Member member;
+
+	Subscriber subscriber;
+
+	Dependent dependent;
+
+	ServiceTypeSet serviceTypeSet;
+
+	ProcedureInfoSet procedureInfoSet;
+
+	DiganosisSet diganosisSet;
+
+	PlaceOfServiceSet placeOfServiceSet;
+
+	String tempValue;
+
+	public EDIHeader getHeader() {
+
+		return header;
+
+	}
+
+	public void setHeader(EDIHeader header) {
+
+		this.header = header;
+
+	}
+
+	public EDIProvider getProvider() {
+
+		return provider;
+
+	}
+
+	public void setProvider(EDIProvider provider) {
+
+		this.provider = provider;
+
+	}
+
+	public Member getMember() {
+
+		return member;
+
+	}
+
+	public void setMember(Member member) {
+
+		this.member = member;
+
+	}
+
+	public Subscriber getSubscriber() {
+
+		return subscriber;
+
+	}
+
+	public void setSubscriber(Subscriber subscriber) {
+
+		this.subscriber = subscriber;
+
+	}
+
+	public Dependent getDependent() {
+
+		return dependent;
+
+	}
+
+	public void setDependent(Dependent dependent) {
+
+		this.dependent = dependent;
+
+	}
+
+	public ServiceTypeSet getServiceTypeSet() {
+
+		return serviceTypeSet;
+
+	}
+
+	public void setServiceTypeSet(ServiceTypeSet serviceTypeSet) {
+
+		this.serviceTypeSet = serviceTypeSet;
+
+	}
+
+	public ProcedureInfoSet getProcedureInfoSet() {
+
+		return procedureInfoSet;
+
+	}
+
+	public void setProcedureInfoSet(ProcedureInfoSet procedureInfoSet) {
+
+		this.procedureInfoSet = procedureInfoSet;
+
+	}
+
+	public DiganosisSet getDiganosisSet() {
+
+		return diganosisSet;
+
+	}
+
+	public void setDiganosisSet(DiganosisSet diganosisSet) {
+
+		this.diganosisSet = diganosisSet;
+
+	}
+
+	public PlaceOfServiceSet getPlaceOfServiceSet() {
+
+		return placeOfServiceSet;
+
+	}
+
+	public void setPlaceOfServiceSet(PlaceOfServiceSet placeOfServiceSet) {
+
+		this.placeOfServiceSet = placeOfServiceSet;
+
+	}
+
+	
+
+	public String getTempValue() {
+
+		return tempValue;
+
+	}
+
+	public void setTempValue(String tempValue) {
+
+		this.tempValue = tempValue;
+
+	}
+
+	public StringBuilder getResult(){
+
+		return new StringBuilder(header.getHeader())
+
+		.append(provider.getProvider())
+
+		.append(member.getMember())
+
+		.append(subscriber.getSubscriber())
+
+		.append(dependent.getDependent())
+
+		.append(serviceTypeSet.getServiceType())
+
+		.append(procedureInfoSet.getProcedure())
+
+		.append(diganosisSet.getDiganosisSet())
+
+		.append(placeOfServiceSet.getPos());
+
+		
+
+	}
+
+}
+
