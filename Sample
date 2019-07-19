@@ -1,180 +1,338 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.dto;
 
 
 
-import java.io.Serializable;
+/**
 
-public class LongRunTransReport4DTO implements Serializable {
+ * @author N657186
 
+ * Cognizant_Offshore
 
+ */
 
-	private static final long serialVersionUID = 1L;
+public class RbrcDTO {
 
-	private String seconds = "";
 
-	private String dmCount = "";
 
-	private String tradCount = "";
+	private String dbSiteCd = "";
 
-	private String dentalCount = "";
+	private String dbRiderCd = "";
 
-	private String hmoCount = "";
+	private String dbSvcTypeCd = "";
 
-	private String outBoundCount = "";
+	private String dbPostedDate = "";
 
-	private String providerCount = "";
+	private String dbDescTxt = "";
 
-	private String hrpCount = "";
+	private String dbIONtwkCd = "";
 
-	private String asjCount= "";
+	private String dbTOSCd = "";
 
-	public LongRunTransReport4DTO() {
+	private String dbHMOSrcBnInd = "";
 
-		super();
+	private String textSendInd = "";
 
-		// TODO Auto-generated constructor stub
+	private String prevCareInd = "";
 
-	}
+	private String genderCd = "";
 
-	public LongRunTransReport4DTO(String seconds, String dmCount,
-
-			String tradCount, String dentalCount, String hmoCount,
-
-			String outBoundCount, String providerCount, String hrpCount,
-
-			String asjCount) {
-
-		super();
-
-		this.seconds = seconds;
-
-		this.dmCount = dmCount;
-
-		this.tradCount = tradCount;
-
-		this.dentalCount = dentalCount;
-
-		this.hmoCount = hmoCount;
-
-		this.outBoundCount = outBoundCount;
-
-		this.providerCount = providerCount;
-
-		this.hrpCount = hrpCount;
-
-		this.asjCount = asjCount;
-
-	}
-
-	public String getSeconds() {
-
-		return seconds;
-
-	}
-
-	public void setSeconds(String seconds) {
-
-		this.seconds = seconds;
-
-	}
-
-	public String getDmCount() {
-
-		return dmCount;
-
-	}
-
-	public void setDmCount(String dmCount) {
-
-		this.dmCount = dmCount;
-
-	}
-
-	public String getTradCount() {
-
-		return tradCount;
-
-	}
-
-	public void setTradCount(String tradCount) {
-
-		this.tradCount = tradCount;
-
-	}
-
-	public String getDentalCount() {
-
-		return dentalCount;
-
-	}
-
-	public void setDentalCount(String dentalCount) {
-
-		this.dentalCount = dentalCount;
-
-	}
-
-	public String getHmoCount() {
-
-		return hmoCount;
-
-	}
-
-	public void setHmoCount(String hmoCount) {
-
-		this.hmoCount = hmoCount;
-
-	}
-
-	public String getOutBoundCount() {
-
-		return outBoundCount;
-
-	}
-
-	public void setOutBoundCount(String outBoundCount) {
-
-		this.outBoundCount = outBoundCount;
-
-	}
-
-	public String getProviderCount() {
-
-		return providerCount;
-
-	}
-
-	public void setProviderCount(String providerCount) {
-
-		this.providerCount = providerCount;
-
-	}
-
-	public String getHrpCount() {
-
-		return hrpCount;
-
-	}
-
-	public void setHrpCount(String hrpCount) {
-
-		this.hrpCount = hrpCount;
-
-	}
-
-	public String getAsjCount() {
-
-		return asjCount;
-
-	}
-
-	public void setAsjCount(String asjCount) {
-
-		this.asjCount = asjCount;
-
-	}
+	private char   dbUpdatedInd;
 
 	
+
+	/**
+
+	 * @return the dbSiteCd
+
+	 */
+
+	public String getDbSiteCd() {
+
+		return dbSiteCd;
+
+	}
+
+	/**
+
+	 * @param dbSiteCd the dbSiteCd to set
+
+	 */
+
+	public void setDbSiteCd(String dbSiteCd) {
+
+		this.dbSiteCd = dbSiteCd;
+
+	}
+
+	/**
+
+	 * @return the dbRiderCd
+
+	 */
+
+	public String getDbRiderCd() {
+
+		return dbRiderCd;
+
+	}
+
+	/**
+
+	 * @param dbRiderCd the dbRiderCd to set
+
+	 */
+
+	public void setDbRiderCd(String dbRiderCd) {
+
+		this.dbRiderCd = dbRiderCd;
+
+	}
+
+	/**
+
+	 * @return the dbSvcTypeCd
+
+	 */
+
+	public String getDbSvcTypeCd() {
+
+		return dbSvcTypeCd;
+
+	}
+
+	/**
+
+	 * @param dbSvcTypeCd the dbSvcTypeCd to set
+
+	 */
+
+	public void setDbSvcTypeCd(String dbSvcTypeCd) {
+
+		this.dbSvcTypeCd = dbSvcTypeCd;
+
+	}
+
+	/**
+
+	 * @return the dbPostedDate
+
+	 */
+
+	public String getDbPostedDate() {
+
+		return dbPostedDate;
+
+	}
+
+	/**
+
+	 * @param dbPostedDate the dbPostedDate to set
+
+	 */
+
+	public void setDbPostedDate(String dbPostedDate) {
+
+		this.dbPostedDate = dbPostedDate;
+
+	}
+
+	/**
+
+	 * @return the dbDescTxt
+
+	 */
+
+	public String getDbDescTxt() {
+
+		return dbDescTxt;
+
+	}
+
+	/**
+
+	 * @param dbDescTxt the dbDescTxt to set
+
+	 */
+
+	public void setDbDescTxt(String dbDescTxt) {
+
+		this.dbDescTxt = dbDescTxt;
+
+	}
+
+	/**
+
+	 * @return the dbIONtwkCd
+
+	 */
+
+	public String getDbIONtwkCd() {
+
+		return dbIONtwkCd;
+
+	}
+
+	/**
+
+	 * @param dbIONtwkCd the dbIONtwkCd to set
+
+	 */
+
+	public void setDbIONtwkCd(String dbIONtwkCd) {
+
+		this.dbIONtwkCd = dbIONtwkCd;
+
+	}
+
+	/**
+
+	 * @return the dbTOSCd
+
+	 */
+
+	public String getDbTOSCd() {
+
+		return dbTOSCd;
+
+	}
+
+	/**
+
+	 * @param dbTOSCd the dbTOSCd to set
+
+	 */
+
+	public void setDbTOSCd(String dbTOSCd) {
+
+		this.dbTOSCd = dbTOSCd;
+
+	}
+
+	/**
+
+	 * @return the dbHMOSrcBnInd
+
+	 */
+
+	public String getDbHMOSrcBnInd() {
+
+		return dbHMOSrcBnInd;
+
+	}
+
+	/**
+
+	 * @param dbHMOSrcBnInd the dbHMOSrcBnInd to set
+
+	 */
+
+	public void setDbHMOSrcBnInd(String dbHMOSrcBnInd) {
+
+		this.dbHMOSrcBnInd = dbHMOSrcBnInd;
+
+	}
+
+	/**
+
+	 * @return the textSendInd
+
+	 */
+
+	public String getTextSendInd() {
+
+		return textSendInd;
+
+	}
+
+	/**
+
+	 * @param textSendInd the textSendInd to set
+
+	 */
+
+	public void setTextSendInd(String textSendInd) {
+
+		this.textSendInd = textSendInd;
+
+	}
+
+	/**
+
+	 * @return the prevCareInd
+
+	 */
+
+	public String getPrevCareInd() {
+
+		return prevCareInd;
+
+	}
+
+	/**
+
+	 * @param prevCareInd the prevCareInd to set
+
+	 */
+
+	public void setPrevCareInd(String prevCareInd) {
+
+		this.prevCareInd = prevCareInd;
+
+	}
+
+	/**
+
+	 * @return the genderCd
+
+	 */
+
+	public String getGenderCd() {
+
+		return genderCd;
+
+	}
+
+	/**
+
+	 * @param genderCd the genderCd to set
+
+	 */
+
+	public void setGenderCd(String genderCd) {
+
+		this.genderCd = genderCd;
+
+	}
+
+	/**
+
+	 * @return the dbUpdatedInd
+
+	 */
+
+	public char getDbUpdatedInd() {
+
+		return dbUpdatedInd;
+
+	}
+
+	/**
+
+	 * @param dbUpdatedInd the dbUpdatedInd to set
+
+	 */
+
+	public void setDbUpdatedInd(char dbUpdatedInd) {
+
+		this.dbUpdatedInd = dbUpdatedInd;
+
+	}
 
 	
 
