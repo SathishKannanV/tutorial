@@ -1,88 +1,36 @@
 /**
+
  * 
+
  */
+
 package com.aetna.prvrte.rteintranet.dao;
 
-import java.util.List;
+
+
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-import com.aetna.prvrte.rteintranet.adapter.AdasvctDisplayAdapter;
-import com.aetna.prvrte.rteintranet.adapter.AdasvctAddAdapter;
-import com.aetna.prvrte.rteintranet.adapter.AdasvctDeleteAdapter;
-import com.aetna.prvrte.rteintranet.adapter.VanIdAdapter;
-import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
+
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-/*
- * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO
- * @author N726899
- * Cognizant_Offshore
- * 
+
+
+/**
+
+ * @author N657186
+
+ *
+
  */
-@Repository
-public class RteAdasvctDAOImpl implements RteAdasvctDAO {
-	/*
-	 * Instance of AdasvctDisplayAdapter.
-	 */
-	@Autowired(required = true)
-	private AdasvctDisplayAdapter adasvctDisplayAdapter;
-	/*
-	 * Instance of VanAdapter.
-	 */
-	@Autowired(required = true)
-	private VanIdAdapter vanAdapter;
-	/*
-	 * Instance of AdasvctAddAdapter.
-	 */
-	@Autowired(required = true)
-	private AdasvctAddAdapter adasvctAddAdapter;
-	/*
-	 * Instance of AdasvctDeleteAdapter.
-	 */
-	@Autowired(required = true)
-	private AdasvctDeleteAdapter adasvctDeleteAdapter;
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#getAdasvctLookUpList(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
-	 */
-	@Override
-	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
-			return adasvctDisplayAdapter.getAdasvctLookUpList(adasvctDTO);
-		
-	}
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#getVanList()
-	 */
-	@Override
-	public Map<String, Object> getVanList() throws ApplicationException {
-			return vanAdapter.getVanList();
-		
-	}
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#addAdasvct(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
-	 */
-	@Override
-	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException {
-		return adasvctAddAdapter.addAdasvctToDb(adasvctDTO);
-	}
+public interface RteSecurityDAO {
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#deleteAdasvct(java.util.List, java.lang.String[])
-	 */
-	@Override
-	public Map<String, Object> deleteAdasvct(String adaCd, String effDate) throws ApplicationException {
-		return adasvctDeleteAdapter.deleteAdasvct(adaCd, effDate);
-	}
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO#addUpdateAdasvct(java.util.List, java.lang.String[])
-	 */
-	@Override
-	public Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,List<AdasvctDTO> adasvctDTOList, int index)
-			throws ApplicationException {
-		return adasvctAddAdapter.addUpdateAdasvct(adasvctDTO, adasvctDTOList, index);
-	}
+
+	Map getUserSecurityLevel(String userId)throws ApplicationException;
+
+
+
 }
+
