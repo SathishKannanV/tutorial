@@ -1,104 +1,1052 @@
-package com.aetna.prvrte.rteintranet.exception;
+/*
+ * Created Dec 2007
+ * Updated May 2009
+ * Updated Mar 2010 (Java 5 code improvements)
+ */
+package com.aetna.prvrte.rteintranet.facade;
 
-import org.springframework.stereotype.Component;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
-@Component("ex")
-public class ApplicationException extends Exception {
+import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
+import com.aetna.prvrte.rteintranet.dto.BenafrqDTO;
+import com.aetna.prvrte.rteintranet.dto.BplvrpDTO;
+import com.aetna.prvrte.rteintranet.dto.BplvsDTO;
+import com.aetna.prvrte.rteintranet.dto.DedacsrDTO;
+import com.aetna.prvrte.rteintranet.dto.ErspmsgDTO;
+import com.aetna.prvrte.rteintranet.dto.IndmntrpDTO;
+import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
+import com.aetna.prvrte.rteintranet.dto.PlnlmEXDTO;
+import com.aetna.prvrte.rteintranet.dto.ProcexDTO;
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetpbrDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetprlDTO;
+import com.aetna.prvrte.rteintranet.dto.SitemsgDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchcolDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchdtlDTO;
+import com.aetna.prvrte.rteintranet.dto.SrcherrDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchresDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchscDTO;
+import com.aetna.prvrte.rteintranet.dto.SstypaDTO;
+import com.aetna.prvrte.rteintranet.dto.StstypaDTO;
+import com.aetna.prvrte.rteintranet.dto.TOSDTO;
+import com.aetna.prvrte.rteintranet.dto.TierdMsgDTO;
+import com.aetna.prvrte.rteintranet.dto.TosctDTO;
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+import com.aetna.prvrte.rteintranet.facade.state.ApplicationState;
+import com.aetna.prvrte.rteintranet.vo.RtetprlVO;
+import com.aetna.prvrte.rteintranet.dto.RbbcDTO;
+import com.aetna.prvrte.rteintranet.dto.RtebeplmDTO;
+import com.aetna.prvrte.rteintranet.dto.RtedictrDTO;
+import com.aetna.prvrte.rteintranet.dto.RterbacDTO;
+import com.aetna.prvrte.rteintranet.dto.RtestscDTO;
+import com.aetna.prvrte.rteintranet.dto.RtestypDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetierDTO;
+import com.aetna.prvrte.rteintranet.dto.HrpRuleDTO;
 
-	private static final long serialVersionUID = 1L;
-	// private static final long serialVersionUID = 1L;
-	private String errorCode       = null;
-	private String errorMessage    = null;
-	private Throwable objThrowable = null;
+/**
+ * <code>Facade</code> is an interface implemented by the component that fulfills high-level business
+ * operations by aggregating more finely-grained calls to a variety of underlying services.  Ideally
+ * transactions are demarcated at this level as well.  This aids in creating a single-point-of-entry
+ * from the presentation layer into the core of the application.
+ * <p>
+ * Note: This interface exists as an example of how to package and deploy such interfaces and is not
+ * considered reusable across the enterprise (and thus not supported), although any application is
+ * free to leverage this code.
+ * 
+ * @author Kent Rancourt
+ * @author Tony Kerz
+ */
+public interface Facade {
+
+    /**
+     * Method to return application state relative to the current user.
+     * 
+     * @return an object which stores application state <i>relative to the current user</i>.  In
+     * applications that do not allow any concurrent access (e.g. a desktop application) the
+     * object returned is most likely a POJO.  On other platforms (e.g. the web) the object is
+     * more likely a POJO proxied (dynamically) to leverage the platform's underlying state-management
+     * mechanism (e.g. in the case a of a web application, <code>HttpSession</code>).
+     */
+    public ApplicationState getApplicationState();
+
+	public Map getUserSecurityLevel(String userId) throws ApplicationException;
 
 	/**
-	 * Constructor with no arguments.
-	 */
-	public ApplicationException() {
-
-		// Call for Super Class Constructor.
-		super();
-	}
-
-	/**
-	 * Constructor with error Code argument.
+	 * Method to get the ADASVCT list from data store.
 	 * 
-	 * @param errorCode
-	 * @param errorMessage
-	 * @param objException
-	 */
-	public ApplicationException(final String errorCode,
-			final Throwable objException) {
-
-		// Call to Super Class Constructor with error Code as argument.
-		super(errorCode);
-		this.errorCode    = errorCode;
-		this.objThrowable = objException;
-	}
-
-	/**
-	 * Constructor with error Code and error Message as arguments.
+	 * @param adasvctDTO
+	 * 			adasvctDTO object.
+	 * @return Map of ADASVCT list and success or error message.
 	 * 
-	 * @param errorCode
-	 * @param errorMessage
-	 * @param objException
+	 * @exception ApplicationException if data not found in data store.
 	 */
-	public ApplicationException(final String errorCode,
-			final String errorMessage, final Throwable objException) {
-		super();
-		this.errorCode    = errorCode;
-		this.errorMessage = errorMessage;
-		this.objThrowable = objException;
-	}
-
+	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO)throws ApplicationException;
+	
 	/**
-	 * Constructor with error Code and error Message as arguments.
+	 * Method to add new ADASVCT to data store.
 	 * 
-	 * @param errorMessage
-	 */
-	public ApplicationException(final String errorMessage) {
-		super(errorMessage);
-		this.errorMessage = errorMessage;
-	}
-
-	/**
-	 * Constructor with error Code and error Message as arguments.
+	 * @param adasvctDTO
+	 *            adasvctDTO object.
+	 * @return Map of added ADASVCT data and success or error message.
 	 * 
-	 * @param objException
+	 * @exception ApplicationException
+	 *                if insertion fails.
 	 */
-	public ApplicationException(final Throwable objException) {
-		super(objException);
-		this.objThrowable = objException;
-	}
+	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException;
 
 	/**
-	 * @return Returns the errorCode.
+	 * Method to delete the ADASVCT data from data store.
+	 * 
+	 * @param adaCd
+	 *            String of adaCd.
+	 * @param expDate
+	 *            String of expiration data of adaCd.
+	 * @return Map of flag to delete the data from ADASVCT list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *             if deletion fails.
 	 */
-	public String getErrorCode() {
-		return errorCode;
-	}
+	public Map<String, Object> deleteAdasvct(String adaCd, String effDate)throws ApplicationException;
+	 
+	/**
+	 * Method to add/update list of ADASVCT to data store.
+	 * 
+	 * @param adasvctDTO
+	 *            adasvctDTO object.
+	 * @param adasvctDTOList
+	 *            list of adasvctDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from ADASVCT list, success or
+	 *         error message and list of ADASVCT.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO, List<AdasvctDTO> adasvctDTOList, int index) throws ApplicationException;
+	/**
+	 * Method to get the BENAFRQ list from data store.
+	 * 
+	 * @param benafrqDTO
+	 * 			benafrqDTO object.
+	 * @return Map of BENAFRQ list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	public Map<String, Object> getBenafrqLookUpList(BenafrqDTO benafrqDTO) throws ApplicationException;
+	/**
+	 * Method to add new BENAFRQ to data store.
+	 * 
+	 * @param benafrqDTO
+	 *            benafrqDTO object.
+	 * @return Map of added BENAFRQ data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	public Map<String, Object> addBenafrqToDb(BenafrqDTO benafrqDTO) throws ApplicationException;
 
 	/**
-	 * @param errorCode
-	 *            The errorCode to set.
+	 * Method to delete the BENAFRQ data from data store.
+	 * 
+	 * @param defacumAccumCd
+	 *            String of default accum data.
+	 * @param benafrqAfreqCd
+	 *            String of frequency data.
+	 * @param hmobBenefitCd
+	 *            String of benefit data.
+	 * @return Map of flag to delete the data from BENAFRQ list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *                if deletion fails.
 	 */
-	public void setErrorCode(final String errorCode) {
-		this.errorCode = errorCode;
-	}
+	public Map<String, Object> deleteBenafrq(String defacumAccumCd, String benafrqAfreqCd, String hmobBenefitCd) throws ApplicationException;
+	/**
+	 * Method to add/update list of BENAFRQ to data store.
+	 * 
+	 * @param benafrqDTO
+	 *            benafrqDTO object.
+	 * @param benafrqDTOList
+	 *            list of benafrqDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from BENAFRQ list, success or
+	 *         error message and list of BENAFRQ.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateBenafrq(BenafrqDTO benafrqDTO, List<BenafrqDTO> benafrqDTOList, int index) throws ApplicationException;
+	/**
+	 * Method to get the AetCtls list from data store.
+	 * 
+	 * @param aetCtl
+	 *            String of aetna id.
+	 * @return Map of AetCtls list and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if data not found in data store.
+	 */
+	public Map<String, Object> getAetCtlsLookUpList(String aetCtl)throws ApplicationException;
+	
+	/**
+	 * Method to add new AetCtls to data store.
+	 * 
+	 * @param aetCtl
+	 *            String of aetna id.
+	 * @return Map of AetCtls list and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	public Map<String, Object> addAetCtlsToDb(String aetCtl) throws ApplicationException;
+	
+	/**
+	 * Method to delete the AetCtls data from data store.
+	 * 
+	 * @param aetCtlsList
+	 *            List of aetna ids.
+	 * @param takeAction
+	 *            List of selected indexes to delete aetna id.
+	 * @param index
+	 *            index to update the data
+	 * 
+	 * @return Map of flag to delete the data from AetCtls list and success or
+	 *         error message.
+	 * @throws ApplicationException
+	 *             if deletion fails.
+	 */
+	public Map<String, Object> deleteAetCtls(List<String> aetCtlsList, String aetCtl, int index)throws ApplicationException;
+		
+	/**
+	 * Method to add/update list of AetCtls to data store.
+	 * 
+	 * @param aetCtlsList
+	 *            List of aetna ids.
+	 * @param takeAction
+	 *            List of selected indexes to delete aetna id.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from AetCtls list, success or
+	 *         error message and list of AetCtls.
+	 * @throws ApplicationException
+	 *             if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateAetCtls(List<String> aetCtlsList, String aetCtl, int index) throws ApplicationException;
 
 	/**
-	 * @return Returns the errorMessage.
+	 * Method to get the AuthTrx list from data store.
+	 * 
+	 * @param authTrx
+	 *            String of aetna id.
+	 * @return Map of AetCtls list and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if data not found in data store.
 	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+	public Map<String, Object> getAuthTrxLookUpList(String authTrx)throws ApplicationException;
+	
+	/**
+	 * Method to add new AuthTrx to data store.
+	 * 
+	 * @param authTrx
+	 *            String of aetna id.
+	 * @return Map of AetCtls list and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	public Map<String, Object> addAuthTrxToDb(String authTrx) throws ApplicationException;
 
 	/**
-	 * @param errorMessage
-	 *            The errorMessage to set.
+	 * Method to delete the AuthTrx data from data store.
+	 * 
+	 * @param authTrxList
+	 *            List of aetna ids.
+	 * @param takeAction
+	 *            List of selected indexes to delete aetna id.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from AuthTrx list and success or
+	 *         error message.
+	 * @throws ApplicationException
+	 *             if deletion fails.
 	 */
-	public void setErrorMessage(final String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+	public Map<String, Object> deleteAuthTrx(List<String> authTrxList, String authTrx, int index)throws ApplicationException;
+	 
+	/**
+	 * Method to add/update list of AuthTrx to data store.
+	 * 
+	 * @param authTrxList
+	 *            List of aetna ids.
+	 * @param takeAction
+	 *            List of selected indexes to delete aetna id.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from AuthTrx list, success or
+	 *         error message and list of AuthTrx.
+	 * @throws ApplicationException
+	 *             if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateAuthTrx(List<String> authTrxList, String authTrx, int index) throws ApplicationException;
+	/**
+	 * Method to get the BPLVRP list from data store.
+	 * 
+	 * @param bplvrpDTO
+	 * 			bplvrpDTO object.
+	 * @return Map of BPLVRP list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	public Map<String, Object> getBplvrpLookUpList(BplvrpDTO bplvrpDTO)throws ApplicationException;
 
+	/**
+	 * Method to add new BPLVRP to data store.
+	 * 
+	 * @param bplvrpDTO
+	 *            bplvrpDTO object.
+	 * @return Map of added BPLVRP data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	public Map<String, Object> addBplvrpToDb(BplvrpDTO bplvrpDTO) throws ApplicationException;
+
+	/**
+	 * Method to delete the BPLVRP data from data store.
+	 * 
+	 * @param bplvrpDTO
+	 *        bplvrpDTO object.  
+	 * @return Map of flag to delete the data from BPLVRP list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *             if deletion fails.
+	 */
+	public Map<String, Object> deleteBplvrp(BplvrpDTO bplvrpDTO)throws ApplicationException;
+	 
+	/**
+	 * Method to add/update list of BPLVRP to data store.
+	 * 
+	 * @param bplvrpDTO
+	 *            bplvrpDTO object.
+	 * @param bplvrpDTOList
+	 *            list of bplvrpDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from BPLVRP list, success or
+	 *         error message and list of BPLVRP.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateBplvrp(BplvrpDTO bplvrpDTO, List<BplvrpDTO> bplvrpDTOList, int index) throws ApplicationException;
+	/**
+	 * Method to get the Dedacsr list from data store.
+	 * 
+	 * @param dedacsrDTO
+	 * 			dedacsrDTO object
+	 * @param defAccumCd
+	 * 			string of defAccumCd.
+	 * @return Map of Dedacsr list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	public Map<String, Object> getDedacsrLookUpList(DedacsrDTO dedacsrDTO)throws ApplicationException;
+	/**
+	 * Method to add new BPLVRP to data store.
+	 * 
+	 * @param dedacsrDTO
+	 *            dedacsrDTO object.
+	 * @return Map of added DEDACSR data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	public Map<String, Object> addDedacsrToDb(DedacsrDTO dedacsrDTO) throws ApplicationException;
+
+	/**
+	 * Method to delete the DEDACSR data from data store.
+	 * 
+	 * @param dbSvcTypeCd
+	 *            string of dbSvcTypeCd.
+	 * @param dbDefAccumCd
+	 *            String of dbDefAccumCd.
+	 * @return Map of flag to delete the data from DEDACSR list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *                if deletion fails.
+	 */
+	public Map<String, Object> deleteDedacsr(String dbSvcTypeCd, String dbDefAccumCd)throws ApplicationException;
+	 
+	/**
+	 * Method to add/update list of DEDACSR to data store.
+	 * 
+	 * @param dedacsrDTO
+	 *            dedacsrDTO object.
+	 * @param dedacsrDTOList
+	 *            list of dedacsrDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from DEDACSR list, success or
+	 *         error message and list of DEDACSR.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	public Map<String, Object> addUpdateDedacsr(DedacsrDTO dedacsrDTO, List<DedacsrDTO> dedacsrDTOList, int index) throws ApplicationException;
+	/**
+	 * Method to get the ERSPMSG list from data store.
+	 * 
+	 * @param erspmsgDTO
+	 * 			erspmsgDTO object.
+	 * @return Map of ERSPMSG list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	Map<String, Object> getErspmsgLookUpList(ErspmsgDTO erspmsgDTO) throws ApplicationException;
+	/**
+	 * Method to add new ERSPMSG to data store.
+	 * 
+	 * @param erspmsgDTO
+	 *            erspmsgDTO object.
+	 * @return Map of added ERSPMSG data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> addErspmsgToDb(ErspmsgDTO erspmsgDTO) throws ApplicationException;
+	/**
+	 * Method to delete the ERSPMSG data from data store.
+	 * 
+	 * @param messageId
+	 *            String of messageId.
+	 * @return Map of flag to delete the data from ERSPMSG list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *             if deletion fails.
+	 */
+	Map<String, Object> deleteErspmsg(int messageId) throws ApplicationException;
+	
+	/**
+	 * Method to add/update list of ERSPMSG to data store.
+	 * 
+	 * @param erspmsgDTO
+	 *            erspmsgDTO object.
+	 * @param erspmsgDTOList
+	 *            list of erspmsgDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from ERSPMSG list, success or
+	 *         error message and list of ERSPMSG.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	Map<String, Object> addUpdateErspmsg(ErspmsgDTO erspmsgDTO,	List<ErspmsgDTO> erspmsgDTOList, int index)throws ApplicationException;
+	/**
+	 * Method to get the INDMNTRP list from data store.
+	 * 
+	 * @param indmntrpDTO
+	 * 			indmntrpDTO object.
+	 * @return Map of INDMNTRP list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	Map<String, Object> getIndmntrpLookUpList(IndmntrpDTO indmntrpDTO)throws ApplicationException;
+	/**
+	 * Method to add new INDMNTRP to data store.
+	 * 
+	 * @param indmntrpDTO
+	 *            indmntrpDTO object.
+	 * @return Map of added INDMNTRP data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> addIndmntrpToDb(IndmntrpDTO indmntrpDTO)throws ApplicationException;
+	/**
+	 * Method to delete the INDMNTRP data from data store.
+	 * 
+	 * @param indmntrpDTO
+	 *            indmntrpDTO object.
+	 * @return Map of added INDMNTRP data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> deleteIndmntrp(IndmntrpDTO indmntrpDTO)throws ApplicationException;
+	/**
+	 * Method to add/update list of INDMNTRP to data store.
+	 * 
+	 * @param indmntrpDTO
+	 *            indmntrpDTO object.
+	 * @param indmntrpList
+	 *            list of indmntrpDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from INDMNTRP list, success or
+	 *         error message and list of INDMNTRP.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	Map<String, Object> addUpdateIndmntrp(IndmntrpDTO indmntrpDTO, List<IndmntrpDTO> indmntrpList, int index)throws ApplicationException;
+	/**
+	 * Method to get the PLNLMEX list from data store.
+	 * 
+	 * @param plnlmEXDTO
+	 * 			plnlmEXDTO object.
+	 * @return Map of PLNLMEX list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	Map<String, Object> getPlnlmEXLookUpList(PlnlmEXDTO plnlmEXDTO)throws ApplicationException;
+	/**
+	 * Method to add new PLNLMEX to data store.
+	 * 
+	 * @param plnlmEXDTO
+	 *            plnlmEXDTO object.
+	 * @return Map of added PLNLMEX data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> addPlnlmEXToDb(PlnlmEXDTO plnlmEXDTO)throws ApplicationException;
+	/**
+	 * Method to delete the PLNLMEX data from data store.
+	 * 
+	 * @param plnlmEXDTO
+	 *            plnlmEXDTO object.
+	 * @return Map of added PLNLMEX data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> deletePlnlmEX(String explntCd)throws ApplicationException;
+	/**
+	 * Method to add/update list of PLNLMEX to data store.
+	 * 
+	 * @param plnlmEXDTO
+	 *            plnlmEXDTO object.
+	 * @param plnlmEXList
+	 *            list of plnlmEXDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from PLNLMEX list, success or
+	 *         error message and list of PLNLMEX.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	Map<String, Object> addUpdatePlnlmEX(PlnlmEXDTO plnlmEXDTO, List<PlnlmEXDTO> plnlmEXList, int index)throws ApplicationException;
+	public Map getRtetpbrLookUpTable(String idNo ,String effDate) throws ApplicationException;
+
+	public Map addNewRtetpbr(RtetpbrDTO rtetpbrDTO) throws ApplicationException;
+
+	public Map deleteRtetpbr(String rtetpbrIdNo, String rtetpbrEffDate)throws ApplicationException;
+
+	public Map addUpdateRtetpbr(RtetpbrDTO editedRtetpbrDTO,
+			List<RtetpbrDTO> rtetpbrDtoList, int index, char updateInd)throws ApplicationException;
+
+	/**
+	 * @param siteCd
+	 * @param svcTypeCode
+	 * @return 
+	 * @throws ApplicationException
+	 */
+	public Map getSitemsgLookUpTable(String siteCd, String svcTypeCode)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param sitemsgDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewSitemsg(SitemsgDTO sitemsgDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param sitemsgDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteSitemsg(SitemsgDTO sitemsgDTO) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param editedSitemsgDTO
+	 * @param sitemsgDtoList
+	 * @param i
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateSitemsg(SitemsgDTO editedSitemsgDTO,
+			List<SitemsgDTO> sitemsgDtoList, int i,char updateInd) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param rtetprlDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getRtetprlLookUpTable(RtetprlDTO rtetprlDTO) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param rtetprlDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewRtetprl(RtetprlDTO rtetprlDTO)throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param rtetprlDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteRtetprl(RtetprlDTO rtetprlDTO) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param editedRtetprlDTO
+	 * @param rtetprlDtoList
+	 * @param index
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	
+	
+	
+	public Map addUpdateRtetprl(RtetprlDTO editedRtetprlDTO,
+			List<RtetprlDTO> rtetprlDtoList, int index,char updateInd) throws ApplicationException;
+	
+	
+	/**
+	 * 
+	 * @param tierdmsgDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getTierdMsgLookUpTable(TierdMsgDTO tierdmsgDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param tierdmsgDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewTierdmsg(TierdMsgDTO tierdmsgDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param editedTierdMsgDTO
+	 * @param tierdmsgDtoList
+	 * @param index
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateTierdMsg(TierdMsgDTO editedTierdMsgDTO,
+			List<TierdMsgDTO> tierdMsgDtoList, int index, char updatedInd)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param tierdmsgDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteTierdMsg(TierdMsgDTO tierdmsgDTO)throws ApplicationException;
+
+	
+	/**
+	 * 
+	 * @param sstypaDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getSstypaLookUpTable(SstypaDTO sstypaDTO) throws ApplicationException;
+	
+	/**
+	 * 
+	 * @param sstypaDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewSstypa(SstypaDTO sstypaDTO)throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param editedSstypaDTO
+	 * @param sstypaDtoList
+	 * @param index
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateSstypa(SstypaDTO editedSstypaDTO,
+			List<SstypaDTO> sstypaDtoList, int index, char updatedInd)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param sstypaDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteSstypa(SstypaDTO sstypaDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param ststypaDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getStstypaLookUpTable(StstypaDTO ststypaDTO) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param ststypaDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewStstypa(StstypaDTO ststypaDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param editedStstypaDTO
+	 * @param ststypaDtoList
+	 * @param index
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateStstypa(StstypaDTO editedStstypaDTO,
+			List<StstypaDTO> ststypaDtoList, int index, char updatedInd)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param tosctDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteStstypa(StstypaDTO tosctDTO)throws ApplicationException;
+
+	
+	/**
+	 * 
+	 * @param tosctDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getTosctLookUpTable(TosctDTO tosctDTO) throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param tosctDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewTosct(TosctDTO tosctDTO)throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param editedTosctDTO
+	 * @param tosctDtoList
+	 * @param index
+	 * @param updateInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateTosct(TosctDTO editedTosctDTO,
+			List<TosctDTO> tosctDtoList, int index, char updatedInd)throws ApplicationException;
+
+
+	
+	public Map deleteTosct(TosctDTO tosctDTO)throws ApplicationException;
+
+	/**
+	 * 
+	 * @param tosDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getTOSLookUpTable(TOSDTO tosDTO) throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param tosDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewTOS(TOSDTO tosDTO)throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param editedTOSDTO
+	 * @param tosDtoList
+	 * @param index
+	 * @param updatedInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateTOS(TOSDTO editedTOSDTO, List<TOSDTO> tosDtoList, int index, char updatedInd) throws ApplicationException;
+
+	/**
+	 * 
+	 * @param tosctDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteTOS(TOSDTO tosDTO) throws ApplicationException;
+	
+	/**
+	 * 
+	 * @param rbrcDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map getUserLookUpTable(RbrcDTO rbrcDTO) throws ApplicationException;
+
+
+
+	/**
+	 * 
+	 * @param rbrcDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addNewUser(RbrcDTO rbrcDTO)throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param editedRbrcDTO
+	 * @param rbrcDtoList
+	 * @param index
+	 * @param dbUpdatedInd
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList,
+			int index, char dbUpdatedInd) throws ApplicationException;
+
+
+	/**
+	 * 
+	 * @param rbrcctDTO
+	 * @return
+	 * @throws ApplicationException
+	 */
+	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException;
+
+	//Procex starts here
+	public Map getProcexLookUpTable(String procexCode, String svcTypeCode) throws ApplicationException;
+
+	public Map addNewProcex(ProcexDTO procexDTO)throws ApplicationException;
+
+	public Map deleteProcex(String procexCd, String svcTypeCd) throws ApplicationException;
+
+	public Map addUpdateProcex(ProcexDTO existProcexDTO,
+			List<ProcexDTO> procexDtoList, int index, char updateInd) throws ApplicationException;
+	//Procex ends here
+	
+	//Rbbc starts here
+	public Map getRbbcLookUp(RbbcDTO rbbcDTO) throws ApplicationException;
+	
+	public Map addNewRbbc(RbbcDTO rbbcDTO)throws ApplicationException;
+
+	public Map deleteRbbc(String bnftIdCd, String svcTypeCd) throws ApplicationException;
+
+	public Map addUpdateRbbc(RbbcDTO existRbbcDTO,
+			List<RbbcDTO> RbbcDtoList, int index, char updateInd) throws ApplicationException;	
+	//Rbbc ends here
+
+	//Rbrc starts here
+	public Map getRbrcLookUp(RbrcDTO rbrcDTO) throws ApplicationException;
+	
+	public Map addNewRbrc(RbrcDTO rbrcDTO)throws ApplicationException;
+
+	public Map deleteRbrc(RbrcDTO rbrcDTO) throws ApplicationException;
+
+	public Map addUpdateRbrc(RbrcDTO existRbrcDTO,
+			List<RbrcDTO> RbrcDtoList, int index, char updateInd) throws ApplicationException;	
+	//Rbrc ends here
+	
+	//Rtestyp starts here
+	public Map getRtestypLookUp(RtestypDTO rtestypDTO) throws ApplicationException;
+
+	public Map addNewRtestyp(RtestypDTO rtestypDTO)throws ApplicationException;
+
+	public Map deleteRtestyp(String svcTypeCd, String effDate) throws ApplicationException;
+
+	public Map addUpdateRtestyp(RtestypDTO existRtestypDTO,
+			List<RtestypDTO> RtestypDtoList, int index, char updateInd) throws ApplicationException;	
+	//Rtestyp ends here
+	
+	
+	//Rtebeplm starts here
+	public Map getRtebeplmLookUp(RtebeplmDTO rtebeplmDTO) throws ApplicationException;
+
+	public Map deleteRtebeplm(RtebeplmDTO rtebeplmDTO) throws ApplicationException;
+
+	public Map addUpdateRtebeplm(RtebeplmDTO rtebeplmDTO,
+			List<RtebeplmDTO> RtebeplmDtoList, int index, char updateInd) throws ApplicationException;	
+	//Rtebeplm ends here
+	
+	//Rtedictr starts here
+		public Map getRtedictrLookUp(RtedictrDTO rtedictrDTO) throws ApplicationException;
+
+		public Map addNewRtedictr(RtedictrDTO rtedictrDTO)throws ApplicationException;
+
+		public Map deleteRtedictr(RtedictrDTO rtedictrDTO) throws ApplicationException;
+
+		public Map addUpdateRtedictr(RtedictrDTO existRtedictrDTO,
+				List<RtedictrDTO> RtedictrDtoList, int index) throws ApplicationException;	
+	//Rtedictr ends here
+
+	//Rterbac starts here
+		public Map getRterbacLookUp(RterbacDTO rterbacDTO) throws ApplicationException;
+
+		public Map addNewRterbac(RterbacDTO rterbacDTO)throws ApplicationException;
+
+		public Map deleteRterbac(RterbacDTO rterbacDTO) throws ApplicationException;
+
+		public Map addUpdateRterbac(RterbacDTO existRterbacDTO,
+				List<RterbacDTO> RterbacDtoList, int index) throws ApplicationException;	
+	//Rterbac ends here
+		
+		//Rtestsc starts here
+				public Map getRtestscLookUp(RtestscDTO rtestscDTO) throws ApplicationException;
+
+				public Map addNewRtestsc(RtestscDTO rtestscDTO)throws ApplicationException;
+
+				public Map deleteRtestsc(RtestscDTO rtestscDTO) throws ApplicationException;
+
+				public Map addUpdateRtestsc(RtestscDTO existRtestscDTO,
+						List<RtestscDTO> RtestscDtoList, int index, char updateInd) throws ApplicationException;	
+			//Rtestsc ends here
+				
+				//Rtetier starts here
+				public Map getRtetierLookUp(RtetierDTO rtetierDTO) throws ApplicationException;
+
+				public Map addNewRtetier(RtetierDTO rtetierDTO)throws ApplicationException;
+
+				public Map deleteRtetier(RtetierDTO rtetierDTO) throws ApplicationException;
+
+				public Map addUpdateRtetier(RtetierDTO existRtetierDTO,
+						List<RtetierDTO> RtetierDtoList, int index, char updateInd) throws ApplicationException;	
+			//Rtetier ends here
+				
+			//HrpRule Starts here
+				
+				/**
+				 * 
+				 * @param hrpruleDTO
+				 * @return
+				 * @throws ApplicationException
+				 */
+				public Map getHrpRuleLookUpTable(HrpRuleDTO hrpruleDTO)throws ApplicationException;
+
+				/**
+				 * 
+				 * @param hrpruleDTO
+				 * @return
+				 * @throws ApplicationException
+				 */
+				public Map addNewHrprule(HrpRuleDTO hrpruleDTO)throws ApplicationException;
+
+				/**
+				 * 
+				 * @param editedHrpRuleDTO
+				 * @param hrpruleDtoList
+				 * @param index
+				 * @param updateInd
+				 * @return
+				 * @throws ApplicationException
+				 */
+				public Map addUpdateHrpRule(HrpRuleDTO editedHrpRuleDTO,
+						List<HrpRuleDTO> hrpRuleDtoList, int index, char updatedInd)throws ApplicationException;
+
+				/**
+				 * 
+				 * @param hrpruleDTO
+				 * @return
+				 * @throws ApplicationException
+				 */
+				public Map deleteHrpRule(HrpRuleDTO hrpruleDTO)throws ApplicationException;
+
+			//HrpRule ends here
+
+	
+				//BPLVS starts
+				
+				public Map getBplvsLookUpTable(String bicId, String prov,String lineVal,String svcType) throws ApplicationException;
+				
+				public Map addNewBplvs(BplvsDTO bplvsDTO)throws ApplicationException;
+				public Map addUpdateBplvs(BplvsDTO existBplvsDTO,
+						List<BplvsDTO> bplvsDtoList, int index, char updateInd) throws ApplicationException;
+				
+				public Map deleteBplvs(BplvsDTO bplvsDTO)throws ApplicationException;
+				
+				//BPLVS ends
+				
+				//SBMLETK starts
+						public Map getSbmletkLookUpTable(String convIdCode, String vanIdCd,String tranType,String postedDt,String seconds) throws ApplicationException;
+				//SBMLETK ENDS		
+						
+					//SRCHDTL starts
+						public Map getSrchdtlLookUpTable(String srchscFirstId, String srchscSecondId,String srcherrCd,String srchcolCd) throws ApplicationException;
+						public Map deleteSrchdtl(SrchdtlDTO srchdtlDTO)throws ApplicationException;
+
+						public Map addUpdateSrchdtl(SrchdtlDTO existSrchdtlDTO,
+								List<SrchdtlDTO> srchdtlDtoList, int index, char updateInd)throws ApplicationException;
+						
+						public Map getSrchcolLookUpTable(String srchcolCd) throws ApplicationException;
+						public Map getSrchscLookUpTable(String srchscId) throws ApplicationException;
+						public Map getSrcherrLookUpTable(String srcherrCd) throws ApplicationException;
+						public Map getSrchresLookUpTable(String srchresCd) throws ApplicationException;
+						
+						
+						public Map deleteSrchcol(SrchcolDTO srchcolDTO)throws ApplicationException;
+						public Map deleteSrchsc(SrchscDTO srchscDTO)throws ApplicationException;
+						public Map deleteSrcherr(SrcherrDTO srcherrDTO)throws ApplicationException;
+						public Map deleteSrchres(SrchresDTO srchresDTO)throws ApplicationException;
+						
+						public Map addUpdateSrchcol(SrchcolDTO editedSrchcolDTO,
+								List<SrchcolDTO> srchcolDtoList, int index, char updatedInd)throws ApplicationException;
+
+						public Map addUpdateSrchsc(SrchscDTO editedSrchscDTO,
+								List<SrchscDTO> srchscDtoList, int index, char updatedInd)throws ApplicationException;
+
+						public Map addUpdateSrcherr(SrcherrDTO editedSrcherrDTO,
+								List<SrcherrDTO> srcherrDtoList, int index, char updatedInd)throws ApplicationException;
+						public Map addUpdateSrchres(SrchresDTO editedSrchresDTO,
+								List<SrchresDTO> srchresDtoList, int index, char updatedInd)throws ApplicationException;
+
+				//SRCHDTL ENDS	
+				
+						
+				//EVENT TRACKING starts
+					public Map getSbrsrxbEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSpntprvEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSbmrdepEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					
+					public Map getSubmsnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSrapidtlEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getEventTrackSbmletkLookUpTable(String convIdCode, String vanIdCd,String tranType,String postedDt,String seconds) throws ApplicationException;
+					public Map getSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSbmrplnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
+					public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt,String seqNo) throws ApplicationException;
+				//EVENT TRACKING	
+					
+					//LONG RUN TRANSACTION SEARCH
+					public Map<String, Object> getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO)throws ApplicationException;
+					
+					//LONG RUN TRANSACTION SEARCH
+					public Map<String, Object> getVanList() throws ApplicationException;
+	
 }
