@@ -8,335 +8,159 @@ package com.aetna.prvrte.rteintranet.dto;
 
 
 
+import java.io.Serializable;
+
+
+
 /**
 
  * @author N657186
 
- * Cognizant_Offshore
+ *
 
  */
 
-public class RbrcDTO {
+public class UserDTO implements Serializable{
 
+	/**
 
+	 * 
 
-	private String dbSiteCd = "";
+	 */
 
-	private String dbRiderCd = "";
+	private static final long serialVersionUID = 3378304167421298050L;
 
-	private String dbSvcTypeCd = "";
+	private String securityLevel = "";
 
-	private String dbPostedDate = "";
+	private String name = "";
 
-	private String dbDescTxt = "";
+	private String aetnaId = "";
 
-	private String dbIONtwkCd = "";
+	private String dateSecLevPosted = "";
 
-	private String dbTOSCd = "";
+	
 
-	private String dbHMOSrcBnInd = "";
+	public UserDTO() {
 
-	private String textSendInd = "";
+		super();
 
-	private String prevCareInd = "";
+		setSecurityLevel("R");
 
-	private String genderCd = "";
+		setName("Unknown User");
 
-	private char   dbUpdatedInd;
+		setAetnaId("z000000");
+
+		setDateSecLevPosted("0001-01-01");
+
+	}
 
 	
 
 	/**
 
-	 * @return the dbSiteCd
+	 * @return the securityLevel
 
 	 */
 
-	public String getDbSiteCd() {
+	public String getSecurityLevel() {
 
-		return dbSiteCd;
+		return securityLevel;
 
 	}
 
 	/**
 
-	 * @param dbSiteCd the dbSiteCd to set
+	 * @param securityLevel the securityLevel to set
 
 	 */
 
-	public void setDbSiteCd(String dbSiteCd) {
+	public void setSecurityLevel(String securityLevel) {
 
-		this.dbSiteCd = dbSiteCd;
+		this.securityLevel = securityLevel;
 
 	}
 
 	/**
 
-	 * @return the dbRiderCd
+	 * @return the name
 
 	 */
 
-	public String getDbRiderCd() {
+	public String getName() {
 
-		return dbRiderCd;
+		return name;
 
 	}
 
 	/**
 
-	 * @param dbRiderCd the dbRiderCd to set
+	 * @param name the name to set
 
 	 */
 
-	public void setDbRiderCd(String dbRiderCd) {
+	public void setName(String name) {
 
-		this.dbRiderCd = dbRiderCd;
+		this.name = name;
 
 	}
 
 	/**
 
-	 * @return the dbSvcTypeCd
+	 * @return the aetnaId
 
 	 */
 
-	public String getDbSvcTypeCd() {
+	public String getAetnaId() {
 
-		return dbSvcTypeCd;
+		return aetnaId;
 
 	}
 
 	/**
 
-	 * @param dbSvcTypeCd the dbSvcTypeCd to set
+	 * @param aetnaId the aetnaId to set
 
 	 */
 
-	public void setDbSvcTypeCd(String dbSvcTypeCd) {
+	public void setAetnaId(String aetnaId) {
 
-		this.dbSvcTypeCd = dbSvcTypeCd;
+		this.aetnaId = aetnaId;
 
 	}
 
 	/**
 
-	 * @return the dbPostedDate
+	 * @return the dateSecLevPosted
 
 	 */
 
-	public String getDbPostedDate() {
+	public String getDateSecLevPosted() {
 
-		return dbPostedDate;
+		return dateSecLevPosted;
 
 	}
 
 	/**
 
-	 * @param dbPostedDate the dbPostedDate to set
+	 * @param dateSecLevPosted the dateSecLevPosted to set
 
 	 */
 
-	public void setDbPostedDate(String dbPostedDate) {
+	public void setDateSecLevPosted(String dateSecLevPosted) {
 
-		this.dbPostedDate = dbPostedDate;
-
-	}
-
-	/**
-
-	 * @return the dbDescTxt
-
-	 */
-
-	public String getDbDescTxt() {
-
-		return dbDescTxt;
-
-	}
-
-	/**
-
-	 * @param dbDescTxt the dbDescTxt to set
-
-	 */
-
-	public void setDbDescTxt(String dbDescTxt) {
-
-		this.dbDescTxt = dbDescTxt;
-
-	}
-
-	/**
-
-	 * @return the dbIONtwkCd
-
-	 */
-
-	public String getDbIONtwkCd() {
-
-		return dbIONtwkCd;
-
-	}
-
-	/**
-
-	 * @param dbIONtwkCd the dbIONtwkCd to set
-
-	 */
-
-	public void setDbIONtwkCd(String dbIONtwkCd) {
-
-		this.dbIONtwkCd = dbIONtwkCd;
-
-	}
-
-	/**
-
-	 * @return the dbTOSCd
-
-	 */
-
-	public String getDbTOSCd() {
-
-		return dbTOSCd;
-
-	}
-
-	/**
-
-	 * @param dbTOSCd the dbTOSCd to set
-
-	 */
-
-	public void setDbTOSCd(String dbTOSCd) {
-
-		this.dbTOSCd = dbTOSCd;
-
-	}
-
-	/**
-
-	 * @return the dbHMOSrcBnInd
-
-	 */
-
-	public String getDbHMOSrcBnInd() {
-
-		return dbHMOSrcBnInd;
-
-	}
-
-	/**
-
-	 * @param dbHMOSrcBnInd the dbHMOSrcBnInd to set
-
-	 */
-
-	public void setDbHMOSrcBnInd(String dbHMOSrcBnInd) {
-
-		this.dbHMOSrcBnInd = dbHMOSrcBnInd;
-
-	}
-
-	/**
-
-	 * @return the textSendInd
-
-	 */
-
-	public String getTextSendInd() {
-
-		return textSendInd;
-
-	}
-
-	/**
-
-	 * @param textSendInd the textSendInd to set
-
-	 */
-
-	public void setTextSendInd(String textSendInd) {
-
-		this.textSendInd = textSendInd;
-
-	}
-
-	/**
-
-	 * @return the prevCareInd
-
-	 */
-
-	public String getPrevCareInd() {
-
-		return prevCareInd;
-
-	}
-
-	/**
-
-	 * @param prevCareInd the prevCareInd to set
-
-	 */
-
-	public void setPrevCareInd(String prevCareInd) {
-
-		this.prevCareInd = prevCareInd;
-
-	}
-
-	/**
-
-	 * @return the genderCd
-
-	 */
-
-	public String getGenderCd() {
-
-		return genderCd;
-
-	}
-
-	/**
-
-	 * @param genderCd the genderCd to set
-
-	 */
-
-	public void setGenderCd(String genderCd) {
-
-		this.genderCd = genderCd;
-
-	}
-
-	/**
-
-	 * @return the dbUpdatedInd
-
-	 */
-
-	public char getDbUpdatedInd() {
-
-		return dbUpdatedInd;
-
-	}
-
-	/**
-
-	 * @param dbUpdatedInd the dbUpdatedInd to set
-
-	 */
-
-	public void setDbUpdatedInd(char dbUpdatedInd) {
-
-		this.dbUpdatedInd = dbUpdatedInd;
+		this.dateSecLevPosted = dateSecLevPosted;
 
 	}
 
 	
 
 	
+
+	
+
+	
+
+
 
 }
 
