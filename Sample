@@ -1,18 +1,22 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.adapter;
 
 
 
-import java.sql.ResultSet;
+import java.sql.Date;
 
 import java.sql.SQLException;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
-
 import java.util.HashMap;
 
-import java.util.LinkedHashSet;
+import java.util.LinkedHashMap;
 
 import java.util.LinkedList;
 
@@ -30,383 +34,363 @@ import org.apache.commons.logging.Log;
 
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.jdbc.core.RowMapper;
-
 import org.springframework.jdbc.core.SqlOutParameter;
 
 import org.springframework.jdbc.core.SqlParameter;
-
-import org.springframework.jdbc.core.SqlReturnResultSet;
 
 import org.springframework.jdbc.object.StoredProcedure;
 
 
 
-import com.aetna.prvrte.rteintranet.dto.LongRunTransReport3DTO;
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
-import com.aetna.prvrte.rteintranet.dto.LongRunTransReport4DTO;
 
-import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
-import com.aetna.prvrte.rteintranet.vo.LongRunTransReport3VO;
+import com.aetna.prvrte.rteintranet.util.DBConstants;
 
-import com.aetna.prvrte.rteintranet.vo.LongRunTransactionVO;
-
-
-
-public class LongRunTransLookUpReport4Adapter extends StoredProcedure {
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
 
 
-	private final Log log = LogFactory
+/**
 
-			.getLog(LongRunTransLookUpReport4Adapter.class);
+ * @author N657186
 
+ * Cognizant_Offshore
 
+ */
 
-	private static final String START_TIMESTAMP = "START_TIMESTAMP";
-
-	private static final String END_TIMESTAMP = "END_TIMESTAMP";
-
-	private static final String LOAD_MODULE = "LOAD_MODULE";
-
-	private static final String SECONDS_RANGE = "SECONDS_RANGE";
-
-	private static final String MINUTES_SPLIT = "MINUTES_SPLIT";
-
-	private static final String LS_SQLCODE = "LS_SQLCODE";
-
-	private static final String READ_CURSOR = "READ_CURSOR4";
-
-	private static final String IN_RPT_IND = "IN_RPT_IND";
+public class RbrcAddAdapter extends StoredProcedure{
 
 
 
-	public LongRunTransLookUpReport4Adapter(DataSource datasource,
+	/**
 
-			String storedProc) {
+	 * Instance of Log Factory.
+
+	 */
+
+	private final Log log = LogFactory.getLog(RbrcAddAdapter.class);
+
+	
+
+	/**
+
+	 * 
+
+	 * @param datasource
+
+	 * @param storedProc
+
+	 * @throws SQLException
+
+	 */
+
+	public RbrcAddAdapter(DataSource datasource, String storedProc) throws SQLException{
 
 		super(datasource, storedProc);
 
+		
 
+		declareParameter(new SqlParameter(DBConstants.LS_SITE_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(START_TIMESTAMP, Types.TIMESTAMP));
+		declareParameter(new SqlParameter(DBConstants.LS_RIDER_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(END_TIMESTAMP, Types.TIMESTAMP));
+		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(LOAD_MODULE, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_SRCE_PSTD_DT, Types.DATE));
 
-		declareParameter(new SqlParameter(SECONDS_RANGE, Types.DECIMAL));
+		declareParameter(new SqlParameter(DBConstants.LS_DESC_TXT, Types.CHAR));
 
-		declareParameter(new SqlParameter(MINUTES_SPLIT, Types.DECIMAL));
+		declareParameter(new SqlParameter(DBConstants.LS_IONTWK_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(IN_RPT_IND, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));		
 
-		declareParameter(new SqlOutParameter(LS_SQLCODE, Types.INTEGER));
+		declareParameter(new SqlParameter(DBConstants.LS_HMOSRCBN_IND, Types.CHAR));
 
-		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper() {
+		declareParameter(new SqlParameter(DBConstants.LS_TXT_SND_CD, Types.CHAR));
 
+		declareParameter(new SqlParameter(DBConstants.PREV_CARE_IND, Types.CHAR));
 
+		declareParameter(new SqlParameter(DBConstants.GENDER_CD, Types.CHAR));
 
-			/*
+		
 
-			 * (non-Javadoc)
+		declareParameter(new SqlOutParameter(DBConstants.LS_ADD_UPDATE, Types.DECIMAL));
 
-			 * 
+		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
-			 * @see
+		
 
-			 * org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet
+	}
 
-			 * , int)
+	
 
-			 */
+	/**
 
-			public Object mapRow(final ResultSet rs, final int arg1)
+	 * 
 
-					throws SQLException {
+	 * @param rbrcDTO	
 
+	 * @return
 
+	 * @throws ApplicationException
 
-				LongRunTransactionDTO longRunTransDTO = new LongRunTransactionDTO();
+	 */
 
-				longRunTransDTO.setConvrsnCDResult(rs
+	@SuppressWarnings("unchecked")
 
-						.getString("CASE_COL"));
+	public Map addNewRbrc(RbrcDTO rbrcDTO) throws ApplicationException {
 
-				longRunTransDTO.setResultSecondsResult(rs
+		
 
-						.getString("TIME_STAMPS"));
+		log.warn("Entered RbrcAddAdapter  - addNewRbrc");
 
-				longRunTransDTO.setResult3CNT(rs.getString("CNT"));
+		
 
-				return longRunTransDTO;
+		String newMessage ="";
+
+		Map results = null;
+
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
+
+		Map rbrcMap = new HashMap();
+
+		
+
+		try {			
+
+			params = setInputParameters(rbrcDTO, params);	
+
+			log.warn(params);
+
+			results = execute(params);
+
+			log.warn("RbrcAddAdapter: Executed stored procedure");
+
+			String actionCode =  String.valueOf(results
+
+					.get(DBConstants.LS_ADD_UPDATE));
+
+			String sqlCode =  String.valueOf(results
+
+					.get(DBConstants.LS_SQLCODE));
+
+			
+
+			if ("0".equalsIgnoreCase(sqlCode)) {
+
+				
+
+				List<RbrcDTO> rbrcList = new LinkedList<RbrcDTO>();
+
+				rbrcList.add(rbrcDTO);
+
+				rbrcMap.put("rbrcList", rbrcList);
+
+				if ("0".equalsIgnoreCase(actionCode)) {
+
+					newMessage = "This row added to the database";
+
+				}else {
+
+					newMessage ="Row already exists on the database. It was updated with these values.";					
+
+					rbrcDTO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_Y);
+
+				}				
+
+				}
+
+			else {
+
+				newMessage = "Unable to add row to the database. SQLCODE = " + sqlCode;
 
 			}
 
+			
 
+			rbrcMap.put("rbrcMessage", newMessage);
 
-		}));
+							
 
+		return rbrcMap;
 
+	}catch (Exception exception){
+
+		log.error("RbrcAddAdapter : generic error occured  "+exception);
+
+		throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
 	}
 
 
 
+}
+
+	
+
+	
+
+	/**
+
+	 * @param existingRbrc
+
+	 * @param rbrcDtoList
+
+	 * @param index
+
+	 * @param currUpdateInd
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
 	@SuppressWarnings("unchecked")
 
-	public Map getLongrunTransLookUpTable(LongRunTransactionDTO longrunTransDTO)
+	public Map addUpdateRbrc(RbrcDTO existingRbrc,
 
-			throws ApplicationException {
+			List<RbrcDTO> rbrcDtoList, int index, char currUpdateInd) throws ApplicationException{
 
-		log.warn("Entered LongRunTransLookUpReport4Adapter  - getLongrunTransLookUpTable");
+		log.warn("Entered RbrcAddAdapter  - addUpdateRbrc");
 
+		boolean isRbrcAddorUpdated = false;
 
-
-		Map<String, String> params = new java.util.HashMap<String, String>();
-
-		Map longRunTransMap = new HashMap();
-
-		params.put(START_TIMESTAMP, longrunTransDTO.getStartTimestamp());
-
-		params.put(END_TIMESTAMP, longrunTransDTO.getEndTimestamp());
-
-		params.put(LOAD_MODULE, longrunTransDTO.getModule());
-
-		params.put(SECONDS_RANGE, longrunTransDTO.getSecondsCalc());
-
-		params.put(MINUTES_SPLIT, longrunTransDTO.getMinutesCalc());
-
-		params.put(IN_RPT_IND, "4");
-
-		log.warn(params);
+		String newMessage ="";
 
 		Map results = null;
 
+		Map<String, Object> params = new LinkedHashMap<String, Object>();
 
+		Map rbrcMap = new HashMap();
 
-		List<LongRunTransactionDTO> longRunTransList = new LinkedList<LongRunTransactionDTO>();
+		
 
-		String newMessage = "";
+		params = setInputParameters(existingRbrc, params);
 
-		List<LongRunTransReport4DTO> longRunTrans3List = new ArrayList<LongRunTransReport4DTO>();
+		
+
+		log.warn(params);	
+
+		
 
 		try {
 
-
+					
 
 			results = execute(params);
 
-			log.warn("LongRunTransLookUpReport4Adapter: Executed stored procedure");
+			log.warn("RbrcAddAdapter: Executed stored procedure");
 
-			String sqlCode = String.valueOf(results.get(LS_SQLCODE));
+			String actionCode =  String.valueOf(results
 
+					.get(DBConstants.LS_ADD_UPDATE));
 
+			String sqlCode =  String.valueOf(results
 
-			longRunTransList = (List<LongRunTransactionDTO>) results
+					.get(DBConstants.LS_SQLCODE));
 
-					.get(READ_CURSOR);
+			if ("0".equalsIgnoreCase(sqlCode)) {
 
-			if (longRunTransList != null && longRunTransList.isEmpty()) {
+				isRbrcAddorUpdated = true;
 
+				if ("0".equalsIgnoreCase(actionCode)) {
 
+					
 
-				if ("0".equals(sqlCode)) {
+					if (currUpdateInd == ApplicationConstants.COPY)						
 
-					newMessage = "No Data on database ";
+						rbrcDtoList.set(index, existingRbrc);						
 
-				} else if ("-905".equals(sqlCode)){
+					else
 
-					newMessage = "Try to minimize the start time and end time for results" + sqlCode;
-
-				}
-
-				else {
-
-					newMessage = "Problem in DB2. sqlcode: " + sqlCode;
+						rbrcDtoList.add(existingRbrc);
 
 				}
+
+				else
+
+					rbrcDtoList.set(index, existingRbrc);
+
+				
 
 			} else {
 
-				newMessage = "";
-
-				// Report3 start
-
-				List<String> transLevelReport4 = new ArrayList<String>();
-
-				try {
-
-					if (longRunTransList != null && !longRunTransList.isEmpty()) {
-
-						for (LongRunTransactionDTO test : longRunTransList) {
-
-							transLevelReport4.add(test.getResultSecondsResult());
-
-						}
-
-						transLevelReport4 = new ArrayList<String>(
-
-								new LinkedHashSet<String>(transLevelReport4));
-
-						for (String reportName : transLevelReport4) {
-
-							LongRunTransReport4DTO report3 = new LongRunTransReport4DTO();
-
-							for (LongRunTransactionDTO values : longRunTransList) {
-
-								if (reportName.equals(values
-
-										.getResultSecondsResult())) {
-
-
-
-									if (values.getConvrsnCDResult().equals("PROVIDER")) {
-
-										report3.setProviderCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("DM PROCESS")) {
-
-										report3.setDmCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("TRADITIONAL")) {
-
-										report3.setTradCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("DENTAL")) {
-
-										report3.setDentalCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("HMO")) {
-
-										report3.setHmoCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("OUTBOUND")) {
-
-										report3.setOutBoundCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("HRP")) {
-
-										report3.setHrpCount(values
-
-												.getResult3CNT());
-
-									} else if (values.getConvrsnCDResult().equals("ASH/SRC")) {
-
-										
-
-										report3.setAsjCount(values
-
-												.getResult3CNT());
-
-									}
-
-									report3.setSeconds(reportName);
-
-									longRunTrans3List.add(report3);
-
-								}
-
-							}
-
-						}
-
-						longRunTrans3List = new ArrayList<LongRunTransReport4DTO>(
-
-								new LinkedHashSet<LongRunTransReport4DTO>(longRunTrans3List));
-
-						System.out.println(longRunTrans3List);
-
-						for (LongRunTransReport4DTO values : longRunTrans3List) {
-
-							if(values.getDmCount().equals("")){
-
-								values.setDmCount("0");
-
-							}if(values.getTradCount().equals("")){
-
-								values.setTradCount("0");
-
-							}if(values.getDentalCount().equals("")){
-
-								values.setDentalCount("0");
-
-							}if(values.getHmoCount().equals("")){
-
-								values.setHmoCount("0");
-
-							}if(values.getOutBoundCount().equals("")){
-
-								values.setOutBoundCount("0");
-
-							}if(values.getProviderCount().equals("")){
-
-								values.setProviderCount("0");
-
-							}if(values.getHrpCount().equals("")){
-
-								values.setHrpCount("0");
-
-							}if(values.getAsjCount().equals("")){
-
-								values.setAsjCount("0");
-
-							}
-
-						}
-
-					}
-
-				} catch (Exception e) {
-
-					System.out.println(e);
-
-				}
-
-
-
-				// Report3 end
+				newMessage = "Adding/updating of rows failed with a SQLCODE code of " + sqlCode;
 
 			}
 
-			longRunTransMap.put("longRunTransMessage", newMessage);
+			rbrcMap.put("rbrcMessage",newMessage);
 
-			longRunTransMap.put("longRunTransList", longRunTrans3List);
+			rbrcMap.put("rbrcDtoList",rbrcDtoList);
 
-			return longRunTransMap;
+			rbrcMap.put("isrbrcAddorUpdated", isRbrcAddorUpdated);
 
-		} catch (Exception exception) {
+			return rbrcMap;
 
-			log.error("LongRunTransLookUpReport2Adapter : generic error occured  "
+		}catch (Exception exception){
 
-					+ exception);
+			log.error("RbrcAddAdapter : generic error occured  "+exception);
 
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,
-
-					exception.getMessage(), exception);
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
 		}
 
 
 
 	}
+
+	
+
+	/**
+
+	 * @param rbrcDTO
+
+	 * @param params
+
+	 * @return
+
+	 */
+
+	public Map<String, Object> setInputParameters(RbrcDTO rbrcDTO, Map<String, Object> params){
+
+			
+
+		params.put(DBConstants.LS_SITE_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd()));
+
+		params.put(DBConstants.LS_RIDER_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbRiderCd()));
+
+		params.put(DBConstants.LS_SVCTYP_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd()));
+
+		params.put(DBConstants.LS_SRCE_PSTD_DT, Date.valueOf(RteIntranetUtils.getTrimmedString(rbrcDTO.getDbPostedDate())));
+
+		params.put(DBConstants.LS_DESC_TXT, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbDescTxt()));
+
+		params.put(DBConstants.LS_IONTWK_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbIONtwkCd()));
+
+		params.put(DBConstants.LS_TOS_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbTOSCd()));
+
+		params.put(DBConstants.LS_HMOSRCBN_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbHMOSrcBnInd()));
+
+		params.put(DBConstants.LS_TXT_SND_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getTextSendInd()));
+
+		params.put(DBConstants.PREV_CARE_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getPrevCareInd()));
+
+		params.put(DBConstants.GENDER_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getGenderCd()));
+
+		
+
+		return params;
+
+	}
+
+	
 
 }
 
