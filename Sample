@@ -1,1 +1,80 @@
-package com.aetna.prvrte.rteintranet.copybookbean;import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;public class NonIndividualData {	String entityId="1P";	String name;	public String getEntityId() {				return entityId;	}	public void setEntityId(String entityId) {				this.entityId = entityId;	}	public String getName() {				return name;	}	public void setName(String name) {				this.name = name;	}	public StringBuilder getNonIndiv(){		return new StringBuilder(getEntityId())		.append(getName())		.append(RteIntranetUtils.spaceFiller(70));	}}
+package com.aetna.prvrte.rteintranet.copybookbean;
+
+
+
+import java.util.List;
+
+
+
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+
+
+
+public class PlaceOfServiceSet {
+
+
+
+	String placeOfServiceCtr;
+
+	List<String> posCode;
+
+	public String getPlaceOfServiceCtr() {
+
+		
+
+		return placeOfServiceCtr;
+
+	}
+
+	public void setPlaceOfServiceCtr(String placeOfServiceCtr) {
+
+		
+
+		this.placeOfServiceCtr = placeOfServiceCtr;
+
+	}
+
+	public List<String> getPosCode() {
+
+		
+
+		return posCode;
+
+	}
+
+	public void setPosCode(List<String> posCode) {
+
+		this.posCode = posCode;
+
+	}
+
+	public StringBuilder getPos(){
+
+		int popCount;
+
+		StringBuilder type = new StringBuilder();
+
+        popCount = getPosCode().size();
+
+       
+
+		for(int i=0; i<popCount; i++) {
+
+			;
+
+			type.append(RteIntranetUtils.spaceFiller(2, getPosCode().get(i)));
+
+		}
+
+		for(int i=popCount; i<10; i++) {
+
+			type.append(RteIntranetUtils.spaceFiller(2));
+
+	}
+
+		return type;
+
+	}
+
+}
+
