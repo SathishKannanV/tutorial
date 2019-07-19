@@ -2,67 +2,45 @@ package com.aetna.prvrte.rteintranet.dto;
 
 
 
+
+
+
+
 import java.io.Serializable;
 
 
 
-public class LongRunTransactionDTO implements Serializable{
+public class LongRunTransReport3DTO implements Serializable {
 
 
 
 	private static final long serialVersionUID = 1L;
 
-	private String startDate ="";
+	private String startDate = "";
 
-	private String startHrs="";
+	private String startTime = "";
 
-	private String startMns="";
+	private String endTime = "";
 
-	private String startSecs="";
+	private String zeroTimeTaken ="";
 
-	private String endDate ="";
+	private String oneTimeTaken="";
 
-	private String endHrs="";
+	private String twoTimeTaken ="";
 
-	private String endMns="";
+	private String threeTimeTaken="";
 
-	private String endSecs="";
+	private String fourTimeTaken ="";
 
-	private String secondsCalc = "";
+	private String fiveTimeTaken="";
 
-	private String minutesCalc = "";
+	private String sixTimeTaken="";
 
-	private String module = "";
-
-	private String startTimestamp = "";
-
-	private String endTimestamp = "";
-
-	private String convrsnCDResult="";
-
-	private String vanIDCDResult="";
-
-	private String typCDResult="";
-
-	private String loadNameResult="";
-
-	private String resultSecondsResult="";
-
-	private String result3CNT="";
-
-	private String result3StartTime="";
-
-	private String result3EndTime="";
-
-	private String result3TimeTaken="";
-
-	private String report = "";
-
-	private char   updatedInd;
+	private String sevenTimeTaken="";
 
 	
 
-	public LongRunTransactionDTO() {
+	public LongRunTransReport3DTO() {
 
 		super();
 
@@ -72,113 +50,43 @@ public class LongRunTransactionDTO implements Serializable{
 
 	
 
-	
-
-
-
-	
 
 
 
 
+	public LongRunTransReport3DTO(String startDate, String startTime,
 
+			String endTime, String zeroTimeTaken, String oneTimeTaken,
 
+			String twoTimeTaken, String threeTimeTaken, String fourTimeTaken,
 
-	public LongRunTransactionDTO(String startDate, String startHrs,
-
-			String startMns, String startSecs, String endDate, String endHrs,
-
-			String endMns, String endSecs, String secondsCalc,
-
-			String minutesCalc, String module, String startTimestamp,
-
-			String endTimestamp, String convrsnCDResult, String vanIDCDResult,
-
-			String typCDResult, String loadNameResult,
-
-			String resultSecondsResult, String result3cnt,
-
-			String result3StartTime, String result3EndTime,
-
-			String result3TimeTaken, String report, char updatedInd) {
+			String fiveTimeTaken, String sixTimeTaken, String sevenTimeTaken) {
 
 		super();
 
 		this.startDate = startDate;
 
-		this.startHrs = startHrs;
+		this.startTime = startTime;
 
-		this.startMns = startMns;
+		this.endTime = endTime;
 
-		this.startSecs = startSecs;
+		this.zeroTimeTaken = zeroTimeTaken;
 
-		this.endDate = endDate;
+		this.oneTimeTaken = oneTimeTaken;
 
-		this.endHrs = endHrs;
+		this.twoTimeTaken = twoTimeTaken;
 
-		this.endMns = endMns;
+		this.threeTimeTaken = threeTimeTaken;
 
-		this.endSecs = endSecs;
+		this.fourTimeTaken = fourTimeTaken;
 
-		this.secondsCalc = secondsCalc;
+		this.fiveTimeTaken = fiveTimeTaken;
 
-		this.minutesCalc = minutesCalc;
+		this.sixTimeTaken = sixTimeTaken;
 
-		this.module = module;
-
-		this.startTimestamp = startTimestamp;
-
-		this.endTimestamp = endTimestamp;
-
-		this.convrsnCDResult = convrsnCDResult;
-
-		this.vanIDCDResult = vanIDCDResult;
-
-		this.typCDResult = typCDResult;
-
-		this.loadNameResult = loadNameResult;
-
-		this.resultSecondsResult = resultSecondsResult;
-
-		result3CNT = result3cnt;
-
-		this.result3StartTime = result3StartTime;
-
-		this.result3EndTime = result3EndTime;
-
-		this.result3TimeTaken = result3TimeTaken;
-
-		this.report = report;
-
-		this.updatedInd = updatedInd;
+		this.sevenTimeTaken = sevenTimeTaken;
 
 	}
-
-	public String getResult3EndTime() {
-
-		return result3EndTime;
-
-	}
-
-
-
-	public void setResult3EndTime(String result3EndTime) {
-
-		this.result3EndTime = result3EndTime;
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -188,161 +96,39 @@ public class LongRunTransactionDTO implements Serializable{
 
 	}
 
+
+
 	public void setStartDate(String startDate) {
 
 		this.startDate = startDate;
 
 	}
 
-	public String getStartHrs() {
 
-		return startHrs;
 
-	}
+	public String getEndTime() {
 
-	public void setStartHrs(String startHrs) {
-
-		this.startHrs = startHrs;
-
-	}
-
-	public String getStartMns() {
-
-		return startMns;
-
-	}
-
-	public void setStartMns(String startMns) {
-
-		this.startMns = startMns;
-
-	}
-
-	public String getStartSecs() {
-
-		return startSecs;
-
-	}
-
-	public void setStartSecs(String startSecs) {
-
-		this.startSecs = startSecs;
-
-	}
-
-	public String getEndDate() {
-
-		return endDate;
-
-	}
-
-	public void setEndDate(String endDate) {
-
-		this.endDate = endDate;
-
-	}
-
-	public String getEndHrs() {
-
-		return endHrs;
-
-	}
-
-	public void setEndHrs(String endHrs) {
-
-		this.endHrs = endHrs;
-
-	}
-
-	public String getEndMns() {
-
-		return endMns;
-
-	}
-
-	public void setEndMns(String endMns) {
-
-		this.endMns = endMns;
-
-	}
-
-	public String getEndSecs() {
-
-		return endSecs;
-
-	}
-
-	public void setEndSecs(String endSecs) {
-
-		this.endSecs = endSecs;
-
-	}
-
-	public String getSecondsCalc() {
-
-		return secondsCalc;
-
-	}
-
-	public void setSecondsCalc(String secondsCalc) {
-
-		this.secondsCalc = secondsCalc;
-
-	}
-
-	public String getMinutesCalc() {
-
-		return minutesCalc;
-
-	}
-
-	public void setMinutesCalc(String minutesCalc) {
-
-		this.minutesCalc = minutesCalc;
-
-	}
-
-	public String getModule() {
-
-		return module;
-
-	}
-
-	public void setModule(String module) {
-
-		this.module = module;
+		return endTime;
 
 	}
 
 
 
-	public String getStartTimestamp() {
-
-		return startTimestamp;
-
-	}
 
 
 
-	public void setStartTimestamp(String startTimestamp) {
-
-		this.startTimestamp = startTimestamp;
-
-	}
 
 
 
-	public String getEndTimestamp() {
-
-		return endTimestamp;
-
-	}
 
 
 
-	public void setEndTimestamp(String endTimestamp) {
 
-		this.endTimestamp = endTimestamp;
+
+
+	public void setEndTime(String endTime) {
+
+		this.endTime = endTime;
 
 	}
 
@@ -352,241 +138,161 @@ public class LongRunTransactionDTO implements Serializable{
 
 
 
-	public String getConvrsnCDResult() {
 
-		return convrsnCDResult;
+
+
+
+
+
+
+
+	public String getStartTime() {
+
+		return startTime;
+
+	}
+
+	public void setStartTime(String startTime) {
+
+		this.startTime = startTime;
 
 	}
 
 
 
+	public String getZeroTimeTaken() {
 
-
-
-
-	public void setConvrsnCDResult(String convrsnCDResult) {
-
-		this.convrsnCDResult = convrsnCDResult;
+		return zeroTimeTaken;
 
 	}
 
 
 
+	public void setZeroTimeTaken(String zeroTimeTaken) {
 
-
-
-
-	public String getVanIDCDResult() {
-
-		return vanIDCDResult;
+		this.zeroTimeTaken = zeroTimeTaken;
 
 	}
 
 
 
+	public String getOneTimeTaken() {
 
-
-
-
-	public void setVanIDCDResult(String vanIDCDResult) {
-
-		this.vanIDCDResult = vanIDCDResult;
+		return oneTimeTaken;
 
 	}
 
 
 
+	public void setOneTimeTaken(String oneTimeTaken) {
 
-
-
-
-	public String getTypCDResult() {
-
-		return typCDResult;
+		this.oneTimeTaken = oneTimeTaken;
 
 	}
 
 
 
+	public String getTwoTimeTaken() {
 
-
-
-
-	public void setTypCDResult(String typCDResult) {
-
-		this.typCDResult = typCDResult;
+		return twoTimeTaken;
 
 	}
 
 
 
+	public void setTwoTimeTaken(String twoTimeTaken) {
 
-
-
-
-	public String getLoadNameResult() {
-
-		return loadNameResult;
+		this.twoTimeTaken = twoTimeTaken;
 
 	}
 
 
 
+	public String getThreeTimeTaken() {
 
-
-
-
-	public void setLoadNameResult(String loadNameResult) {
-
-		this.loadNameResult = loadNameResult;
+		return threeTimeTaken;
 
 	}
 
 
 
+	public void setThreeTimeTaken(String threeTimeTaken) {
 
-
-
-
-	public String getResultSecondsResult() {
-
-		return resultSecondsResult;
+		this.threeTimeTaken = threeTimeTaken;
 
 	}
 
 
 
+	public String getFourTimeTaken() {
 
-
-
-
-	public void setResultSecondsResult(String resultSecondsResult) {
-
-		this.resultSecondsResult = resultSecondsResult;
+		return fourTimeTaken;
 
 	}
 
 
 
-	/**
+	public void setFourTimeTaken(String fourTimeTaken) {
 
-	 * @return the updatedInd
-
-	 */
-
-	public char getUpdatedInd() {
-
-		return updatedInd;
+		this.fourTimeTaken = fourTimeTaken;
 
 	}
 
 
 
-	/**
+	public String getFiveTimeTaken() {
 
-	 * @param updatedInd the updatedInd to set
-
-	 */
-
-	public void setUpdatedInd(char updatedInd) {
-
-		this.updatedInd = updatedInd;
+		return fiveTimeTaken;
 
 	}
 
 
 
+	public void setFiveTimeTaken(String fiveTimeTaken) {
 
-
-
-
-	public String getResult3CNT() {
-
-		return result3CNT;
+		this.fiveTimeTaken = fiveTimeTaken;
 
 	}
 
 
 
+	public String getSixTimeTaken() {
 
-
-
-
-	public void setResult3CNT(String result3cnt) {
-
-		result3CNT = result3cnt;
+		return sixTimeTaken;
 
 	}
 
 
 
+	public void setSixTimeTaken(String sixTimeTaken) {
 
-
-
-
-	public String getResult3StartTime() {
-
-		return result3StartTime;
+		this.sixTimeTaken = sixTimeTaken;
 
 	}
 
 
 
+	public String getSevenTimeTaken() {
 
-
-
-
-	public void setResult3StartTime(String result3StartTime) {
-
-		this.result3StartTime = result3StartTime;
+		return sevenTimeTaken;
 
 	}
 
 
 
+	public void setSevenTimeTaken(String sevenTimeTaken) {
 
-
-
-
-	public String getResult3TimeTaken() {
-
-		return result3TimeTaken;
+		this.sevenTimeTaken = sevenTimeTaken;
 
 	}
 
 
-
-
-
-
-
-	public void setResult3TimeTaken(String result3TimeTaken) {
-
-		this.result3TimeTaken = result3TimeTaken;
-
-	}
-
-	
-
-	public String getReport() {
-
-		return report;
-
-	}
-
-
-
-	public void setReport(String report) {
-
-		this.report = report;
-
-	}
-
-	
 
 	
 
 	
 
 }
+
+
 
