@@ -1,26 +1,17 @@
 /**
-
  * 
-
  */
-
 package com.aetna.prvrte.rteintranet.adapter;
 
-
-
 import java.sql.ResultSet;
-
 import java.sql.SQLException;
-
 import java.sql.Types;
-
 import java.util.HashMap;
-
 import java.util.LinkedList;
-
 import java.util.List;
-
 import java.util.Map;
+
+
 
 
 
@@ -28,369 +19,245 @@ import javax.sql.DataSource;
 
 
 
+
+
 import org.apache.commons.logging.Log;
-
 import org.apache.commons.logging.LogFactory;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-
 import org.springframework.jdbc.core.SqlOutParameter;
-
 import org.springframework.jdbc.core.SqlParameter;
-
 import org.springframework.jdbc.core.SqlReturnResultSet;
-
 import org.springframework.jdbc.object.StoredProcedure;
 
 
 
+
+
+import com.aetna.fs.enterprise.crypto.AetnaEnterpriseCrypto;
+import com.aetna.fs.enterprise.crypto.AetnaEnterpriseCryptoException;
+import com.aetna.fs.enterprise.crypto.FormatPreservingEncryption;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
-
-import com.aetna.prvrte.rteintranet.vo.SbmsnrVO;
-
 import com.aetna.prvrte.rteintranet.vo.SubmsnVO;
 
 
-
-
-
 /**
-
  * @author N731694
-
  * Cognizant_Offshore
-
  */
+public class SubmsnAdapter extends StoredProcedure{
 
-public class SbmsnrAdapter extends StoredProcedure{
-
-
-
-	private final Log log = LogFactory.getLog(SbmsnrAdapter.class);
-
+	private final Log log = LogFactory.getLog(SubmsnAdapter.class);
 	private static final String CNVRSTN_CD = "CNVRSTN_CD";
-
 	private static final String VAN_ID_CD = "VAN_ID_CD";
-
 	private static final String IN_TY_CD = "IN_TY_CD";
-
 	private static final String IN_PSTD_DT = "IN_PSTD_DT";
-
 	
-
 	private static final String OUT_CODE = "OUT_CODE";
-
 	private static final String READ_CURSOR = "READ_CURSOR3";
-
 	
-
 	
-
- 	public SbmsnrAdapter(DataSource datasource, String storedProc) {
-
+	// SSN Encryption code using Voltage API framework
+	@Autowired
+	AetnaEnterpriseCrypto aec;
+	
+	String format="SSN";
+	
+	public void setAec(AetnaEnterpriseCrypto aec) {
+		this.aec = aec;
+	}
+	
+	public SubmsnAdapter(DataSource datasource, String storedProc) {
 		super(datasource, storedProc);
-
 		
-
 		declareParameter(new SqlParameter(CNVRSTN_CD, Types.CHAR));   
-
 		declareParameter(new SqlParameter(VAN_ID_CD, Types.CHAR));
-
 		declareParameter(new SqlParameter(IN_TY_CD, Types.CHAR));
-
 		declareParameter(new SqlParameter(IN_PSTD_DT, Types.CHAR));
-
 		
-
 		declareParameter(new SqlOutParameter(OUT_CODE, Types.INTEGER));
-
 		
-
 		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper(){
-
 			
-
 			/* (non-Javadoc)
-
 			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-
 			 */
-
 			public Object mapRow(final ResultSet rs, final int arg1)
-
 					throws SQLException 
-
 					{
-
-						SbmsnrVO sbmsnrVO=new SbmsnrVO();
-
+						SubmsnVO submsnVO=new SubmsnVO();
 						
-
-						sbmsnrVO.setAlphaSearchInd(rs.getString("SBMSNR_ALPHSRC_IND"));
-
-						sbmsnrVO.setSbmtPvdrLastName(rs.getString("SBMSNR_SBPRLAST_NM"));
-
-						sbmsnrVO.setSbmtPvdrFirstName(rs.getString("SBMSNR_SBPR_FST_NM"));
-
-						sbmsnrVO.setSbmtPvdrMidName(rs.getString("SBMSNR_SBPRMID_NM"));
-
-						sbmsnrVO.setSbmtPvdrTitle(rs.getString("SBMSNR_SBPRTITL_NM"));
-
+						submsnVO.setConvIdCode(rs.getString("SUBMSN_CNVRSTN_CD"));
+						submsnVO.setVanIdCd (rs.getString("SUBMSN_VAN_ID_CD"));
+						submsnVO.setTypeCd (rs.getString("SUBMSN_TY_CD"));
+						submsnVO.setAuthorizationId (rs.getString("SUBMSN_ATHRZTI_IDN"));
+						submsnVO.setSecurityId (rs.getString("SUBMSN_SCRTYIN_IDN"));
+						submsnVO.setIntrchngSendId (rs.getString("SUBMSN_INTRCHS_IDN"));
+						submsnVO.setIntrchngRcvrId (rs.getString("SUBMSN_INTRCHR_IDN"));
+						submsnVO.setInterchangeDate (rs.getString("SUBMSN_INTERCHN_DT"));
+						submsnVO.setInterchangeTime (rs.getString("SUBMSN_INTRCHN_TM"));
+						submsnVO.setIntrcngCntrlNo (rs.getString("SUBMSN_INTRCHNC_NO"));
+						submsnVO.setAppSendCd (rs.getString("SUBMSN_APPLCTNS_CD"));
+						submsnVO.setAppRcvrCd (rs.getString("SUBMSN_APPLCTNR_CD"));
+						submsnVO.setGroupDate (rs.getString("SUBMSN_GROUP_DT"));
+						submsnVO.setGroupTime(rs.getString("SUBMSN_GROUP_TM"));
+						submsnVO.setGrpControlNo(rs.getString("SUBMSN_GRPCNTRL_NO"));
 						
-
+						submsnVO.setTrnsctnTypeCd (rs.getString("SUBMSN_TRNSCTNS_CD"));
+						submsnVO.setServiceTypeCode (rs.getString("SUBMSN_SVCTYP_CD"));
+						submsnVO.setReqstdBnftCd (rs.getString("SUBMSN_RQSTDBNT_CD"));
+						submsnVO.setAsOfDate (rs.getString("SUBMSN_AS_OF_DT"));
+						submsnVO.setToDate (rs.getString("SUBMSN_TO_DT"));
+						submsnVO.setSbmtPrvdrId (rs.getString("SUBMSN_SBPR_ID_CD"));
+						submsnVO.setSbmtPvdrLastName (rs.getString("SUBMSN_SBPRLAST_NM"));
+						submsnVO.setSbmtPvdrFirstName (rs.getString("SUBMSN_SBPR_FST_NM"));
+						submsnVO.setSbmtPvdrMidName (rs.getString("SUBMSN_SBPRMID_NM"));
+						submsnVO.setSbmtPvdrTitle (rs.getString("SUBMSN_SBPRTITL_NM"));
+						submsnVO.setSbmtPvdrAddr1 (rs.getString("SUBMSN_SPADDR1_TXT"));
+						submsnVO.setSbmtPvdrAddr2 (rs.getString("SUBMSN_SPADDR2_TXT"));
+						submsnVO.setSbmtPvdrCity (rs.getString("SUBMSN_SBPRCITY_NM"));
+						submsnVO.setSbmtPvdrState (rs.getString("SUBMSN_SBPRV_ST_CD"));
+						submsnVO.setSbmPvdrZipCd (rs.getString("SUBMSN_SBPR_ZIP_CD"));
 						
-
-						sbmsnrVO.setSbmtPvdrAddr1(rs.getString("SBMSNR_SPADDR1_TXT"));
-
-						sbmsnrVO.setSbmtPvdrAddr2(rs.getString("SBMSNR_SPADDR2_TXT"));
-
-						sbmsnrVO.setSbmtPvdrCity(rs.getString("SBMSNR_SBPRCITY_NM"));
-
-						sbmsnrVO.setSbmtPvdrState(rs.getString("SBMSNR_SBPRV_ST_CD"));
-
-						sbmsnrVO.setSbmPvdrZipCd(rs.getString("SBMSNR_SBPR_ZIP_CD"));
-
+						submsnVO.setsPCommunication1No(rs.getString("SUBMSN_SPRVCOM1_NO"));
 						
-
+						// SSN encryption - Voltage API
+						//submsnVO.setSubscriberIdCd (rs.getString("SUBMSN_SUBS_ID_CD"));
 						
-
-						sbmsnrVO.setSpCommunication1No(rs.getString("SBMSNR_SPRVCOMM_NO"));
-
-						sbmsnrVO.setAssistantPhoneNo(rs.getString("SBMSNR_ASTNCPHN_NO"));
-
-						sbmsnrVO.setRespTypeCd(rs.getString("SBMSNR_RSPNS_TY_CD"));
-
-						sbmsnrVO.setEffDate(rs.getString("SBMSNR_EFF_DT"));
-
-						sbmsnrVO.setRespTime(rs.getString("SBMSNR_RSPNS_TM"));
-
+						try {
+							submsnVO.setSubscriberIdCd(voltageApiEncryption(rs.getString("SUBMSN_SUBS_ID_CD")));
+						} catch (AetnaEnterpriseCryptoException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						
-
 						
-
+						submsnVO.setMemberIdCd (rs.getString("SUBMSN_MBR_ID_CD"));
+						submsnVO.setEmployeeId (rs.getString("SUBMSN_EMPLOYEE_ID"));
+						submsnVO.setSubsLastName (rs.getString("SUBMSN_SUBSLAST_NM"));
+						submsnVO.setSubsFirstName (rs.getString("SUBMSN_SUBS_FST_NM"));
+						submsnVO.setSubsMidName (rs.getString("SUBMSN_SUBSMID_NM"));
+						submsnVO.setSubsTitle (rs.getString("SUBMSN_SUBSTITL_NM"));
+						submsnVO.setPatientLastName (rs.getString("SUBMSN_PTNT_LST_NM"));
+						submsnVO.setPatientFirstName (rs.getString("SUBMSN_PTNT_FST_NM"));
+						submsnVO.setPatientMidName (rs.getString("SUBMSN_PTNTMID_NM"));
+						submsnVO.setPatientTitle (rs.getString("SUBMSN_PTNTTITL_NM"));
+						submsnVO.setPatientBirthdate (rs.getString("SUBMSN_PTNTBRTH_DT"));
+						submsnVO.setRelationToSubsCode (rs.getString("SUBMSN_RTPTSUBS_CD"));
+						submsnVO.setPatientSexCode (rs.getString("SUBMSN_PTNT_SEX_CD"));
 						
-
-						sbmsnrVO.setPostedDt(rs.getString("SBMSNR_PSTD_DT"));
-
-						sbmsnrVO.setClaimOfficeCd(rs.getString("SBMSNR_CLMOFF_CD"));
-
-						sbmsnrVO.setProviderTypeCd(rs.getString("SBMSNR_PRVTY_CD"));
-
-						sbmsnrVO.setPostedTime(rs.getString("SBMSNR_PSTD_TM"));
-
-						sbmsnrVO.setProductName(rs.getString("SBMSNR_UNTPRVAS_NM"));
-
 						
-
-						sbmsnrVO.setSbmsnrTypeCd(rs.getString("SBMSNR_TY_CD"));
-
-						sbmsnrVO.setPayorCobCd(rs.getString("SBMSNR_PAYORCOB_CD"));
-
-						sbmsnrVO.setMedUnitIdCd(rs.getString("MEDUNIT_ID_CD"));
-
-						sbmsnrVO.setSubsIdQualCd(rs.getString("SBMSNR_SBSCRBIQ_CD"));
-
-						sbmsnrVO.setDepIdQualCode(rs.getString("SBMSNR_DPNDNTIQ_CD"));
-
 						
-
-						sbmsnrVO.setTransactionTypeCd(rs.getString("SBMSNR_TRNSCTNT_CD"));
-
-						sbmsnrVO.setConvIdCode(rs.getString("SUBMSN_CNVRSTN_CD"));
-
-						sbmsnrVO.setVanIdCd(rs.getString("SUBMSN_VAN_ID_CD"));
-
-						sbmsnrVO.setTranType(rs.getString("SUBMSN_TY_CD"));
-
-						sbmsnrVO.setEmployeeId(rs.getString("SBMSNR_EMPLOYE_IDN"));
-
+						submsnVO.setEffectiveDate (rs.getString("SUBMSN_EFF_DT"));
+						submsnVO.setReceivedTime (rs.getString("SUBMSN_RECVD_TM"));
+						submsnVO.setPrvdrSbmTime (rs.getString("SUBMSN_PRVDRSBM_TM"));
+						submsnVO.setPrvdrSbmDate (rs.getString("SUBMSN_PRVDRSBM_DT"));
+						submsnVO.setTransactionCd (rs.getString("SUBMSN_TRANSCTN_CD"));
+						submsnVO.setPostedDt (rs.getString("SUBMSN_PSTD_DT"));
+						submsnVO.setSpvdrEntTypeQualCd (rs.getString("HCSR_SBMTPETQ_CD"));
+						submsnVO.setSpvdrContactName (rs.getString("HCSR_SBMTTNGPRC_NM"));
+						submsnVO.setSubsIdQualCode (rs.getString("HCSR_SBSCRBRIQ_CD"));
+						submsnVO.setSubsTrceRefNo (rs.getString("HCSR_SBSCRBRTRR_NO"));
+						submsnVO.setDepIdQualCode  (rs.getString("HCSR_DPNDNTIDQ_CD"));
+						submsnVO.setDepTrceRefNo  (rs.getString("HCSR_DPNDNTTRCR_NO"));
+						submsnVO.setCoverForPCPInd  (rs.getString("ELIGIQ_COVGPCP_IND"));
+						submsnVO.setEmpGroupIdCode  (rs.getString("SUBMSN_ERGRPIDN_CD"));
+						submsnVO.setPrvdrNetworkIdCode  (rs.getString("ELIGIQ_PRNTWKID_CD"));
 						
-
-						sbmsnrVO.setSpCommNoQualCd(rs.getString("SBMSNR_SPCNQLF_CD"));
-
-						sbmsnrVO.setSubsPhoneNo(rs.getString("SBMSNR_SBSCRBRT_NO"));
-
-						sbmsnrVO.setDepsPhoneNo(rs.getString("SBMSNR_DPNDNTTL_NO"));
-
-						sbmsnrVO.setPatientAddr1(rs.getString("SBMSNR_PTNTAD1_TXT"));
-
-						sbmsnrVO.setPatientAddr2(rs.getString("SBMSNR_PTNTAD2_TXT"));
-
 						
+						submsnVO.setAltRouteIdCode  (rs.getString("ELIGIQ_ALTRTGID_CD"));
+						submsnVO.setAltRouteTypeCode  (rs.getString("ELIGIQ_ALTRTTYP_CD"));
+						submsnVO.setEmployerName (rs.getString("ELIGIQ_ER_NM"));
+						submsnVO.setRoutingId (rs.getString("ELIGIQ_RTG_ID"));
+						submsnVO.setRoutingTypeCode (rs.getString("ELIGIQ_RTGTYPE_CD"));
+						submsnVO.setCumbIdNo(rs.getString("CUMB_ID_NO"));
+						submsnVO.setPrvdrIdNo (rs.getString("PRVDR_ID_NO"));
+						submsnVO.setPrvdrOrgNo(rs.getString("PRVORG_NO"));
+						submsnVO.setSpComm1QualCode (rs.getString("SUBMSN_SPCN1QLF_CD"));
+						submsnVO.setVersionReleaseCode (rs.getString("SUBMSN_VERSNRLS_CD"));
+						submsnVO.setMswContactCode (rs.getString("SUBMSN_MSWCNTC_CD"));
+						submsnVO.setSpCommunication2No (rs.getString("SUBMSN_SPRVCOM2_NO"));
 
-						sbmsnrVO.setPatientCity(rs.getString("SBMSNR_PTNTCITY_NM"));
-
-						sbmsnrVO.setPatientState(rs.getString("SBMSNR_PTNTST_CD"));
-
-						sbmsnrVO.setPatientZipCd(rs.getString("SBMSNR_PTNTZIP_CD"));
-
-						sbmsnrVO.setClaimOfficeName(rs.getString("CLMOFF_NM"));
-
-						sbmsnrVO.setClaimOfficeAddr1(rs.getString("CLMOFF_ADDRLN1_TXT"));
-
+						submsnVO.setSpComm2QualCode (rs.getString("SUBMSN_SPCN2QLF_CD"));
+						submsnVO.setEntityIdCode  (rs.getString("ENTTYID_CD"));
+						submsnVO.setPvdrIdCodeQualCode  (rs.getString("IDCDQLF_CD"));
+						submsnVO.setFamilyLevelInd  (rs.getString("SUBMSN_FAMLVL_IND"));
+						submsnVO.setPosCode  (rs.getString("SUBMSN_POS_CD"));
 						
-
-						sbmsnrVO.setClaimOfficeAddr2(rs.getString("CLMOFF_ADDRLN2_TXT"));
-
-						sbmsnrVO.setClaimOffLocationCd(rs.getString("CLMOFF_LOC_CD"));
-
-						sbmsnrVO.setClaimOfficeState(rs.getString("CLMOFF_ST_CD"));
-
-						sbmsnrVO.setClaimOfficeZipCd(rs.getString("CLMOFF_ZIP_CD"));
-
-						sbmsnrVO.setCobPrimSecCd(rs.getString("COB_PRIM_SEC_CD"));
-
 						
-
-						
-
-						
-
-						sbmsnrVO.setCobCarrierName(rs.getString("CUMBOC_CARRIER_NM"));
-
-						sbmsnrVO.setCobPolicyNo(rs.getString("CUMBOC_POLICY_NO"));
-
-						sbmsnrVO.setCobEffDate(rs.getString("CUMBOC_EFFECTIV_DT"));
-
-						sbmsnrVO.setCobExpDate(rs.getString("CUMBOC_EXPIRATN_DT"));
-
-						sbmsnrVO.setFamilyLevelInd(rs.getString("SBMNSR_FAMLVL_IND"));
-
-						return sbmsnrVO;
-
+						return submsnVO;
 			}
-
-
 
 		}));
 
-
-
 	}
-
 	
-
+	 public String voltageApiEncryption(String value) throws AetnaEnterpriseCryptoException{
+		 
+		 FormatPreservingEncryption fpe =aec.getFormatPreservingEncryption(format);
+			
+			String string= value;
+			
+			return fpe.encrypt(string);
+			
+		
+	}
 	
-
 	
-
 	@SuppressWarnings("unchecked")
-
-	public Map getSbmsnrEvntTracking (String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
+	public Map getSubmsnEvntTracking (String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
 		log.debug("Entered SbrsrxbAdapter  - getSbrsrxbEvntTracking");
-
 	
-
 		Map<String, String> params = new java.util.HashMap<String, String>();
-
-		Map sbmsnrMap = new HashMap();
-
+		Map submsnMap = new HashMap();
 		params.put(CNVRSTN_CD, RteIntranetUtils.getTrimmedString(convIdCode));
-
 		params.put(VAN_ID_CD, RteIntranetUtils.getTrimmedString(vanIdCd));
-
 		params.put(IN_TY_CD, RteIntranetUtils.getTrimmedString(typeCd));
-
 		params.put(IN_PSTD_DT, RteIntranetUtils.getTrimmedString(postedDt));
-
 		
-
 	
-
 		
-
 		log.debug(params);
-
 		Map results = null;
-
 		
-
-		List<SbmsnrVO> sbmsnrList= new LinkedList<SbmsnrVO>();
-
+		List<SubmsnVO> submsnList= new LinkedList<SubmsnVO>();
 		String newMessage="";
-
 	
-
 		try {
-
 			results = execute(params);
-
-			log.debug("SbmsnrAdapter: Executed stored procedure");
-
+			log.debug("SubmsnAdapter: Executed stored procedure");
 			String sqlCode =  String.valueOf(results
-
 					.get(OUT_CODE));
-
-			sbmsnrList = (List<SbmsnrVO>) results
-
+			submsnList = (List<SubmsnVO>) results
 					.get(READ_CURSOR);	
-
-	
-
 			if ("0".equals(sqlCode))
-
-			{
-
-				if (null==sbmsnrList ||sbmsnrList.isEmpty()) {
-
-				newMessage = "No Data for Conversation ID: " + convIdCode + 
-
-							" Van Id: " +  vanIdCd + 
-
-							" Tran Type: " + typeCd + 
-
-							" or Posted Date: " + postedDt;
-
+				{
+					if (null==submsnList ||submsnList.isEmpty()) {
+					newMessage = "No Data for Conversation ID: " + convIdCode + 
+								" Van Id: " +  vanIdCd + 
+								" Tran Type: " + typeCd + 
+								" or Posted Date: " + postedDt;
+					}
+				else
+				{
+					newMessage = "Data found for Conversation ID: " + convIdCode +
+						" Van Id: " +  vanIdCd + 
+						" Tran Type: " + typeCd + 
+						" and Posted Date: " + postedDt;
 				}
-
-			else
-
-			{
-
-				newMessage = "Data found for Conversation ID: " + convIdCode +
-
-					" Van Id: " +  vanIdCd + 
-
-					" Tran Type: " + typeCd + 
-
-					" and Posted Date: " + postedDt;
-
-			}
-
-		} else {
-
-			
-
-		    	newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
-
-		}
-
+			} else {
 				
-
-			
-
-			sbmsnrMap.put("newMessage", newMessage);
-
-			sbmsnrMap.put("sbmsnrList",sbmsnrList);
-
-			return sbmsnrMap;
-
+			    	newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
+			}
+			submsnMap.put("newMessage", newMessage);
+			submsnMap.put("submsnList",submsnList);
+			return submsnMap;
 		}catch (Exception exception){
-
-			log.error("SbmsnrAdapter : generic error occured  "+exception);
-
+			log.error("SubmsnAdapter : generic error occured  "+exception);
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
-
 		}
-
 	}
-
-
 
 }
-
