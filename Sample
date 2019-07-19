@@ -6,159 +6,17 @@ import java.util.Map;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
-
-
-import com.aetna.prvrte.rteintranet.dao.EventTrackDAO;
+import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 
 
-/**
+public interface LongRunTransLookUpService {
 
-package com.aetna.prvrte.rteintranet.service;
 
 
-
-import java.util.Map;
-
-
-
-/**
-
- * @author N731694
-
- * Cognizant_Offshore
-
- */
-
-@Service
-
-public class EventTrackingServiceImpl implements EventTrackingService {
-
-	@Autowired(required=true)
-
-	private EventTrackDAO eventTrackDAO;
-
-	
-
-	
-
-
-
-	@Override
-
-	public Map getSbrsrxbEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbrsrxbEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSpntprvEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSpntprvEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSbmrdepEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbmrdepEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSubmsnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSubmsnEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSrapidtlEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSrapidtlEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getEventTrackSbmletkLookUpTable(String convIdCode, String vanIdCd,String tranType,String postedDt,String seconds)
-
-			throws ApplicationException {
-
-		
-
-		return eventTrackDAO.getEventTrackSbmletkLookUpTable(convIdCode, vanIdCd,tranType,postedDt,seconds);
-
-	}
-
-
-
-	@Override
-
-	public Map getSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbmsnrEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSbmrplnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbmrplnEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbmrplnSbmsnrEvntTracking(convIdCode, vanIdCd,typeCd,postedDt);
-
-	}
-
-	@Override
-
-	public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt,String seqNo) throws ApplicationException {
-
-		// TODO Auto-generated method stub
-
-		return eventTrackDAO.getSbmrplnSbmsnrEvntTracking(convIdCode, vanIdCd,typeCd,postedDt,seqNo);
-
-	}
-
-
-
-
-
-
+	Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO) throws ApplicationException;
 
 }
 
