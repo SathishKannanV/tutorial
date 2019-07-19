@@ -2,223 +2,115 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 import java.util.LinkedHashMap;
 
-public class HMB1CopyBookList {
+public class HMP1CopyBookList {
 	private LinkedHashMap<String, Object> copyBookFields = new LinkedHashMap<String, Object>(); 
-	public HMB1CopyBookList() {
+	public HMP1CopyBookList() {
 		populateHash();
 	}
 	
 	private void populateHash(){
-		copyBookFields.put("PRODUCT-IDENTIFICATION-CTR-B", "1|N|PRODUCT-IDENTIFICATION-CTR-B");
-		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_3", getProductIdentification());
+		//GENERAL-PLAN-DATA-B
+		copyBookFields.put("PPID-STYLE-B", "1|C|PPID-STYLE-B");
+		copyBookFields.put("NUMBER-OF-FAMILY-MEMBERS-B", "2|C|NUMBER-OF-FAMILY-MEMBERS-B");
+		copyBookFields.put("COBRA-PLAN-INDICATOR-B","1|C|COBRA-PLAN-INDICATOR-B");
+		//MEDICAL-EXTENSION-DETAIL-B
+		copyBookFields.put("COVERAGE-EXTENSION-INDICATOR-B","1|C|COVERAGE-EXTENSION-INDICATOR-B");
+		copyBookFields.put("NUMBER-OF-MONTHS-B","3|C|NUMBER-OF-MONTHS-B");
+		copyBookFields.put("START-DATE-B","10|C|EXTENSION-START-DATE-B");
+		//CONTRACT-DATES-B
+		copyBookFields.put("CSTART-DATE-B","10|C|CONTRACT-START-DATE-B");
+		copyBookFields.put("END-DATE-B","10|C|CONTRACT-END-DATE-B");
+		copyBookFields.put("CAPITATION-INDICATOR-B","1|C|CAPITATION-INDICATOR-B");
+		//PLAN-LIMIT-DATA-B
+		//PLAN-LIMIT-SET-B
+		copyBookFields.put("PLAN-LIMIT-CTR-B","1|C|PLAN-LIMIT-CTR-B");
+		//PLAN-LIMIT-B OCCURS 1 TIMES
+		copyBookFields.put("PLAN-LIMIT-QUALIFICATION-B","1|C|PLAN-LIMIT-QUALIFICATION-B");
+		copyBookFields.put("PERIOD-CODE-B","1|C|PERIOD-CODE-B");
+		//PLAN-DEDUCTIBLE-EXTENSIONS-B
+		copyBookFields.put("CREDIT-INDICATOR-B","1|C|CREDIT-INDICATOR-B");
+		copyBookFields.put("CREDIT-DATE-B","10|C|CREDIT-DATE-B");
+		copyBookFields.put("CARRYOVER-INDICATOR-B","1|C|CARRYOVER-INDICATOR-B");
+		copyBookFields.put("CARRYOVER-QUANTITY-B","4|C|CARRYOVER-QUANTITY-B");
+		//NETWORK-PLN-LMT-DTL-SET-B
+		copyBookFields.put("NETWORK-PLN-LMT-DTL-CTR-B","1|C|NETWORK-PLN-LMT-DTL-CTR-B");
+		//NETWORK-PLN-LMT-DTL-B OCCURS 5 TIMES
+		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_5", getProductIdentification());
+		
+		copyBookFields.put("INDEMNITY-CODE-B","9|C|INDEMNITY-CODE-B");
+		copyBookFields.put("BENEFIT-PAYMENT-LIMIT-B","11|C|BENEFIT-PAYMENT-LIMIT-B");
+		copyBookFields.put("BENEFIT-VISIT-LIMIT-B","5|C|BENEFIT-VISIT-LIMIT-B");
+		//PLAN-PROD-COMPON-ID-SET-B
+		copyBookFields.put("PLAN-PROD-COMPON-ID-CTR-B","2|C|PLAN-PROD-COMPON-ID-CTR-B");
+		
+		//PLAN-PROD-COMPON-ID-B OCCURS 25 TIMES
+		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_25", getPlanProdComponID());
+		
 	}
 	
 	public LinkedHashMap<String, Object> getProductIdentification(){
-		LinkedHashMap<String, Object> hmProdIden = new LinkedHashMap<String, Object>();
-		hmProdIden.put("BENEFIT-QUALIFICATION-B", "1|C| BENEFIT-QUALIFICATION-B");
-		hmProdIden.put("BENEFIT-TYPE-B", "1|C|BENEFIT-TYPE-B");
-		hmProdIden.put("COMPONENT-IDENTIFIER", "5|C|COMPONENT-IDENTIFIER");
-		hmProdIden.put("PRODUCT-COMPONENT-TYPE", "2|N|PRODUCT-COMPONENT-TYPE");
-		hmProdIden.put("BENEFIT-TYPE-GROUP-CTR", "1|C|BENEFIT-TYPE-GROUP-CTR");
-		
-		//hmProdIden.put("BENEFIT-TYPE-GROUP-IDENTIFIER", "1|C|BENEFIT-TYPE-GROUP-IDENTIFIER");
-		//BENEFIT-TYPE-GROUP OCCURS 8 TIMES
-		hmProdIden.put("BENEFIT-TYPE-GROUP_REPEAT_8", getBenefitTypeGrp());
-		hmProdIden.put("PROVIDER-TYPE","1|C|PROVIDER-TYPE");
-		hmProdIden.put("LOCATION" ,"1|C|LOCATION");
-		hmProdIden.put("BENEFIT-IDENTIFIER","3|C|BENEFIT-IDENTIFIER");
-		hmProdIden.put("BENEFIT-COVERAGE-INDICATOR","1|C|BENEFIT-COVERAGE-INDICATOR");
-		hmProdIden.put("DESCRIPTION","80|C|Description");
-		hmProdIden.put("GENDER","1|C|GENDER");
-		hmProdIden.put("LOWER-AGE","3|C|LOWER-AGE");
-		hmProdIden.put("UPPER-AGE","3|C|UPPER-AGE");
-		hmProdIden.put("COINSURANCE-PERCENTAGE", "7|N|COINSURANCE-PERCENTAGE");
-		hmProdIden.put("COINSURANCE-LIMIT-AMOUNT", "11|N|COINSURANCE-LIMIT-AMOUNT");
-		hmProdIden.put("SUBJECT-TO-DEDUCTIBLE","1|C|SUBJECT-TO-DEDUCTIBLE");
-		hmProdIden.put("OOPA DEDUCTIBLE","1|C|OOPA DEDUCTIBLE");
-		hmProdIden.put("OOPA COPAY","1|C|OOPA COPAY");
-		hmProdIden.put("OOPA COINSURANCE","1|C|OOPA COINSURANCE");
-		hmProdIden.put("OOPA SCHEDULE-BENEFIT","1|C|OOPA SCHEDULE-BENEFIT");
-		hmProdIden.put("CAPITATION","1|C|CAPITATION");
-		hmProdIden.put("SCHEDULE-BENEFIT-AMOUNT", "11|N|SCHEDULE-BENEFIT-AMOUNT");
-		hmProdIden.put("APPLY-COINS-TO-PRIMARY-OOP","1|C|APPLY-COINS-TO-PRIMARY-OOP");
-		hmProdIden.put("FIRST-DOLLAR-BENEFIT1","3|C|FIRST-DOLLAR-BENEFIT1");
-		hmProdIden.put("FIRST-DOLLAR-BENEFIT2","3|C|FIRST-DOLLAR-BENEFIT2");
-		hmProdIden.put("PER-CONDITION-INDICATOR","1|C|PER-CONDITION-INDICATOR");
-		hmProdIden.put("TIERED-COPAY-CTR","1|C|TIERED-COPAY-CTR");
-		//TIERED-COPAY-CTR OCCURS 3 TIMES
-		hmProdIden.put("TIERED-COPAY-CTR_REPEAT_3", getTieredCopayCTR());
-		//COPAY-PAYMENT OCCURS 4 TIMES
-//		hmProdIden.put("COPAY-PAYMENT-CTR","1|N|COPAY-PAYMENT-CTR");
-//		hmProdIden.put("COPAY-PAYMENT_REPEAT_4", getCoPayement());
-		hmProdIden.put("COPAY-MAXIMUM-IND","9|C|COPAY-MAXIMUM-IND");
-		// 88 COPAY-FAMILY-MAX-INST    VALUE '1'.
-        // 88 COPAY-PERCENTAGE-MAXIMUM-INST VALUE '2'.
-        // 88 MAXIMUM-AMOUNT-INST      VALUE '3'.
-		//COPAY-MAXIMUM-DATA         PIC X(33).
-        //take the above value and based on 123 set the below values.....
-		//hmProdIden.put("COPAY-MAXIMUM-DATA","33|C|COPAY-MAXIMUM-DATA");
-		//40 COPAY-FAMILY-MAX-DATA REDEFINES COPAY-MAXIMUM-DATA.
-        //45 FAMILY-MAXIMUM.
-//		hmProdIden.put("FAMILY-MEMBERS-MUST-MEET","33|N|FAMILY-MEMBERS-MUST-MEET");
-//		hmProdIden.put("FAMILY-MEMBERS-MET","33|N|FAMILY-MEMBERS-MET");
-//		//hmProdIden.put("FILLER","25|C|FILLER");
-//	
-//		//COPAY-PERCENTAGE-MAXIMUM-DATA REDEFINES COPAY-MAXIMUM-DATA
-//		hmProdIden.put("PERCENTAGE" ,"33|N|PERCENTAGE");
-//		//hmProdIden.put("FILLER","26|C|FILLER");
-//	
-//		//MAXIMUM-AMOUNT-DATA REDEFINES COPAY-MAXIMUM-DATA. 
-//		//USAGE-AMOUNT
-//		hmProdIden.put("USED-AMOUNT" ,"11|N|USED-AMOUNT");
-//		hmProdIden.put("REMAINDER-AMOUNT" ,"11|N|REMAINDER-AMOUNT");
-//		hmProdIden.put("AMOUNT" ,"11|N|AMOUNT");
-		
-		//COPAY-PERIOD-LIMITATIONS
-		hmProdIden.put("PERIOD-DEFINITION" ,"1|C|PERIOD-DEFINITION");
-		hmProdIden.put("FREQUENCY-LIMITATION" ,"1|C|FREQUENCY-LIMITATION");
-		hmProdIden.put("NUMBER-PER-PERIOD" ,"3|N|NUMBER-PER-PERIOD");
-		//ACCUMULATOR-SET
-		hmProdIden.put("ACCUMULATOR-CTR" ,"2|C|ACCUMULATOR-CTR");
-		//ACCUMULATOR  OCCURS 3 TIMES
-		hmProdIden.put("ACCUMULATOR_REPEAT_7", getAccumulator());
-		return hmProdIden;
+		LinkedHashMap<String, Object> hmpProdIden = new LinkedHashMap<String, Object>();
+		hmpProdIden.put("NETWORK-B", "1|C| NETWORK-B");
+		hmpProdIden.put("COINSURANCE-PERCENTAGE-B", "7|C| COINSURANCE-PERCENTAGE-B");
+		//FINANCIAL-MAXI-DTL-SET-B
+		hmpProdIden.put("FINANCIAL-MAXI-DTL-CTR-B", "1|C| FINANCIAL-MAXI-DTL-CTR-B");
+		//FINANCIAL-MAXIMUM-DETAILS-B OCCURS 6 TIMES
+		//hmpProdIden.put("NETWORK", "1|C| NETWORK");
+		//getting error here................This is moved to Dec release 
+		hmpProdIden.put("PRODUCT-IDENTIFICATION-B_REPEAT_6", getProductIdenB());
+		//PRECERTIFICATION-PENALTY-B
+		hmpProdIden.put("PERCENTAGE-B", "5|C|PERCENTAGE-B");
+		hmpProdIden.put("AMOUNT-B", "11|C|AMOUNT-B");
+		//FIRST-DOLLAR-BENEFIT-B
+		hmpProdIden.put("FDB-LIMIT-B", "13|C|FDB-LIMIT-B");
+		hmpProdIden.put("PRV-LIMIT-B", "13|C|PRV-LIMIT-B");
+		hmpProdIden.put("OVL-LIMIT-B", "13|C|OVL-LIMIT-B");
+		hmpProdIden.put("FDB-USAGE-B", "13|C|FDB-USAGE-B");
+		hmpProdIden.put("PRV-USAGE-B", "13|C|PRV-USAGE-B");
+		hmpProdIden.put("OVL-USAGE-B", "13|C|OVL-USAGE-B");
+		hmpProdIden.put("FDB-REMAINING-B", "13|C|FDB-REMAINING-B");
+		hmpProdIden.put("PRV-REMAINING-B", "13|C|PRV-REMAINING-B");
+		hmpProdIden.put("OVL-REMAINING-B", "13|C|OVL-REMAINING-B");
+		return hmpProdIden;
 	}
 	
-	public LinkedHashMap<String, Object> getBenefitTypeGrp(){
-		LinkedHashMap<String, Object> hmBenefitGroup = new LinkedHashMap<String, Object>();
-//		hmBenefitGroup.put("BENEFIT-TYPE-GROUP-IDENTIFIER", "1|C|BENEFIT-TYPE-GROUP-IDENTIFIER");
-		//Amount
-		hmBenefitGroup.put("AMOUNT-VALUE-IND", "2|C|AMOUNT-VALUE-IND");
-		//hmBenefitGroup.put("AMOUNT-VALUE-DATA", "11|N|AMOUNT-VALUE-DATA");
-		//hmBenefitGroup.put("AMOUNT-NUMERIC-DATA", "11|N|AMOUNT-NUMERIC-DATA");
-		//hmBenefitGroup.put("AMOUNT-ALPHA-DATA", "11|N|AMOUNT-ALPHA-DATA");
-		hmBenefitGroup.put("AMOUNT", "11|N|AMOUNT");
+	
+	public LinkedHashMap<String, Object> getPlanProdComponID(){
+		LinkedHashMap<String, Object> hmpPlanProdComponID = new LinkedHashMap<String, Object>();
+		hmpPlanProdComponID.put("PROD-COMPON-ID-B", "5|C|PROD-COMPON-ID-B");
+		hmpPlanProdComponID.put("PROD-COMPON-TYPE-B", "2|C|PROD-COMPON-TYPE-B");
 		
-		return hmBenefitGroup;
+		return hmpPlanProdComponID;
 	}
 	
-	public LinkedHashMap<String, Object> getTieredCopayCTR(){
-		LinkedHashMap<String, Object> hmTieredGroup = new LinkedHashMap<String, Object>();
-		hmTieredGroup.put("LEVEL","1|C|Level");
-		hmTieredGroup.put("SERVICE-DAY-MINIMUM","3|N|SERVICE-DAY-MINIMUM");
-		hmTieredGroup.put("SERVICE-DAY-MAXIMUM","3|N|SERVICE-DAY-MAXIMUM");
-		hmTieredGroup.put("FOLLOW-UP-DAY","3|N|FOLLOW-UP-DAY");
-		hmTieredGroup.put("COPAY-PAYMENT-CTR","1|N|COPAY-PAYMENT-CTR");
-//		hmTieredGroup.put("COPAY-MAXIMUM-IND","1|C|COPAY-MAXIMUM-IND");
-//		hmTieredGroup.put("COPAY-PAYMENT-IND","1|C|COPAY-PAYMENT-IND");
-		hmTieredGroup.put("COPAY-PAYMENT_REPEAT_4", getCoPayement());
-//		//hmCoPaymentGroup.put("FILLER","4|C|FILLER");
-		hmTieredGroup.put("TIERED-VISIT-LOW","3|C|TIERED-VISIT-LOW");
-		hmTieredGroup.put("TIERED-VISIT-HIGH","3|C|TIERED-VISIT-HIGH");
-//		//hmCoPaymentGroup.put("FILLER","8|C|FILLER");
-//		hmTieredGroup.put("COPAY-MAXIMUM-IND","1|C|COPAY-MAXIMUM-IND");
+	public LinkedHashMap<String, Object> getProductIdenB(){
+		LinkedHashMap<String, Object> hmpProductIdn = new LinkedHashMap<String, Object>();
+		//hmpProductIdn.put("FINANCIAL-MAXI-DTL-IND-B", "1|C|FINANCIAL-MAXI-DTL-IND-B");
+		//hmpProductIdn.put("FINANCIAL-MAXI-DTL-DATA-B", "61|C|FINANCIAL-MAXI-DTL-DATA-B");
+		//FAM-FINANCIAL-MAXI-DATA-B REDEFINES FINANCIAL-MAXI-DTL-DATA-B
+		//hmpProductIdn.put("MAXIMUM-TYPE-B", "1|C|MAXIMUM-TYPE-B");
+	//DATES-B
+		//hmpProductIdn.put("START-DATE-B", "10|C|START-DATE-B");
+		//hmpProductIdn.put("END-DATE-B", "10|C|END-DATE-B");
+	//FAMILY-MAXIMUM-B
+		//hmpProductIdn.put("FAM-MEMBERS-MUST-MEET-B", "4|C|FAM-MEMBERS-MUST-MEET-B");
+		//hmpProductIdn.put("FAM-MEMBERS-MET-B", "4|C|FAM-MEMBERS-MET-B");
+	//FILLER PIC X(32)
+		//FINANCIAL-MAXI-DATA-B REDEFINES FINANCIAL-MAXI-DTL-DATA-B.
+		hmpProductIdn.put("MAXIMUM-TYPE-B ", "1|C|MAXIMUM-TYPE-B ");
+	//DATES-B
+		hmpProductIdn.put("START-DATE-B", "10|C|START-DATE-B");
+		hmpProductIdn.put("END-DATE-B", "10|C|END-DATE-B");
+		hmpProductIdn.put("WAGE-BAND-INDICATOR-B ", "1|C|WAGE-BAND-INDICATOR-B");
+	//FAMILY-MAXIMUM
+		hmpProductIdn.put("FAMILY-MEMBERS-MUST-MEET","4|C|FAMILY-MEMBERS-MUST-MEET");
+		hmpProductIdn.put("FAMILY-MEMBERS-MET PIC","4|C|FAMILY-MEMBERS-MET PIC");
+		hmpProductIdn.put("LIMIT-AMOUNT-B", "13|C|LIMIT-AMOUNT-B");
+		hmpProductIdn.put("REMAINDER-AMOUNT-B", "13|C|REMAINDER-AMOUNT-B");
+		hmpProductIdn.put("USED-AMOUNT-B", "13|C|USED-AMOUNT-B");
 		
 		
-		return hmTieredGroup;
-	}
-	
-	public LinkedHashMap<String, Object> getCoPayement(){
-		LinkedHashMap<String, Object> hmCoPaymentGroup = new LinkedHashMap<String, Object>();
-		hmCoPaymentGroup.put("COPAY-PAYMENT-IND","1|C|COPAY-PAYMENT-IND");
-		//*hmCoPaymentGroup.put("COPAY-PAYMENT-DATA","13|C|COPAY-PAYMENT-DATA");
-		//hmCoPaymentGroup.put("COPAY-PAYMENT-DATA","12|C|COPAY-PAYMENT-DATA");
-		//COPAY-AMOUNT-DATA REDEFINES COPAY-PAYMENT-DATA.
-		hmCoPaymentGroup.put("AMOUNT","11|N|AMOUNT");
-		//*hmCoPaymentGroup.put("COPAY-TYPE","1|C|COPAY-TYPE");
-		hmCoPaymentGroup.put("FREQUENCY-PERIOD","1|C|FREQUENCY-PERIOD");
-		//COPAY-PERCENTAGE-DATA REDEFINES COPAY-PAYMENT-DATA
-//		hmCoPaymentGroup.put("PERCENTAGE","7|N|PERCENTAGE");
-		//*hmCoPaymentGroup.put("COPAY-PERCENTAGE-TYPE","1|C|COPAY-PERCENTAGE-TYPE");
-//		hmCoPaymentGroup.put("FREQUENCY-PERIOD","1|C|FREQUENCY-PERIOD");
-//		//hmCoPaymentGroup.put("FILLER","4|C|FILLER");
-//		hmCoPaymentGroup.put("TIERED-VISIT-LOW","3|C|TIERED-VISIT-LOW");
-//		hmCoPaymentGroup.put("TIERED-VISIT-HIGH","3|C|TIERED-VISIT-HIGH");
-//		//hmCoPaymentGroup.put("FILLER","8|C|FILLER");
-		return hmCoPaymentGroup;
-	}
-	
-	public LinkedHashMap<String, Object> getAccumulator(){
-		LinkedHashMap<String, Object> hmAccumulatorGroup = new LinkedHashMap<String, Object>();
-		hmAccumulatorGroup.put("ACCUMULATOR-IDENTIFIER" ,"3|C|ACCUMULATOR-IDENTIFIER");
-		hmAccumulatorGroup.put("ACCUMULATOR-USAGE-IND" ,"1|C|ACCUMULATOR-USAGE-IND");
-		
-		//AGE-RESTRICTION
-		hmAccumulatorGroup.put("LOWER-AGE" ,"3|N|LOWER-AGE");
-		hmAccumulatorGroup.put("UPPER-AGE" ,"3|N|UPPER-AGE");
-		//ACCUMULATOR-PERIOD-LIMITATIONS
-		hmAccumulatorGroup.put("PERIOD-DEFINITION" ,"1|C|PERIOD-DEFINITION");
-		hmAccumulatorGroup.put("FREQUENCY-LIMITATION" ,"1|C|FREQUENCY-LIMITATION");
-		hmAccumulatorGroup.put("ACCUM-FREQUENCY-NUMBER" ,"3|N|ACCUM-FREQUENCY-NUMBER");
-		hmAccumulatorGroup.put("AMOUNT" ,"11|N|AMOUNT");
-		hmAccumulatorGroup.put("LIFETIME-LIMIT" ,"11|N|LIFETIME-LIMIT");
-		//ACCUMULATOR-USAGE
-		//hmProdIden.put("ACCUMULATOR-USAGE-IND" ,"1|C|ACCUMULATOR-USAGE-IND");
-		//hmProdIden.put("ACCUMULATOR-USAGE-DATA" ,"69|C|ACCUMULATOR-USAGE-DATA");
-		//ACCUMULATOR-USAGE-IND value is 1,2, 3 need to do venkat
-	//if ACCUMULATOR-USAGE-IND = 1{
-		//CLAIM-USAGE-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
-//		hmAccumulatorGroup.put("LIFETIME-USED-TOTAL" ,"13|N|LIFETIME-USED-TOTAL");
-//		hmAccumulatorGroup.put("USED-AMOUNT" ,"13|N|USED-AMOUNT");
-//		hmAccumulatorGroup.put("REMAINDER-AMOUNT" ,"13|N|REMAINDER-AMOUNT");
-//		//CLAIM-PERIOD
-//		hmAccumulatorGroup.put("START-DATE" ,"10|C|START-DATE");
-//		hmAccumulatorGroup.put("END-DATE" ,"10|C|END-DATE");
-//		hmAccumulatorGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
-//		//}elseif{
-//		//CLAIM-USAGE-NON-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
-//		hmAccumulatorGroup.put("LIFETIME-USED-TOTAL" ,"4|N|LIFETIME-USED-TOTAL");
-//		hmAccumulatorGroup.put("USED-VISITS" ,"4|N|USED-VISITS");
-//		hmAccumulatorGroup.put("REMAINDER-VISITS" ,"4|N|REMAINDER-VISITS");
-//		hmAccumulatorGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
-//		//CLAIM-PERIOD
-//		hmAccumulatorGroup.put("START-DATE" ,"10|C|START-DATE");
-//		hmAccumulatorGroup.put("END-DATE" ,"10|C|END-DATE");
-		//hmAccumulatorGroup.put("FILLER","27|C|FILLER");
-		//}
-		return hmAccumulatorGroup;
-	}
-	
-	public LinkedHashMap<String, Object> getCopayMaxData(String copayMaxInd) {
-		LinkedHashMap<String, Object> hmCopayMaxGroup = new LinkedHashMap<String, Object>();
-		if (copayMaxInd.equals("1")){
-			hmCopayMaxGroup.put("FAMILY-MEMBERS-MUST-MEET" ,"4|N|FAMILY-MEMBERS-MUST-MEET");
-			hmCopayMaxGroup.put("FAMILY-MEMBERS-MET" ,"29|N|FAMILY-MEMBERS-MUST-MEET");
-		} else if (copayMaxInd.equals("2")){
-			hmCopayMaxGroup.put("PERCENTAGE" ,"33|N|PERCENTAGE");
-
-		} else if (copayMaxInd.equals("3")) {
-			hmCopayMaxGroup.put("USED-AMOUNT" ,"11|N|USED-AMOUNT");
-			hmCopayMaxGroup.put("REMAINDER-AMOUNT" ,"11|N|REMAINDER-AMOUNT");
-			hmCopayMaxGroup.put("AMOUNT" ,"11|N|AMOUNT");
-		}else{
-			hmCopayMaxGroup.put("COPAY-MAXIMUM-DATA" ,"33|N|COPAY-MAXIMUM-DATA");
-		}
-		return hmCopayMaxGroup;
-	}
-	
-	public LinkedHashMap<String, Object> getAccumlatorData(String accumInd) {
-		LinkedHashMap<String, Object> hmAccumGroup = new LinkedHashMap<String, Object>();
-		if (accumInd.equals("1")){
-			hmAccumGroup.put("LIFETIME-USED-TOTAL" ,"13|N|LIFETIME-USED-TOTAL");
-			hmAccumGroup.put("USED-AMOUNT" ,"13|N|USED-AMOUNT");
-			hmAccumGroup.put("REMAINDER-AMOUNT" ,"13|N|REMAINDER-AMOUNT");
-			//CLAIM-PERIOD
-			hmAccumGroup.put("START-DATE" ,"10|C|START-DATE");
-			hmAccumGroup.put("END-DATE" ,"10|C|END-DATE");
-			hmAccumGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
-		}else{
-			//CLAIM-USAGE-NON-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
-			hmAccumGroup.put("LIFETIME-USED-TOTAL" ,"4|N|LIFETIME-USED-TOTAL");
-			hmAccumGroup.put("USED-VISITS" ,"4|N|USED-VISITS");
-			hmAccumGroup.put("REMAINDER-VISITS" ,"4|N|REMAINDER-VISITS");
-			hmAccumGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
-			//CLAIM-PERIOD
-			hmAccumGroup.put("START-DATE" ,"10|C|START-DATE");
-			hmAccumGroup.put("END-DATE" ,"37|C|END-DATE");
-
-		}
-		return hmAccumGroup;
+		return hmpProductIdn;
 	}
 	
 	public LinkedHashMap<String, Object> getCopyBookFields() {
@@ -231,3 +123,6 @@ public class HMB1CopyBookList {
 
 
 }
+
+
+
