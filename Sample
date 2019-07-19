@@ -1,104 +1,116 @@
-package com.aetna.prvrte.rteintranet.adapter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.SqlOutParameter;
-import org.springframework.jdbc.core.SqlParameter;
-import org.springframework.jdbc.core.SqlReturnResultSet;
-import org.springframework.jdbc.object.StoredProcedure;
-
-
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-import com.aetna.prvrte.rteintranet.util.DBConstants;
-import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-public class VanIdAdapter extends StoredProcedure {
-	public VanIdAdapter() {}
-	private final Log log = LogFactory.getLog(VanIdAdapter.class);
-	@SuppressWarnings("rawtypes")
-	public VanIdAdapter(DataSource datasource, String storedProc)
-			throws SQLException {
-		super(datasource, storedProc);
-		//System.out.println(" AdasvctDisplayAdapter ------------------> " + storedProc);
-		log.info("Loaded Stored procedure of VanIdAdapter : " + storedProc);
-		declareParameter(new SqlParameter(DBConstants.RTEGENL_DB2VW_NM, Types.CHAR));
-		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
-		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR4, new RowMapper() {
-			/*
-			 * (non-Javadoc)
-			 * 
-			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet , int)
-			 */
-			public HashMap<String, String> mapRow(final ResultSet rs, final int arg1)
-					throws SQLException {
-				//VanVo vanvo = new VanVo();
-				HashMap<String, String> vanIds = new HashMap<String, String>();
-				vanIds.put(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RTEGENL_VALUE_CD)), RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RTEGENL_DESC_TXT)));
-				return vanIds;
-			}
-		}));
+
+public class Dependent {
+
+
+
+	Name name;
+
+	String dob;
+
+	String gender;
+
+	String relationship;
+
+	String terminationDate;
+
+	public Name getName() {
+
+		return name;
+
 	}
-	
-	@SuppressWarnings("unchecked")
-	public Map<String, Object> getVanList() throws ApplicationException {
-		if (log.isDebugEnabled()) {
-			log.warn("---- Entering getVanLookUpList ---");
-		}
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
-		List<HashMap<String, String>> vanlist = new ArrayList<HashMap<String, String>>();
-		String newMessage = "";
-		try {
-			String org1 = RteIntranetUtils.getTrimmedString("EDIVANID");
-			
-			
-			params.put(DBConstants.RTEGENL_DB2VW_NM, org1);
-			
-			
-			log.info("Params for getting Van List : " + params);
-			Map<String, Object> results = execute(params);
-			String sqlCode = String.valueOf(results.get(DBConstants.LS_SQLCODE));
-			
-			if ("0".equals(sqlCode)) {
-				vanlist =  (List<HashMap<String, String>>) results.get(DBConstants.READ_CURSOR4);
-				
-			if (vanlist.isEmpty()) {
-					newMessage = "No Data on database for Van: ";
-				}
-			} else {
-				log.warn("-----------------------------> "	+ "Problem in DB2. Sqlcode: " + sqlCode);
-				newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
-			}
-			
-			resultMap.put("vanMsg", newMessage);
-			resultMap.put("vanList", vanlist);
-			return resultMap;
-			
-		} catch (DataAccessException dae) {
-			log.error("VanAdapter : Data access excpetion occured " + dae);
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
-		} catch (Exception exception) {
-			log.error("VanAdapter : generic error occured  " + exception);
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
-		} finally {
 
-		}
+	public void setName(Name name) {
+
+		this.name = name;
+
 	}
+
+	public String getDob() {
+
+		
+
+		return dob;
+
+	}
+
+	public void setDob(String dob) {
+
+		dob=dob.replaceAll("-", "");
+
+		this.dob = dob;
+
+	}
+
+	public String getGender() {
+
+		
+
+		return gender;
+
+	}
+
+	public void setGender(String gender) {
+
+		
+
+		this.gender = gender;
+
+	}
+
+	public String getRelationship() {
+
+		
+
+		return relationship;
+
+	}
+
+	public void setRelationship(String relationship) {
+
+		
+
+		this.relationship = relationship;
+
+	}
+
+	public String getTerminationDate() {
+
+		
+
+		return terminationDate;
+
+	}
+
+	public void setTerminationDate(String terminationDate) {
+
+		terminationDate=terminationDate.replaceAll("-", "");
+
+		
+
+		this.terminationDate = terminationDate;
+
+	}
+
+	public StringBuilder getDependent(){
+
+		return new StringBuilder(name.getName())
+
+		.append(getDob())
+
+		.append(getDob())
+
+		.append(getGender())
+
+		.append(getRelationship())
+
+		.append(getTerminationDate());
+
+	}
+
 }
+
