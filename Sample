@@ -1,166 +1,104 @@
-/**
+package com.aetna.prvrte.rteintranet.exception;
 
- * 
+import org.springframework.stereotype.Component;
 
- */
+@Component("ex")
+public class ApplicationException extends Exception {
 
-package com.aetna.prvrte.rteintranet.dto;
-
-
-
-import java.io.Serializable;
-
-
-
-/**
-
- * @author N657186
-
- *
-
- */
-
-public class UserDTO implements Serializable{
+	private static final long serialVersionUID = 1L;
+	// private static final long serialVersionUID = 1L;
+	private String errorCode       = null;
+	private String errorMessage    = null;
+	private Throwable objThrowable = null;
 
 	/**
-
-	 * 
-
+	 * Constructor with no arguments.
 	 */
+	public ApplicationException() {
 
-	private static final long serialVersionUID = 3378304167421298050L;
-
-	private String securityLevel = "";
-
-	private String name = "";
-
-	private String aetnaId = "";
-
-	private String dateSecLevPosted = "";
-
-	
-
-	public UserDTO() {
-
+		// Call for Super Class Constructor.
 		super();
-
-		setSecurityLevel("R");
-
-		setName("Unknown User");
-
-		setAetnaId("z000000");
-
-		setDateSecLevPosted("0001-01-01");
-
-	}
-
-	
-
-	/**
-
-	 * @return the securityLevel
-
-	 */
-
-	public String getSecurityLevel() {
-
-		return securityLevel;
-
 	}
 
 	/**
-
-	 * @param securityLevel the securityLevel to set
-
+	 * Constructor with error Code argument.
+	 * 
+	 * @param errorCode
+	 * @param errorMessage
+	 * @param objException
 	 */
+	public ApplicationException(final String errorCode,
+			final Throwable objException) {
 
-	public void setSecurityLevel(String securityLevel) {
-
-		this.securityLevel = securityLevel;
-
+		// Call to Super Class Constructor with error Code as argument.
+		super(errorCode);
+		this.errorCode    = errorCode;
+		this.objThrowable = objException;
 	}
 
 	/**
-
-	 * @return the name
-
+	 * Constructor with error Code and error Message as arguments.
+	 * 
+	 * @param errorCode
+	 * @param errorMessage
+	 * @param objException
 	 */
-
-	public String getName() {
-
-		return name;
-
+	public ApplicationException(final String errorCode,
+			final String errorMessage, final Throwable objException) {
+		super();
+		this.errorCode    = errorCode;
+		this.errorMessage = errorMessage;
+		this.objThrowable = objException;
 	}
 
 	/**
-
-	 * @param name the name to set
-
+	 * Constructor with error Code and error Message as arguments.
+	 * 
+	 * @param errorMessage
 	 */
-
-	public void setName(String name) {
-
-		this.name = name;
-
+	public ApplicationException(final String errorMessage) {
+		super(errorMessage);
+		this.errorMessage = errorMessage;
 	}
 
 	/**
-
-	 * @return the aetnaId
-
+	 * Constructor with error Code and error Message as arguments.
+	 * 
+	 * @param objException
 	 */
-
-	public String getAetnaId() {
-
-		return aetnaId;
-
+	public ApplicationException(final Throwable objException) {
+		super(objException);
+		this.objThrowable = objException;
 	}
 
 	/**
-
-	 * @param aetnaId the aetnaId to set
-
+	 * @return Returns the errorCode.
 	 */
-
-	public void setAetnaId(String aetnaId) {
-
-		this.aetnaId = aetnaId;
-
+	public String getErrorCode() {
+		return errorCode;
 	}
 
 	/**
-
-	 * @return the dateSecLevPosted
-
+	 * @param errorCode
+	 *            The errorCode to set.
 	 */
-
-	public String getDateSecLevPosted() {
-
-		return dateSecLevPosted;
-
+	public void setErrorCode(final String errorCode) {
+		this.errorCode = errorCode;
 	}
 
 	/**
-
-	 * @param dateSecLevPosted the dateSecLevPosted to set
-
+	 * @return Returns the errorMessage.
 	 */
-
-	public void setDateSecLevPosted(String dateSecLevPosted) {
-
-		this.dateSecLevPosted = dateSecLevPosted;
-
+	public String getErrorMessage() {
+		return errorMessage;
 	}
 
-	
-
-	
-
-	
-
-	
-
-
+	/**
+	 * @param errorMessage
+	 *            The errorMessage to set.
+	 */
+	public void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
 }
-
