@@ -1,110 +1,73 @@
 /**
-
  * 
-
  */
-
 package com.aetna.prvrte.rteintranet.dao;
 
-
-
 import java.util.List;
-
 import java.util.Map;
 
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Repository;
-
-import com.aetna.prvrte.rteintranet.adapter.RbrcAddAdapter;
-
-import com.aetna.prvrte.rteintranet.adapter.RbrcDeleteAdapter;
-
-import com.aetna.prvrte.rteintranet.adapter.RbrcLookUpAdapter;
-
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
-
+import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-
-
 /**
-
- * @author N657186
-
- * Cognizant_Offshore
-
+ * 
+ * <h1>RteAdasvctDAO</h1> The RteAdasvctDAO is responsible for handling the
+ * storage, retrieval, and search data from/to data store.
+ * 
+ * @author N726899 Cognizant_Offshore
+ * 
  */
-
-
-
-@Repository
-
-public class RbrcDAOImpl implements RbrcDAO {
-
-
-
-	@Autowired(required=true)
-
-	private RbrcLookUpAdapter rbrcLookUpAdapter;
-
+public interface RteAdasvctDAO {
+	/**
+	 * Method to get the ADASVCT list from data store.
+	 * 
+	 * @param adasvctDTO
+	 * 			adasvctDTO object.
+	 * @return Map of ADASVCT list and success or error message.
+	 * 
+	 * @exception ApplicationException if data not found in data store.
+	 */
+	Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException;
+	/**
+	 * Method to add new ADASVCT to data store.
+	 * 
+	 * @param adasvctDTO
+	 *            adasvctDTO object.
+	 * @return Map of added ADASVCT data and success or error message.
+	 * 
+	 * @exception ApplicationException
+	 *                if insertion fails.
+	 */
+	Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException;
+	/**
+	 * Method to delete the ADASVCT data from data store.
+	 * 
+	 * @param adaCd
+	 *            String of adaCd.
+	 * @param expDate
+	 *            String of expiration data of adaCd.
+	 * @return Map of flag to delete the data from ADASVCT list and success or
+	 *         error message.
+	 * @exception ApplicationException
+	 *             if deletion fails.
+	 */
+	Map<String, Object> deleteAdasvct(String adaCd, String expDate)throws ApplicationException;
 	
-
-	@Autowired(required=true)
-
-	private RbrcAddAdapter rbrcAddAdapter;
-
+	/**
+	 * Method to add/update list of ADASVCT to data store.
+	 * 
+	 * @param adasvctDTO
+	 *            adasvctDTO object.
+	 * @param adasvctDTOList
+	 *            list of adasvctDTO object.
+	 * @param index
+	 *            index to update the data
+	 * @return Map of flag to delete the data from ADASVCT list, success or
+	 *         error message and list of ADASVCT.
+	 * @exception ApplicationException
+	 *                if insertion or update fails.
+	 */
+	Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,	List<AdasvctDTO> adasvctDTOList, int index)throws ApplicationException;
+	Map<String, Object> getVanList()throws ApplicationException;
 	
-
-	@Autowired(required=true)
-
-	private RbrcDeleteAdapter rbrcDeleteAdapter;
-
-	
-
-	@Override
-
-	public Map getRbrcLookUp(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return rbrcLookUpAdapter.getRbrcLookUp(rbrcDTO);
-
-	}
-
-	@Override
-
-	public Map addNewRbrc(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return rbrcAddAdapter.addNewRbrc(rbrcDTO);
-
-	}
-
-	
-
-
-
-	@Override
-
-	public Map deleteRbrc(RbrcDTO rbrcDTO)
-
-			throws ApplicationException {
-
-		return rbrcDeleteAdapter.deleteRbrc(rbrcDTO);
-
-	}
-
-
-
-	@Override
-
-	public Map addUpdateRbrc(RbrcDTO existRbrcDTO,
-
-			List<RbrcDTO> rbrcDtoList, int index, char updateInd) throws ApplicationException {
-
-		return rbrcAddAdapter.addUpdateRbrc(existRbrcDTO, rbrcDtoList, index, updateInd);
-
-	}
-
 }
-
