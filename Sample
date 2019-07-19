@@ -8,7 +8,11 @@ import java.sql.SQLException;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
+
 import java.util.HashMap;
+
+import java.util.LinkedHashSet;
 
 import java.util.LinkedList;
 
@@ -38,21 +42,29 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 
 
+import com.aetna.prvrte.rteintranet.dto.LongRunTransReport3DTO;
+
 import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
+import com.aetna.prvrte.rteintranet.vo.LongRunTransReport3VO;
+
+import com.aetna.prvrte.rteintranet.vo.LongRunTransactionVO;
 
 
-public class LongRunTransLookUpReport2Adapter extends StoredProcedure {
+
+public class LongRunTransLookUpReport3Adapter extends StoredProcedure {
 
 
 
-private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class);
+	private final Log log = LogFactory
 
-	
+			.getLog(LongRunTransLookUpReport3Adapter.class);
+
+
 
 	private static final String START_TIMESTAMP = "START_TIMESTAMP";
 
@@ -66,17 +78,19 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 	private static final String LS_SQLCODE = "LS_SQLCODE";
 
-	private static final String READ_CURSOR = "READ_CURSOR2";
+	private static final String READ_CURSOR = "READ_CURSOR3";
 
 	private static final String IN_RPT_IND = "IN_RPT_IND";
 
-	
 
-	public LongRunTransLookUpReport2Adapter(DataSource datasource, String storedProc) {
+
+	public LongRunTransLookUpReport3Adapter(DataSource datasource,
+
+			String storedProc) {
 
 		super(datasource, storedProc);
 
-		
+
 
 		declareParameter(new SqlParameter(START_TIMESTAMP, Types.TIMESTAMP));
 
@@ -92,13 +106,21 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 		declareParameter(new SqlOutParameter(LS_SQLCODE, Types.INTEGER));
 
-		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper(){
+		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper() {
 
-			
 
-			/* (non-Javadoc)
 
-			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
+			/*
+
+			 * (non-Javadoc)
+
+			 * 
+
+			 * @see
+
+			 * org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet
+
+			 * , int)
 
 			 */
 
@@ -106,21 +128,19 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 					throws SQLException {
 
-				
 
-				LongRunTransactionDTO longRunTransDTO =  new LongRunTransactionDTO();
 
-				longRunTransDTO.setConvrsnCDResult(rs.getString("SUBMSN_CNVRSTN_CD"));
+				LongRunTransactionDTO longRunTransDTO = new LongRunTransactionDTO();
 
-				longRunTransDTO.setVanIDCDResult(rs.getString("SUBMSN_VAN_ID_CD"));
+				longRunTransDTO.setResultSecondsResult(rs
 
-				longRunTransDTO.setTypCDResult(rs.getString("SUBMSN_TY_CD"));
+						.getString("TIME_SECONDS"));
 
-				longRunTransDTO.setLoadNameResult(rs.getString("SBMLETK_LOAD_NM"));
+				longRunTransDTO.setResult3StartTime(rs.getTimestamp("START_TIMEP").toString());
 
-				longRunTransDTO.setResultSecondsResult(rs.getString("TIME_SECONDS"));
+				longRunTransDTO.setResult3EndTime(rs.getTimestamp("END_TIMEP").toString());
 
-				longRunTransDTO.setUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+				longRunTransDTO.setResult3CNT(rs.getString("CNT"));
 
 				return longRunTransDTO;
 
@@ -134,15 +154,17 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 	}
 
-	
+
 
 	@SuppressWarnings("unchecked")
 
-	public Map getLongrunTransLookUpTable (LongRunTransactionDTO longrunTransDTO) throws ApplicationException {
+	public Map getLongrunTransLookUpTable(LongRunTransactionDTO longrunTransDTO)
+
+			throws ApplicationException {
 
 		log.warn("Entered LongRunTransLookUpReport2Adapter  - getLongrunTransLookUpTable");
 
-		
+
 
 		Map<String, String> params = new java.util.HashMap<String, String>();
 
@@ -158,41 +180,39 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 		params.put(MINUTES_SPLIT, longrunTransDTO.getMinutesCalc());
 
-		params.put(IN_RPT_IND, "2");
+		params.put(IN_RPT_IND, "3");
 
 		log.warn(params);
 
 		Map results = null;
 
-		
+
 
 		List<LongRunTransactionDTO> longRunTransList = new LinkedList<LongRunTransactionDTO>();
 
-		String newMessage="";
+		String newMessage = "";
 
-		
+		List<LongRunTransReport3DTO> longRunTrans3List = new ArrayList<LongRunTransReport3DTO>();
 
 		try {
 
-			
+
 
 			results = execute(params);
 
 			log.warn("LongRunTransLookUpReport2Adapter: Executed stored procedure");
 
-			String sqlCode =  String.valueOf(results
+			String sqlCode = String.valueOf(results.get(LS_SQLCODE));
 
-					.get(LS_SQLCODE));
 
-			
 
 			longRunTransList = (List<LongRunTransactionDTO>) results
 
-					.get(READ_CURSOR);	
+					.get(READ_CURSOR);
 
-			if (longRunTransList.isEmpty()){
+			if (longRunTransList != null && longRunTransList.isEmpty()) {
 
-				
+
 
 				if ("0".equals(sqlCode)) {
 
@@ -202,35 +222,243 @@ private final Log log = LogFactory.getLog(LongRunTransLookUpReport2Adapter.class
 
 					newMessage = "Try to minimize the start time and end time for results" + sqlCode;
 
-				}
+				} 
 
 				else {
 
-					newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
+					newMessage = "Problem in DB2. sqlcode: " + sqlCode;
 
-				}			  		  		  
+				}
 
 			} else {
 
 				newMessage = "";
 
+				// Report3 start
+
+				List<String> startTimeReport3 = new ArrayList<String>();
+
+				try {
+
+					if (longRunTransList != null && !longRunTransList.isEmpty()) {
+
+						for (LongRunTransactionDTO test : longRunTransList) {
+
+							startTimeReport3.add(test.getResult3StartTime());
+
+						}
+
+						startTimeReport3 = new ArrayList<String>(
+
+								new LinkedHashSet<String>(startTimeReport3));
+
+						
+
+						LongRunTransReport3DTO report3Greater7 = new LongRunTransReport3DTO();
+
+						for (String startTime : startTimeReport3) {
+
+							int greaterSevenRecords = 0;
+
+							boolean greaterSevenFlag = false;
+
+							LongRunTransReport3DTO report3 = new LongRunTransReport3DTO();
+
+							for (LongRunTransactionDTO values : longRunTransList) {
+
+								if (startTime.equals(values
+
+										.getResult3StartTime())) {
+
+
+
+									if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 0) {
+
+										report3.setZeroTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 1) {
+
+										report3.setOneTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 2) {
+
+										report3.setTwoTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 3) {
+
+										report3.setThreeTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 4) {
+
+										report3.setFourTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 5) {
+
+										report3.setFiveTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) == 6) {
+
+										report3.setSixTimeTaken(values
+
+												.getResult3CNT());
+
+									} else if (Integer.parseInt(values
+
+											.getResultSecondsResult()) >= 7) {
+
+										greaterSevenFlag = true;
+
+										greaterSevenRecords = greaterSevenRecords
+
+												+ Integer.parseInt(values
+
+														.getResult3CNT());
+
+										String s3 = Integer
+
+												.toString(greaterSevenRecords);
+
+										report3.setSevenTimeTaken(s3);
+
+									}
+
+									String endDate = values.getResult3EndTime();
+
+									String split[] = startTime.split(" ");
+
+									String split1[] = endDate.split(" ");
+
+									report3.setStartDate(split[0]);
+
+									report3.setStartTime(split[1]);
+
+									report3.setEndTime(split1[1]);
+
+									longRunTrans3List.add(report3);
+
+								}
+
+							}
+
+						}
+
+						longRunTrans3List = new ArrayList<LongRunTransReport3DTO>(
+
+								new LinkedHashSet<LongRunTransReport3DTO>(longRunTrans3List));
+
+						System.out.println(longRunTrans3List);
+
+						for (LongRunTransReport3DTO values : longRunTrans3List) {
+
+							if (values.getZeroTimeTaken().equals("")) {
+
+								values.setZeroTimeTaken("0");
+
+							}
+
+							if (values.getOneTimeTaken().equals("")) {
+
+								values.setOneTimeTaken("0");
+
+							}
+
+							if (values.getTwoTimeTaken().equals("")) {
+
+								values.setTwoTimeTaken("0");
+
+							}
+
+							if (values.getThreeTimeTaken().equals("")) {
+
+								values.setThreeTimeTaken("0");
+
+							}
+
+							if (values.getFourTimeTaken().equals("")) {
+
+								values.setFourTimeTaken("0");
+
+							}
+
+							if (values.getFiveTimeTaken().equals("")) {
+
+								values.setFiveTimeTaken("0");
+
+							}
+
+							if (values.getSixTimeTaken().equals("")) {
+
+								values.setSixTimeTaken("0");
+
+							}
+
+							if (values.getSevenTimeTaken().equals("")) {
+
+								values.setSevenTimeTaken("0");
+
+							}
+
+						}
+
+					}
+
+				} catch (Exception e) {
+
+					System.out.println(e);
+
+				}
+
+
+
+				// Report3 end
+
 			}
 
 			longRunTransMap.put("longRunTransMessage", newMessage);
 
-			longRunTransMap.put("longRunTransList",longRunTransList);
+			longRunTransMap.put("longRunTransList", longRunTrans3List);
 
 			return longRunTransMap;
 
-		}catch (Exception exception){
+		} catch (Exception exception) {
 
-			log.error("LongRunTransLookUpReport2Adapter : generic error occured  "+exception);
+			log.error("LongRunTransLookUpReport2Adapter : generic error occured  "
 
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
+					+ exception);
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,
+
+					exception.getMessage(), exception);
 
 		}
 
-		
+
 
 	}
 
