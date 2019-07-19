@@ -12,6 +12,24 @@ import java.util.List;
 
 import java.util.Map;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Repository;
+
+
+
+import com.aetna.prvrte.rteintranet.adapter.UserAddAdapter;
+
+import com.aetna.prvrte.rteintranet.adapter.UserDeleteAdapter;
+
+import com.aetna.prvrte.rteintranet.adapter.UserDisplayAdapter;
+
+/*import com.aetna.prvrte.rteintranet.adapter.UserDeleteAdapter;
+
+*/
+
 import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
@@ -22,11 +40,59 @@ import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
  * @author N624926
 
- *Cognizant_Offshore
+ * Cognizant_Offshore
 
  */
 
-public interface UserDAO {
+@Repository
+
+public class UserDAOImpl implements UserDAO {
+
+	
+
+	@Autowired(required=true)
+
+	private UserDisplayAdapter userDisplayAdapter;
+
+
+
+	@Autowired(required=true)
+
+	private UserAddAdapter userAddAdapter;
+
+	
+
+	@Autowired(required=true)
+
+	private UserDeleteAdapter userDeleteAdapter;
+
+	
+
+	
+
+	/**
+
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	@Override
+
+	public Map getUserLookUpTable(RbrcDTO rbrcDTO)
+
+			throws ApplicationException {
+
+		
+
+		return userDisplayAdapter.getUserLookUpTable(rbrcDTO);
+
+	}
 
 
 
@@ -44,9 +110,13 @@ public interface UserDAO {
 
 	 */
 
-	Map getUserLookUpTable(RbrcDTO rbrcDTO) throws ApplicationException ;
+	@Override
 
+	public Map addNewUser(RbrcDTO rbrcDTO) throws ApplicationException {
 
+		return userAddAdapter.addNewUser(rbrcDTO);
+
+	}
 
 
 
@@ -62,25 +132,17 @@ public interface UserDAO {
 
 	 */
 
-	Map addNewUser(RbrcDTO rbrcDTO)throws ApplicationException ;
+	@Override
+
+	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException {
+
+		return userDeleteAdapter.deleteUser(rbrcDTO);
+
+	}
 
 
 
-	/**
 
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
-
-	 */
-
-	Map deleteUser(RbrcDTO rbrcDTO)throws ApplicationException ;
-
-
-
-	
 
 	/**
 
@@ -98,15 +160,19 @@ public interface UserDAO {
 
 	 */
 
-		Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList,
+	@Override
 
-				int index, char dbUpdatedInd)throws ApplicationException ;
+	public Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList,
 
+			int index, char dbUpdatedInd)
 
+			throws ApplicationException {
 
+		return userAddAdapter.addUpdateUser(  editedRbrcDTO,  rbrcDtoList,
 
+				 index,  dbUpdatedInd);
 
-
+	}
 
 
 
