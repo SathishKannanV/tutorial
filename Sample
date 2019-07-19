@@ -1,116 +1,38 @@
-package com.aetna.prvrte.rteintranet.copybookbean;
+package com.aetna.prvrte.rteintranet.dao;
 
 
 
-
-
-public class Subscriber {
+import java.util.Map;
 
 
 
-	String ssn;
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-	Name name;
 
-	String dob;
 
-	String gender;
+public interface EventTrackDAO {
 
-	String coverageTerminationDate;
 
-	public String getSsn() {
 
-		
+	public Map getSbrsrxbEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-		return ssn;
+	public Map getSpntprvEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-	}
+	public Map getSbmrdepEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-	public void setSsn(String ssn) {
+	public Map getSubmsnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-		
+	public Map getSrapidtlEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-		this.ssn = ssn;
+	public Map getEventTrackSbmletkLookUpTable(String convIdCode, String vanIdCd,String tranType,String postedDt,String seconds) throws ApplicationException ;
 
-	}
+	public Map getSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-	public Name getName() {
+	public Map getSbmrplnEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-		return name;
+	public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException;
 
-	}
-
-	public void setName(Name name) {
-
-		this.name = name;
-
-	}
-
-	public String getDob() {
-
-		
-
-		return dob;
-
-	}
-
-	public void setDob(String dob) {
-
-		dob=dob.replaceAll("-", "");
-
-		
-
-		this.dob = dob;
-
-	}
-
-	public String getGender() {
-
-		
-
-		return gender;
-
-	}
-
-	public void setGender(String gender) {
-
-		
-
-		this.gender = gender;
-
-	}
-
-	public String getCoverageTerminationDate() {
-
-		
-
-		return coverageTerminationDate;
-
-	}
-
-	public void setCoverageTerminationDate(String coverageTerminationDate) {
-
-		coverageTerminationDate=coverageTerminationDate.replaceAll("-", "");
-
-		
-
-		this.coverageTerminationDate = coverageTerminationDate;
-
-	}
-
-	public StringBuilder getSubscriber(){
-
-		return new StringBuilder(getSsn())
-
-		.append(name.getName())
-
-		.append(getDob())
-
-		.append(getGender())
-
-		.append(getCoverageTerminationDate());
-
-	}
+	public Map getSbmrplnSbmsnrEvntTracking(String convIdCode, String vanIdCd,String typeCd,String postedDt ,String seqNo) throws ApplicationException;
 
 }
 
