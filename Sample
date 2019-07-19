@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import java.sql.Types;
 
-
-
 import java.util.ArrayList;
 
 import java.util.HashMap;
@@ -44,75 +42,65 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 
 
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
-
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
-import com.aetna.prvrte.rteintranet.util.DBConstants;
-
-import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
-
-import com.aetna.prvrte.rteintranet.vo.RbrcVO;
+import com.aetna.prvrte.rteintranet.vo.UserVO;
 
 
 
-/**
-
- * @author N624926
-
- * Cognizant_Offshore
-
- */
-
-public class UserDisplayAdapter extends StoredProcedure{
+public class UserSecurityAdapter extends StoredProcedure{
 
 
 
-	/**
+	private final Log log = LogFactory.getLog(UserSecurityAdapter.class);
 
-	 * Instance of Log Factory.
+	private static final String LS_SITE_CD = "LS_SITE_CD";
 
-	 */
+	private static final String LS_RIDER_CD = "LS_RIDER_CD";
 
-	private final Log log = LogFactory.getLog(UserDisplayAdapter.class);
+	private static final String LS_SVCTYP_CD = "LS_SVCTYP_CD";
+
+	private static final String LS_SQL_TYPE = "LS_SQL_TYPE";
+
+	private static final String LS_SQLCODE = "LS_SQLCODE";
+
+	//Defaulting to the Stored Procedure's search with site, rider and service code option.
+
+	private static final String siteCd = "ZZZZ";
+
+	private static final String svcTypeCd = "99999";
+
+	private static final int searchCd = 3;    
+
+	private static final String READ_CURSOR3 = "READ_CURSOR3";
+
+
 
 	
 
-	/**
+	
 
-	 * 
-
-	 * @param datasource
-
-	 * @param storedProc
-
-	 * @throws SQLException
-
-	 */
-
-	public UserDisplayAdapter(DataSource datasource, String storedProc) {
+	public UserSecurityAdapter(DataSource datasource, String storedProc) {
 
 		super(datasource, storedProc);
 
-		
+		System.out.println("-------------------->"+storedProc);
 
-		declareParameter(new SqlParameter(DBConstants.LS_SITE_CD, Types.CHAR));
+		declareParameter(new SqlParameter(LS_SITE_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_RIDER_CD, Types.CHAR));
+		declareParameter(new SqlParameter(LS_RIDER_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));		
+		declareParameter(new SqlParameter(LS_SVCTYP_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SQL_TYPE, Types.DECIMAL));
+		declareParameter(new SqlParameter(LS_SQL_TYPE, Types.DECIMAL));
 
-		
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
+		declareParameter(new SqlOutParameter(LS_SQLCODE, Types.CHAR));
 
 		
 
-		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR3, new RowMapper(){
+		declareParameter(new SqlReturnResultSet(READ_CURSOR3, new RowMapper(){
 
 			
 
@@ -126,35 +114,19 @@ public class UserDisplayAdapter extends StoredProcedure{
 
 					throws SQLException {
 
-				char updatedInd = ApplicationConstants.UPDATE_IND_N; //Used by RBrCDisplay, not on database
+				
 
-				RbrcDTO rbrcDTO = new RbrcDTO();
+				UserVO currentUser =new UserVO();
 
-				rbrcDTO.setDbSiteCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.SITE_CD)));
+				currentUser.setAetnaId(rs.getString("RIDER_CD"));
 
-				rbrcDTO.setDbRiderCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RIDER_CD)));
+				currentUser.setDateSecLevPosted(rs.getString("RBRC_SRCE_PSTD_DT"));
 
-				rbrcDTO.setDbSvcTypeCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_SVCTYP_CD)));
+				currentUser.setName(rs.getString("RBRC_DESC_TXT"));
 
-				rbrcDTO.setDbPostedDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_SRCE_PSTD_DT)));
+				currentUser.setSecurityLevel(rs.getString("RBRC_IONTWK_CD"));
 
-				rbrcDTO.setDbDescTxt(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_DESC_TXT)));
-
-				rbrcDTO.setDbIONtwkCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_IONTWK_CD)));
-
-				rbrcDTO.setDbTOSCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.TOS_CD)));
-
-				rbrcDTO.setDbHMOSrcBnInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_HMOSRCBN_IND)));
-
-				rbrcDTO.setTextSendInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.RBRC_TXT_SND_CD)));
-
-				rbrcDTO.setPrevCareInd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.PREV_CARE_IND)));
-
-				rbrcDTO.setGenderCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.GENDER_CD)));
-
-				rbrcDTO.setDbUpdatedInd(updatedInd);
-
-				return rbrcDTO;
+				return currentUser;
 
 			}
 
@@ -168,131 +140,129 @@ public class UserDisplayAdapter extends StoredProcedure{
 
 	
 
-	
-
-	/**
-
-	 * Method to get the RBRC list from data store.
-
-	 * 
-
-	 * @param rbrcDTO
-
-	 * 			rbrcDTO parameter
-
-	 * 
-
-	 * @return Map of RBRC list and success or error message.
-
-	 * 
-
-	 * @exception ApplicationException if data not found in data store.
-
-	 */
-
 	@SuppressWarnings("unchecked")
 
-	public Map getUserLookUpTable (RbrcDTO rbrcDTO) throws ApplicationException {
+	public Map getUserSecurityLevel (String userId) throws ApplicationException {
 
-		log.warn("Entered UserDisplayAdapter  - getUserLookUpTable");
+		log.debug("Entered UserSecurityAdapter  - getUserSecurityLevel");
 
-		int searchCd =3;
+		Map<String, String> params = new java.util.HashMap<String, String>();
 
-		Map<String, String> params = new java.util.LinkedHashMap<String, String>();
+		params.put(LS_SITE_CD, siteCd);
 
-		String siteCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSiteCd());
+		params.put(LS_RIDER_CD, userId.toLowerCase());
 
-		String riderCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbRiderCd());
+		params.put(LS_SVCTYP_CD, svcTypeCd);
 
-		String svcTypeCode = RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd());
+		params.put(LS_SQL_TYPE, String.valueOf(searchCd));
 
-		if (riderCode.equals(""))
+		log.debug(params);
 
-			searchCd = 2;  
+		Map results = null;
 
-		Map rbrcMap = new HashMap();
+		List<UserVO> userList = new LinkedList<UserVO>();
 
-		params.put(DBConstants.LS_SITE_CD, siteCode);
+		Map userDetailsMap = new HashMap();
 
-		params.put(DBConstants.LS_RIDER_CD, riderCode);
-
-		params.put(DBConstants.LS_SVCTYP_CD, svcTypeCode);		
-
-		params.put(DBConstants.LS_SQL_TYPE, String.valueOf(searchCd));		
-
-		log.warn(params);
-
-		
-
-		Map results = null;		
-
-		List<RbrcVO>rbrcList= new LinkedList<RbrcVO>();
+		UserVO currUser = new UserVO();
 
 		String newMessage="";
 
 		try {
 
-			log.warn("UserDisplayAdapter: Executing stored procedure : ");
+			log.warn("UserSecurityAdapter: Executing stored procedure : " + "user id : " + userId);
 
 					
 
 			results = execute(params);
 
-			log.warn("UserDisplayAdapter: Executed stored procedure");
+			log.warn("UserSecurityAdapter: Executed stored procedure");
 
 			String sqlCode =  String.valueOf(results
 
-					.get(DBConstants.LS_SQLCODE));
+					.get(LS_SQLCODE));
 
 			
 
-			rbrcList = (List<RbrcVO>) results
+			if(results != null){
 
-					.get(DBConstants.READ_CURSOR3);	
-
-	
-
-			if (rbrcList.isEmpty()){
+				if ("0".equals(sqlCode)){					
 
 				
 
-				if (ApplicationConstants.ZERO_0.equals(sqlCode)) {
+				userList = (ArrayList<UserVO>) results
 
+						.get(READ_CURSOR3);	
 
+				if(userList!=null){
 
-					newMessage = "No Data on database for User ID: " + riderCode ;
+				currUser = userList.get(0);
+
+				
+
+				if ("Unknown User".equalsIgnoreCase(currUser.getName())){
+
+					newMessage = "Unable to find ---> " + currUser.getAetnaId() +
+
+									 " <--- on the RTE Security table. Contact RTE P&E to fix. Read Only rights granted.";
 
 				} else {
 
-					newMessage = "Problem in DB2. SQL Code: " + sqlCode + " || You asked for UserId  " + riderCode;
-
-				}			  		  		  
-
-			} else {
-
-				newMessage = rbrcList.size() + " Row(s) found for requested User. " + riderCode;
+					newMessage = "Welcome " + currUser.getName();
 
 				}
 
-			rbrcMap.put("newMessage", newMessage);
+				}else{
 
-			rbrcMap.put("rbrcList",rbrcList);
+					log.info("result set is empty");
 
-			return rbrcMap;
+					newMessage = "Unable to find ---> " + currUser.getAetnaId() +
+
+							 " <--- on the RTE Security table. Contact RTE P&E to fix. Read Only rights granted.";
+
+				}
+
+			}else{
+
+				
+
+				
+
+				 newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
+
+			}
+
+			}
+
+			userDetailsMap.put("userMessage", newMessage);
+
+			userDetailsMap.put("user", currUser);
+
+			log.warn("End: UserSecurityAdapter  - getUserSecurityLevel");
+
+			return userDetailsMap;
+
+			
+
+		}catch (DataAccessException dae) {
+
+			log.error("UserSecurityAdapter : Data access excpetion occured "+dae);
+
+			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS,dae.getMessage(),dae);
 
 		}catch (Exception exception){
 
-			log.error("UserDisplayAdapter : generic error occured  "+exception);
+			log.error("UserSecurityAdapter : generic error occured  "+exception);
 
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 
 		}
 
-	}
-
 		
 
+	}
 
+	
 
 }
 
