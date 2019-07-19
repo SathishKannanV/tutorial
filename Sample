@@ -4,71 +4,61 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-public class EDIProvider {
+public class Entity {
 
 
 
-	String providerID;
+	String entityIndicator;
 
-	String qualifier;
+	IndividualData individualData;
 
-	Entity entity;
+	NonIndividualData nonIndividualData;
 
-	public String getProviderID() {
+	public String getEntityIndicator() {
 
-		
-
-		return providerID;
+		return entityIndicator;
 
 	}
 
-	public void setProviderID(String providerID) {
+	public void setEntityIndicator(String entityIndicator) {
 
-		
-
-		this.providerID = providerID;
+		this.entityIndicator = entityIndicator;
 
 	}
 
-	public String getQualifier() {
+	public IndividualData getIndividualData() {
 
-		
-
-		return qualifier;
+		return individualData;
 
 	}
 
-	public void setQualifier(String qualifier) {
+	public void setIndividualData(IndividualData individualData) {
 
-		
-
-		this.qualifier = qualifier;
+		this.individualData = individualData;
 
 	}
 
-	public Entity getEntity() {
+	public NonIndividualData getNonIndividualData() {
 
-		return entity;
-
-	}
-
-	public void setEntity(Entity entity) {
-
-		this.entity = entity;
+		return nonIndividualData;
 
 	}
 
-	public StringBuilder getProvider(){
+	public void setNonIndividualData(NonIndividualData nonIndividualData) {
 
-		return new StringBuilder(getProviderID())
-
-		.append(getQualifier())
-
-		.append(entity.getEntity());
+		this.nonIndividualData = nonIndividualData;
 
 	}
 
-	
+	public StringBuilder getEntity(){
+
+		return new StringBuilder(getEntityIndicator())
+
+		.append(individualData.getIndividual())
+
+		.append(nonIndividualData.getNonIndiv());
+
+	}
 
 }
 
