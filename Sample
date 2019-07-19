@@ -8,8 +8,6 @@ package com.aetna.prvrte.rteintranet.adapter;
 
 
 
-import java.sql.Date;
-
 import java.sql.SQLException;
 
 import java.sql.Types;
@@ -17,10 +15,6 @@ import java.sql.Types;
 import java.util.HashMap;
 
 import java.util.LinkedHashMap;
-
-import java.util.LinkedList;
-
-import java.util.List;
 
 import java.util.Map;
 
@@ -44,8 +38,6 @@ import org.springframework.jdbc.object.StoredProcedure;
 
 import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
-
-
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
@@ -64,7 +56,7 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
  */
 
-public class RbrcAddAdapter extends StoredProcedure{
+public class RbrcDeleteAdapter extends StoredProcedure{
 
 
 
@@ -74,9 +66,7 @@ public class RbrcAddAdapter extends StoredProcedure{
 
 	 */
 
-	private final Log log = LogFactory.getLog(RbrcAddAdapter.class);
-
-	
+	private final Log log = LogFactory.getLog(RbrcDeleteAdapter.class);
 
 	/**
 
@@ -90,7 +80,7 @@ public class RbrcAddAdapter extends StoredProcedure{
 
 	 */
 
-	public RbrcAddAdapter(DataSource datasource, String storedProc) throws SQLException{
+	public RbrcDeleteAdapter(DataSource datasource, String storedProc) {
 
 		super(datasource, storedProc);
 
@@ -102,25 +92,9 @@ public class RbrcAddAdapter extends StoredProcedure{
 
 		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
 
-		declareParameter(new SqlParameter(DBConstants.LS_SRCE_PSTD_DT, Types.DATE));
-
-		declareParameter(new SqlParameter(DBConstants.LS_DESC_TXT, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_IONTWK_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));		
-
-		declareParameter(new SqlParameter(DBConstants.LS_HMOSRCBN_IND, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_TXT_SND_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.PREV_CARE_IND, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.GENDER_CD, Types.CHAR));
+		declareParameter(new SqlParameter(DBConstants.LS_TOS_CD, Types.CHAR));
 
 		
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_ADD_UPDATE, Types.DECIMAL));
 
 		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
 
@@ -132,233 +106,31 @@ public class RbrcAddAdapter extends StoredProcedure{
 
 	/**
 
-	 * 
-
-	 * @param rbrcDTO	
-
-	 * @return
-
-	 * @throws ApplicationException
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	public Map addNewRbrc(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		
-
-		log.warn("Entered RbrcAddAdapter  - addNewRbrc");
-
-		
-
-		String newMessage ="";
-
-		Map results = null;
-
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
-
-		Map rbrcMap = new HashMap();
-
-		
-
-		try {			
-
-			params = setInputParameters(rbrcDTO, params);	
-
-			log.warn(params);
-
-			results = execute(params);
-
-			log.warn("RbrcAddAdapter: Executed stored procedure");
-
-			String actionCode =  String.valueOf(results
-
-					.get(DBConstants.LS_ADD_UPDATE));
-
-			String sqlCode =  String.valueOf(results
-
-					.get(DBConstants.LS_SQLCODE));
-
-			
-
-			if ("0".equalsIgnoreCase(sqlCode)) {
-
-				
-
-				List<RbrcDTO> rbrcList = new LinkedList<RbrcDTO>();
-
-				rbrcList.add(rbrcDTO);
-
-				rbrcMap.put("rbrcList", rbrcList);
-
-				if ("0".equalsIgnoreCase(actionCode)) {
-
-					newMessage = "This row added to the database";
-
-				}else {
-
-					newMessage ="Row already exists on the database. It was updated with these values.";					
-
-					rbrcDTO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_Y);
-
-				}				
-
-				}
-
-			else {
-
-				newMessage = "Unable to add row to the database. SQLCODE = " + sqlCode;
-
-			}
-
-			
-
-			rbrcMap.put("rbrcMessage", newMessage);
-
-							
-
-		return rbrcMap;
-
-	}catch (Exception exception){
-
-		log.error("RbrcAddAdapter : generic error occured  "+exception);
-
-		throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
-
-	}
-
-
-
-}
-
-	
-
-	
-
-	/**
-
-	 * @param existingRbrc
-
-	 * @param rbrcDtoList
-
-	 * @param index
-
-	 * @param currUpdateInd
-
-	 * @return
-
-	 * @throws ApplicationException
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	public Map addUpdateRbrc(RbrcDTO existingRbrc,
-
-			List<RbrcDTO> rbrcDtoList, int index, char currUpdateInd) throws ApplicationException{
-
-		log.warn("Entered RbrcAddAdapter  - addUpdateRbrc");
-
-		boolean isRbrcAddorUpdated = false;
-
-		String newMessage ="";
-
-		Map results = null;
-
-		Map<String, Object> params = new LinkedHashMap<String, Object>();
-
-		Map rbrcMap = new HashMap();
-
-		
-
-		params = setInputParameters(existingRbrc, params);
-
-		
-
-		log.warn(params);	
-
-		
-
-		try {
-
-					
-
-			results = execute(params);
-
-			log.warn("RbrcAddAdapter: Executed stored procedure");
-
-			String actionCode =  String.valueOf(results
-
-					.get(DBConstants.LS_ADD_UPDATE));
-
-			String sqlCode =  String.valueOf(results
-
-					.get(DBConstants.LS_SQLCODE));
-
-			if ("0".equalsIgnoreCase(sqlCode)) {
-
-				isRbrcAddorUpdated = true;
-
-				if ("0".equalsIgnoreCase(actionCode)) {
-
-					
-
-					if (currUpdateInd == ApplicationConstants.COPY)						
-
-						rbrcDtoList.set(index, existingRbrc);						
-
-					else
-
-						rbrcDtoList.add(existingRbrc);
-
-				}
-
-				else
-
-					rbrcDtoList.set(index, existingRbrc);
-
-				
-
-			} else {
-
-				newMessage = "Adding/updating of rows failed with a SQLCODE code of " + sqlCode;
-
-			}
-
-			rbrcMap.put("rbrcMessage",newMessage);
-
-			rbrcMap.put("rbrcDtoList",rbrcDtoList);
-
-			rbrcMap.put("isrbrcAddorUpdated", isRbrcAddorUpdated);
-
-			return rbrcMap;
-
-		}catch (Exception exception){
-
-			log.error("RbrcAddAdapter : generic error occured  "+exception);
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
-
-		}
-
-
-
-	}
-
-	
-
-	/**
-
 	 * @param rbrcDTO
 
-	 * @param params
-
 	 * @return
+
+	 * @throws ApplicationException
 
 	 */
 
-	public Map<String, Object> setInputParameters(RbrcDTO rbrcDTO, Map<String, Object> params){
+	@SuppressWarnings("unchecked")
+
+	public Map deleteRbrc(RbrcDTO rbrcDTO) throws ApplicationException {
+
+		
+
+		log.warn("Entered RbrcDeleteAdapter  - deleteRbrc");
+
+		boolean isRbrcDeleted = false;
+
+		String newMessage ="";
+
+		Map results = null;
+
+		Map<String, String> params = new LinkedHashMap<String, String>();
+
+		Map rbrcMap = new HashMap();
 
 			
 
@@ -368,25 +140,51 @@ public class RbrcAddAdapter extends StoredProcedure{
 
 		params.put(DBConstants.LS_SVCTYP_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbSvcTypeCd()));
 
-		params.put(DBConstants.LS_SRCE_PSTD_DT, Date.valueOf(RteIntranetUtils.getTrimmedString(rbrcDTO.getDbPostedDate())));
-
-		params.put(DBConstants.LS_DESC_TXT, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbDescTxt()));
-
-		params.put(DBConstants.LS_IONTWK_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbIONtwkCd()));
-
 		params.put(DBConstants.LS_TOS_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbTOSCd()));
-
-		params.put(DBConstants.LS_HMOSRCBN_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getDbHMOSrcBnInd()));
-
-		params.put(DBConstants.LS_TXT_SND_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getTextSendInd()));
-
-		params.put(DBConstants.PREV_CARE_IND, RteIntranetUtils.getTrimmedString(rbrcDTO.getPrevCareInd()));
-
-		params.put(DBConstants.GENDER_CD, RteIntranetUtils.getTrimmedString(rbrcDTO.getGenderCd()));
 
 		
 
-		return params;
+		log.warn(params);	
+
+		try {
+
+			results = execute(params);
+
+			log.warn("RbrcDeleteAdapter: Executed stored procedure");
+
+			
+
+			String sqlCode =  String.valueOf(results
+
+					.get(DBConstants.LS_SQLCODE));
+
+			
+
+			if ("0".equalsIgnoreCase(sqlCode)) 
+
+				isRbrcDeleted = true;
+
+			else {
+
+				newMessage = "Deleting of rows failed with a SQLCODE code of " + sqlCode;
+
+			}
+
+			rbrcMap.put("rbrcMessage", newMessage);
+
+			rbrcMap.put("isRbrcDeleted", isRbrcDeleted);
+
+			return rbrcMap;
+
+		}catch (Exception exception){
+
+			
+
+			log.error("RbrcDeleteAdapter : generic error occured  "+exception);
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
+
+		}
 
 	}
 
