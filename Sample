@@ -1,274 +1,233 @@
-/**
-
- * 
-
- */
-
 package com.aetna.prvrte.rteintranet.adapter;
-
-
-
-import java.sql.ResultSet;
-
-import java.sql.SQLException;
-
-import java.sql.Types;
-
-import java.util.ArrayList;
-
-import java.util.HashMap;
 
 import java.util.LinkedHashMap;
 
-import java.util.LinkedList;
-
-import java.util.List;
-
-import java.util.Map;
-
-
-
-import javax.sql.DataSource;
-
-
-
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.dao.DataAccessException;
-
-import org.springframework.jdbc.core.RowMapper;
-
-import org.springframework.jdbc.core.SqlOutParameter;
-
-import org.springframework.jdbc.core.SqlParameter;
-
-import org.springframework.jdbc.core.SqlReturnResultSet;
-
-import org.springframework.jdbc.object.StoredProcedure;
-
-
-
-import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
-
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
-import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-
-import com.aetna.prvrte.rteintranet.util.DBConstants;
-
-import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
-
-import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
-
-
-
-/**
-
- * This Adapter class is to call the stored procedure call to manipulated the
-
- * data in data store
-
- * 
-
- * @author N726899 Cognizant_Offshore
-
- */
-
-public class AdasvctDisplayAdapter extends StoredProcedure {
-
-
-
-	public AdasvctDisplayAdapter() {}
-
-
-
-	/*
-
-	 * Instance of Log Factory.
-
-	 */
-
-	private final Log log = LogFactory.getLog(AdasvctDisplayAdapter.class);
-
-	/*
-
-	 * Constructor to initialize the data source and stored procedure.
-
-	 */
-
-	@SuppressWarnings("rawtypes")
-
-	public AdasvctDisplayAdapter(DataSource datasource, String storedProc)
-
-			throws SQLException {
-
-		super(datasource, storedProc);
-
-		System.out.println(" AdasvctDisplayAdapter ------------------> " + storedProc);
-
-		log.info("Loaded Stored procedure of AdasvctAdapter : " + storedProc);
-
-		declareParameter(new SqlParameter(DBConstants.LS_ADASVCT_ADA_CD, Types.CHAR));
-
-		declareParameter(new SqlParameter(DBConstants.LS_SVCTYP_CD, Types.CHAR));
-
-		declareParameter(new SqlOutParameter(DBConstants.LS_SQLCODE, Types.INTEGER));
-
-
-
-		declareParameter(new SqlReturnResultSet(DBConstants.READ_CURSOR4, new RowMapper() {
-
-			/*
-
-			 * (non-Javadoc)
-
-			 * 
-
-			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet , int)
-
-			 */
-
-			public Object mapRow(final ResultSet rs, final int arg1)
-
-					throws SQLException {
-
-				AdasvctVO adasvctVO = new AdasvctVO();
-
-				adasvctVO.setExpDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_EXP_DT)));
-
-				adasvctVO.setAdaCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_ADA_CD)));
-
-				adasvctVO.setPostedDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_POSTED_DT)));
-
-				adasvctVO.setSvcTypeCd(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.SVCTYP_CD)));
-
-				adasvctVO.setEffDate(RteIntranetUtils.getTrimmedString(rs.getString(DBConstants.ADASVCT_EFF_DT)));
-
-				adasvctVO.setUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-				return adasvctVO;
-
-			}
-
-		}));
-
+public class HMB1CopyBookList {
+	private LinkedHashMap<String, Object> copyBookFields = new LinkedHashMap<String, Object>(); 
+	public HMB1CopyBookList() {
+		populateHash();
 	}
-
 	
-
-	/**
-
-	 * Method to get the ADASVCT list from data store.
-
-	 * 
-
-	 * @param adasvctDTO
-
-	 * 			adasvctDTO object.
-
-	 * 
-
-	 * @return Map of ADASVCT list and success or error message.
-
-	 * 
-
-	 * @exception ApplicationException if data not found in data store.
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
-
-		if (log.isDebugEnabled()) {
-
-			log.warn("---- Entering getAdasvctLookUpList ---");
-
-		}
-
-		Map<String, Object> resultMap = new HashMap<String, Object>();
-
-		HashMap<String, Object> params = new LinkedHashMap<String, Object>();
-
-		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
-
-		String newMessage = "";
-
-		try {
-
-			String queryAdaCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getAdaCd());
-
-			String querySvcTypeCd = RteIntranetUtils.getTrimmedString(adasvctDTO.getSvcTypeCd());
-
-			
-
-			params.put(DBConstants.LS_ADASVCT_ADA_CD, queryAdaCd);
-
-			params.put(DBConstants.LS_SVCTYP_CD, querySvcTypeCd);
-
-			
-
-			log.info("Params for getting Adasvct LookUp List : " + params);
-
-			Map<String, Object> results = execute(params);
-
-			String sqlCode = String.valueOf(results.get(DBConstants.LS_SQLCODE));
-
-			
-
-			if ("0".equals(sqlCode)) {
-
-				adasvctList = (ArrayList<AdasvctVO>) results.get(DBConstants.READ_CURSOR4);
-
-				newMessage = "Data found on database for ADA Cd: " + queryAdaCd + " or Service Type Cd: " + querySvcTypeCd;
-
-				log.warn("-----------------------------> " + "Adasvct LookUp List count : [" + adasvctList.size() + "]");
-
-				if (adasvctList.isEmpty()) {
-
-					newMessage = "No Data on database for ADA Cd: " + queryAdaCd + " or Service Type Cd: " + querySvcTypeCd;
-
-				}
-
-			} else {
-
-				log.warn("-----------------------------> "	+ "Problem in DB2. Sqlcode: " + sqlCode);
-
-				newMessage = "Problem in DB2. Sqlcode: " + sqlCode;
-
-			}
-
-			
-
-			resultMap.put("adasvctMsg", newMessage);
-
-			resultMap.put("adasvctList", adasvctList);
-
-			return resultMap;
-
-			
-
-		} catch (DataAccessException dae) {
-
-			log.error("AdasvctDisplayAdapter : Data access excpetion occured " + dae);
-
-			throw new ApplicationException(ApplicationConstants.ERR_IR_ACCESS, dae.getMessage(), dae);
-
-		} catch (Exception exception) {
-
-			log.error("AdasvctDisplayAdapter : generic error occured  " + exception);
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, exception.getMessage(), exception);
-
-		} finally {
-
-
-
-		}
-
+	private void populateHash(){
+		copyBookFields.put("PRODUCT-IDENTIFICATION-CTR-B", "1|N|PRODUCT-IDENTIFICATION-CTR-B");
+		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_3", getProductIdentification());
 	}
+	
+	public LinkedHashMap<String, Object> getProductIdentification(){
+		LinkedHashMap<String, Object> hmProdIden = new LinkedHashMap<String, Object>();
+		hmProdIden.put("BENEFIT-QUALIFICATION-B", "1|C| BENEFIT-QUALIFICATION-B");
+		hmProdIden.put("BENEFIT-TYPE-B", "1|C|BENEFIT-TYPE-B");
+		hmProdIden.put("COMPONENT-IDENTIFIER", "5|C|COMPONENT-IDENTIFIER");
+		hmProdIden.put("PRODUCT-COMPONENT-TYPE", "2|N|PRODUCT-COMPONENT-TYPE");
+		hmProdIden.put("BENEFIT-TYPE-GROUP-CTR", "1|C|BENEFIT-TYPE-GROUP-CTR");
+		
+		//hmProdIden.put("BENEFIT-TYPE-GROUP-IDENTIFIER", "1|C|BENEFIT-TYPE-GROUP-IDENTIFIER");
+		//BENEFIT-TYPE-GROUP OCCURS 8 TIMES
+		hmProdIden.put("BENEFIT-TYPE-GROUP_REPEAT_8", getBenefitTypeGrp());
+		hmProdIden.put("PROVIDER-TYPE","1|C|PROVIDER-TYPE");
+		hmProdIden.put("LOCATION" ,"1|C|LOCATION");
+		hmProdIden.put("BENEFIT-IDENTIFIER","3|C|BENEFIT-IDENTIFIER");
+		hmProdIden.put("BENEFIT-COVERAGE-INDICATOR","1|C|BENEFIT-COVERAGE-INDICATOR");
+		hmProdIden.put("DESCRIPTION","80|C|Description");
+		hmProdIden.put("GENDER","1|C|GENDER");
+		hmProdIden.put("LOWER-AGE","3|C|LOWER-AGE");
+		hmProdIden.put("UPPER-AGE","3|C|UPPER-AGE");
+		hmProdIden.put("COINSURANCE-PERCENTAGE", "7|N|COINSURANCE-PERCENTAGE");
+		hmProdIden.put("COINSURANCE-LIMIT-AMOUNT", "11|N|COINSURANCE-LIMIT-AMOUNT");
+		hmProdIden.put("SUBJECT-TO-DEDUCTIBLE","1|C|SUBJECT-TO-DEDUCTIBLE");
+		hmProdIden.put("OOPA DEDUCTIBLE","1|C|OOPA DEDUCTIBLE");
+		hmProdIden.put("OOPA COPAY","1|C|OOPA COPAY");
+		hmProdIden.put("OOPA COINSURANCE","1|C|OOPA COINSURANCE");
+		hmProdIden.put("OOPA SCHEDULE-BENEFIT","1|C|OOPA SCHEDULE-BENEFIT");
+		hmProdIden.put("CAPITATION","1|C|CAPITATION");
+		hmProdIden.put("SCHEDULE-BENEFIT-AMOUNT", "11|N|SCHEDULE-BENEFIT-AMOUNT");
+		hmProdIden.put("APPLY-COINS-TO-PRIMARY-OOP","1|C|APPLY-COINS-TO-PRIMARY-OOP");
+		hmProdIden.put("FIRST-DOLLAR-BENEFIT1","3|C|FIRST-DOLLAR-BENEFIT1");
+		hmProdIden.put("FIRST-DOLLAR-BENEFIT2","3|C|FIRST-DOLLAR-BENEFIT2");
+		hmProdIden.put("PER-CONDITION-INDICATOR","1|C|PER-CONDITION-INDICATOR");
+		hmProdIden.put("TIERED-COPAY-CTR","1|C|TIERED-COPAY-CTR");
+		//TIERED-COPAY-CTR OCCURS 3 TIMES
+		hmProdIden.put("TIERED-COPAY-CTR_REPEAT_3", getTieredCopayCTR());
+		//COPAY-PAYMENT OCCURS 4 TIMES
+//		hmProdIden.put("COPAY-PAYMENT-CTR","1|N|COPAY-PAYMENT-CTR");
+//		hmProdIden.put("COPAY-PAYMENT_REPEAT_4", getCoPayement());
+		hmProdIden.put("COPAY-MAXIMUM-IND","9|C|COPAY-MAXIMUM-IND");
+		// 88 COPAY-FAMILY-MAX-INST    VALUE '1'.
+        // 88 COPAY-PERCENTAGE-MAXIMUM-INST VALUE '2'.
+        // 88 MAXIMUM-AMOUNT-INST      VALUE '3'.
+		//COPAY-MAXIMUM-DATA         PIC X(33).
+        //take the above value and based on 123 set the below values.....
+		//hmProdIden.put("COPAY-MAXIMUM-DATA","33|C|COPAY-MAXIMUM-DATA");
+		//40 COPAY-FAMILY-MAX-DATA REDEFINES COPAY-MAXIMUM-DATA.
+        //45 FAMILY-MAXIMUM.
+//		hmProdIden.put("FAMILY-MEMBERS-MUST-MEET","33|N|FAMILY-MEMBERS-MUST-MEET");
+//		hmProdIden.put("FAMILY-MEMBERS-MET","33|N|FAMILY-MEMBERS-MET");
+//		//hmProdIden.put("FILLER","25|C|FILLER");
+//	
+//		//COPAY-PERCENTAGE-MAXIMUM-DATA REDEFINES COPAY-MAXIMUM-DATA
+//		hmProdIden.put("PERCENTAGE" ,"33|N|PERCENTAGE");
+//		//hmProdIden.put("FILLER","26|C|FILLER");
+//	
+//		//MAXIMUM-AMOUNT-DATA REDEFINES COPAY-MAXIMUM-DATA. 
+//		//USAGE-AMOUNT
+//		hmProdIden.put("USED-AMOUNT" ,"11|N|USED-AMOUNT");
+//		hmProdIden.put("REMAINDER-AMOUNT" ,"11|N|REMAINDER-AMOUNT");
+//		hmProdIden.put("AMOUNT" ,"11|N|AMOUNT");
+		
+		//COPAY-PERIOD-LIMITATIONS
+		hmProdIden.put("PERIOD-DEFINITION" ,"1|C|PERIOD-DEFINITION");
+		hmProdIden.put("FREQUENCY-LIMITATION" ,"1|C|FREQUENCY-LIMITATION");
+		hmProdIden.put("NUMBER-PER-PERIOD" ,"3|N|NUMBER-PER-PERIOD");
+		//ACCUMULATOR-SET
+		hmProdIden.put("ACCUMULATOR-CTR" ,"2|C|ACCUMULATOR-CTR");
+		//ACCUMULATOR  OCCURS 3 TIMES
+		hmProdIden.put("ACCUMULATOR_REPEAT_7", getAccumulator());
+		return hmProdIden;
+	}
+	
+	public LinkedHashMap<String, Object> getBenefitTypeGrp(){
+		LinkedHashMap<String, Object> hmBenefitGroup = new LinkedHashMap<String, Object>();
+//		hmBenefitGroup.put("BENEFIT-TYPE-GROUP-IDENTIFIER", "1|C|BENEFIT-TYPE-GROUP-IDENTIFIER");
+		//Amount
+		hmBenefitGroup.put("AMOUNT-VALUE-IND", "2|C|AMOUNT-VALUE-IND");
+		//hmBenefitGroup.put("AMOUNT-VALUE-DATA", "11|N|AMOUNT-VALUE-DATA");
+		//hmBenefitGroup.put("AMOUNT-NUMERIC-DATA", "11|N|AMOUNT-NUMERIC-DATA");
+		//hmBenefitGroup.put("AMOUNT-ALPHA-DATA", "11|N|AMOUNT-ALPHA-DATA");
+		hmBenefitGroup.put("AMOUNT", "11|N|AMOUNT");
+		
+		return hmBenefitGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getTieredCopayCTR(){
+		LinkedHashMap<String, Object> hmTieredGroup = new LinkedHashMap<String, Object>();
+		hmTieredGroup.put("LEVEL","1|C|Level");
+		hmTieredGroup.put("SERVICE-DAY-MINIMUM","3|N|SERVICE-DAY-MINIMUM");
+		hmTieredGroup.put("SERVICE-DAY-MAXIMUM","3|N|SERVICE-DAY-MAXIMUM");
+		hmTieredGroup.put("FOLLOW-UP-DAY","3|N|FOLLOW-UP-DAY");
+		hmTieredGroup.put("COPAY-PAYMENT-CTR","1|N|COPAY-PAYMENT-CTR");
+//		hmTieredGroup.put("COPAY-MAXIMUM-IND","1|C|COPAY-MAXIMUM-IND");
+//		hmTieredGroup.put("COPAY-PAYMENT-IND","1|C|COPAY-PAYMENT-IND");
+		hmTieredGroup.put("COPAY-PAYMENT_REPEAT_4", getCoPayement());
+//		//hmCoPaymentGroup.put("FILLER","4|C|FILLER");
+		hmTieredGroup.put("TIERED-VISIT-LOW","3|C|TIERED-VISIT-LOW");
+		hmTieredGroup.put("TIERED-VISIT-HIGH","3|C|TIERED-VISIT-HIGH");
+//		//hmCoPaymentGroup.put("FILLER","8|C|FILLER");
+//		hmTieredGroup.put("COPAY-MAXIMUM-IND","1|C|COPAY-MAXIMUM-IND");
+		
+		
+		return hmTieredGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getCoPayement(){
+		LinkedHashMap<String, Object> hmCoPaymentGroup = new LinkedHashMap<String, Object>();
+		hmCoPaymentGroup.put("COPAY-PAYMENT-IND","1|C|COPAY-PAYMENT-IND");
+		//*hmCoPaymentGroup.put("COPAY-PAYMENT-DATA","13|C|COPAY-PAYMENT-DATA");
+		//hmCoPaymentGroup.put("COPAY-PAYMENT-DATA","12|C|COPAY-PAYMENT-DATA");
+		//COPAY-AMOUNT-DATA REDEFINES COPAY-PAYMENT-DATA.
+		hmCoPaymentGroup.put("AMOUNT","11|N|AMOUNT");
+		//*hmCoPaymentGroup.put("COPAY-TYPE","1|C|COPAY-TYPE");
+		hmCoPaymentGroup.put("FREQUENCY-PERIOD","1|C|FREQUENCY-PERIOD");
+		//COPAY-PERCENTAGE-DATA REDEFINES COPAY-PAYMENT-DATA
+//		hmCoPaymentGroup.put("PERCENTAGE","7|N|PERCENTAGE");
+		//*hmCoPaymentGroup.put("COPAY-PERCENTAGE-TYPE","1|C|COPAY-PERCENTAGE-TYPE");
+//		hmCoPaymentGroup.put("FREQUENCY-PERIOD","1|C|FREQUENCY-PERIOD");
+//		//hmCoPaymentGroup.put("FILLER","4|C|FILLER");
+//		hmCoPaymentGroup.put("TIERED-VISIT-LOW","3|C|TIERED-VISIT-LOW");
+//		hmCoPaymentGroup.put("TIERED-VISIT-HIGH","3|C|TIERED-VISIT-HIGH");
+//		//hmCoPaymentGroup.put("FILLER","8|C|FILLER");
+		return hmCoPaymentGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getAccumulator(){
+		LinkedHashMap<String, Object> hmAccumulatorGroup = new LinkedHashMap<String, Object>();
+		hmAccumulatorGroup.put("ACCUMULATOR-IDENTIFIER" ,"3|C|ACCUMULATOR-IDENTIFIER");
+		hmAccumulatorGroup.put("ACCUMULATOR-USAGE-IND" ,"1|C|ACCUMULATOR-USAGE-IND");
+		
+		//AGE-RESTRICTION
+		hmAccumulatorGroup.put("LOWER-AGE" ,"3|N|LOWER-AGE");
+		hmAccumulatorGroup.put("UPPER-AGE" ,"3|N|UPPER-AGE");
+		//ACCUMULATOR-PERIOD-LIMITATIONS
+		hmAccumulatorGroup.put("PERIOD-DEFINITION" ,"1|C|PERIOD-DEFINITION");
+		hmAccumulatorGroup.put("FREQUENCY-LIMITATION" ,"1|C|FREQUENCY-LIMITATION");
+		hmAccumulatorGroup.put("ACCUM-FREQUENCY-NUMBER" ,"3|N|ACCUM-FREQUENCY-NUMBER");
+		hmAccumulatorGroup.put("AMOUNT" ,"11|N|AMOUNT");
+		hmAccumulatorGroup.put("LIFETIME-LIMIT" ,"11|N|LIFETIME-LIMIT");
+		//ACCUMULATOR-USAGE
+		//hmProdIden.put("ACCUMULATOR-USAGE-IND" ,"1|C|ACCUMULATOR-USAGE-IND");
+		//hmProdIden.put("ACCUMULATOR-USAGE-DATA" ,"69|C|ACCUMULATOR-USAGE-DATA");
+		//ACCUMULATOR-USAGE-IND value is 1,2, 3 need to do venkat
+	//if ACCUMULATOR-USAGE-IND = 1{
+		//CLAIM-USAGE-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
+//		hmAccumulatorGroup.put("LIFETIME-USED-TOTAL" ,"13|N|LIFETIME-USED-TOTAL");
+//		hmAccumulatorGroup.put("USED-AMOUNT" ,"13|N|USED-AMOUNT");
+//		hmAccumulatorGroup.put("REMAINDER-AMOUNT" ,"13|N|REMAINDER-AMOUNT");
+//		//CLAIM-PERIOD
+//		hmAccumulatorGroup.put("START-DATE" ,"10|C|START-DATE");
+//		hmAccumulatorGroup.put("END-DATE" ,"10|C|END-DATE");
+//		hmAccumulatorGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
+//		//}elseif{
+//		//CLAIM-USAGE-NON-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
+//		hmAccumulatorGroup.put("LIFETIME-USED-TOTAL" ,"4|N|LIFETIME-USED-TOTAL");
+//		hmAccumulatorGroup.put("USED-VISITS" ,"4|N|USED-VISITS");
+//		hmAccumulatorGroup.put("REMAINDER-VISITS" ,"4|N|REMAINDER-VISITS");
+//		hmAccumulatorGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
+//		//CLAIM-PERIOD
+//		hmAccumulatorGroup.put("START-DATE" ,"10|C|START-DATE");
+//		hmAccumulatorGroup.put("END-DATE" ,"10|C|END-DATE");
+		//hmAccumulatorGroup.put("FILLER","27|C|FILLER");
+		//}
+		return hmAccumulatorGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getCopayMaxData(String copayMaxInd) {
+		LinkedHashMap<String, Object> hmCopayMaxGroup = new LinkedHashMap<String, Object>();
+		if (copayMaxInd.equals("1")){
+			hmCopayMaxGroup.put("FAMILY-MEMBERS-MUST-MEET" ,"4|N|FAMILY-MEMBERS-MUST-MEET");
+			hmCopayMaxGroup.put("FAMILY-MEMBERS-MET" ,"29|N|FAMILY-MEMBERS-MUST-MEET");
+		} else if (copayMaxInd.equals("2")){
+			hmCopayMaxGroup.put("PERCENTAGE" ,"33|N|PERCENTAGE");
+
+		} else if (copayMaxInd.equals("3")) {
+			hmCopayMaxGroup.put("USED-AMOUNT" ,"11|N|USED-AMOUNT");
+			hmCopayMaxGroup.put("REMAINDER-AMOUNT" ,"11|N|REMAINDER-AMOUNT");
+			hmCopayMaxGroup.put("AMOUNT" ,"11|N|AMOUNT");
+		}else{
+			hmCopayMaxGroup.put("COPAY-MAXIMUM-DATA" ,"33|N|COPAY-MAXIMUM-DATA");
+		}
+		return hmCopayMaxGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getAccumlatorData(String accumInd) {
+		LinkedHashMap<String, Object> hmAccumGroup = new LinkedHashMap<String, Object>();
+		if (accumInd.equals("1")){
+			hmAccumGroup.put("LIFETIME-USED-TOTAL" ,"13|N|LIFETIME-USED-TOTAL");
+			hmAccumGroup.put("USED-AMOUNT" ,"13|N|USED-AMOUNT");
+			hmAccumGroup.put("REMAINDER-AMOUNT" ,"13|N|REMAINDER-AMOUNT");
+			//CLAIM-PERIOD
+			hmAccumGroup.put("START-DATE" ,"10|C|START-DATE");
+			hmAccumGroup.put("END-DATE" ,"10|C|END-DATE");
+			hmAccumGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
+		}else{
+			//CLAIM-USAGE-NON-FINANCIAL-DATA REDEFINES ACCUMULATOR-USAGE-DATA
+			hmAccumGroup.put("LIFETIME-USED-TOTAL" ,"4|N|LIFETIME-USED-TOTAL");
+			hmAccumGroup.put("USED-VISITS" ,"4|N|USED-VISITS");
+			hmAccumGroup.put("REMAINDER-VISITS" ,"4|N|REMAINDER-VISITS");
+			hmAccumGroup.put("LAST-DATE-OF-SERVICE" ,"10|C|LAST-DATE-OF-SERVICE");
+			//CLAIM-PERIOD
+			hmAccumGroup.put("START-DATE" ,"10|C|START-DATE");
+			hmAccumGroup.put("END-DATE" ,"37|C|END-DATE");
+
+		}
+		return hmAccumGroup;
+	}
+	
+	public LinkedHashMap<String, Object> getCopyBookFields() {
+		return copyBookFields;
+	}
+
+	public void setcopyBookFields(LinkedHashMap<String, Object> copyBookFields) {
+		this.copyBookFields = copyBookFields;
+	}
+
 
 }
-
