@@ -10,41 +10,45 @@ import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
 
 
-public class ProcedureInfoSet {
+public class ServiceTypeSet {
 
-	String procedureInfoCtr;
 
-	List<ProcedureInfo> procedureInfo;
 
-	public String getProcedureInfoCtr() {
+	String serviceTypeCTR;
+
+	List<String> serviceTypeCode;
+
+	public String getServiceTypeCTR() {
 
 		
 
-		return procedureInfoCtr;
+		return serviceTypeCTR;
 
 	}
 
-	public void setProcedureInfoCtr(String procedureInfoCtr) {
+	public void setServiceTypeCTR(String serviceTypeCTR) {
 
-		this.procedureInfoCtr = procedureInfoCtr;
+		
 
-	}
-
-	public List<ProcedureInfo> getProcedureInfo() {
-
-		return procedureInfo;
+		this.serviceTypeCTR = serviceTypeCTR;
 
 	}
 
-	public void setProcedureInfo(List<ProcedureInfo> procedureInfo) {
+	public List<String> getServiceTypeCode() {
 
-		this.procedureInfo = procedureInfo;
+		
+
+		return this.serviceTypeCode;
 
 	}
 
+	public void setServiceTypeCode(List<String> serviceTypeCode) {
 
+		this.serviceTypeCode = serviceTypeCode;
 
-	public StringBuilder getProcedure(){
+	}
+
+	public StringBuilder getServiceType(){
 
 
 
@@ -52,21 +56,23 @@ public class ProcedureInfoSet {
 
 		StringBuilder type = new StringBuilder();
 
-        popCount = getProcedureInfo().size();
+        popCount = getServiceTypeCode().size();
 
        
 
 		for(int i=0; i<popCount; i++) {
 
-			type.append(getProcedureInfo().get(i).getProcedureInfo());
+			type.append(RteIntranetUtils.spaceFiller(2, getServiceTypeCode().get(i)));
 
 		}
 
-		for(int i=popCount; i<10; i++) {
+		for(int i=popCount; i<99; i++) {
 
-			type.append(RteIntranetUtils.spaceFiller(13));
+			type.append(RteIntranetUtils.spaceFiller(2));
 
 	}
+
+		
 
 		return type;
 
