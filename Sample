@@ -2,115 +2,87 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-
-
-public class Dependent {
+import java.util.List;
 
 
 
-	Name name;
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
-	String dob;
 
-	String gender;
 
-	String relationship;
+public class DiganosisSet {
 
-	String terminationDate;
 
-	public Name getName() {
 
-		return name;
+	String diganosisCtr;
 
-	}
+	List<String> diganosisCode;
 
-	public void setName(Name name) {
-
-		this.name = name;
-
-	}
-
-	public String getDob() {
+	public String getDiganosisCtr() {
 
 		
 
-		return dob;
+		return diganosisCtr;
 
 	}
 
-	public void setDob(String dob) {
-
-		dob=dob.replaceAll("-", "");
-
-		this.dob = dob;
-
-	}
-
-	public String getGender() {
+	public void setDiganosisCtr(String diganosisCtr) {
 
 		
 
-		return gender;
+		this.diganosisCtr = diganosisCtr;
 
 	}
 
-	public void setGender(String gender) {
+	public List<String> getDiganosisCode() {
 
 		
 
-		this.gender = gender;
+		return diganosisCode;
 
 	}
 
-	public String getRelationship() {
+	public void setDiganosisCode(List<String> diganosisCode) {
+
+		this.diganosisCode = diganosisCode;
+
+	}
+
+	public StringBuilder getDiganosisSet(){
+
+		int popCount;
+
+		StringBuilder type = new StringBuilder();
 
 		
 
-		return relationship;
+        popCount = getDiganosisCode().size();
+
+       
+
+		for(int i=0; i<popCount; i++) {
+
+			
+
+			type.append(RteIntranetUtils.spaceFiller(11, getDiganosisCode().get(i)));
+
+		}
+
+		for(int i=popCount; i<10; i++) {
+
+			type.append(RteIntranetUtils.spaceFiller(11));
 
 	}
 
-	public void setRelationship(String relationship) {
+		return type;
 
-		
+	
 
-		this.relationship = relationship;
-
-	}
-
-	public String getTerminationDate() {
-
-		
-
-		return terminationDate;
+	
 
 	}
 
-	public void setTerminationDate(String terminationDate) {
-
-		terminationDate=terminationDate.replaceAll("-", "");
-
-		
-
-		this.terminationDate = terminationDate;
-
-	}
-
-	public StringBuilder getDependent(){
-
-		return new StringBuilder(name.getName())
-
-		.append(getDob())
-
-		.append(getDob())
-
-		.append(getGender())
-
-		.append(getRelationship())
-
-		.append(getTerminationDate());
-
-	}
+	
 
 }
 
