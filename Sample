@@ -2,87 +2,135 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-import java.util.List;
+
+
+public class EDIHeader {
 
 
 
-import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+	String transactionType;
 
+	String vanId;
 
+	String conversation;
 
-public class DiganosisSet {
+	String versionRels;
 
+	String typeOfSearch;
 
+	String eligilibilityServiceDate;
 
-	String diganosisCtr;
+	public String getTransactionType() {
 
-	List<String> diganosisCode;
+		return transactionType;
 
-	public String getDiganosisCtr() {
+	}
+
+	public void setTransactionType(String transactionType) {
 
 		
 
-		return diganosisCtr;
+		this.transactionType = transactionType;
 
 	}
 
-	public void setDiganosisCtr(String diganosisCtr) {
+	public String getVanId() {
 
 		
 
-		this.diganosisCtr = diganosisCtr;
+		return vanId;
 
 	}
 
-	public List<String> getDiganosisCode() {
+	public void setVanId(String vanId) {
 
 		
 
-		return diganosisCode;
+		this.vanId = vanId;
 
 	}
 
-	public void setDiganosisCode(List<String> diganosisCode) {
-
-		this.diganosisCode = diganosisCode;
-
-	}
-
-	public StringBuilder getDiganosisSet(){
-
-		int popCount;
-
-		StringBuilder type = new StringBuilder();
+	public String getConversation() {
 
 		
 
-        popCount = getDiganosisCode().size();
-
-       
-
-		for(int i=0; i<popCount; i++) {
-
-			
-
-			type.append(RteIntranetUtils.spaceFiller(11, getDiganosisCode().get(i)));
-
-		}
-
-		for(int i=popCount; i<10; i++) {
-
-			type.append(RteIntranetUtils.spaceFiller(11));
+		return conversation;
 
 	}
 
-		return type;
+	public void setConversation(String conversation) {
+
+		
+
+		this.conversation = conversation;
+
+	}
+
+	public String getVersionRels() {
+
+		
+
+		return versionRels;
+
+	}
+
+	public void setVersionRels(String versionRels) {
+
+		
+
+		this.versionRels = versionRels;
+
+	}
+
+	public String getTypeOfSearch() {
+
+		
+
+		return typeOfSearch;
+
+	}
+
+	public void setTypeOfSearch(String typeOfSearch) {
+
+		
+
+		this.typeOfSearch = typeOfSearch;
+
+	}
+
+	public String getEligilibilityServiceDate() {
+
+		
+
+		return eligilibilityServiceDate;
+
+	}
+
+	public void setEligilibilityServiceDate(String eligilibilityServiceDate) {
+
+		eligilibilityServiceDate=eligilibilityServiceDate.replaceAll("-", "");
+
+		this.eligilibilityServiceDate = eligilibilityServiceDate;
+
+	}
 
 	
 
-	
+	public StringBuilder getHeader(){
+
+		return new StringBuilder(getTransactionType())
+
+		.append(getVanId())
+
+		.append(getConversation())
+
+		.append(getVersionRels())
+
+		.append(getTypeOfSearch())
+
+		.append(getEligilibilityServiceDate());
 
 	}
-
-	
 
 }
 
