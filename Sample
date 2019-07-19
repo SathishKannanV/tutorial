@@ -4,59 +4,53 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-public class Entity {
+public class EntityIndicator {
 
 
 
-	String entityIndicator;
+	String individualInst;
 
-	IndividualData individualData;
+	String nonIndividualInst;
 
-	NonIndividualData nonIndividualData;
+	public String getIndividualInst() {
 
-	public String getEntityIndicator() {
+		
 
-		return entityIndicator;
-
-	}
-
-	public void setEntityIndicator(String entityIndicator) {
-
-		this.entityIndicator = entityIndicator;
+		return individualInst;
 
 	}
 
-	public IndividualData getIndividualData() {
+	public void setIndividualInst(String individualInst) {
 
-		return individualData;
+		
 
-	}
-
-	public void setIndividualData(IndividualData individualData) {
-
-		this.individualData = individualData;
+		this.individualInst = individualInst;
 
 	}
 
-	public NonIndividualData getNonIndividualData() {
+	public String getNonIndividualInst() {
 
-		return nonIndividualData;
+		
 
-	}
-
-	public void setNonIndividualData(NonIndividualData nonIndividualData) {
-
-		this.nonIndividualData = nonIndividualData;
+		return nonIndividualInst;
 
 	}
 
-	public StringBuilder getEntity(){
+	public void setNonIndividualInst(String nonIndividualInst) {
 
-		return new StringBuilder(getEntityIndicator())
+		
 
-		.append(individualData.getIndividual())
+		this.nonIndividualInst = nonIndividualInst;
 
-		.append(nonIndividualData.getNonIndiv());
+	}
+
+	
+
+	public StringBuilder getEntityIndicator(){
+
+		return new StringBuilder(getIndividualInst())
+
+		.append(getNonIndividualInst());
 
 	}
 
