@@ -4,117 +4,163 @@
 
  */
 
-package com.aetna.prvrte.rteintranet.dao;
+package com.aetna.prvrte.rteintranet.dto;
 
 
 
-import java.util.List;
-
-import java.util.Map;
-
-
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Repository;
-
-
-
-import com.aetna.prvrte.rteintranet.adapter.UserAddAdapter;
-
-import com.aetna.prvrte.rteintranet.adapter.UserDeleteAdapter;
-
-import com.aetna.prvrte.rteintranet.adapter.UserDisplayAdapter;
-
-/*import com.aetna.prvrte.rteintranet.adapter.UserDeleteAdapter;
-
-*/
-
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
-
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+import java.io.Serializable;
 
 
 
 /**
 
- * @author N624926
+ * 
+
+ * @author N726899
 
  * Cognizant_Offshore
 
  */
 
-@Repository
-
-public class UserDAOImpl implements UserDAO {
-
-	
-
-	@Autowired(required=true)
-
-	private UserDisplayAdapter userDisplayAdapter;
+public class AdasvctDTO implements Serializable {
 
 
 
-	@Autowired(required=true)
+	/**
 
-	private UserAddAdapter userAddAdapter;
+	 * Constant serialized ID used for compatibility. 
 
-	
+	 */
 
-	@Autowired(required=true)
+	private static final long serialVersionUID = 1L;
 
-	private UserDeleteAdapter userDeleteAdapter;
+	/**
 
-	
+	 * String of adaCd
+
+	 */
+
+	private String adaCd = "";
+
+	/**
+
+	 * String of svcTypeCd
+
+	 */
+
+	private String svcTypeCd = "";
+
+	/**
+
+	 * String of effective date(yyyy-MM-dd)
+
+	 */
+
+	private String effDate = "";
+
+	/**
+
+	 * String of expiration date(yyyy-MM-dd)
+
+	 */
+
+	private String expDate = "";
+
+	/**
+
+	 * String of record posted date(yyyy-MM-dd)
+
+	 */
+
+	private String postedDate = "";
+
+	/**
+
+	 * char of index to update the record.
+
+	 */
+
+	private char updatedInd;
+
+
+
+	/**
+
+	 * Default Constructor.
+
+	 */
+
+	public AdasvctDTO() {
+
+		super();
+
+	}
 
 	
 
 	/**
+
+	 * Creates a new AdasvctDTO
 
 	 * 
 
-	 * @param rbrcDTO
+	 * @param adaCd
 
-	 * @return
+	 *            the value for {@link adaCd}
 
-	 * @throws ApplicationException
+	 * @param svcTypeCd
+
+	 *            the value for {@link svcTypeCd}
+
+	 * @param effDate
+
+	 *            the value for {@link effDate}
+
+	 * @param expDate
+
+	 *            the value for {@link expDate}
+
+	 * @param postedDate
+
+	 *            the value for {@link postedDate}
+
+	 * @param updatedInd
+
+	 *            the value for {@link updatedInd}
 
 	 */
 
-	@Override
+	public AdasvctDTO(String adaCd, String svcTypeCd, String effDate,
 
-	public Map getUserLookUpTable(RbrcDTO rbrcDTO)
+			String expDate, String postedDate, char updatedInd) {
 
-			throws ApplicationException {
+		super();
 
-		
+		this.adaCd = adaCd;
 
-		return userDisplayAdapter.getUserLookUpTable(rbrcDTO);
+		this.effDate = effDate;
+
+		this.expDate = expDate;
+
+		this.postedDate = postedDate;
+
+		this.svcTypeCd = svcTypeCd;
+
+		this.updatedInd = updatedInd;
 
 	}
-
-
 
 	
 
 	/**
 
-	 * 
-
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
+	 * @return the adaCd
 
 	 */
 
-	@Override
+	public String getAdaCd() {
 
-	public Map addNewUser(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return userAddAdapter.addNewUser(rbrcDTO);
+		return adaCd;
 
 	}
 
@@ -122,61 +168,155 @@ public class UserDAOImpl implements UserDAO {
 
 	/**
 
-	 * 
-
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
+	 * @param adaCd the adaCd to set
 
 	 */
 
-	@Override
+	public void setAdaCd(String adaCd) {
 
-	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return userDeleteAdapter.deleteUser(rbrcDTO);
+		this.adaCd = adaCd;
 
 	}
-
-
 
 
 
 	/**
 
-	 * @param editedRbrcDTO
-
-	 * @param rbrcDtoList
-
-	 * @param index
-
-	 * @param dbUpdatedInd
-
-	 * @return
-
-	 * @throws ApplicationException
+	 * @return the svcTypeCd
 
 	 */
 
-	@Override
+	public String getSvcTypeCd() {
 
-	public Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList,
-
-			int index, char dbUpdatedInd)
-
-			throws ApplicationException {
-
-		return userAddAdapter.addUpdateUser(  editedRbrcDTO,  rbrcDtoList,
-
-				 index,  dbUpdatedInd);
+		return svcTypeCd;
 
 	}
 
 
 
+	/**
 
+	 * @param svcTypeCd the svcTypeCd to set
+
+	 */
+
+	public void setSvcTypeCd(String svcTypeCd) {
+
+		this.svcTypeCd = svcTypeCd;
+
+	}
+
+
+
+	/**
+
+	 * @return the effDate
+
+	 */
+
+	public String getEffDate() {
+
+		return effDate;
+
+	}
+
+
+
+	/**
+
+	 * @param effDate the effDate to set
+
+	 */
+
+	public void setEffDate(String effDate) {
+
+		this.effDate = effDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the expDate
+
+	 */
+
+	public String getExpDate() {
+
+		return expDate;
+
+	}
+
+
+
+	/**
+
+	 * @param expDate the expDate to set
+
+	 */
+
+	public void setExpDate(String expDate) {
+
+		this.expDate = expDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the postedDate
+
+	 */
+
+	public String getPostedDate() {
+
+		return postedDate;
+
+	}
+
+
+
+	/**
+
+	 * @param postedDate the postedDate to set
+
+	 */
+
+	public void setPostedDate(String postedDate) {
+
+		this.postedDate = postedDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the updatedInd
+
+	 */
+
+	public char getUpdatedInd() {
+
+		return updatedInd;
+
+	}
+
+
+
+	/**
+
+	 * @param updatedInd the updatedInd to set
+
+	 */
+
+	public void setUpdatedInd(char updatedInd) {
+
+		this.updatedInd = updatedInd;
+
+	}
 
 }
 
