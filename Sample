@@ -4,51 +4,91 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
-public class Member {
+public class Name {
 
 
 
-	String identifier;
+	String firstName;
 
-	String groupID;
+	String middleName;
 
-	public String getIdentifier() {
+	String lastName;
 
-		
+	String titleDesc;
 
-		return identifier;
-
-	}
-
-	public void setIdentifier(String identifier) {
+	public String getFirstName() {
 
 		
 
-		this.identifier = identifier;
+		return firstName;
 
 	}
 
-	public String getGroupID() {
+	public void setFirstName(String firstName) {
 
 		
 
-		return groupID;
+		this.firstName = firstName;
 
 	}
 
-	public void setGroupID(String groupID) {
+	public String getMiddleName() {
 
 		
 
-		this.groupID = groupID;
+		return middleName;
 
 	}
 
-	public StringBuilder getMember(){
+	public void setMiddleName(String middleName) {
 
-		return new StringBuilder(getIdentifier())
+		
 
-		.append(getGroupID());
+		this.middleName = middleName;
+
+	}
+
+	public String getLastName() {
+
+		
+
+		return lastName;
+
+	}
+
+	public void setLastName(String lastName) {
+
+		
+
+		this.lastName = lastName;
+
+	}
+
+	public String getTitleDesc() {
+
+		
+
+		return titleDesc;
+
+	}
+
+	public void setTitleDesc(String titleDesc) {
+
+		
+
+		this.titleDesc = titleDesc;
+
+	}
+
+	public StringBuilder getName(){
+
+		return new StringBuilder(getFirstName())
+
+		.append(getMiddleName())
+
+		.append(getLastName())
+
+		.append(getTitleDesc());
 
 	}
 
