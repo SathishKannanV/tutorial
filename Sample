@@ -1,81 +1,60 @@
 /**
  * 
  */
-package com.aetna.prvrte.rteintranet.adapter;
+ package com.aetna.prvrte.rteintranet.adapter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-
-
-
-
 import javax.sql.DataSource;
-
-
-
-
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlOutParameter;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.SqlReturnResultSet;
 import org.springframework.jdbc.object.StoredProcedure;
 
-
-
-
-
-import com.aetna.fs.enterprise.crypto.AetnaEnterpriseCrypto;
-import com.aetna.fs.enterprise.crypto.AetnaEnterpriseCryptoException;
-import com.aetna.fs.enterprise.crypto.FormatPreservingEncryption;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
-import com.aetna.prvrte.rteintranet.vo.SubmsnVO;
+import com.aetna.prvrte.rteintranet.vo.Sbmrpln5VO;
+import com.aetna.prvrte.rteintranet.vo.SbmrstSrapidtlVO;
 
 
 /**
  * @author N731694
  * Cognizant_Offshore
  */
-public class SubmsnAdapter extends StoredProcedure{
+public class SrapidtlAdapter extends StoredProcedure{
 
-	private final Log log = LogFactory.getLog(SubmsnAdapter.class);
+	private final Log log = LogFactory.getLog(SrapidtlAdapter.class);
+	ArrayList<String> mappedEbsBenDtls = new ArrayList<String>();
+	ArrayList<String> mapoutBenDtls = new ArrayList<String>();
 	private static final String CNVRSTN_CD = "CNVRSTN_CD";
 	private static final String VAN_ID_CD = "VAN_ID_CD";
 	private static final String IN_TY_CD = "IN_TY_CD";
-	private static final String IN_PSTD_DT = "IN_PSTD_DT";
+	
 	
 	private static final String OUT_CODE = "OUT_CODE";
 	private static final String READ_CURSOR = "READ_CURSOR3";
 	
 	
-	// SSN Encryption code using Voltage API framework
-	@Autowired
-	AetnaEnterpriseCrypto aec;
-	
-	String format="SSN";
-	
-	public void setAec(AetnaEnterpriseCrypto aec) {
-		this.aec = aec;
-	}
-	
-	public SubmsnAdapter(DataSource datasource, String storedProc) {
-		super(datasource, storedProc);
-		
+	public SrapidtlAdapter(DataSource datasource, String storedProc) {
+		  super(datasource, storedProc);
+		  System.out.println(" SrapidtlAdapter ------------------> " + storedProc);
+
 		declareParameter(new SqlParameter(CNVRSTN_CD, Types.CHAR));   
 		declareParameter(new SqlParameter(VAN_ID_CD, Types.CHAR));
 		declareParameter(new SqlParameter(IN_TY_CD, Types.CHAR));
-		declareParameter(new SqlParameter(IN_PSTD_DT, Types.CHAR));
+		
 		
 		declareParameter(new SqlOutParameter(OUT_CODE, Types.INTEGER));
 		
@@ -84,180 +63,1639 @@ public class SubmsnAdapter extends StoredProcedure{
 			/* (non-Javadoc)
 			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
 			 */
-			public Object mapRow(final ResultSet rs, final int arg1)
+			@SuppressWarnings("rawtypes")
+			public Sbmrpln5VO mapRow(final ResultSet rs, final int arg1)
 					throws SQLException 
 					{
-						SubmsnVO submsnVO=new SubmsnVO();
+				List<Sbmrpln5VO> sbmrpln5Collection = new ArrayList<Sbmrpln5VO>();
+				List<SbmrstSrapidtlVO> srapidt5Collection = new ArrayList<SbmrstSrapidtlVO>();
+				ArrayList<String> mappedEbsBenDtls = new ArrayList<String>();
+						String vanId = rs.getString("SUBMSN_VAN_ID_CD"); //Save the new SBMRPLN5 values locally
+						String tranTypeCd = rs.getString("SUBMSN_TY_CD");
+						String convIdCd = rs.getString("SUBMSN_CNVRSTN_CD");
+						int seqNo = rs.getInt("SBMRPLN_SEQ_NO");
+						int planControlNo = rs.getInt("SBMRPLN_CTL_NO");
+						String bnftIdCd = rs.getString("BNFT_ID_CD");
+						int pbnfSeqNo = rs.getInt("PBNF_SEQ_NO");
+						int planNumber = rs.getInt("SBMRPLN_PLAN_NO");
+						String planSummaryCd = rs.getString("SBMRPLN_PLSMRY_CD");
+						String planName = rs.getString("SBMRPLN_PLAN_NM");
 						
-						submsnVO.setConvIdCode(rs.getString("SUBMSN_CNVRSTN_CD"));
-						submsnVO.setVanIdCd (rs.getString("SUBMSN_VAN_ID_CD"));
-						submsnVO.setTypeCd (rs.getString("SUBMSN_TY_CD"));
-						submsnVO.setAuthorizationId (rs.getString("SUBMSN_ATHRZTI_IDN"));
-						submsnVO.setSecurityId (rs.getString("SUBMSN_SCRTYIN_IDN"));
-						submsnVO.setIntrchngSendId (rs.getString("SUBMSN_INTRCHS_IDN"));
-						submsnVO.setIntrchngRcvrId (rs.getString("SUBMSN_INTRCHR_IDN"));
-						submsnVO.setInterchangeDate (rs.getString("SUBMSN_INTERCHN_DT"));
-						submsnVO.setInterchangeTime (rs.getString("SUBMSN_INTRCHN_TM"));
-						submsnVO.setIntrcngCntrlNo (rs.getString("SUBMSN_INTRCHNC_NO"));
-						submsnVO.setAppSendCd (rs.getString("SUBMSN_APPLCTNS_CD"));
-						submsnVO.setAppRcvrCd (rs.getString("SUBMSN_APPLCTNR_CD"));
-						submsnVO.setGroupDate (rs.getString("SUBMSN_GROUP_DT"));
-						submsnVO.setGroupTime(rs.getString("SUBMSN_GROUP_TM"));
-						submsnVO.setGrpControlNo(rs.getString("SUBMSN_GRPCNTRL_NO"));
-						
-						submsnVO.setTrnsctnTypeCd (rs.getString("SUBMSN_TRNSCTNS_CD"));
-						submsnVO.setServiceTypeCode (rs.getString("SUBMSN_SVCTYP_CD"));
-						submsnVO.setReqstdBnftCd (rs.getString("SUBMSN_RQSTDBNT_CD"));
-						submsnVO.setAsOfDate (rs.getString("SUBMSN_AS_OF_DT"));
-						submsnVO.setToDate (rs.getString("SUBMSN_TO_DT"));
-						submsnVO.setSbmtPrvdrId (rs.getString("SUBMSN_SBPR_ID_CD"));
-						submsnVO.setSbmtPvdrLastName (rs.getString("SUBMSN_SBPRLAST_NM"));
-						submsnVO.setSbmtPvdrFirstName (rs.getString("SUBMSN_SBPR_FST_NM"));
-						submsnVO.setSbmtPvdrMidName (rs.getString("SUBMSN_SBPRMID_NM"));
-						submsnVO.setSbmtPvdrTitle (rs.getString("SUBMSN_SBPRTITL_NM"));
-						submsnVO.setSbmtPvdrAddr1 (rs.getString("SUBMSN_SPADDR1_TXT"));
-						submsnVO.setSbmtPvdrAddr2 (rs.getString("SUBMSN_SPADDR2_TXT"));
-						submsnVO.setSbmtPvdrCity (rs.getString("SUBMSN_SBPRCITY_NM"));
-						submsnVO.setSbmtPvdrState (rs.getString("SUBMSN_SBPRV_ST_CD"));
-						submsnVO.setSbmPvdrZipCd (rs.getString("SUBMSN_SBPR_ZIP_CD"));
-						
-						submsnVO.setsPCommunication1No(rs.getString("SUBMSN_SPRVCOM1_NO"));
-						
-						// SSN encryption - Voltage API
-						//submsnVO.setSubscriberIdCd (rs.getString("SUBMSN_SUBS_ID_CD"));
-						
+						String coverageTypeCd = rs.getString("SRAPIDTL_CVRGTP_CD"); //Add the new SRAPIDTL to the SRAPIDTl collection
+						String programName = rs.getString("SRAPIDTL_APISRT_NM");
+						String ebsBenefitData = rs.getString("SRAPIDTL_APIRSP_TX");
+						String postedDate = rs.getString("SUBMSN_PSTD_DT");
+						 
+						Sbmrpln5VO aSbmrpln5 =
+								 new Sbmrpln5VO(convIdCd, vanId, tranTypeCd, seqNo, postedDate,  planControlNo,  0, 0, " ",  " ",
+								 			" ",  " ",	" ",  " ",  " ",  " ",  bnftIdCd,
+								 			pbnfSeqNo,  planNumber,  planSummaryCd, planName, " ", " ",  " ",
+								 			" ",  " ", " ", " ",  " ",  " ",  " ",
+								 			" ", " ",  " ",  " ",  " ", " ",  " ",
+								 			" ",  " ", " ", " ", 0, " ", " ", srapidt5Collection);
 						try {
-							submsnVO.setSubscriberIdCd(voltageApiEncryption(rs.getString("SUBMSN_SUBS_ID_CD")));
-						} catch (AetnaEnterpriseCryptoException e) {
+							mappedEbsBenDtls = mapBenDetails(coverageTypeCd, ebsBenefitData);
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
-						
-						submsnVO.setMemberIdCd (rs.getString("SUBMSN_MBR_ID_CD"));
-						submsnVO.setEmployeeId (rs.getString("SUBMSN_EMPLOYEE_ID"));
-						submsnVO.setSubsLastName (rs.getString("SUBMSN_SUBSLAST_NM"));
-						submsnVO.setSubsFirstName (rs.getString("SUBMSN_SUBS_FST_NM"));
-						submsnVO.setSubsMidName (rs.getString("SUBMSN_SUBSMID_NM"));
-						submsnVO.setSubsTitle (rs.getString("SUBMSN_SUBSTITL_NM"));
-						submsnVO.setPatientLastName (rs.getString("SUBMSN_PTNT_LST_NM"));
-						submsnVO.setPatientFirstName (rs.getString("SUBMSN_PTNT_FST_NM"));
-						submsnVO.setPatientMidName (rs.getString("SUBMSN_PTNTMID_NM"));
-						submsnVO.setPatientTitle (rs.getString("SUBMSN_PTNTTITL_NM"));
-						submsnVO.setPatientBirthdate (rs.getString("SUBMSN_PTNTBRTH_DT"));
-						submsnVO.setRelationToSubsCode (rs.getString("SUBMSN_RTPTSUBS_CD"));
-						submsnVO.setPatientSexCode (rs.getString("SUBMSN_PTNT_SEX_CD"));
-						
-						
-						
-						submsnVO.setEffectiveDate (rs.getString("SUBMSN_EFF_DT"));
-						submsnVO.setReceivedTime (rs.getString("SUBMSN_RECVD_TM"));
-						submsnVO.setPrvdrSbmTime (rs.getString("SUBMSN_PRVDRSBM_TM"));
-						submsnVO.setPrvdrSbmDate (rs.getString("SUBMSN_PRVDRSBM_DT"));
-						submsnVO.setTransactionCd (rs.getString("SUBMSN_TRANSCTN_CD"));
-						submsnVO.setPostedDt (rs.getString("SUBMSN_PSTD_DT"));
-						submsnVO.setSpvdrEntTypeQualCd (rs.getString("HCSR_SBMTPETQ_CD"));
-						submsnVO.setSpvdrContactName (rs.getString("HCSR_SBMTTNGPRC_NM"));
-						submsnVO.setSubsIdQualCode (rs.getString("HCSR_SBSCRBRIQ_CD"));
-						submsnVO.setSubsTrceRefNo (rs.getString("HCSR_SBSCRBRTRR_NO"));
-						submsnVO.setDepIdQualCode  (rs.getString("HCSR_DPNDNTIDQ_CD"));
-						submsnVO.setDepTrceRefNo  (rs.getString("HCSR_DPNDNTTRCR_NO"));
-						submsnVO.setCoverForPCPInd  (rs.getString("ELIGIQ_COVGPCP_IND"));
-						submsnVO.setEmpGroupIdCode  (rs.getString("SUBMSN_ERGRPIDN_CD"));
-						submsnVO.setPrvdrNetworkIdCode  (rs.getString("ELIGIQ_PRNTWKID_CD"));
-						
-						
-						submsnVO.setAltRouteIdCode  (rs.getString("ELIGIQ_ALTRTGID_CD"));
-						submsnVO.setAltRouteTypeCode  (rs.getString("ELIGIQ_ALTRTTYP_CD"));
-						submsnVO.setEmployerName (rs.getString("ELIGIQ_ER_NM"));
-						submsnVO.setRoutingId (rs.getString("ELIGIQ_RTG_ID"));
-						submsnVO.setRoutingTypeCode (rs.getString("ELIGIQ_RTGTYPE_CD"));
-						submsnVO.setCumbIdNo(rs.getString("CUMB_ID_NO"));
-						submsnVO.setPrvdrIdNo (rs.getString("PRVDR_ID_NO"));
-						submsnVO.setPrvdrOrgNo(rs.getString("PRVORG_NO"));
-						submsnVO.setSpComm1QualCode (rs.getString("SUBMSN_SPCN1QLF_CD"));
-						submsnVO.setVersionReleaseCode (rs.getString("SUBMSN_VERSNRLS_CD"));
-						submsnVO.setMswContactCode (rs.getString("SUBMSN_MSWCNTC_CD"));
-						submsnVO.setSpCommunication2No (rs.getString("SUBMSN_SPRVCOM2_NO"));
-
-						submsnVO.setSpComm2QualCode (rs.getString("SUBMSN_SPCN2QLF_CD"));
-						submsnVO.setEntityIdCode  (rs.getString("ENTTYID_CD"));
-						submsnVO.setPvdrIdCodeQualCode  (rs.getString("IDCDQLF_CD"));
-						submsnVO.setFamilyLevelInd  (rs.getString("SUBMSN_FAMLVL_IND"));
-						submsnVO.setPosCode  (rs.getString("SUBMSN_POS_CD"));
-						
-						
-						return submsnVO;
+						SbmrstSrapidtlVO aSrapidtl =
+								 new SbmrstSrapidtlVO(coverageTypeCd, programName, mappedEbsBenDtls);
+								srapidt5Collection.add(aSrapidtl);
+						return aSbmrpln5;
 			}
 
 		}));
 
 	}
 	
-	 public String voltageApiEncryption(String value) throws AetnaEnterpriseCryptoException{
-		 
-		 FormatPreservingEncryption fpe =aec.getFormatPreservingEncryption(format);
-			
-			String string= value;
-			
-			return fpe.encrypt(string);
-			
-		
-	}
 	
 	
 	@SuppressWarnings("unchecked")
-	public Map getSubmsnEvntTracking (String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
-		log.debug("Entered SbrsrxbAdapter  - getSbrsrxbEvntTracking");
-	
+	public Map getSrapidtlEvntTracking (String convIdCode, String vanIdCd,String typeCd,String postedDt) throws ApplicationException {
+		log.debug("Entered SrapidtlAdapter  - getSrapidtlEvntTracking");
+
 		Map<String, String> params = new java.util.HashMap<String, String>();
-		Map submsnMap = new HashMap();
+		Map srapidtlMap = new HashMap();
 		params.put(CNVRSTN_CD, RteIntranetUtils.getTrimmedString(convIdCode));
 		params.put(VAN_ID_CD, RteIntranetUtils.getTrimmedString(vanIdCd));
 		params.put(IN_TY_CD, RteIntranetUtils.getTrimmedString(typeCd));
-		params.put(IN_PSTD_DT, RteIntranetUtils.getTrimmedString(postedDt));
-		
 	
-		
 		log.debug(params);
 		Map results = null;
 		
-		List<SubmsnVO> submsnList= new LinkedList<SubmsnVO>();
+		List<Sbmrpln5VO> srapidtlList= new LinkedList<Sbmrpln5VO>();
+		
 		String newMessage="";
-	
+		int noOfElements ;
 		try {
 			results = execute(params);
-			log.debug("SubmsnAdapter: Executed stored procedure");
+			log.debug("SrapidtlAdapter: Executed stored procedure");
 			String sqlCode =  String.valueOf(results
 					.get(OUT_CODE));
-			submsnList = (List<SubmsnVO>) results
+	
+			srapidtlList = (List<Sbmrpln5VO>) results
 					.get(READ_CURSOR);	
-			if ("0".equals(sqlCode))
-				{
-					if (null==submsnList ||submsnList.isEmpty()) {
-					newMessage = "No Data for Conversation ID: " + convIdCode + 
-								" Van Id: " +  vanIdCd + 
-								" Tran Type: " + typeCd + 
-								" or Posted Date: " + postedDt;
-					}
-				else
-				{
-					newMessage = "Data found for Conversation ID: " + convIdCode +
-						" Van Id: " +  vanIdCd + 
-						" Tran Type: " + typeCd + 
-						" and Posted Date: " + postedDt;
-				}
+			noOfElements = srapidtlList.size();
+			if (srapidtlList.isEmpty()){
+				newMessage = "No Data for Conversation ID: " + convIdCode +
+												" Van Id: " +  vanIdCd + 
+												" Tran Type: " + typeCd; 
 			} else {
-				
-			    	newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
+				newMessage = "Data found for Conversation ID: "  + convIdCode +
+						" Van Id: " +  vanIdCd + 
+						" Tran Type: " + typeCd; 
 			}
-			submsnMap.put("newMessage", newMessage);
-			submsnMap.put("submsnList",submsnList);
-			return submsnMap;
+			srapidtlMap.put("newMessage", newMessage);
+			srapidtlMap.put("srapidtlList", srapidtlList);
+			return srapidtlMap;
 		}catch (Exception exception){
-			log.error("SubmsnAdapter : generic error occured  "+exception);
+			log.error("SrapidtlAdapter : generic error occured  "+exception);
 			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
 		}
 	}
 
+	public ArrayList<String> mapBenDetails(String cvgTypeCd, String ebsBenDtls)
+			throws Exception {
+		String recordType = cvgTypeCd.substring(1, 3);
+		String apiType = cvgTypeCd.substring(1, 2);
+		String recordValue = cvgTypeCd.substring(0, 3);
+		// ArrayList<String> mapoutBenDtls = new ArrayList<String>();
+	
+		String tempText,planCopayInd,providerNameInd,inputCriteriaInd,inputproviderInd,nameCriteriaInd,planIdentifierInd;
+		/*RTE changes begin here SR1234 OffShore*/
+		/*	Begin #Resource_Type_Cognizant_Offshore #Resource_ID_N742407 updated for SR P08-P23175a */
+		
+		
+		//For Traditional tables T1 T2
+		if (recordType.equals(ApplicationConstants.T1) || recordType.equals(ApplicationConstants.T5)) {
+
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0; 											// second (4) call to the service
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));
+			// 10 PLAN-INDICATIVE-DETAIL-GROUP.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			// 20 COVERAGE-CODE-DATA.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			//mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));// P24915a Nov'16 
+			// 15 PLAN-INDICATIVE-RECORD.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P8197V PI-HABIL-FIELD1
+			// 15 BENEFIT-COMPONENT-RECORD.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			// 15 SCHEDULED-BENEFITS.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+
+			// mapoutBenDtls.add(convertMFSignedNumbers(ebsBenDtls.substring(j,j += 5)));
+
+			for (int i = 0; i < 40; i++) {						// 40 Occurrences
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+			}
+
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 20 DED-DET-CTR
+
+			for (int i = 0; i < 20; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+
+				// 25 FAMILY-DEDUCTIBLE.
+				// mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+				
+				mapoutBenDtls.add(convertMFSignedNumbers(ebsBenDtls.substring(
+						j, j += 9)));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+				// 25 PATIENT-DEDUCTIBLE.																															
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				// SPRS-DED-TIER-TYPE
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				// 25 FAMILY-DED-CARRYOVER
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				// 25 PATIENT-DED-CARRYOVER
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P24915a Nov'16
+			}
+			// 15 MAX-TOS-POS-EXCEEDED
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+
+		} 
+		// Traditional tables T1  Ends here
+		// Traditional tables T2,,T8  begin here
+		else if (recordType.equals(ApplicationConstants.T2) || recordType.equals(ApplicationConstants.T3)
+				|| recordType.equals(ApplicationConstants.T4) || recordType.equals(ApplicationConstants.T6)
+				|| recordType.equals(ApplicationConstants.T7) || recordType.equals(ApplicationConstants.T8)) {
+
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0;
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			for (int l = 0; l < 10; l++) {							// Ten occurrences
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				// 25 EX-CODE-AMOUNT.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // PL-SAVINGS-IND
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11)); // PL-REL-PERIOD
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+				// 25 PL-FLOAT-ACCUMULATOR-DATA.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				// 25 INCENTIVE-CREDIT.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P24915a Nov'16
+				for (int i = 0; i < 25; i++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+			}
+		}
+		// Traditional tables T2,,T8  Ends here
+		
+		//Dental M1 begin here
+		else if (recordType.equals(ApplicationConstants.M1)) {
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0;
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			// 15 COVERAGE-CODE-DATA.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11)); // HF-REMAINDER
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9)); //P24915a Nov'16
+			// 10 PLAN-INDICATIVE-RECORD.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P8197V PI-HABIL-FIELD1
+
+			// 10 BENEFIT-COMPONENT-RECORD.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			// 10 DENTAL-DATA.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+
+			// 15 PDO-RATE-COMPARE-IND
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+
+			// 20 ADA-CODE-DETAILS OCCURS 3 TIMES.
+			for (int i = 0; i < 3; i++) {							// Three Occurrences
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				// 30 DENTAL-RESPONSE-DTL OCCURS 3 TIMES
+				for (int k = 0; k < 3; k++) {							// Three Occurrences
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					//mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 32));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					// 40 GBOB-GRP OCCURS 4 TIMES.
+					for (int l = 0; l < 4; l++) {							// 4 Occurrences 
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					}
+				}
+			}
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			// ALTERNATE-NETWORK-SET.
+			for (int m = 0; m < 12; m++) {							// 12 Occurrences 
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			}
+			
+		}
+
+		// M2 Begin Here
+		else if (recordType.equals(ApplicationConstants.M2)) {
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0; 
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			/*for (int i = 0; i <= 40; i++) {*/
+				for (int k = 0; k <= 20; k++) {							// 20 Occurrences 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					// PATIENT-DEDUCTIBLE
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));
+
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					// FAMILY-DED-CARRYOVER
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P24915a Nov'16
+					
+			}
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		} 
+		// Dental M2 Ends here
+
+		// Dental M3  Begin here
+		else if (recordType.equals(ApplicationConstants.M3) || recordType.equals(ApplicationConstants.M4)) {
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0;
+			//mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				for (int k = 0; k < 10; k++) {							// Ten Occurrences 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+
+					// 25 EX-CODE-AMOUNT.
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+					// PL-FLOAT-ACCUMULATOR-DATA
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					// INCENTIVE-CREDIT
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 13));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					//for (int l = 0; l < 162; l++) {
+						for (int m = 0; m < 100; m++) {					// 100 Occurrences 
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					}
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P24915a Nov'16
+						for (int m = 0; m < 5; m++) {					/*5 Occurrences*/ 
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+					}
+				}
+				
+		}
+		// Dental M3 and M4 Ends here
+
+		/*	End #Resource_Type_Cognizant_Offshore #Resource_ID_N742407 updated for SR P08-P23175a */
+
+		else if (recordType.equals("A1") || recordType.equals("A4")) { // Trad Accum Part 1 first (1)
+																	// Part 1
+																	// first (1)
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0; // second (4) call to the service
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(convertMFSignedNumbers(ebsBenDtls.substring(j,
+					j += 5)));
+			mapoutBenDtls.add(convertMFSignedNumbers(ebsBenDtls.substring(j,
+					j += 5)));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			for (int i = 0; i < 10; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 5) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 8262d Feb // 2012
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));	//P8551b-Nov Release-Added a new field												
+			}
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			for (int i = 0; i < 3; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				for (int k = 0; k < 25; k++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				}
+				for (int k = 0; k < 25; k++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 8262d Feb 2012
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));	//P8551b-Nov Release-Added a new field										
+			}
+			tempText = ebsBenDtls.substring(j, j += 7) + "."
+					+ ebsBenDtls.substring(j, j += 2);
+			mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+			mapoutBenDtls.add(convertMFSignedNumbers(ebsBenDtls.substring(j,
+					j += 5)));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			for (int i = 0; i < 10; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+			}
+			//if (cvgTypeCd.equals("DA1")) { // Trad Dental specific elements -
+											// Trad Accum Part 1 only
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3) + "."
+						+ ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				for (int i = 0; i < 12; i++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				for (int i = 0; i < 3; i++) {
+					mapoutBenDtls	.add(ebsBenDtls.substring(j, j += 5));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					for (int k = 0; k < 3; k++) {
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						for (int l = 0; l < 4; l++) {
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						} // l
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 17));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						tempText = ebsBenDtls.substring(j, j += 5) + "."
+								+ ebsBenDtls.substring(j, j += 2);
+						mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 19));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 32));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					} // k
+				} // i
+			//} // end cvgTypeCd "DA1"
+	
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // feb 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 8262d Feb
+																// 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 8262d Feb
+																// 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 7140w Feb
+																// 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); // 7140w Feb
+																	// 2012
+			// venkat August 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // P8357D August
+																// 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // P8357D August
+																// 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // P8357D August 2012
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); //P8551b-Start-Nov Release-Added below new fields
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); //P8551b-Nov Release-Added a new field						
+			// venkat August 2012
+	
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // FICOMPARE-IND
+																// and end of
+																// 'A1' & 'A4'
+		}
+		
+		else if (recordType.equals("A2") || recordType.equals("A3")
+				|| recordType.equals("A5") || recordType.equals("A6")) { // Trad
+																			// Accum
+																			// Parts
+																			// 2
+			mapoutBenDtls = new ArrayList<String>();																// and
+																			// 3
+			int j = 0; // first (2-3) and second (5-6)call
+	
+			if (recordType.equals("A2")) { // 8262e Feb 2012 (scheduled
+											// benefits)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // 8262e Feb
+																	// 2012
+																	// (scheduled
+																	// benefits)
+				for (int l = 0; l < 20; l++) { // 8262e Feb 2012 (scheduled
+												// benefits)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11)); // 8262e
+																			// Feb
+																			// 2012
+																			// (scheduled
+																			// Benefits)
+				} // 8262e Feb 2012
+			} // 8262e Feb 2012
+	
+			for (int i = 0; i < 11; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 65));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				for (int k = 0; k < 25; k++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				}
+				for (int k = 0; k < 25; k++) {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				tempText = ebsBenDtls.substring(j, j += 7) + "."
+						+ ebsBenDtls.substring(j, j += 2);
+				mapoutBenDtls.add(convertMFSignedNumbers(tempText));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // Feb 12 8262d
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));	//P8551b-Nov Release-Added a new field											
+			}
+			if (recordType.equals("A3") || recordType.equals("A6")) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			}
+		} 
+		
+		else if (apiType.equals("S")) { // Trad SE Parts 1-4 first (MS1-4) and
+											// second (VS1-4) call
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0;
+			if (recordType.equals("S1")) {  //P8262-Aug Release-start-Modified the structure of copybook
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			}
+			if(recordValue.equals("VS4"))
+			{
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+			}
+			int k = 13; // pcr 8825 changed from 16 to 13
+			if (recordType.equals("S4"))
+				k = 11; // pcr 8825 new 'S4' only 11 occurenced
+			for (int i = 0; i < k; i++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); //P8551b-Nov Release-Added a new field		
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        for (int k1 = 0; k1 < 2; k1++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+		        }
+			    mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        for (int k2 = 0; k2 < 4; k2++) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        planCopayInd = ebsBenDtls.substring(j, j += 1);
+		        mapoutBenDtls.add(planCopayInd);
+		        if ((planCopayInd.equals("1")) || (planCopayInd.equals("2"))){
+		        	mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        	mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+			        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));
+		        }
+		        else {
+		        	mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+		        }
+		         }
+		        /*P8551c - August 2014: BASIC-DEDUCTIBLE-LINE-NO-B,BASIC-COVERED-RATE-CALC-IND-B*/
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+		        mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//P24915a Nov'16
+			}
+			//P24915a Nov'16 changes begin
+			try
+			{
+			if (recordType.equals("S1")) {  
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 727));
+			}
+			if (recordType.equals("S2")) {  
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 754));
+			}
+			if (recordType.equals("S3")) {  
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 754));
+			}
+			if (recordType.equals("S4")) {  
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1238));
+			}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			//P24915a Nov'16 changes end
+			
+			
+			//P8262-Aug Release-end-Modified the structure of copybook 
+			
+			//19134a - RTE Feb 2014 release - New condition added
+			
+		} else if (apiType.equals("P")) { 
+			mapoutBenDtls = new ArrayList<String>();								
+			int j = 0;
+			if (recordType.equals("P1") && cvgTypeCd.equals("EP1")){
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));     		//AS-OF-DATE
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));				//ENTITY-TYPE-CODE 
+				inputproviderInd = ebsBenDtls.substring(j, j += 1);
+				mapoutBenDtls.add(inputproviderInd);												//INPUT-PROVIDER-IND
+				if ((inputproviderInd.equals("1")) ){
+		        	mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));   //TAX-ID-FORMAT-CODE 
+		        	mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));   //TAX-IDENTIFIER-NUMBER
+		        }
+				else if((inputproviderInd.equals("2")) || (inputproviderInd.equals("3"))){
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));   		//PROVIDER-ID-NUMBER and  NATIONAL-PROVIDER-IDENTIFIER
+				}
+				else {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));    	//INPUT-PROVIDER-IDENTIFIER-DATA
+		        }
+				inputCriteriaInd = ebsBenDtls.substring(j, j += 1);
+				mapoutBenDtls.add(inputCriteriaInd);												//INPUT-CRITERIA-IND can take 1,2,3 values
+				if ((inputCriteriaInd.equals("1")) ){
+						nameCriteriaInd = ebsBenDtls.substring(j, j += 1);  
+						mapoutBenDtls.add(nameCriteriaInd); 										//NAME-CRITERIA-IND can take 1 and 2 as values
+						if( nameCriteriaInd.equals("1")) {
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); 	//LAST-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); 	// FIRST-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25));  //MIDDLE-NAME
+						}else if((nameCriteriaInd.equals("2")) ){
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  //NON-INDIVIDUAL-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  //FILLER
+						}else{
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 100)); //NAME-CRITERIA-DATA
+						}
+						
+					    mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7)); 	//CONTROL-NUMBER 
+						planIdentifierInd = ebsBenDtls.substring(j, j += 1);  
+						mapoutBenDtls.add(planIdentifierInd); 									//PLAN-IDENTIFIER-IND can take 1 and 2 as values
+						if ( planIdentifierInd.equals("1")) {
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));  	//PLAN-NUMBER
+						}else if ( planIdentifierInd.equals("2") ){
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));   //PLAN-SUMMARY
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));   //FILLER
+						}else{
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));   //PLAN-IDENTIFIER-DATA
+						}
+						// ---- EP1 Nov,2015 Changes starts -------
+						// GOLD-DIABETIC-PLAN-CRITERIA added
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // GOLD-DIABETIC-PLAN-IND
+						//INPUT-SPECIALITY-CRITERIA. - GOLD-DIAB-PRVDR-SPEC-TYPE-SET.
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); // GOLD-DIAB-PRVDR-SPEC-TYPE-CTR
+						for (int i = 0; i < 10; i++) { // else
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8)); // GOLD-DIAB-PRVDR-SPEC-TYPE
+						}		
+						// ---- EP1 Nov,2015 Changes ends ------- /						
+						// ---- EP1 Feb,2016 Changes - P23800A CHANGES starts -------
+						// PROVIDER-TYPE-SRCH-CRITERIA.
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // PROVIDER-TYPE-SRCH-INDICATOR
+						// PROVIDER-TYPE-INPUT-CRITERIA.
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); // PROVIDER-TYPE-CLASS-CODE
+						// ---- EP1 Feb,2016 Changes end - P23800A CHANGES -------
+						
+				} else if ( inputCriteriaInd.equals("2") ){  								//TIER-CRITERIA-DATA
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 7)); 		//CONTROL-NUMBER
+						planIdentifierInd = ebsBenDtls.substring(j, j += 1);
+						mapoutBenDtls.add(planIdentifierInd); 									//PLAN-IDENTIFIER-IND can take 1 and 2 as values
+						if (planIdentifierInd.equals("1")) {
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); 	//PLAN-NUMBER 
+						}else if ( planIdentifierInd.equals("2")){
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));  	//PLAN-SUMMARY
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  	//FILLER
+						}else{
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));  	//PLAN-IDENTIFIER-DATA
+						}
+						// ---- EP1 Feb,2016 Changes - P23800A CHANGES starts -------
+						// PROVIDER-TYPE-SRCH-CRITERIA.
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // PROVIDER-TYPE-SRCH-INDICATOR
+						// PROVIDER-TYPE-INPUT-CRITERIA.
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); // PROVIDER-TYPE-CLASS-CODE
+						// ---- EP1 Feb,2016 Changes - P23800A CHANGES ends -------
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 184)); // FILLER changed 101 to 184 EP1 Nov,2015
+					
+				} else if ((inputCriteriaInd.equals("3")) ){  								//NAME-CRITERIA-DATA
+						nameCriteriaInd = ebsBenDtls.substring(j, j += 1); 
+						mapoutBenDtls.add(nameCriteriaInd);											//NAME-CRITERIA-IND can take 1 and 2 as values
+						if ( nameCriteriaInd.equals("1")) {
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); 	//LAST-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); 	//FIRST-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); 	//MIDDLE-NAME
+						}else if((nameCriteriaInd.equals("2")) ){             	//NON-IND-NAME-CRITERIA-DATA
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  //NON-INDIVIDUAL-NAME
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  // FILLER
+						}else{
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 100)); //NAME-CRITERIA-DATA
+						}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 98)); // FILLER updated - P23800  
+				} 
+				/* ----  P20941A CHANGES BEGIN, INPUT-CRITERIA-IND can take 4,5 values including--- */
+				else if ((inputCriteriaInd.equals("4"))) { // INPUT-NAME-NETID-CRITERIA-DATA
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));  //NETWORK-ID 
+					nameCriteriaInd = ebsBenDtls.substring(j, j += 1); // NAME-CRITERIA-IND 
+					mapoutBenDtls.add(nameCriteriaInd); // NAME-CRITERIA-IND can take 1 and 2 as values
+					if (nameCriteriaInd.equals("1")) {
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); // LAST-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); // FIRST-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); // MIDDLE-NAME
+					} else if ((nameCriteriaInd.equals("2"))) {
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); // NON-INDIVIDUAL-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); // FILLER
+					} else {
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 100)); // NAME-CRITERIA-DATA
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 93)); // FILLER updated - P23800A
+				}
+				else if ((inputCriteriaInd.equals("5"))) { 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));  //NETWORK-ID 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 194)); // FILLER , upated P23800A 
+				} 
+				/* ----  P20941A CHANGES BEGIN, INPUT-CRITERIA-IND can take 4,5 values including--- */
+				
+				else {
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 199)); // INPUT-CRITERIA-DATA  changed 112 to 195 , EP1 Nov,2015
+				}
+				//PROVIDER-TIERS-BY-ID
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 				//WARNING-INDICATOR
+				//PROVIDER-DETAILS
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 				//PROVIDER-ID
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  				//PROVIDER-INFO-TYPE can take only 1,2,3,4 values
+				//PROVIDER-TYPE
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));  				//TYPE-CODE
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 60));  			//DESCRIPTION
+				providerNameInd = ebsBenDtls.substring(j, j += 1);    			//PROVIDER-NAME-IND
+				mapoutBenDtls.add(providerNameInd); 												//PROVIDER-NAME-IND can take 1 and 2 as values
+					if( (providerNameInd.equals("1")) ){  										//INDIVIDUAL-NAME-DATA
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  	//LAST-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25));  	//FIRST-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); 		//MIDDLE-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));  		//RANK
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));  		//SALUTATION
+					}else if( (providerNameInd.equals("2")) ) {  							//NON-INDIVIDUAL-NAME-DATA
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  	//MARKETING-NAME
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 58));  	//FILLER
+					}else{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 108)); 	//PROVIDER-NAME-DATA
+					}
+					
+					//PROVIDER-TIER-SET
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));   		//PROVIDER-TIER-CTR
+					for(int i=1; i<6; i++){
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  		//PROVIDER-TIER
+					}
+					//CATEGORY-DETAIL-SET-SET
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));   		//CATEGORY-DETAIL-SET-CTR
+					for (int i=1; i<11; i++){
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));  		//CATEGORY-CODE
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50)); 		//CATEGORY-CODE-DESCRIPTION
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));   	//MASTER-CATEGORY-CODE
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));  	//MASTER-CATEGORY-DESCRIPTION
+						
+						//CLASSIFICATION-SET
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));  		//CLASSIFICATION-CTR 
+						for (int a=1; a<16; a++){
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));  	//CLASSIFICATION-CODE
+						}
+						//PRVDR-TIER-SET
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));    	//PRVDR-TIER-CTR
+						for (int b=1; b<6; b++){
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));		//PRVDR-TIER
+							mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));		//GOLD-DIABETIC-MATCH-IND
+							
+						}
+					}
+					
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 			//EYEMED-PROVIDER-INDICATOR
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 		//PROVIDER-FLAG-CTR
+					
+					for (int i=1; i<11; i++){
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));  //FLAG-CODE 
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); /*P20941a August 2014:PROVIDER-MATCH-INDICATOR*/ 
+					
+					// ---- EP1 Feb,2016 Changes - P23800A CHANGES starts -------
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); // PROVIDER-TYPE-MATCH-INDICATOR
+					// ---- EP1 Feb,2016 Changes end - P23800A CHANGES -------
+			}
+			
+			//------------------------------------------
+			// HRP-PLAN-RESP  P23575a V2020 - Nov15 Release - Starts
+			// ------------------------------------------
+			//	
+			//BENEFIT-DATA
+			else if (recordType.equals("P1") && cvgTypeCd.equals("HP1")) {
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5)); //EIE-RETURN-CODE(05)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 40)); //EIE-RETURN-CODE-TEXT(40)
+				//COB-CARRIER.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//COB-INDICATOR(01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 40));//COB-NAME(40)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 12));//POLICY-NUMBER(12)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8)); //START-DATE(08)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//END-DATE(08)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//CARRIER-CODE(03)
+				
+				//PLAN-LEVEL-DETAIL-SET.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); //PLAN-LEVEL-DETAIL-CTR(1)
+				//PLAN-LEVEL-DETAIL
+				for (int i = 0; i < 1; i++) {	 //OCCURS 1 TIMES
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 17));//PLAN-MEMBER-ID(17)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 15));//GROUP-NO(15)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));//PLAN-NAME(50)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//PLAN-SPONSOR-NAME(35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//MEMBER-PLAN-EFFECTIVE-DATE(10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//MEMBER-PLAN-TERMINATION-DATE(10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//ORIG-MEMBER-EFFECTIVE-DATE(10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//CLAIM-KEY(03)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//CONTROLLING-STATE(02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//EXCHANGE-PARTICIPATION(02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//FUNDING-TYPE(02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//ACTIVE-PLAN-IND(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//PHARMACY-COVERAGE(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//VISION-COVERAGE(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//BEHAVIORAL-COVERAGE(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//DENTAL-COVERAGE(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//PLAN-ON-HOLD-IND(01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); //INS-LINE-CD(03)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25)); //MEMBER-FIRST-NAME(25)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25));//MEMBER-MIDDLE-NAME (25)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//MEMBER-LAST-NAME (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//MEMBER-TITLE-NAME (10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8)); //MEMBER-BIRTH-DATE(08)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//MEMBER-SEX-CODE (01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//MEMBER-TERM-DATE (08)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//MBR-ADDRESS-LINE-1 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//MBR-ADDRESS-LINE-2 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 20));//MEMBER-CITY (20)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//MEMBER-STATE (02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5)); //MEMBER-ZIP (05)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25));//PCP-FIRST-NAME (25)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 25));//PCP-MIDDLE-INITIAL (25)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//PCP-LAST-NAME (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//PCP-TITLE-NAME (10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//PCP-EFFECTIVE-DATE (08)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//PCP-TERMINATION-DATE (08)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//PCP-PHONE-NUMBER(10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 4));//PCP-PHONE-EXTN (04)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//ENTITY-TYPE-QLFR-CD (01)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//CAP-OFFICE-NUMBER (10)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//CAP-OFFICE-NAME (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//CAP-OFFICE-ADDR1 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//CAP-OFFICE-ADDR2 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 20));//CAP-OFFICE-CITY (20)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//CAP-OFFICE-STATE (02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));//CAP-OFFICE-ZIP (05)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//PROV-ORGANIZATION-NAME (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));//POIN  (05)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//PROV-ORGANIZATION-ADDR1 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));//PROV-ORGANIZATION-ADDR2 (35)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 20));//PROV-ORGANIZATION-CITY (20)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//PROV-ORGANIZATION-STATE (02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));//PROV-ORGANIZATION-ZIP (05)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//PCP-PORG-EFFECTIVE-DATE (08)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 60));//CAPITATED-LAB-NAME (60)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 20));//CAPITATED-LAB-PHONE (20)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 60));//CAPITATED-XRAY-NAME  (60)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 20));//CAPITATED-XRAY-PHONE (20)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 6));//PI-ID (06)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//VERSION-NUMBER (02)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 8));//VERSION-EFF-DATE (08)
+					//LOB-CODE changes (P27793c)
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//LOB-CODE (01)
+					//P26770C CHANGES - AUG-17 RELEASE
+					for (int n = 0; n < 10; n++) { //OTHER ID OCCURS 10 TIMES 
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));//OTHER ID (50)
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//IN-NETWORK-PRECERT-REQUIRED (01) VALUE Y,N
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//IN-NETWORK-REFERRAL-REQUIRED (01) VALUE Y,N
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//OUT-OF-NTWK-PRECERT-REQUIRED (01) VALUE Y,N
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//OUT-OF-NTWK-REFERRAL-REQUIRED (01) VALUE Y,N
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//BENEFIT-LEVEL-DETAIL-LIMIT-IND (01) VALUE Y,N
+				}
+			} 
+			
+		}
+		// ------------------------------------------
+		// P23575a V2020 - Nov15 Release - Ends
+		// ------------------------------------------
+		// 	
+		//HRP-BENEFIT-RESP
+		else if ("0".equals(apiType) || "1".equals(apiType)) {
+			mapoutBenDtls = new ArrayList<String>();
+			int j = 0;
+			//BENEFIT-LEVEL-DETAIL-SET.
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//BENEFIT-LEVEL-DETAIL-CTR (03)
+			mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//PLAN-SEQ-NUMBER (03)
+			for (int m = 0; m < 9; m++) {	 //BENEFIT-LEVEL-DETAIL OCCURS 7 TIMES  // doubt
+				/*
+				 * VALUES DISPLAY - RESPONSE-CODE 
+				 * RESP-CD-IS-COINSURANCE	VALUE	'A'
+				 * RESP-CD-IS-COPAYMENT		VALUE 	'B'
+				 * RESP-CD-IS-DEDUCTIBLE 	VALUE 	'C'
+				 * RESP-CD-IS-OOP 			VALUE 	'G'
+				 * RESP-CD-IS-NOT-COVERED 	VALUE 	'I'
+				 * RESP-CD-IS-LIMITATIONS 	VALUE 	'F'
+				 * RESP-CD-IS-CONTACT-ENTITY VALUE  'U'
+				 * RESP-CD-IS-ACTIVE 		VALUE 	'1'
+				 * RESP-CD-IS-INACTIVE 		VALUE 	'6'
+				 * RESP-CD-IS-DELINQUENT 	VALUE 	'7'
+				 * RESP-CD-IS-UNLIMITED 	VALUE 	'H'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//RESPONSE-CODE  (01)
+				/*  --- RESPONSE-LEVEL-CODE ---
+				 * PLAN-LEVEL-DETAIL  		VALUE 	'P'
+				 * BENEFIT-LEVEL-DETAIL  	VALUE 	'B'
+				 * */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//RESPONSE-LEVEL-CODE  (01)
+				/* --- IN-NETWORK-CODE --- 
+				 * IN-NETWORK             	VALUE  'Y'.
+				 * OUT-OF-NETWORK         	VALUE  'N'.
+				 * NETWORK-STATUS-UNKNOWN 	VALUE  'U'.
+				 * NETWORK-STATUS-BOTH    	VALUE  'W'.
+				 * NETWORK-STATUS-ALL-OTHERS VALUE  ' '
+				 * */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//IN-NETWORK-CODE   (01)
+				/* --- AMOUNT-CAT-CODE ---
+				 * AMOUNT-TYPE-IS-VISITS  VALUE  '1'.
+				 * AMOUNT-TYPE-IS-DOLLARS VALUE  '2'.
+				 * AMOUNT-TYPE-IS-PERCENT VALUE  '3'.
+				 * AMOUNT-TYPE-IS-DAYS    VALUE  '4'.
+				 * AMOUNT-TYPE-IS-UNITS   VALUE  '5'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//AMOUNT-CAT-CODE (01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));//AMOUNT(09)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9));//AMOUNT-REMAINING (09)
+				/* --- RESPONSIBILITY-TYPE-CODE ---
+				 * FAMILY-RESPONSIBILITY  VALUE  'F'.
+				 * INDIVIDUAL-RESPONSIBILITY VALUE  'I'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//RESPONSIBILITY-TYPE-CODE (01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//LAST-DATE-OF-SERVICE  (10)
+				/* --- DEDUCTIBLE-WAIVED-IND ----
+				 * DEDUCTIBLE-IS-WAIVED    VALUE  'Y'.
+				 * DEDUCTIBLE-IS-NOT-WAIVED VALUE  'N'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//DEDUCTIBLE-WAIVED-IND     VALUE  'Y','N' (01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//APPLIES-TO-OOP-IND VALUE  'Y','N' (01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//PERIOD-LIMIT-QUANTITY (03)
+				/* --- PERIOD-LIMIT-CODE ----
+				 * PERIOD-LIMIT-IS-SVC-YR VALUE  '1'.
+				 * PERIOD-LIMIT-IS-CONTRACT-YR VALUE  '2'.
+				 * PERIOD-LIMIT-IS-CAL-YR    VALUE  '3'.
+				 * PERIOD-LIMIT-IS-LIFETIME  VALUE  '4'.
+				 * PERIOD-LIMIT-IS-PER-HOUR  VALUE  '5'.
+				 * PERIOD-LIMIT-IS-PER-DAY   VALUE  '6'.
+				 * PERIOD-LMT-IS-PER-EPISODE VALUE  '7'.
+				 * PERIOD-LMT-IS-PER-MONTH   VALUE  '8'.
+				 * PERIOD-LIMIT-IS-PER-WEEK  VALUE  '9'.
+				 * PERIOD-LIMIT-IS-PER-VISIT VALUE  'A'.
+				 * PERIOD-LIMIT-IS-PER-ADMSN VALUE  'B'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//PERIOD-LIMIT-CODE  (01)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//BENEFIT-EFFECTIVE-DATE (10)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));//BENEFIT-TERMINATION-DATE (10)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));//BENEFIT-TIER (05)
+				//BENEFIT-AGE-RANGE.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MIN-AGE   (03)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MAX-AGE (03)
+				//BENEFIT-DAY-RANGE.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MIN-DAY   (03)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MAX-DAY  (03)
+				//BENEFIT-VISIT-RANGE.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MIN-VISIT   (03)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//MAX-VISIT   (03)
+				//PROVIDER-MESSAGES-SET
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));//PROVIDER-MESSAGES-CTR (02)
+				for (int n = 0; n < 10; n++) { //PROVIDER-MESSAGES OCCURS 10 TIMES
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 30));//PROVIDER-TEXT (30)
+				}
+				//PROCEDURE-SET.
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));//PROCEDURE-CODE (11)
+				/* --- BENEFIT-PLAN-TYPE ----
+				 * MEDICAL             VALUE 'M'.
+				 * DENTAL              VALUE 'D'.
+				 * VISION              VALUE 'V'.
+				 * BEHAVIORAL          VALUE 'B'.
+				 * PHARMACY            VALUE 'P'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));//BENEFIT-PLAN-TYPE (01)
+				/* --- BENEFIT-PLAN-TYPE ---
+				 * MEDICAL     VALUE 'M'.
+				 * DENTAL      VALUE 'D'.
+				 * VISION      VALUE 'V'.
+				 * BEHAVIORAL  VALUE 'B'.
+				 * PHARMACY    VALUE 'P'.
+				 */
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//PLACE-OF-SERVICE (03)
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3));//TYPE-OF-BILLING (03)
+			}
+	}
+	// ------------------------------------------
+	// P23575a V2020 - Nov15 Release - Ends
+	// ------------------------------------------
+	//	
+		//19134a - RTE Feb 2014 release ends here
+		
+		else if (cvgTypeCd.equals("ASP"))
+			{
+				
+				int j=0;
+				mapoutBenDtls = new ArrayList<String>();
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				for (int i=0;i<4;i++)
+				{
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					 
+				
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				
+				
+				for (int k=0;k<13;k++)
+				{
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				for (int k=0;k<10;k++)
+				{
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				}
+				}
+			}
+		else if (apiType.equals("B") || apiType.equals("H")) { // HMO Accum
+			// Summary
+			// SRAPIDTL
+			// mapping
+			// D107HMB1
+			mapoutBenDtls = new ArrayList<String>();
+				LinkedHashMap<String, Object> fieldList = null;
+				if (apiType.equals("B")) {
+					HMB1CopyBookList copyBookList = new HMB1CopyBookList();
+					fieldList = copyBookList.getCopyBookFields();
+				} else if (apiType.equals("H")) {
+					// HMB1CopyBookList copyBookList = new HMB1CopyBookList();
+					HMP1CopyBookList copyBookList = new HMP1CopyBookList();
+					fieldList = copyBookList.getCopyBookFields();
+				}
+				int curentPosition = 0;
+				String accumInd = "";
+				for (String keyField : fieldList.keySet()) {
+					Object fieldVal = fieldList.get(keyField);
+					if (fieldVal instanceof HashMap) {
+						int repeatTimes = 1;
+						if (keyField.indexOf("REPEAT") != -1) {
+							repeatTimes = Integer.parseInt(keyField
+									.substring(keyField.length() - 1));
+						}
+						// process the Hash & Loop
+						int updatedPosition = processHMOMap(ebsBenDtls,
+								(LinkedHashMap<String, Object>) fieldVal,
+								curentPosition, repeatTimes, apiType);
+						curentPosition = updatedPosition;
+					} else {
+						String fieldValue = (String) fieldList.get(keyField);
+						String[] stVals = fieldValue.split("\\|");
+						int fieldLen = Integer.parseInt(stVals[0]);
+						String fieldType = stVals[1];
+						String fieldLabel = stVals[2];
+	
+						String val = ebsBenDtls.substring(curentPosition, curentPosition += fieldLen);
+						mapoutBenDtls.add(fieldLabel + "|" + val);
+					}
+	
+				}
+				
+		}
+		 if (cvgTypeCd.equals("AB1"))
+			{
+				mapoutBenDtls = new ArrayList<String>();
+				int j = 0;
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 40));     		//Name
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				for (int i=0; i<7; i++){
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  		
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 		
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));   	
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  	
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  		//CLASSIFICATION-CTR
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<10;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 30)); 
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<13;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<10;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					}
+				}
+				
+			}
+			else if ((cvgTypeCd.equals("AB2")||cvgTypeCd.equals("AB3")||cvgTypeCd.equals("AB4")||cvgTypeCd.equals("AB5")||cvgTypeCd.equals("AB6")))
+			{
+				mapoutBenDtls = new ArrayList<String>();
+				int j = 0;
+				
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 50));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 5));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));	
+				
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 35));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));	
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));
+				mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+				for (int i=0; i<7; i++){
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  		
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 		
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));   	
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  	
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 9)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1));  		//CLASSIFICATION-CTR
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10));
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 3)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 1)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 10)); 
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<10;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 30)); 
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<13;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					}
+					mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2)); 
+					for (int k=0;k<10;k++)
+					{
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 11));
+						mapoutBenDtls.add(ebsBenDtls.substring(j, j += 2));
+					}
+				}
+				
+			}
+	
+		return mapoutBenDtls;
+	}
+
+	public String convertMFSignedNumbers(String numberToConvert) {
+		char singleChar = numberToConvert
+				.charAt((numberToConvert.length() - 1));
+		String displayNumber = "";
+		switch (singleChar) {
+		case '{':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('{', '0');
+			break;
+		case 'A':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('A', '1');
+			break;
+		case 'B':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('B', '2');
+			break;
+		case 'C':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('C', '3');
+			break;
+		case 'D':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('D', '4');
+			break;
+		case 'E':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('E', '5');
+			break;
+		case 'F':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('F', '6');
+			break;
+		case 'G':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('G', '7');
+			break;
+		case 'H':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('H', '8');
+			break;
+		case 'I':
+			displayNumber = "+" + numberToConvert;
+			displayNumber = displayNumber.replace('I', '9');
+			break;
+		case '}':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('}', '0');
+			break;
+		case 'J':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('J', '1');
+			break;
+		case 'K':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('K', '2');
+			break;
+		case 'L':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('L', '3');
+			break;
+		case 'M':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('M', '4');
+			break;
+		case 'N':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('N', '5');
+			break;
+		case 'O':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('O', '6');
+			break;
+		case 'P':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('P', '7');
+			break;
+		case 'Q':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('Q', '8');
+			break;
+		case 'R':
+			displayNumber = "-" + numberToConvert;
+			displayNumber = displayNumber.replace('R', '9');
+			break;
+		}
+		return displayNumber;
+	}
+
+	private int processHMOMap(String bnftDetailStr,
+			LinkedHashMap<String, Object> currentMap, int currentPosition,
+			int repeatTimes, String apiType) {
+		int updatedPosition = currentPosition;
+		int repeatId = 1;
+		String accumInd = "";
+		try {
+			for (int i = 0; i < repeatTimes; i++) {
+				for (String keyField : currentMap.keySet()) {
+					Object fieldVal = currentMap.get(keyField);
+					if (fieldVal instanceof HashMap) {
+						int repeatNum = 1;
+						if (keyField.indexOf("REPEAT") != -1) {
+							repeatNum = Integer.parseInt(keyField
+									.substring(keyField.length() - 1));
+						}
+						// process the Hash & Loop
+						int newPosition = processHMOMap(bnftDetailStr,
+								(LinkedHashMap<String, Object>) fieldVal,
+								updatedPosition, repeatNum, apiType);
+						updatedPosition = newPosition;
+					} else {
+						String fieldValue = (String) currentMap.get(keyField);
+						String[] stVals = fieldValue.split("\\|");
+						int fieldLen = Integer.parseInt(stVals[0]);
+						String fieldType = stVals[1];
+						String fieldLbl = stVals[2];
+						String fieldLabel = fieldLbl + " " + repeatId;
+
+						String val = bnftDetailStr.substring(updatedPosition,
+								updatedPosition += fieldLen);
+						mapoutBenDtls.add(fieldLabel + "|" + val.trim());
+						if (fieldLbl.equals("COPAY-MAXIMUM-IND")) {
+							updatedPosition = addRedefineBenData(apiType, bnftDetailStr, updatedPosition,repeatId, "COPAY", val);
+						}
+						if (fieldLbl.equals("ACCUMULATOR-USAGE-IND")) {
+							accumInd = val;
+						}
+						if (fieldLbl.equals("LIFETIME-LIMIT")) {
+							updatedPosition = addRedefineBenData(apiType, bnftDetailStr, updatedPosition,repeatId, "ACCUM", accumInd);
+						}
+
+					}
+				}
+				repeatId++;
+			}
+		} catch (Exception e) {
+			log.warn(e.getMessage());
+		}
+		return updatedPosition;
+	}
+	
+	private int addRedefineBenData(String apiType, String ebsBenDtls, int currentPosition,int repeatId, String type, String val){
+		LinkedHashMap<String, Object> fieldList = null;
+		int finalPosition = currentPosition;
+		if (type.equals("COPAY")){
+			if(apiType.equals("B")){
+				HMB1CopyBookList copyBookList = new HMB1CopyBookList();
+				fieldList = copyBookList.getCopayMaxData(val);
+			}
+		}else{
+			if(apiType.equals("B")){
+				HMB1CopyBookList copyBookList = new HMB1CopyBookList();
+				fieldList = copyBookList.getAccumlatorData(val);
+			}
+		}
+		
+		for (String keyField : fieldList.keySet()) {
+			Object fieldVal = fieldList.get(keyField);
+
+			String fieldValue = (String) fieldList.get(keyField);
+			String[] stVals = fieldValue.split("\\|");
+			int fieldLen = Integer.parseInt(stVals[0]);
+			String fieldType = stVals[1];
+			String fieldLabel = stVals[2]+" "+repeatId;
+
+			String value = ebsBenDtls.substring(finalPosition, finalPosition += fieldLen);
+			mapoutBenDtls.add(fieldLabel + "|" + value.trim());
+			//finalPosition = finalPosition+fieldLen;
+		}
+		return finalPosition;
+	}
 }
