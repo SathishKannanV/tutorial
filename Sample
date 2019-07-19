@@ -1,240 +1,128 @@
 package com.aetna.prvrte.rteintranet.adapter;
 
+import java.util.LinkedHashMap;
 
-
-import java.sql.ResultSet;
-
-import java.sql.SQLException;
-
-import java.sql.Types;
-
-import java.util.HashMap;
-
-import java.util.LinkedList;
-
-import java.util.List;
-
-import java.util.Map;
-
-
-
-import javax.sql.DataSource;
-
-
-
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.jdbc.core.RowMapper;
-
-import org.springframework.jdbc.core.SqlOutParameter;
-
-import org.springframework.jdbc.core.SqlParameter;
-
-import org.springframework.jdbc.core.SqlReturnResultSet;
-
-import org.springframework.jdbc.object.StoredProcedure;
-
-
-
-import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
-
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
-import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-
-import com.aetna.prvrte.rteintranet.util.DBConstants;
-
-
-
-public class LongRunTransLookUpAdapter extends StoredProcedure {
-
-
-
-private final Log log = LogFactory.getLog(LongRunTransLookUpAdapter.class);
-
+public class HMP1CopyBookList {
+	private LinkedHashMap<String, Object> copyBookFields = new LinkedHashMap<String, Object>(); 
+	public HMP1CopyBookList() {
+		populateHash();
+	}
 	
-
-	private static final String START_TIMESTAMP = "START_TIMESTAMP";
-
-	private static final String END_TIMESTAMP = "END_TIMESTAMP";
-
-	private static final String LOAD_MODULE = "LOAD_MODULE";
-
-	private static final String SECONDS_RANGE = "SECONDS_RANGE";
-
-	private static final String MINUTES_SPLIT = "MINUTES_SPLIT";
-
-	private static final String LS_SQLCODE = "LS_SQLCODE";
-
-	private static final String READ_CURSOR = "READ_CURSOR1";
-
-	private static final String IN_RPT_IND = "IN_RPT_IND";
-
+	private void populateHash(){
+		//GENERAL-PLAN-DATA-B
+		copyBookFields.put("PPID-STYLE-B", "1|C|PPID-STYLE-B");
+		copyBookFields.put("NUMBER-OF-FAMILY-MEMBERS-B", "2|C|NUMBER-OF-FAMILY-MEMBERS-B");
+		copyBookFields.put("COBRA-PLAN-INDICATOR-B","1|C|COBRA-PLAN-INDICATOR-B");
+		//MEDICAL-EXTENSION-DETAIL-B
+		copyBookFields.put("COVERAGE-EXTENSION-INDICATOR-B","1|C|COVERAGE-EXTENSION-INDICATOR-B");
+		copyBookFields.put("NUMBER-OF-MONTHS-B","3|C|NUMBER-OF-MONTHS-B");
+		copyBookFields.put("START-DATE-B","10|C|EXTENSION-START-DATE-B");
+		//CONTRACT-DATES-B
+		copyBookFields.put("CSTART-DATE-B","10|C|CONTRACT-START-DATE-B");
+		copyBookFields.put("END-DATE-B","10|C|CONTRACT-END-DATE-B");
+		copyBookFields.put("CAPITATION-INDICATOR-B","1|C|CAPITATION-INDICATOR-B");
+		//PLAN-LIMIT-DATA-B
+		//PLAN-LIMIT-SET-B
+		copyBookFields.put("PLAN-LIMIT-CTR-B","1|C|PLAN-LIMIT-CTR-B");
+		//PLAN-LIMIT-B OCCURS 1 TIMES
+		copyBookFields.put("PLAN-LIMIT-QUALIFICATION-B","1|C|PLAN-LIMIT-QUALIFICATION-B");
+		copyBookFields.put("PERIOD-CODE-B","1|C|PERIOD-CODE-B");
+		//PLAN-DEDUCTIBLE-EXTENSIONS-B
+		copyBookFields.put("CREDIT-INDICATOR-B","1|C|CREDIT-INDICATOR-B");
+		copyBookFields.put("CREDIT-DATE-B","10|C|CREDIT-DATE-B");
+		copyBookFields.put("CARRYOVER-INDICATOR-B","1|C|CARRYOVER-INDICATOR-B");
+		copyBookFields.put("CARRYOVER-QUANTITY-B","4|C|CARRYOVER-QUANTITY-B");
+		//NETWORK-PLN-LMT-DTL-SET-B
+		copyBookFields.put("NETWORK-PLN-LMT-DTL-CTR-B","1|C|NETWORK-PLN-LMT-DTL-CTR-B");
+		//NETWORK-PLN-LMT-DTL-B OCCURS 5 TIMES
+		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_5", getProductIdentification());
+		
+		copyBookFields.put("INDEMNITY-CODE-B","9|C|INDEMNITY-CODE-B");
+		copyBookFields.put("BENEFIT-PAYMENT-LIMIT-B","11|C|BENEFIT-PAYMENT-LIMIT-B");
+		copyBookFields.put("BENEFIT-VISIT-LIMIT-B","5|C|BENEFIT-VISIT-LIMIT-B");
+		//PLAN-PROD-COMPON-ID-SET-B
+		copyBookFields.put("PLAN-PROD-COMPON-ID-CTR-B","2|C|PLAN-PROD-COMPON-ID-CTR-B");
+		
+		//PLAN-PROD-COMPON-ID-B OCCURS 25 TIMES
+		copyBookFields.put("PRODUCT-IDENTIFICATION-B_REPEAT_25", getPlanProdComponID());
+		
+	}
 	
-
-	public LongRunTransLookUpAdapter(DataSource datasource, String storedProc) {
-
-		super(datasource, storedProc);
-
+	public LinkedHashMap<String, Object> getProductIdentification(){
+		LinkedHashMap<String, Object> hmpProdIden = new LinkedHashMap<String, Object>();
+		hmpProdIden.put("NETWORK-B", "1|C| NETWORK-B");
+		hmpProdIden.put("COINSURANCE-PERCENTAGE-B", "7|C| COINSURANCE-PERCENTAGE-B");
+		//FINANCIAL-MAXI-DTL-SET-B
+		hmpProdIden.put("FINANCIAL-MAXI-DTL-CTR-B", "1|C| FINANCIAL-MAXI-DTL-CTR-B");
+		//FINANCIAL-MAXIMUM-DETAILS-B OCCURS 6 TIMES
+		//hmpProdIden.put("NETWORK", "1|C| NETWORK");
+		//getting error here................This is moved to Dec release 
+		hmpProdIden.put("PRODUCT-IDENTIFICATION-B_REPEAT_6", getProductIdenB());
+		//PRECERTIFICATION-PENALTY-B
+		hmpProdIden.put("PERCENTAGE-B", "5|C|PERCENTAGE-B");
+		hmpProdIden.put("AMOUNT-B", "11|C|AMOUNT-B");
+		//FIRST-DOLLAR-BENEFIT-B
+		hmpProdIden.put("FDB-LIMIT-B", "13|C|FDB-LIMIT-B");
+		hmpProdIden.put("PRV-LIMIT-B", "13|C|PRV-LIMIT-B");
+		hmpProdIden.put("OVL-LIMIT-B", "13|C|OVL-LIMIT-B");
+		hmpProdIden.put("FDB-USAGE-B", "13|C|FDB-USAGE-B");
+		hmpProdIden.put("PRV-USAGE-B", "13|C|PRV-USAGE-B");
+		hmpProdIden.put("OVL-USAGE-B", "13|C|OVL-USAGE-B");
+		hmpProdIden.put("FDB-REMAINING-B", "13|C|FDB-REMAINING-B");
+		hmpProdIden.put("PRV-REMAINING-B", "13|C|PRV-REMAINING-B");
+		hmpProdIden.put("OVL-REMAINING-B", "13|C|OVL-REMAINING-B");
+		return hmpProdIden;
+	}
+	
+	
+	public LinkedHashMap<String, Object> getPlanProdComponID(){
+		LinkedHashMap<String, Object> hmpPlanProdComponID = new LinkedHashMap<String, Object>();
+		hmpPlanProdComponID.put("PROD-COMPON-ID-B", "5|C|PROD-COMPON-ID-B");
+		hmpPlanProdComponID.put("PROD-COMPON-TYPE-B", "2|C|PROD-COMPON-TYPE-B");
 		
-
-		declareParameter(new SqlParameter(START_TIMESTAMP, Types.TIMESTAMP));
-
-		declareParameter(new SqlParameter(END_TIMESTAMP, Types.TIMESTAMP));
-
-		declareParameter(new SqlParameter(LOAD_MODULE, Types.CHAR));
-
+		return hmpPlanProdComponID;
+	}
+	
+	public LinkedHashMap<String, Object> getProductIdenB(){
+		LinkedHashMap<String, Object> hmpProductIdn = new LinkedHashMap<String, Object>();
+		//hmpProductIdn.put("FINANCIAL-MAXI-DTL-IND-B", "1|C|FINANCIAL-MAXI-DTL-IND-B");
+		//hmpProductIdn.put("FINANCIAL-MAXI-DTL-DATA-B", "61|C|FINANCIAL-MAXI-DTL-DATA-B");
+		//FAM-FINANCIAL-MAXI-DATA-B REDEFINES FINANCIAL-MAXI-DTL-DATA-B
+		//hmpProductIdn.put("MAXIMUM-TYPE-B", "1|C|MAXIMUM-TYPE-B");
+	//DATES-B
+		//hmpProductIdn.put("START-DATE-B", "10|C|START-DATE-B");
+		//hmpProductIdn.put("END-DATE-B", "10|C|END-DATE-B");
+	//FAMILY-MAXIMUM-B
+		//hmpProductIdn.put("FAM-MEMBERS-MUST-MEET-B", "4|C|FAM-MEMBERS-MUST-MEET-B");
+		//hmpProductIdn.put("FAM-MEMBERS-MET-B", "4|C|FAM-MEMBERS-MET-B");
+	//FILLER PIC X(32)
+		//FINANCIAL-MAXI-DATA-B REDEFINES FINANCIAL-MAXI-DTL-DATA-B.
+		hmpProductIdn.put("MAXIMUM-TYPE-B ", "1|C|MAXIMUM-TYPE-B ");
+	//DATES-B
+		hmpProductIdn.put("START-DATE-B", "10|C|START-DATE-B");
+		hmpProductIdn.put("END-DATE-B", "10|C|END-DATE-B");
+		hmpProductIdn.put("WAGE-BAND-INDICATOR-B ", "1|C|WAGE-BAND-INDICATOR-B");
+	//FAMILY-MAXIMUM
+		hmpProductIdn.put("FAMILY-MEMBERS-MUST-MEET","4|C|FAMILY-MEMBERS-MUST-MEET");
+		hmpProductIdn.put("FAMILY-MEMBERS-MET PIC","4|C|FAMILY-MEMBERS-MET PIC");
+		hmpProductIdn.put("LIMIT-AMOUNT-B", "13|C|LIMIT-AMOUNT-B");
+		hmpProductIdn.put("REMAINDER-AMOUNT-B", "13|C|REMAINDER-AMOUNT-B");
+		hmpProductIdn.put("USED-AMOUNT-B", "13|C|USED-AMOUNT-B");
 		
-
-		declareParameter(new SqlParameter(SECONDS_RANGE, Types.DECIMAL));
-
-		declareParameter(new SqlParameter(MINUTES_SPLIT, Types.DECIMAL));
-
-		declareParameter(new SqlParameter(IN_RPT_IND, Types.CHAR));
-
-		declareParameter(new SqlOutParameter(LS_SQLCODE, Types.INTEGER));
-
-		declareParameter(new SqlReturnResultSet(READ_CURSOR, new RowMapper(){
-
-			
-
-			/* (non-Javadoc)
-
-			 * @see org.springframework.jdbc.core.RowMapper#mapRow(java.sql.ResultSet, int)
-
-			 */
-
-			public Object mapRow(final ResultSet rs, final int arg1)
-
-					throws SQLException {
-
-				
-
-				LongRunTransactionDTO longRunTransDTO =  new LongRunTransactionDTO();
-
-				longRunTransDTO.setConvrsnCDResult(rs.getString("SUBMSN_CNVRSTN_CD"));
-
-				longRunTransDTO.setVanIDCDResult(rs.getString("SUBMSN_VAN_ID_CD"));
-
-				longRunTransDTO.setTypCDResult(rs.getString("SUBMSN_TY_CD"));
-
-				longRunTransDTO.setResultSecondsResult(rs.getString("TIME_SECONDS"));
-
-				longRunTransDTO.setUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-				return longRunTransDTO;
-
-			}
-
-
-
-		}));
-
-
-
+		
+		return hmpProductIdn;
+	}
+	
+	public LinkedHashMap<String, Object> getCopyBookFields() {
+		return copyBookFields;
 	}
 
-	
-
-	@SuppressWarnings("unchecked")
-
-	public Map getLongrunTransLookUpTable (LongRunTransactionDTO longrunTransDTO) throws ApplicationException {
-
-		log.warn("Entered LongRunTransLookUpAdapter  - getLongrunTransLookUpTable");
-
-		
-
-		Map<String, String> params = new java.util.HashMap<String, String>();
-
-		Map longRunTransMap = new HashMap();
-
-		params.put(START_TIMESTAMP, longrunTransDTO.getStartTimestamp().replaceAll("/", "-"));
-
-		params.put(END_TIMESTAMP, longrunTransDTO.getEndTimestamp());
-
-		params.put(LOAD_MODULE, longrunTransDTO.getModule());
-
-		params.put(SECONDS_RANGE, longrunTransDTO.getSecondsCalc());
-
-		params.put(MINUTES_SPLIT, longrunTransDTO.getMinutesCalc());
-
-		params.put(IN_RPT_IND, "1");
-
-		log.warn(params);
-
-		Map results = null;
-
-		
-
-		List<LongRunTransactionDTO> longRunTransList = new LinkedList<LongRunTransactionDTO>();
-
-		String newMessage="";
-
-		
-
-		try {
-
-			
-
-			results = execute(params);
-
-			log.warn("LongRunTransLookUpAdapter: Executed stored procedure");
-
-			String sqlCode =  String.valueOf(results
-
-					.get(LS_SQLCODE));
-
-			
-
-			longRunTransList = (List<LongRunTransactionDTO>) results
-
-					.get(READ_CURSOR);
-
-			if (longRunTransList.isEmpty()){
-
-				
-
-				if ("0".equals(sqlCode)) {
-
-					newMessage = "No Data on database ";
-
-				}else if ("-905".equals(sqlCode)){
-
-					newMessage = "Try to minimize the start time and end time for results" + sqlCode;
-
-				} 
-
-				else {
-
-					newMessage = "Problem in DB2. sqlcode: " + sqlCode ;
-
-				}			  		  		  
-
-			} else {
-
-				newMessage = "";
-
-			}
-
-			longRunTransMap.put("longRunTransMessage", newMessage);
-
-			longRunTransMap.put("longRunTransList",longRunTransList);
-
-			return longRunTransMap;
-
-		}catch (Exception exception){
-
-			log.error("LongRunTransLookUpAdapter : generic error occured  "+exception);
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC,exception.getMessage(),exception);
-
-		}
-
-		
-
+	public void setcopyBookFields(LinkedHashMap<String, Object> copyBookFields) {
+		this.copyBookFields = copyBookFields;
 	}
+
 
 }
+
+
 
