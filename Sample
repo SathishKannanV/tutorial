@@ -2,59 +2,75 @@ package com.aetna.prvrte.rteintranet.copybookbean;
 
 
 
+import java.util.List;
+
+
+
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
 
 
+public class ProcedureInfoSet {
 
+	String procedureInfoCtr;
 
-public class ProcedureInfo {
+	List<ProcedureInfo> procedureInfo;
 
-
-
-	String procedureCode;
-
-	String qualifier;
-
-	public String getProcedureCode() {
+	public String getProcedureInfoCtr() {
 
 		
 
-		return procedureCode;
+		return procedureInfoCtr;
 
 	}
 
-	public void setProcedureCode(String procedureCode) {
+	public void setProcedureInfoCtr(String procedureInfoCtr) {
 
-		
-
-		this.procedureCode = procedureCode;
+		this.procedureInfoCtr = procedureInfoCtr;
 
 	}
 
-	public String getQualifier() {
+	public List<ProcedureInfo> getProcedureInfo() {
 
-		
-
-		return qualifier;
+		return procedureInfo;
 
 	}
 
-	public void setQualifier(String qualifier) {
+	public void setProcedureInfo(List<ProcedureInfo> procedureInfo) {
 
-		
-
-		this.qualifier = qualifier;
+		this.procedureInfo = procedureInfo;
 
 	}
+
+
+
+	public StringBuilder getProcedure(){
+
+
+
+		int popCount;
+
+		StringBuilder type = new StringBuilder();
+
+        popCount = getProcedureInfo().size();
+
+       
+
+		for(int i=0; i<popCount; i++) {
+
+			type.append(getProcedureInfo().get(i).getProcedureInfo());
+
+		}
+
+		for(int i=popCount; i<10; i++) {
+
+			type.append(RteIntranetUtils.spaceFiller(13));
+
+	}
+
+		return type;
 
 	
-
-	public StringBuilder getProcedureInfo(){
-
-		return new StringBuilder(RteIntranetUtils.spaceFiller(11, getProcedureCode()))
-
-		.append(RteIntranetUtils.spaceFiller(2, getQualifier()));
 
 	}
 
