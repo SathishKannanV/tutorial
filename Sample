@@ -1,0 +1,142 @@
+/**
+
+ * 
+
+ */
+
+package com.aetna.prvrte.rteintranet.service;
+
+
+
+import java.util.List;
+
+import java.util.Map;
+
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
+
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+
+
+
+/**
+
+ * @author N624926
+
+ * Cognizant_Offshore
+
+ */
+
+public interface UserService {
+
+
+
+	/**
+
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	Map getUserLookUpTable(RbrcDTO rbrcDTO) throws ApplicationException ;
+
+
+
+
+
+
+
+
+
+	/**
+
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	Map addNewUser(RbrcDTO rbrcDTO)throws ApplicationException ;
+
+
+
+
+
+
+
+
+
+
+
+	/**
+
+	 * 
+
+	 * @param rbrcDTO
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	Map deleteUser(RbrcDTO rbrcDTO)throws ApplicationException ;
+
+
+
+
+
+	/**
+
+	 * @param editedRbrcDTO
+
+	 * @param rbrcDtoList
+
+	 * @param index
+
+	 * @param dbUpdatedInd
+
+	 * @return
+
+	 * @throws ApplicationException
+
+	 */
+
+	Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList, int index,char dbUpdatedInd)throws ApplicationException ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
