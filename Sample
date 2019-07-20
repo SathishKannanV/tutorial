@@ -1,101 +1,41 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
 <!--Chrome Upgrade-N127627-->
-<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <!--END-->
-
+<HTML>
 <HEAD>
-<TITLE>RBRCLookupForm.jsp</TITLE>
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>RTE Home</TITLE>
+<!-- chrome_upgrade-N127627-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <SCRIPT>
-
-var relPath="<%=request.getContextPath()%>";
 $(document).ready( function(e) {
-$('#LookUp').click(function(){
-var action = relPath+'/rbrc/GatherRbrc';
-
-var flag = ValidateEntry();
-if(flag==true){
-	$("#rbrcForm").attr('action', action).submit();
-	}
-	});
-	
-	$('#Add').click(function(){
-var action = relPath+'/rbrc/AddNewRbrcRow';
-	$("#rbrcForm").attr('action', action).submit();	
-	});
+ $('form').on('submit',function(){
+   $(this).attr('target', '_self');
 });
 
-function OpenWindow() {
-	window.open(relPath+'/rbrc/rbrcHelp', null, "height=360,width=350,status=yes,toolbar=no,menubar=no,location=no")
-	}
-function ListSTCs() {
-	window.open(relPath+'/rbrc/stcList', null, "height=550,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
-function ValidateEntry(){
-var retFlag = true;
-	if (($.trim($('#siteCd').val()) == "" ||
-		$('#siteCd').val().substring(0,1) == " ") &&
-		$('#riderCd').val().value == "" &&
-		$('#svcTypeCd').val().value == "") { 
-		alert("You must At least Enter Site Code!");
-		$('#siteCd').focus();
-		retFlag = false;
-	} else if ($.trim($('#siteCd').val()) == "" ||
-		$('#siteCd').val().substring(0,1) == " ") {
-		alert("Site Code must not be left Blank!");
-		$('#siteCd').focus();
-		retFlag = false;
-	}
-	return retFlag;
-}
-
+});
 </SCRIPT>
+
+<!-- End -->
+
 </HEAD>
-<BODY bgcolor="#e1eeb9">
-<H1 align="center">RBRC</H1>
-<H3 align="center"> Requested Benefit Rider Coverage Table Look Up</H3>
-<P align="center"><I>Enter value (click Help for Instructions). Then Click LookUp</I></P>
-<DIV align="center">
-<form:form commandName="rbrcVO" name="rbrcForm" id="rbrcForm" action="#" method="POST">
 
-<TABLE>
-    <TBODY>
-        <TR>
-            <TD>Site Code</TD>
-            <TD>
-            <form:input path="dbSiteCd" size="5" type="text" id="siteCd" tabindex="1" maxlength="4" value="USHC"/></TD>
-        </TR>
-        <TR>
-            <TD>Rider Code (Benefit)</TD>
-            <TD><form:input path="dbRiderCd" size="5" type="text" id="riderCd" tabindex="2" maxlength="5"
-            				onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
-        </TR>
-        <TR>
-            <TD><A href="javascript:ListSTCs()"
-            				onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
-            				onmouseout="window.status = '';">Service Type</A></TD>
-            <TD><form:input path="dbSvcTypeCd" size="5" type="text" id="svcTypeCd" tabindex="3" maxlength="5"
-            				onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
-        </TR>
-		
-    </TBODY>
-</TABLE>
-<BR>
-<INPUT type="button" name="LookUp" id="LookUp" value="LookUp" tabindex="4" style="margin-left: 20px">
+<FRAMESET rows="15%,83%">
+    <FRAMESET cols="25%,63%,12%" frameborder="NO" border="0">
+        <FRAME src="TopLeftPage.jsp" name="TopLeft" noresize scrolling="NO">
+        <FRAME src="CenterTopPage.jsp" name="CenterTop" noresize scrolling="NO">
+        <FRAME src="TopRightPage.jsp" name="TopRight" noresize scrolling="NO">
+    </FRAMESET>
+    
+    <FRAMESET cols="9%,92%" frameborder="YES" border="1" >
+        <FRAME src="BottomLeftPage.jsp" name="BottomLeft" noresize scrolling="no">     
+		<FRAME SRC="BottomRightPage.jsp" name="BottomRight" noresize>
+    </FRAMESET>
+</FRAMESET>
 
-<INPUT type="button" name="Add" id="Add" value="Add New" style="margin-left: 20px"
-						tabindex="5" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>><BR>
+</HTML>
 
-<BR>
-<INPUT type="button" name="RBRC" value="Help" tabindex="6" onclick="OpenWindow()" style="margin-left: 20px">
-</form:form>
 
-</DIV>
-</BODY>
+
+
