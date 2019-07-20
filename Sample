@@ -2,62 +2,21 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	   					   http://www.springframework.org/schema/aop
-	   					   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean id="applicationState" class="com.aetna.prvrte.rteintranet.facade.state.ApplicationState" scope="session">
-		<aop:scoped-proxy/>
-	</bean>
-	
-	<bean id="baseDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName">
-			<value>jdbc/tableRef</value>
-		</property>
-		<property name="resourceRef" value="true" /> 
-	</bean>
-	
-	<bean id="baseDataSourceEvt" class="org.springframework.jndi.JndiObjectFactoryBean">
-		<property name="jndiName">
-			<value>jdbc/evtTrkRef</value>
-		</property>
-		<property name="resourceRef" value="true" /> 
-	</bean>
-	
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.WebSphereDataSourceAdapter">
-		<property name="targetDataSource" ref="baseDataSource"/> 
-		<property name="username" value="${datasource.username}"/>
-		<property name="password" value="${datasource.password}"/>
-	</bean> 
-	
-	<bean id="dataSourceEvt" class="org.springframework.jdbc.datasource.WebSphereDataSourceAdapter">
-		<property name="targetDataSource" ref="baseDataSourceEvt"/> 
-		<property name="username" value="${datasource.username}"/>
-		<property name="password" value="${datasource.password}"/>
-	</bean>
- 
-<!--	 The following two beans are used for transaction management -->
-	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
-	</bean>
-	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
-		<property name="transactionManager">
-			<ref bean="transactionManager" />
-		</property>
-	</bean>  
+	<!-- Views and rendering bean definitions -->
 
-<bean id="transactionManagerEvt" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource">
-			<ref bean="dataSourceEvt" />
-		</property>
-	</bean>
-	<bean id="transactionTemplateEvt" class="org.springframework.transaction.support.TransactionTemplate">
-		<property name="transactionManager">
-			<ref bean="transactionManagerEvt" />
-		</property>
-	</bean>  
+	<bean class="org.springframework.web.servlet.view.tiles2.TilesViewResolver">
+    	<property name="requestContextAttribute" value="rc"/>
+    </bean>
+
+    <bean class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
+        <property name="definitions">
+        	<list>
+        		<value>/WEB-INF/tiles-defs.xml</value>
+        	</list>
+        </property>
+    </bean>
+    
 </beans>
