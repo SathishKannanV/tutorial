@@ -6,67 +6,64 @@ package com.aetna.prvrte.rteintranet.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO;
 import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-/**
- * 
- * <h1>RteAdasvctService</h1> The RteAdasvctService is responsible for handling
- * the business logic of ADASVCT Look up.
- * 
- * @author N726899 Cognizant_Offshore
+/*
+ * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService
+ * @author N726899
+ * Cognizant_Offshore
  * 
  */
-public interface RteAdasvctService {
-	/**
-	 * Method to get the ADASVCT list from data store.
-	 * 
-	 * @param adasvctDTO
-	 * 			adasvctDTO object.
-	 * @return Map of ADASVCT list and success or error message.
-	 * 
-	 * @exception ApplicationException if data not found in data store.
+@Service
+public class RteAdasvctServiceImpl implements RteAdasvctService {
+	/*
+	 * Instance of RteAdasvctDAO.
 	 */
-	Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException;
-	/**
-	 * Method to add new ADASVCT to data store.
-	 * 
-	 * @param adasvctDTO
-	 *            adasvctDTO object.
-	 * @return Map of added ADASVCT data and success or error message.
-	 * 
-	 * @exception ApplicationException
-	 *                if insertion fails.
+	@Autowired(required=true)
+	private RteAdasvctDAO rteAdasvctDAO;
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#getAdasvctLookUpList(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
 	 */
-	Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO) throws ApplicationException;
-	/**
-	 * Method to delete the ADASVCT data from data store.
-	 * 
-	 * @param adaCd
-	 *            String of adaCd.
-	 * @param expDate
-	 *            String of expiration data of adaCd.
-	 * @return Map of flag to delete the data from ADASVCT list and success or
-	 *         error message.
-	 * @exception ApplicationException
-	 *             if deletion fails.
+	@Override
+	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
+		return rteAdasvctDAO.getAdasvctLookUpList(adasvctDTO);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#getVanList()
 	 */
-	Map<String, Object> deleteAdasvct(String adaCd, String effDate) throws ApplicationException;
-	
-	/**
-	 * Method to add/update list of ADASVCT to data store.
-	 * 
-	 * @param adasvctDTO
-	 *            adasvctDTO object.
-	 * @param adasvctDTOList
-	 *            list of adasvctDTO object.
-	 * @param index
-	 *            index to update the data
-	 * @return Map of flag to delete the data from ADASVCT list, success or
-	 *         error message and list of ADASVCT.
-	 * @exception ApplicationException
-	 *                if insertion or update fails.
+	@Override
+	public Map<String, Object> getVanList() throws ApplicationException {
+		return rteAdasvctDAO.getVanList();
+	}	
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#addAdasvct(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
 	 */
-	Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,	List<AdasvctDTO> adasvctDTOList, int index)throws ApplicationException;
-	Map<String, Object> getVanList() throws ApplicationException;
+	@Override
+	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO)throws ApplicationException {
+		return rteAdasvctDAO.addAdasvctToDb(adasvctDTO);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#deleteAdasvct(java.util.List, java.lang.String[])
+	 */
+	@Override
+	public Map<String, Object> deleteAdasvct(String adaCd, String effDate)throws ApplicationException {
+		return rteAdasvctDAO.deleteAdasvct(adaCd, effDate);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#addUpdateAdasvct(java.util.List, java.lang.String[])
+	 */
+	@Override
+	public Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,List<AdasvctDTO> adasvctDTOList, int index)throws ApplicationException {
+		return rteAdasvctDAO.addUpdateAdasvct(adasvctDTO, adasvctDTOList, index);
+	}
+
 }
