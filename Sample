@@ -1,77 +1,88 @@
-# Customize, if necessary
+<?xml version="1.0"?>
 
-serverName := server1
+<project name="aefw-server-setup" default="main" basedir=".">
+	
+	<!-- ================================================================ -->
+	<!-- M A I N                                                          -->
+	<!-- ================================================================ -->
 
-sharedLibHomeValue := C:/Data/aefw/v3.0.1.RELEASE
+	<property file="${basedir}/project.properties"/>
+	
+	<target name="main">
+		<antcall target="banner"/>
+		<antcall target="setupAefwUseDefaultProfile"/>
+		<antcall target="setupAefwUseCustomProfile"/>
+	</target>
+	
+	<target name="check">
+		<condition property="rad.home" value="C:/Program Files/IBM/WebSphere/AppServer/profiles/AppSrv01/bin" else="C:/Program Files/IBM/SDP">
+			<available file="C:/Program Files/IBM/WebSphere/AppServer/profiles/AppSrv01/bin" type="dir"/>
+		</condition>
+	</target>
 
+	<target name="determineProfile">
+		<condition property="custom.profile.used">
+			<or>
+				<equals arg1="${use.custom.profile}" arg2="true" casesensitive="no" />
+				<equals arg1="${use.custom.profile}" arg2="yes" casesensitive="no" />
+			</or>
+		</condition>
+	</target>
+	
+	<!-- ================================================================ -->
+	<!-- B A N N E R                                                      -->
+	<!-- ================================================================ -->
 
-
-# ----- There should be no need to customize below this line -----
-
-
-
-sharedLibHome := AEFW_SHARED_LIBS
-
-
-
-# Logging
-
-
-
-logging.qcfName := aefw.log_QCF
-
-logging.qcfJndiName := jms/aefw.log_QCF
-
-logging.qcfChannelName := CMQ.MQT411.DEVEL.01
-
-logging.qcfManager := MQT411
-
-logging.qcfHost := xwasm20d
-
-logging.qcfTransportType := CLIENT
-
-logging.qcfPort := 1414
-
-
-
-logging.qName := aefw.log_Q
-
-logging.qJndiName := jms/aefw.log_Q
-
-logging.qTargetClient := MQ
-
-logging.qBaseQName := Q1BUT.LOGSVC.XML.REQUEST
-
-
-
-#Event
-
-
-
-event.qcfName := aefw.event_QCF
-
-event.qcfJndiName := jms/aefw.event_QCF
-
-event.qcfChannelName := CMQ.MQT411.DEVEL.01
-
-event.qcfManager := MQT411
-
-event.qcfHost := xwasm20d
-
-event.qcfTransportType := CLIENT
-
-event.qcfPort := 1414
+	<target name="banner" depends="check">
+		<echo message=""/>
+		<echo message="================================================= "/>
+		<echo message=""/>
+		<echo message="Installing AEFW on the server...                  "/>
+		<echo message=""/>
+		<echo message="================================================= "/>
+		<echo message=""/>
+		<echo message="ANT Version = ${ant.version}"/>
+		<echo message="ANT File = ${ant.file}"/>
+		<echo message="JVM = ${ant.java.version}"/>
+		<echo message="java version = ${java.version}"/>
+		<echo message="basedir = ${basedir}"/>
+		<echo message="rad.home = ${rad.home}"/>
+		<echo message="use.custom.profile = ${use.custom.profile}"/>
+		<echo message="custom.profile.name = ${custom.profile.name}"/>
+		<echo message=""/>
+	</target>	
 
 
+	<!-- ================================================================ -->
+	<!-- S E T U P   C O R E  - U S I N G   D E F A U L T  P R O F I L E  -->
+	<!-- ================================================================ -->
 
-event.qName := aefw.event_Q
+	<target name="setupAefwUseDefaultProfile" depends="check,determineProfile" unless="custom.profile.used">
+		<echo message="Using Default Server Profile"/>
+		<exec executable="${rad.home}/wsadmin.bat" failonerror="true">
+			<arg value="-lang"/>
+			<arg value="jython"/>
+			<arg value="-profileName"/>
+			<arg value="AppSrv06"/>
+			<arg value="-f"/>
+			<arg value="aefw-setup.jy"/>
+		</exec>
+	</target>
+	
+	<!-- ================================================================ -->
+	<!-- S E T U P   C O R E  -  U S I N G  C U S T O M  P R O F I L E    -->
+	<!-- ================================================================ -->
 
-event.qJndiName := jms/aefw.event_Q
+	<target name="setupAefwUseCustomProfile" depends="check,determineProfile" if="custom.profile.used">
+		<echo message="Using Custom Server Profile - ${custom.profile.name}"/>
+		<exec executable="${rad.home}/wsadmin.bat" failonerror="true">
+			<arg value="-lang"/>
+			<arg value="jython"/>
+			<arg value="-f"/>
+			<arg value="aefw-setup.jy"/>
+		 	<arg value="-profileName"/>
+			<arg value="${custom.profile.name}" />
+		</exec>
+	</target>
 
-event.qTargetClient := MQ
-
-event.qBaseQName := Q1BUT.EVENTSVC.CAPTURE1
-
-
-
-jvmArgs := -Dlog4j.repositorySelector=JNDI -Dlog4j.configuratorClass=com.aetna.framework.log.log4j.PropertyConfiguratorJ2EE -Dlog4j.configuration=aefw-default-log4j.properties -Daefw.environment.name=local -Daefw.environment.root=classpath: -Dlogback.ContextSelector=JNDI
+</project>
