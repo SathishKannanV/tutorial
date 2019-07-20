@@ -1,607 +1,416 @@
 /**
+
  * 
+
  */
+
 package com.aetna.prvrte.rteintranet.vo;
 
-import java.util.LinkedList;
-import java.util.List;
+
 
 /**
+
  * @author N657186
- *
+
+ * Cognizant_Offshore
+
  */
-public class LookUpTableListVO {
-	private List<ProcexVO> procexVOList =  new LinkedList<ProcexVO>();
-	
-	private List<IndmntrpVO> indmntrpVOList =  new LinkedList<IndmntrpVO>();
-	
-	private List<AdasvctVO> adasvctVOList =  new LinkedList<AdasvctVO>();
-	
-	private List<BenafrqVO> benafrqVOList =  new LinkedList<BenafrqVO>();
-	
-	private List<String> aetCtlsVOList =  new LinkedList<String>();
-	
-	private List<String> authTrxVOList =  new LinkedList<String>();
-	
-	private List<BplvrpVO> bplvrpVOList =  new LinkedList<BplvrpVO>();
-	
-	private List<DedacsrVO> dedacsrVOList =  new LinkedList<DedacsrVO>();
-	
-	private List<ErspmsgVO> erspmsgVOList =  new LinkedList<ErspmsgVO>();
-	
-	private List<PlnlmEXVO> plnlmEXVOList =  new LinkedList<PlnlmEXVO>();
-	
-	private List<RbbcVO> rbbcVOList =  new LinkedList<RbbcVO>();
-	private List<RtestypVO> rtestypVOList =  new LinkedList<RtestypVO>();
-	private List<RtebeplmVO> rtebeplmVOList =  new LinkedList<RtebeplmVO>();
-	private List<RtedictrVO> rtedictrVOList =  new LinkedList<RtedictrVO>();
-	private List<RterbacVO> rterbacVOList =  new LinkedList<RterbacVO>();
-	private List<RtestscVO> rtestscVOList =  new LinkedList<RtestscVO>();
-	private List<RtetierVO> rtetierVOList =  new LinkedList<RtetierVO>();
-	
-	private List<HrpRuleVO> hrpruleVOList =  new LinkedList<HrpRuleVO>();
-	
-	private List<LongRunTransactionVO> longRunTransactionVOList =  new LinkedList<LongRunTransactionVO>();
-	private List<LongRunTransReport3VO> longRunTransactionVOList3 =  new LinkedList<LongRunTransReport3VO>();
-	private List<LongRunTransReport4VO> longRunTransactionVOList4 =  new LinkedList<LongRunTransReport4VO>();
-	
-		
-	public List<LongRunTransReport4VO> getLongRunTransactionVOList4() {
-		return longRunTransactionVOList4;
-	}
 
-	public void setLongRunTransactionVOList4(
-			List<LongRunTransReport4VO> longRunTransactionVOList4) {
-		this.longRunTransactionVOList4 = longRunTransactionVOList4;
-	}
+public class RbrcVO {
 
-	public List<LongRunTransReport3VO> getLongRunTransactionVOList3() {
-		return longRunTransactionVOList3;
-	}
+	private String dbSiteCd = "";
 
-	public void setLongRunTransactionVOList3(
-			List<LongRunTransReport3VO> longRunTransactionVOList3) {
-		this.longRunTransactionVOList3 = longRunTransactionVOList3;
-	}
+	private String dbRiderCd = "";
 
-	public List<LongRunTransactionVO> getLongRunTransactionVOList() {
-		return longRunTransactionVOList;
-	}
+	private String dbSvcTypeCd = "";
 
-	public void setLongRunTransactionVOList(
-			List<LongRunTransactionVO> longRunTransactionVOList) {
-		this.longRunTransactionVOList = longRunTransactionVOList;
-	}
+	private String dbPostedDate = "";
 
-	/**
-	 * @return the procexVOList
-	 */
-	public List<ProcexVO> getProcexVOList() {
-		return procexVOList;
-	}
+	private String dbDescTxt = "";
 
-	/**
-	 * @param procexVOList the procexVOList to set
-	 */
-	public void setProcexVOList(List<ProcexVO> procexVOList) {
-		this.procexVOList = procexVOList;
-	}
-	
-	/**
-	 * @return the indmntrpVOList
-	 */
-	public List<IndmntrpVO> getIndmntrpVOList() {
-		return indmntrpVOList;
-	}
+	private String dbIONtwkCd = "";
 
-	/**
-	 * @param indmntrpVOList the indmntrpVOList to set
-	 */
-	public void setIndmntrpVOList(List<IndmntrpVO> indmntrpVOList) {
-		this.indmntrpVOList = indmntrpVOList;
-	}
+	private String dbTOSCd = "";
 
-	/**
-	 * @return the adasvctVOList
-	 */
-	public List<AdasvctVO> getAdasvctVOList() {
-		return adasvctVOList;
-	}
+	private String dbHMOSrcBnInd = "";
 
-	/**
-	 * @param adasvctVOList the adasvctVOList to set
-	 */
-	public void setAdasvctVOList(List<AdasvctVO> adasvctVOList) {
-		this.adasvctVOList = adasvctVOList;
-	}
+	private String textSendInd = "";
 
-	/**
-	 * @return the benafrqVOList
-	 */
-	public List<BenafrqVO> getBenafrqVOList() {
-		return benafrqVOList;
-	}
+	private String prevCareInd = "";
 
-	/**
-	 * @param benafrqVOList the benafrqVOList to set
-	 */
-	public void setBenafrqVOList(List<BenafrqVO> benafrqVOList) {
-		this.benafrqVOList = benafrqVOList;
-	}
+	private String genderCd = "";
 
-	/**
-	 * @return the aetCtlsVOList
-	 */
-	public List<String> getAetCtlsVOList() {
-		return aetCtlsVOList;
-	}
-
-	/**
-	 * @param aetCtlsVOList the aetCtlsVOList to set
-	 */
-	public void setAetCtlsVOList(List<String> aetCtlsVOList) {
-		this.aetCtlsVOList = aetCtlsVOList;
-	}
-
-	/**
-	 * @return the authTrxVOList
-	 */
-	public List<String> getAuthTrxVOList() {
-		return authTrxVOList;
-	}
-
-	/**
-	 * @param authTrxVOList the authTrxVOList to set
-	 */
-	public void setAuthTrxVOList(List<String> authTrxVOList) {
-		this.authTrxVOList = authTrxVOList;
-	}
-
-	/**
-	 * @return the bplvrpVOList
-	 */
-	public List<BplvrpVO> getBplvrpVOList() {
-		return bplvrpVOList;
-	}
-
-	/**
-	 * @param bplvrpVOList the bplvrpVOList to set
-	 */
-	public void setBplvrpVOList(List<BplvrpVO> bplvrpVOList) {
-		this.bplvrpVOList = bplvrpVOList;
-	}
-
-	/**
-	 * @return the dedacsrVOList
-	 */
-	public List<DedacsrVO> getDedacsrVOList() {
-		return dedacsrVOList;
-	}
-
-	/**
-	 * @param dedacsrVOList the dedacsrVOList to set
-	 */
-	public void setDedacsrVOList(List<DedacsrVO> dedacsrVOList) {
-		this.dedacsrVOList = dedacsrVOList;
-	}
-
-	/**
-	 * @return the erspmsgVOList
-	 */
-	public List<ErspmsgVO> getErspmsgVOList() {
-		return erspmsgVOList;
-	}
-
-	/**
-	 * @param erspmsgVOList the erspmsgVOList to set
-	 */
-	public void setErspmsgVOList(List<ErspmsgVO> erspmsgVOList) {
-		this.erspmsgVOList = erspmsgVOList;
-	}
-
-	/**
-	 * @return the plnlmEXVOList
-	 */
-	public List<PlnlmEXVO> getPlnlmEXVOList() {
-		return plnlmEXVOList;
-	}
-
-	/**
-	 * @param plnlmEXVOList the plnlmEXVOList to set
-	 */
-	public void setPlnlmEXVOList(List<PlnlmEXVO> plnlmEXVOList) {
-		this.plnlmEXVOList = plnlmEXVOList;
-	}	
-	private List<TOSVO> tosVOList =  new LinkedList<TOSVO>();
-
-	/**
-	 * @return the tosVOList
-	 */
-	public List<TOSVO> getTosVOList() {
-		return tosVOList;
-	}
-
-	/**
-	 * @param tosVOList the tosVOList to set
-	 */
-	public void setTosVOList(List<TOSVO> tosVOList) {
-		this.tosVOList = tosVOList;
-	}
-	
-	private List<RbrcVO> rbrcVOList =  new LinkedList<RbrcVO>();
+	private char   dbUpdatedInd;
 
 	
+
 	
-	private List<RtetpbrVO> rtetpbrVOList =  new LinkedList<RtetpbrVO>();
 
 	/**
-	 * @return the rtetpbrVOList
+
+	 * @param dbSiteCd
+
+	 * @param dbRiderCd
+
+	 * @param dbSvcTypeCd
+
+	 * @param dbPostedDate
+
+	 * @param dbDescTxt
+
+	 * @param dbIONtwkCd
+
+	 * @param dbTOSCd
+
+	 * @param dbHMOSrcBnInd
+
+	 * @param textSendInd
+
+	 * @param prevCareInd
+
+	 * @param genderCd
+
+	 * @param dbUpdatedInd
+
 	 */
-	public List<RtetpbrVO> getRtetpbrVOList() {
-		return rtetpbrVOList;
+
+	public RbrcVO(String dbSiteCd, String dbRiderCd, String dbSvcTypeCd,
+
+			String dbPostedDate, String dbDescTxt, String dbIONtwkCd,
+
+			String dbTOSCd, String dbHMOSrcBnInd, String textSendInd,
+
+			String prevCareInd, String genderCd, char dbUpdatedInd) {
+
+		super();
+
+		this.dbSiteCd = dbSiteCd;
+
+		this.dbRiderCd = dbRiderCd;
+
+		this.dbSvcTypeCd = dbSvcTypeCd;
+
+		this.dbPostedDate = dbPostedDate;
+
+		this.dbDescTxt = dbDescTxt;
+
+		this.dbIONtwkCd = dbIONtwkCd;
+
+		this.dbTOSCd = dbTOSCd;
+
+		this.dbHMOSrcBnInd = dbHMOSrcBnInd;
+
+		this.textSendInd = textSendInd;
+
+		this.prevCareInd = prevCareInd;
+
+		this.genderCd = genderCd;
+
+		this.dbUpdatedInd = dbUpdatedInd;
+
 	}
 
-	/**
-	 * @param rtetpbrVOList the rtetpbrVOList to set
-	 */
-	public void setRtetpbrVOList(List<RtetpbrVO> rtetpbrVOList) {
-		this.rtetpbrVOList = rtetpbrVOList;
-	}
 	
-	private List<RtetprlVO> rtetprlVOList =  new LinkedList<RtetprlVO>();
 
-	/**
-	 * @return the rtetprlVOList
-	 */
-	public List<RtetprlVO> getRtetprlVOList() {
-		return rtetprlVOList;
-	}
-
-	/**
-	 * @param rtetprlVOList the rtetprlVOList to set
-	 */
-	public void setRtetprlVOList(List<RtetprlVO> rtetprlVOList) {
-		this.rtetprlVOList = rtetprlVOList;
-	}
-
-	private List<SitemsgVO> sitemsgVOList =  new LinkedList<SitemsgVO>();
-
-	/**
-	 * @return the sitemsgVOList
-	 */
-	public List<SitemsgVO> getSitemsgVOList() {
-		return sitemsgVOList;
-	}
-
-	/**
-	 * @param sitemsgVOList the sitemsgVOList to set
-	 */
-	public void setSitemsgVOList(List<SitemsgVO> sitemsgVOList) {
-		this.sitemsgVOList = sitemsgVOList;
-	}
 	
-	private List<TierdMsgVO> tierdmsgVOList =  new LinkedList<TierdMsgVO>();
 
-	/**
-	 * @return the tierdmsgVOList
-	 */
-	public List<TierdMsgVO> getTierdmsgVOList() {
-		return tierdmsgVOList;
-	}
+	public RbrcVO() {
 
-	/**
-	 * @param tierdmsgVOList the tierdmsgVOList to set
-	 */
-	public void setTierdmsgVOList(List<TierdMsgVO> tierdmsgVOList) {
-		this.tierdmsgVOList = tierdmsgVOList;
-	}
-
-	private List<StstypaVO> ststypaVOList =  new LinkedList<StstypaVO>();
-
-	/**
-	 * @return the ststypaVOList
-	 */
-	public List<StstypaVO> getStstypaVOList() {
-		return ststypaVOList;
-	}
-
-	/**
-	 * @param ststypaVOList the ststypaVOList to set
-	 */
-	public void setStstypaVOList(List<StstypaVO> ststypaVOList) {
-		this.ststypaVOList = ststypaVOList;
-	}
-	
-	private List<SstypaVO> sstypaVOList =  new LinkedList<SstypaVO>();
-
-	/**
-	 * @return the sstypaVOList
-	 */
-	public List<SstypaVO> getSstypaVOList() {
-		return sstypaVOList;
-	}
-
-	/**
-	 * @param sstypaVOList the sstypaVOList to set
-	 */
-	public void setSstypaVOList(List<SstypaVO> sstypaVOList) {
-		this.sstypaVOList = sstypaVOList;
-	}
-	
-	private List<TosctVO> tosctVOList =  new LinkedList<TosctVO>();
-
-	/**
-	 * @return the tosctVOList
-	 */
-	public List<TosctVO> getTosctVOList() {
-		return tosctVOList;
-	}
-
-	/**
-	 * @param tosctVOList the tosctVOList to set
-	 */
-	public void setTosctVOList(List<TosctVO> tosctVOList) {
-		this.tosctVOList = tosctVOList;
-	}
-	
-	/**
-	 * @return the rbbcVOList
-	 */
-	public List<RbbcVO> getRbbcVOList() {
-		return rbbcVOList;
-	}
-	/**
-	 * @param rbbcVOList the rbbcVOList to set
-	 */
-	public void setRbbcVOList(List<RbbcVO> rbbcVOList) {
-		this.rbbcVOList = rbbcVOList;
-	}
-	/**
-	 * @return the rbrcVOList
-	 */
-	public List<RbrcVO> getRbrcVOList() {
-		return rbrcVOList;
-	}
-	/**
-	 * @param rbrcVOList the rbrcVOList to set
-	 */
-	public void setRbrcVOList(List<RbrcVO> rbrcVOList) {
-		this.rbrcVOList = rbrcVOList;
-	}
-	/**
-	 * @return the rtestypVOList
-	 */
-	public List<RtestypVO> getRtestypVOList() {
-		return rtestypVOList;
-	}
-	/**
-	 * @param rtestypVOList the rtestypVOList to set
-	 */
-	public void setRtestypVOList(List<RtestypVO> rtestypVOList) {
-		this.rtestypVOList = rtestypVOList;
-	}
-	/**
-	 * @return the rtebeplmVOList
-	 */
-	public List<RtebeplmVO> getRtebeplmVOList() {
-		return rtebeplmVOList;
-	}
-	/**
-	 * @param rtebeplmVOList the rtebeplmVOList to set
-	 */
-	public void setRtebeplmVOList(List<RtebeplmVO> rtebeplmVOList) {
-		this.rtebeplmVOList = rtebeplmVOList;
-	}
-	/**
-	 * @return the rtedictrVOList
-	 */
-	public List<RtedictrVO> getRtedictrVOList() {
-		return rtedictrVOList;
-	}
-	/**
-	 * @param rtedictrVOList the rtedictrVOList to set
-	 */
-	public void setRtedictrVOList(List<RtedictrVO> rtedictrVOList) {
-		this.rtedictrVOList = rtedictrVOList;
-	}
-	/**
-	 * @return the rterbacVOList
-	 */
-	public List<RterbacVO> getRterbacVOList() {
-		return rterbacVOList;
-	}
-	/**
-	 * @param rterbacVOList the rterbacVOList to set
-	 */
-	public void setRterbacVOList(List<RterbacVO> rterbacVOList) {
-		this.rterbacVOList = rterbacVOList;
-	}
-	/**
-	 * @return the rtestscVOList
-	 */
-	public List<RtestscVO> getRtestscVOList() {
-		return rtestscVOList;
-	}
-	/**
-	 * @param rtestscVOList the rtestscVOList to set
-	 */
-	public void setRtestscVOList(List<RtestscVO> rtestscVOList) {
-		this.rtestscVOList = rtestscVOList;
-	}
-	/**
-	 * @return the rtetierVOList
-	 */
-	public List<RtetierVO> getRtetierVOList() {
-		return rtetierVOList;
-	}
-	/**
-	 * @param rtetierVOList the rtetierVOList to set
-	 */
-	public void setRtetierVOList(List<RtetierVO> rtetierVOList) {
-		this.rtetierVOList = rtetierVOList;
-	}
-	
-	private List<BplvsVO> bplvsVOList =  new LinkedList<BplvsVO>();
-	private List<SbmletkVO> sbmletkVOList =  new LinkedList<SbmletkVO>();
-	private List<SrchdtlVO> srchdtlVOList =  new LinkedList<SrchdtlVO>();
-	private List<SrchcolVO> srchcolVOList =  new LinkedList<SrchcolVO>();
-	private List<SrchscVO> srchscVOList =  new LinkedList<SrchscVO>();
-	private List<SrcherrVO> srcherrVOList =  new LinkedList<SrcherrVO>();
-	private List<SrchresVO> srchresVOList =  new LinkedList<SrchresVO>();
-	private List<SbrsrxbVO> sbrsrxbVOList =  new LinkedList<SbrsrxbVO>();
-	private List<SpntprvVO> spntprvVOList =  new LinkedList<SpntprvVO>();
-	private List<SbmrdepVO> sbmrdepVOList =  new LinkedList<SbmrdepVO>();
-	private List<SubmsnVO> submsnVOList =  new LinkedList<SubmsnVO>();
-	private List<Sbmrpln5VO> srapidtlVOList =  new LinkedList<Sbmrpln5VO>();
-	private List<SbmsnrVO> sbmsnrVOList =  new LinkedList<SbmsnrVO>();
-	private List<SbmrplnVO> sbmrplnVOList =  new LinkedList<SbmrplnVO>();
-	private List<SbmrplnVO> sbmrplnVOListDtl =  new LinkedList<SbmrplnVO>();
-	
-	
-	public List<SbmrplnVO> getSbmrplnVOList() {
-		return sbmrplnVOList;
-	}
-
-	public void setSbmrplnVOList(List<SbmrplnVO> sbmrplnVOList) {
-		this.sbmrplnVOList = sbmrplnVOList;
-	}
-
-	public List<SbmrplnVO> getSbmrplnVOListDtl() {
-		return sbmrplnVOListDtl;
-	}
-
-	public void setSbmrplnVOListDtl(List<SbmrplnVO> sbmrplnVOListDtl) {
-		this.sbmrplnVOListDtl = sbmrplnVOListDtl;
-	}
-
-	public List<SbmsnrVO> getSbmsnrVOList() {
-		return sbmsnrVOList;
-	}
-
-	public void setSbmsnrVOList(List<SbmsnrVO> sbmsnrVOList) {
-		this.sbmsnrVOList = sbmsnrVOList;
-	}
-
-	public List<SubmsnVO> getSubmsnVOList() {
-		return submsnVOList;
-	}
-
-	public void setSubmsnVOList(List<SubmsnVO> submsnVOList) {
-		this.submsnVOList = submsnVOList;
-	}
-
-	public List<SbmrdepVO> getSbmrdepVOList() {
-		return sbmrdepVOList;
-	}
-
-	public void setSbmrdepVOList(List<SbmrdepVO> sbmrdepVOList) {
-		this.sbmrdepVOList = sbmrdepVOList;
-	}
-
-	public List<SpntprvVO> getSpntprvVOList() {
-		return spntprvVOList;
-	}
-
-	public void setSpntprvVOList(List<SpntprvVO> spntprvVOList) {
-		this.spntprvVOList = spntprvVOList;
-	}
-
-	public List<SbrsrxbVO> getSbrsrxbVOList() {
-		return sbrsrxbVOList;
-	}
-
-	public void setSbrsrxbVOList(List<SbrsrxbVO> sbrsrxbVOList) {
-		this.sbrsrxbVOList = sbrsrxbVOList;
-	}
-
-	public List<SrchresVO> getSrchresVOList() {
-		return srchresVOList;
-	}
-
-	public void setSrchresVOList(List<SrchresVO> srchresVOList) {
-		this.srchresVOList = srchresVOList;
-	}
-
-	public List<SrcherrVO> getSrcherrVOList() {
-		return srcherrVOList;
-	}
-
-	public void setSrcherrVOList(List<SrcherrVO> srcherrVOList) {
-		this.srcherrVOList = srcherrVOList;
-	}
-
-	public List<SrchscVO> getSrchscVOList() {
-		return srchscVOList;
-	}
-
-	public void setSrchscVOList(List<SrchscVO> srchscVOList) {
-		this.srchscVOList = srchscVOList;
-	}
-
-	public List<SrchcolVO> getSrchcolVOList() {
-		return srchcolVOList;
-	}
-
-	public void setSrchcolVOList(List<SrchcolVO> srchcolVOList) {
-		this.srchcolVOList = srchcolVOList;
-	}
-
-	public List<SrchdtlVO> getSrchdtlVOList() {
-		return srchdtlVOList;
-	}
-
-	public void setSrchdtlVOList(List<SrchdtlVO> srchdtlVOList) {
-		this.srchdtlVOList = srchdtlVOList;
-	}
-
-	public List<SbmletkVO> getSbmletkVOList() {
-		return sbmletkVOList;
-	}
-
-	public void setSbmletkVOList(List<SbmletkVO> sbmletkVOList) {
-		this.sbmletkVOList = sbmletkVOList;
-	}
-
-	public List<BplvsVO> getBplvsVOList() {
-		return bplvsVOList;
-	}
-
-	public void setBplvsVOList(List<BplvsVO> bplvsVOList) {
-		this.bplvsVOList = bplvsVOList;
-	}
-	public List<Sbmrpln5VO> getSrapidtlVOList() {
-		return srapidtlVOList;
-	}
-
-	public void setSrapidtlVOList(List<Sbmrpln5VO> srapidtlVOList) {
-		this.srapidtlVOList = srapidtlVOList;
-	}
-
-	/**
-
-	 * @return the hrpruleVOList
-
-	 */
-
-	public List<HrpRuleVO> getHrpruleVOList() {
-
-		return hrpruleVOList;
+		super();
 
 	}
+
+
 
 
 
 	/**
 
-	 * @param hrpruleVOList the hrpruleVOList to set
+	 * @return the dbSiteCd
 
 	 */
 
-	public void setHrpruleVOList(List<HrpRuleVO> hrpruleVOList) {
+	public String getDbSiteCd() {
 
-		this.hrpruleVOList = hrpruleVOList;
+		return dbSiteCd;
 
 	}
 
+	/**
+
+	 * @param dbSiteCd the dbSiteCd to set
+
+	 */
+
+	public void setDbSiteCd(String dbSiteCd) {
+
+		this.dbSiteCd = dbSiteCd;
+
+	}
+
+	/**
+
+	 * @return the dbRiderCd
+
+	 */
+
+	public String getDbRiderCd() {
+
+		return dbRiderCd;
+
+	}
+
+	/**
+
+	 * @param dbRiderCd the dbRiderCd to set
+
+	 */
+
+	public void setDbRiderCd(String dbRiderCd) {
+
+		this.dbRiderCd = dbRiderCd;
+
+	}
+
+	/**
+
+	 * @return the dbSvcTypeCd
+
+	 */
+
+	public String getDbSvcTypeCd() {
+
+		return dbSvcTypeCd;
+
+	}
+
+	/**
+
+	 * @param dbSvcTypeCd the dbSvcTypeCd to set
+
+	 */
+
+	public void setDbSvcTypeCd(String dbSvcTypeCd) {
+
+		this.dbSvcTypeCd = dbSvcTypeCd;
+
+	}
+
+	/**
+
+	 * @return the dbPostedDate
+
+	 */
+
+	public String getDbPostedDate() {
+
+		return dbPostedDate;
+
+	}
+
+	/**
+
+	 * @param dbPostedDate the dbPostedDate to set
+
+	 */
+
+	public void setDbPostedDate(String dbPostedDate) {
+
+		this.dbPostedDate = dbPostedDate;
+
+	}
+
+	/**
+
+	 * @return the dbDescTxt
+
+	 */
+
+	public String getDbDescTxt() {
+
+		return dbDescTxt;
+
+	}
+
+	/**
+
+	 * @param dbDescTxt the dbDescTxt to set
+
+	 */
+
+	public void setDbDescTxt(String dbDescTxt) {
+
+		this.dbDescTxt = dbDescTxt;
+
+	}
+
+	/**
+
+	 * @return the dbIONtwkCd
+
+	 */
+
+	public String getDbIONtwkCd() {
+
+		return dbIONtwkCd;
+
+	}
+
+	/**
+
+	 * @param dbIONtwkCd the dbIONtwkCd to set
+
+	 */
+
+	public void setDbIONtwkCd(String dbIONtwkCd) {
+
+		this.dbIONtwkCd = dbIONtwkCd;
+
+	}
+
+	/**
+
+	 * @return the dbTOSCd
+
+	 */
+
+	public String getDbTOSCd() {
+
+		return dbTOSCd;
+
+	}
+
+	/**
+
+	 * @param dbTOSCd the dbTOSCd to set
+
+	 */
+
+	public void setDbTOSCd(String dbTOSCd) {
+
+		this.dbTOSCd = dbTOSCd;
+
+	}
+
+	/**
+
+	 * @return the dbHMOSrcBnInd
+
+	 */
+
+	public String getDbHMOSrcBnInd() {
+
+		return dbHMOSrcBnInd;
+
+	}
+
+	/**
+
+	 * @param dbHMOSrcBnInd the dbHMOSrcBnInd to set
+
+	 */
+
+	public void setDbHMOSrcBnInd(String dbHMOSrcBnInd) {
+
+		this.dbHMOSrcBnInd = dbHMOSrcBnInd;
+
+	}
+
+	/**
+
+	 * @return the textSendInd
+
+	 */
+
+	public String getTextSendInd() {
+
+		return textSendInd;
+
+	}
+
+	/**
+
+	 * @param textSendInd the textSendInd to set
+
+	 */
+
+	public void setTextSendInd(String textSendInd) {
+
+		this.textSendInd = textSendInd;
+
+	}
+
+	/**
+
+	 * @return the prevCareInd
+
+	 */
+
+	public String getPrevCareInd() {
+
+		return prevCareInd;
+
+	}
+
+	/**
+
+	 * @param prevCareInd the prevCareInd to set
+
+	 */
+
+	public void setPrevCareInd(String prevCareInd) {
+
+		this.prevCareInd = prevCareInd;
+
+	}
+
+	/**
+
+	 * @return the genderCd
+
+	 */
+
+	public String getGenderCd() {
+
+		return genderCd;
+
+	}
+
+	/**
+
+	 * @param genderCd the genderCd to set
+
+	 */
+
+	public void setGenderCd(String genderCd) {
+
+		this.genderCd = genderCd;
+
+	}
+
+	/**
+
+	 * @return the dbUpdatedInd
+
+	 */
+
+	public char getDbUpdatedInd() {
+
+		return dbUpdatedInd;
+
+	}
+
+	/**
+
+	 * @param dbUpdatedInd the dbUpdatedInd to set
+
+	 */
+
+	public void setDbUpdatedInd(char dbUpdatedInd) {
+
+		this.dbUpdatedInd = dbUpdatedInd;
+
+	}
 
 }
+
