@@ -1,167 +1,38 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
-
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-
-
-
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
+<!--Chrome Upgrade-N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
+<HTML>
 <HEAD>
+<BASE target="_blank">
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>RBBCDisplay.jsp</TITLE>
+<TITLE>RBBC Help</TITLE>
+<STYLE type="text/css">
+BODY {/* chrome upgrade N127627 -Edited background-color: "#e1eeb9" */
+	background-color: #e1eeb9;
+	font-style: italic
+}
+</STYLE>
+<SCRIPT language="JavaScript">
 
-<SCRIPT>
-
-var relPath="<%=request.getContextPath()%>";
-
-	$(document).ready(function(e) {
-		var count = $("#plnlmEXDisplay").find('input[type="checkbox"]').length;
-		var errorPath = relPath + "/usrsec/error";
-		$('#LookUp').click(function() {
-			var action = relPath + '/rbbc/rbbcHome';
-			$("#rbbcDisplayForm").attr('action', action).submit();
-		});
-
-		$('#deleteBtn').click(function() {
-			var action = relPath + '/rbbc/deleteRbbc';
-			if (count >= 1000) {
-				$("#form1").attr('action', errorPath).submit();
-			}else{
-			$("#rbbcDisplayForm").attr('action', action).submit();
-			}
-		});
-
-		$('#copyBtn').click(function() {
-			var action = relPath + '/rbbc/copyRbbc';
-			if (count >= 1000) {
-				$("#form1").attr('action', errorPath).submit();
-			}else{
-			$("#rbbcDisplayForm").attr('action', action).submit();
-			}
-		});
-
-		$('#addUpdateBtn').click(function() {
-			var action = relPath + '/rbbc/addUpdateRbbc';
-			if (count >= 1000) {
-				$("#form1").attr('action', errorPath).submit();
-			}else{
-			$("#rbbcDisplayForm").attr('action', action).submit();
-			}
-		});
-
-		$("#rbbcExport").click(function() {
-			var action = relPath + "/rbbc/rbbcExport";
-			$("#form1").attr('action', action).submit();
-		});
-	
-});
-
-
-function ListBICs()
-	{
-	window.open(relPath+'/rbbc/bicList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
-
-function ListSTCs()
-	{
-	window.open(relPath+'/rbbc/stcList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
-
-function ListRBBCs()
-	{
-	window.open(relPath+'/rbbc/rbbcList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
-
+// Drag the item from the left window and
+// drop it here.  Or, click the right mouse button
+// and select 'Insert to Script' from the popup menu.
+// The code is inserted at the current
+// cursor position.
+function WindowClose()
+{
+	window.close()
+}
 
 </SCRIPT></HEAD>
-<BODY style="font-size: 9pt" bgcolor="#e1eeb9">
+<BODY>
+<H1 align="CENTER">RBBC Help Screen</H1>
 
-<FONT face="ARIAL">
-<c:out value="${rbbcMessage}"></c:out>
-</FONT>
-<BR><BR>
-<CENTER><B><FONT size="+2">RBBC Table Search List</FONT></B></CENTER><BR>
+<P>You must enter at least one fully specified <B>Benefit Id Code</B>, <B>Service Type Code</B>. The other field may be left blank .<BR>
 <BR>
-<FONT FACE="ARIAL">
-To make a change on the database using these rows, change any field to the appropriate value, click on the Take Action square for every row changed and then click on the button for the action desired. Multiple rows may be selected for any given action. Labels that are <B>bold</B> identify key columns. A change to any value in these columns will <B>Add</B> rows to the database, not update existing rows.
-</FONT>
-<BR>
-<BR>
-
-<CENTER>
-<input type="image" id="rbbcExport" src="${context}/images/rte_export.jpg"  class="export" style="padding-left: 1mm; padding-right: 1mm">	
-<form:form commandName="lookUpListVO" name="rbbcDisplayForm" id="rbbcDisplayForm"  method="POST">
-<TABLE cellspacing="5" style="background-color: #9393ff" border="1" class="lookupTable">
-    <COL span="1" align="center">
-    <COL span="13">
-    <COL span="1" align="center">
-    <TBODY>
-        <TR>
-            <TD>Take Action?</TD>
-            <TD width="30" style="font-weight: bold"><A href="javascript:ListSTCs()"
-            			onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
-            			onmouseout="window.status = '';">Svc Type</A></TD>
-            <TD width="40" style="font-weight: bold"><A href="javascript:ListBICs()"
-            			onmouseover="window.status = 'Display List of Benefit Id Code (BIC)'; return true;"
-            			onmouseout="window.status = '';">Benefit Id Cd</A></TD>
-            <TD width="30" style="font-weight: bold"><A href="javascript:ListRBBCs()"
-            			onmouseover="window.status = 'Display List of Benefit Id Code (BIC)'; return true;"
-            			onmouseout="window.status = '';">RBBC Cd</A></TD>
-            <TD>Effective Date</TD>
-            <TD>Posted Date</TD>
-        </TR>
-        <c:forEach items="${lookUpListVO.rbbcVOList}" var="rbbc" varStatus="status">
-		<c:choose>
-		<c:when test="${rbbc.dbUpdatedInd == 'Y'}">
-  			
-        <TR bgcolor="#ff4242">
-           </c:when>
-		<c:when test="${rbbc.dbUpdatedInd == 'C'}">
-        <TR bgcolor="#80ffff">
-          </c:when>
-		 <c:otherwise>
-        <TR bgcolor="#9393ff">
-           </c:otherwise>
-		</c:choose>
-		<input type="input" name="rbbcVOList[${status.index}].dbUpdatedInd" value="${rbbc.dbUpdatedInd}" style="display: none;"/>
-            <TD>
-	            <INPUT type="checkbox" name="takeAction" value="${status.index}"></TD>
-           	<TD>
-				
-			<INPUT name="rbbcVOList[${status.index}].dbSvcTypeCd" size="2" maxlength="2" type="text" value="${rbbc.dbSvcTypeCd}" >
-			</TD>
-            <TD>
-            	
-            	<INPUT name="rbbcVOList[${status.index}].dbBnftIdCd" size="7" maxlength="5" type="text" value="${rbbc.dbBnftIdCd}" onblur="ValidateBIC(this)"></TD>
-            <TD>
-            	
-            	<INPUT name="rbbcVOList[${status.index}].dbRBBCCd" size="2" maxlength="1" type="text" value="${rbbc.dbRBBCCd}"></TD>
-            <TD>
-            
-            	<INPUT name="rbbcVOList[${status.index}].dbEffDate" size="10" maxlength="10" type="text" value="${rbbc.dbEffDate}" onblur="ValidateEffDt(this)"></TD>
-            <TD>
-            
-                <INPUT size="10" style="font-size: 12px; text-align: left;
-                						 border-width: 0px; font-style: normal; background-color: #9393ff"
-                						 type="text" name="rbbcVOList[${status.index}].dbPostedDate" value="${rbbc.dbPostedDate}" readonly>
-        </TD>
-        </TR>
-       </c:forEach>
-    </TBODY>
-</TABLE>
-<BR>
-
-<INPUT type="button" id="copyBtn" value="Copy" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-<INPUT type="button" id="addUpdateBtn" value="Add/Update" style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-<INPUT type="button" id="deleteBtn" value="Delete" style="padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-
-<INPUT type="button" id="LookUp" value="Look Up" style="padding-left: 1mm; padding-right: 1mm">
-			
-</CENTER>
-</form:form>
-<form name="form1" id="form1" method="POST"></form>
+<B>Note:</B> When trying to update an existing row returned from a lookup, if any of the table keys are changed then a new row will be <B>added</B> to the database. The key fields are <B>Benefit Id Code</B> and <B>Service Type</B>.<BR>
+</P>
+<P align="center"><INPUT type="button" onclick="WindowClose()" name="CloseButton" value="Close"></P>
 </BODY>
+</HTML>
