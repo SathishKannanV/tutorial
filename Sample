@@ -1,1356 +1,286 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.vo;
 
 
 
 import java.io.Serializable;
 
+import java.util.Date;
 
+import java.util.List;
 
-public class SubmsnVO implements Serializable {
 
-	private String tranType = new String();
 
-	private String convIdCode = new String();
+import com.aetna.framework.security.userdetails.AefwUserDetailsImpl;
 
-	private String vanIdCd = new String();
 
-	private String typeCd = new String();
 
-	private String authorizationId = new String();
+/**
 
-	private String securityId = new String();
+ * @author N657186
 
-	private String intrchngSendId = new String();
+ *
 
-	private String intrchngRcvrId = new String();
+ */
 
-	private String interchangeDate = new String();
+public class UserVO extends AefwUserDetailsImpl implements Serializable{
 
-	private String interchangeTime = new String();
+	/**
 
-	private String intrcngCntrlNo = new String();
+	 * 
 
-	private String appSendCd = new String();
+	 */
 
-	private String appRcvrCd = new String();
+	private static final long serialVersionUID = -257413148564801650L;
 
-	private String groupDate = new String();
+	/**
 
-	private String groupTime = new String();
+	 * Internally generated user id. serial/PK from the DB IWS User Table
 
-	private String	grpControlNo= new String();
+	 */
 
-	private String trnsctnPurposeCd = new String();
+	private String aetnaId;
 
-	private String trnsctnTypeCd = new String();
+	
 
-	private String serviceTypeCode = new String();
+	/**
 
-	private String reqstdBnftCd = new String();
+	 * Last Login Date
 
-	private String asOfDate = new String();
+	 */
 
-	private String toDate = new String();
+	private Date lastLoginDt;
 
-	private String sbmtPrvdrId = new String();
+	
 
-	private String sbmtPvdrLastName = new String();
+	/**
 
-	private String sbmtPvdrFirstName = new String();
+	 * List of Network groups that the user is part of.
 
-	private String sbmtPvdrMidName = new String();
+	 * Additional attribute retrieved from Active Directory
 
-	private String sbmtPvdrTitle = new String();
+	 */
 
-	private String sbmtPvdrAddr1 = new String();
+	private List <String> memberOf;
 
-	private String sbmtPvdrAddr2 = new String();
 
-	private String sbmtPvdrCity = new String();
 
-	private String sbmtPvdrState = new String();
+	private String securityLevel = "";
 
-	private String sbmPvdrZipCd = new String();
+	private String name = "";
 
-	private String sPCommunication1No = new String();
+	
 
-	private String subscriberIdCd = new String();
+	private String dateSecLevPosted = "";
 
-	private String memberIdCd = new String();
+	
 
-	private String employeeId = new String();
-
-	private String subsLastName = new String();
-
-	private String subsFirstName = new String();
-
-	private String subsMidName = new String();
-
-	private String subsTitle = new String();
-
-	private String patientLastName = new String();
-
-	private String patientFirstName = new String();
-
-	private String patientMidName = new String();
-
-	private String patientTitle = new String();
-
-	private String patientBirthdate = new String();
-
-	private String relationToSubsCode = new String();
-
-	private String patientSexCode = new String();
-
-	private String effectiveDate = new String();
-
-	private String receivedTime = new String();
-
-	private String prvdrSbmTime = new String();
-
-	private String prvdrSbmDate = new String();
-
-	private String transactionCd = new String();
-
-	private String postedDt = new String();
-
-	private String spvdrEntTypeQualCd = new String();
-
-	private String spvdrContactName = new String();
-
-	private String subsIdQualCode = new String();
-
-	private String subsTrceRefNo = new String();
-
-	private String depIdQualCode = new String();
-
-	private String depTrceRefNo = new String();
-
-	private String coverForPCPInd = new String();
-
-	private String empGroupIdCode = new String();
-
-	private String prvdrNetworkIdCode = new String();
-
-	private String altRouteIdCode = new String();
-
-	private String altRouteTypeCode = new String();
-
-	private String employerName = new String();
-
-	private String routingId = new String();
-
-	private String routingTypeCode = new String();
-
-	private String	cumbIdNo= new String();
-
-	private String  prvdrIdNo= new String();
-
-	private String	prvdrOrgNo= new String();
-
-	private String spComm1QualCode = new String();
-
-	private String versionReleaseCode = new String();
-
-	private String mswContactCode = new String();
-
-	private String spCommunication2No = new String();
-
-	private String spComm2QualCode = new String();
-
-	private String entityIdCode = new String();
-
-	private String pvdrIdCodeQualCode = new String();
-
-	private String familyLevelInd = new String();
-
-	private String posCode = new String();
-
-	public SubmsnVO() {
+	public UserVO() {
 
 		super();
 
-		// TODO Auto-generated constructor stub
+		setSecurityLevel("R");
 
-	}
+		setName("Unknown User");
 
-	public SubmsnVO(String tranType, String convIdCode, String vanIdCd,
+		setAetnaId("z000000");
 
-			String typeCd, String authorizationId, String securityId,
-
-			String intrchngSendId, String intrchngRcvrId,
-
-			String interchangeDate, String interchangeTime,
-
-			String intrcngCntrlNo, String appSendCd, String appRcvrCd,
-
-			String groupDate, String groupTime, String grpControlNo,
-
-			String trnsctnPurposeCd, String trnsctnTypeCd,
-
-			String serviceTypeCode, String reqstdBnftCd, String asOfDate,
-
-			String toDate, String sbmtPrvdrId, String sbmtPvdrLastName,
-
-			String sbmtPvdrFirstName, String sbmtPvdrMidName,
-
-			String sbmtPvdrTitle, String sbmtPvdrAddr1, String sbmtPvdrAddr2,
-
-			String sbmtPvdrCity, String sbmtPvdrState, String sbmPvdrZipCd,
-
-			String sPCommunication1No, String subscriberIdCd,
-
-			String memberIdCd, String employeeId, String subsLastName,
-
-			String subsFirstName, String subsMidName, String subsTitle,
-
-			String patientLastName, String patientFirstName,
-
-			String patientMidName, String patientTitle,
-
-			String patientBirthdate, String relationToSubsCode,
-
-			String patientSexCode, String effectiveDate, String receivedTime,
-
-			String prvdrSbmTime, String prvdrSbmDate, String transactionCd,
-
-			String postedDt, String spvdrEntTypeQualCd,
-
-			String spvdrContactName, String subsIdQualCode,
-
-			String subsTrceRefNo, String depIdQualCode, String depTrceRefNo,
-
-			String coverForPCPInd, String empGroupIdCode,
-
-			String prvdrNetworkIdCode, String altRouteIdCode,
-
-			String altRouteTypeCode, String employerName, String routingId,
-
-			String routingTypeCode, String cumbIdNo, String prvdrIdNo,
-
-			String prvdrOrgNo, String spComm1QualCode,
-
-			String versionReleaseCode, String mswContactCode,
-
-			String spCommunication2No, String spComm2QualCode,
-
-			String entityIdCode, String pvdrIdCodeQualCode,
-
-			String familyLevelInd, String posCode) {
-
-		super();
-
-		this.tranType = tranType;
-
-		this.convIdCode = convIdCode;
-
-		this.vanIdCd = vanIdCd;
-
-		this.typeCd = typeCd;
-
-		this.authorizationId = authorizationId;
-
-		this.securityId = securityId;
-
-		this.intrchngSendId = intrchngSendId;
-
-		this.intrchngRcvrId = intrchngRcvrId;
-
-		this.interchangeDate = interchangeDate;
-
-		this.interchangeTime = interchangeTime;
-
-		this.intrcngCntrlNo = intrcngCntrlNo;
-
-		this.appSendCd = appSendCd;
-
-		this.appRcvrCd = appRcvrCd;
-
-		this.groupDate = groupDate;
-
-		this.groupTime = groupTime;
-
-		this.grpControlNo = grpControlNo;
-
-		this.trnsctnPurposeCd = trnsctnPurposeCd;
-
-		this.trnsctnTypeCd = trnsctnTypeCd;
-
-		this.serviceTypeCode = serviceTypeCode;
-
-		this.reqstdBnftCd = reqstdBnftCd;
-
-		this.asOfDate = asOfDate;
-
-		this.toDate = toDate;
-
-		this.sbmtPrvdrId = sbmtPrvdrId;
-
-		this.sbmtPvdrLastName = sbmtPvdrLastName;
-
-		this.sbmtPvdrFirstName = sbmtPvdrFirstName;
-
-		this.sbmtPvdrMidName = sbmtPvdrMidName;
-
-		this.sbmtPvdrTitle = sbmtPvdrTitle;
-
-		this.sbmtPvdrAddr1 = sbmtPvdrAddr1;
-
-		this.sbmtPvdrAddr2 = sbmtPvdrAddr2;
-
-		this.sbmtPvdrCity = sbmtPvdrCity;
-
-		this.sbmtPvdrState = sbmtPvdrState;
-
-		this.sbmPvdrZipCd = sbmPvdrZipCd;
-
-		this.sPCommunication1No = sPCommunication1No;
-
-		this.subscriberIdCd = subscriberIdCd;
-
-		this.memberIdCd = memberIdCd;
-
-		this.employeeId = employeeId;
-
-		this.subsLastName = subsLastName;
-
-		this.subsFirstName = subsFirstName;
-
-		this.subsMidName = subsMidName;
-
-		this.subsTitle = subsTitle;
-
-		this.patientLastName = patientLastName;
-
-		this.patientFirstName = patientFirstName;
-
-		this.patientMidName = patientMidName;
-
-		this.patientTitle = patientTitle;
-
-		this.patientBirthdate = patientBirthdate;
-
-		this.relationToSubsCode = relationToSubsCode;
-
-		this.patientSexCode = patientSexCode;
-
-		this.effectiveDate = effectiveDate;
-
-		this.receivedTime = receivedTime;
-
-		this.prvdrSbmTime = prvdrSbmTime;
-
-		this.prvdrSbmDate = prvdrSbmDate;
-
-		this.transactionCd = transactionCd;
-
-		this.postedDt = postedDt;
-
-		this.spvdrEntTypeQualCd = spvdrEntTypeQualCd;
-
-		this.spvdrContactName = spvdrContactName;
-
-		this.subsIdQualCode = subsIdQualCode;
-
-		this.subsTrceRefNo = subsTrceRefNo;
-
-		this.depIdQualCode = depIdQualCode;
-
-		this.depTrceRefNo = depTrceRefNo;
-
-		this.coverForPCPInd = coverForPCPInd;
-
-		this.empGroupIdCode = empGroupIdCode;
-
-		this.prvdrNetworkIdCode = prvdrNetworkIdCode;
-
-		this.altRouteIdCode = altRouteIdCode;
-
-		this.altRouteTypeCode = altRouteTypeCode;
-
-		this.employerName = employerName;
-
-		this.routingId = routingId;
-
-		this.routingTypeCode = routingTypeCode;
-
-		this.cumbIdNo = cumbIdNo;
-
-		this.prvdrIdNo = prvdrIdNo;
-
-		this.prvdrOrgNo = prvdrOrgNo;
-
-		this.spComm1QualCode = spComm1QualCode;
-
-		this.versionReleaseCode = versionReleaseCode;
-
-		this.mswContactCode = mswContactCode;
-
-		this.spCommunication2No = spCommunication2No;
-
-		this.spComm2QualCode = spComm2QualCode;
-
-		this.entityIdCode = entityIdCode;
-
-		this.pvdrIdCodeQualCode = pvdrIdCodeQualCode;
-
-		this.familyLevelInd = familyLevelInd;
-
-		this.posCode = posCode;
-
-	}
-
-	public String getTranType() {
-
-		return tranType;
-
-	}
-
-	public void setTranType(String tranType) {
-
-		this.tranType = tranType;
-
-	}
-
-	public String getConvIdCode() {
-
-		return convIdCode;
-
-	}
-
-	public void setConvIdCode(String convIdCode) {
-
-		this.convIdCode = convIdCode;
-
-	}
-
-	public String getVanIdCd() {
-
-		return vanIdCd;
-
-	}
-
-	public void setVanIdCd(String vanIdCd) {
-
-		this.vanIdCd = vanIdCd;
-
-	}
-
-	public String getTypeCd() {
-
-		return typeCd;
-
-	}
-
-	public void setTypeCd(String typeCd) {
-
-		this.typeCd = typeCd;
-
-	}
-
-	public String getAuthorizationId() {
-
-		return authorizationId;
-
-	}
-
-	public void setAuthorizationId(String authorizationId) {
-
-		this.authorizationId = authorizationId;
-
-	}
-
-	public String getSecurityId() {
-
-		return securityId;
-
-	}
-
-	public void setSecurityId(String securityId) {
-
-		this.securityId = securityId;
-
-	}
-
-	public String getIntrchngSendId() {
-
-		return intrchngSendId;
-
-	}
-
-	public void setIntrchngSendId(String intrchngSendId) {
-
-		this.intrchngSendId = intrchngSendId;
-
-	}
-
-	public String getIntrchngRcvrId() {
-
-		return intrchngRcvrId;
-
-	}
-
-	public void setIntrchngRcvrId(String intrchngRcvrId) {
-
-		this.intrchngRcvrId = intrchngRcvrId;
-
-	}
-
-	public String getInterchangeDate() {
-
-		return interchangeDate;
-
-	}
-
-	public void setInterchangeDate(String interchangeDate) {
-
-		this.interchangeDate = interchangeDate;
-
-	}
-
-	public String getInterchangeTime() {
-
-		return interchangeTime;
-
-	}
-
-	public void setInterchangeTime(String interchangeTime) {
-
-		this.interchangeTime = interchangeTime;
-
-	}
-
-	public String getIntrcngCntrlNo() {
-
-		return intrcngCntrlNo;
-
-	}
-
-	public void setIntrcngCntrlNo(String intrcngCntrlNo) {
-
-		this.intrcngCntrlNo = intrcngCntrlNo;
-
-	}
-
-	public String getAppSendCd() {
-
-		return appSendCd;
-
-	}
-
-	public void setAppSendCd(String appSendCd) {
-
-		this.appSendCd = appSendCd;
-
-	}
-
-	public String getAppRcvrCd() {
-
-		return appRcvrCd;
-
-	}
-
-	public void setAppRcvrCd(String appRcvrCd) {
-
-		this.appRcvrCd = appRcvrCd;
-
-	}
-
-	public String getGroupDate() {
-
-		return groupDate;
-
-	}
-
-	public void setGroupDate(String groupDate) {
-
-		this.groupDate = groupDate;
-
-	}
-
-	public String getGroupTime() {
-
-		return groupTime;
-
-	}
-
-	public void setGroupTime(String groupTime) {
-
-		this.groupTime = groupTime;
-
-	}
-
-	public String getGrpControlNo() {
-
-		return grpControlNo;
-
-	}
-
-	public void setGrpControlNo(String grpControlNo) {
-
-		this.grpControlNo = grpControlNo;
-
-	}
-
-	public String getTrnsctnPurposeCd() {
-
-		return trnsctnPurposeCd;
-
-	}
-
-	public void setTrnsctnPurposeCd(String trnsctnPurposeCd) {
-
-		this.trnsctnPurposeCd = trnsctnPurposeCd;
-
-	}
-
-	public String getTrnsctnTypeCd() {
-
-		return trnsctnTypeCd;
-
-	}
-
-	public void setTrnsctnTypeCd(String trnsctnTypeCd) {
-
-		this.trnsctnTypeCd = trnsctnTypeCd;
-
-	}
-
-	public String getServiceTypeCode() {
-
-		return serviceTypeCode;
-
-	}
-
-	public void setServiceTypeCode(String serviceTypeCode) {
-
-		this.serviceTypeCode = serviceTypeCode;
-
-	}
-
-	public String getReqstdBnftCd() {
-
-		return reqstdBnftCd;
-
-	}
-
-	public void setReqstdBnftCd(String reqstdBnftCd) {
-
-		this.reqstdBnftCd = reqstdBnftCd;
-
-	}
-
-	public String getAsOfDate() {
-
-		return asOfDate;
-
-	}
-
-	public void setAsOfDate(String asOfDate) {
-
-		this.asOfDate = asOfDate;
-
-	}
-
-	public String getToDate() {
-
-		return toDate;
-
-	}
-
-	public void setToDate(String toDate) {
-
-		this.toDate = toDate;
-
-	}
-
-	public String getSbmtPrvdrId() {
-
-		return sbmtPrvdrId;
-
-	}
-
-	public void setSbmtPrvdrId(String sbmtPrvdrId) {
-
-		this.sbmtPrvdrId = sbmtPrvdrId;
-
-	}
-
-	public String getSbmtPvdrLastName() {
-
-		return sbmtPvdrLastName;
-
-	}
-
-	public void setSbmtPvdrLastName(String sbmtPvdrLastName) {
-
-		this.sbmtPvdrLastName = sbmtPvdrLastName;
-
-	}
-
-	public String getSbmtPvdrFirstName() {
-
-		return sbmtPvdrFirstName;
-
-	}
-
-	public void setSbmtPvdrFirstName(String sbmtPvdrFirstName) {
-
-		this.sbmtPvdrFirstName = sbmtPvdrFirstName;
-
-	}
-
-	public String getSbmtPvdrMidName() {
-
-		return sbmtPvdrMidName;
-
-	}
-
-	public void setSbmtPvdrMidName(String sbmtPvdrMidName) {
-
-		this.sbmtPvdrMidName = sbmtPvdrMidName;
-
-	}
-
-	public String getSbmtPvdrTitle() {
-
-		return sbmtPvdrTitle;
-
-	}
-
-	public void setSbmtPvdrTitle(String sbmtPvdrTitle) {
-
-		this.sbmtPvdrTitle = sbmtPvdrTitle;
-
-	}
-
-	public String getSbmtPvdrAddr1() {
-
-		return sbmtPvdrAddr1;
-
-	}
-
-	public void setSbmtPvdrAddr1(String sbmtPvdrAddr1) {
-
-		this.sbmtPvdrAddr1 = sbmtPvdrAddr1;
-
-	}
-
-	public String getSbmtPvdrAddr2() {
-
-		return sbmtPvdrAddr2;
-
-	}
-
-	public void setSbmtPvdrAddr2(String sbmtPvdrAddr2) {
-
-		this.sbmtPvdrAddr2 = sbmtPvdrAddr2;
-
-	}
-
-	public String getSbmtPvdrCity() {
-
-		return sbmtPvdrCity;
-
-	}
-
-	public void setSbmtPvdrCity(String sbmtPvdrCity) {
-
-		this.sbmtPvdrCity = sbmtPvdrCity;
-
-	}
-
-	public String getSbmtPvdrState() {
-
-		return sbmtPvdrState;
-
-	}
-
-	public void setSbmtPvdrState(String sbmtPvdrState) {
-
-		this.sbmtPvdrState = sbmtPvdrState;
-
-	}
-
-	public String getSbmPvdrZipCd() {
-
-		return sbmPvdrZipCd;
-
-	}
-
-	public void setSbmPvdrZipCd(String sbmPvdrZipCd) {
-
-		this.sbmPvdrZipCd = sbmPvdrZipCd;
-
-	}
-
-	public String getsPCommunication1No() {
-
-		return sPCommunication1No;
-
-	}
-
-	public void setsPCommunication1No(String sPCommunication1No) {
-
-		this.sPCommunication1No = sPCommunication1No;
-
-	}
-
-	public String getSubscriberIdCd() {
-
-		return subscriberIdCd;
-
-	}
-
-	public void setSubscriberIdCd(String subscriberIdCd) {
-
-		this.subscriberIdCd = subscriberIdCd;
-
-	}
-
-	public String getMemberIdCd() {
-
-		return memberIdCd;
-
-	}
-
-	public void setMemberIdCd(String memberIdCd) {
-
-		this.memberIdCd = memberIdCd;
-
-	}
-
-	public String getEmployeeId() {
-
-		return employeeId;
-
-	}
-
-	public void setEmployeeId(String employeeId) {
-
-		this.employeeId = employeeId;
-
-	}
-
-	public String getSubsLastName() {
-
-		return subsLastName;
-
-	}
-
-	public void setSubsLastName(String subsLastName) {
-
-		this.subsLastName = subsLastName;
-
-	}
-
-	public String getSubsFirstName() {
-
-		return subsFirstName;
-
-	}
-
-	public void setSubsFirstName(String subsFirstName) {
-
-		this.subsFirstName = subsFirstName;
-
-	}
-
-	public String getSubsMidName() {
-
-		return subsMidName;
-
-	}
-
-	public void setSubsMidName(String subsMidName) {
-
-		this.subsMidName = subsMidName;
-
-	}
-
-	public String getSubsTitle() {
-
-		return subsTitle;
-
-	}
-
-	public void setSubsTitle(String subsTitle) {
-
-		this.subsTitle = subsTitle;
-
-	}
-
-	public String getPatientLastName() {
-
-		return patientLastName;
-
-	}
-
-	public void setPatientLastName(String patientLastName) {
-
-		this.patientLastName = patientLastName;
-
-	}
-
-	public String getPatientFirstName() {
-
-		return patientFirstName;
-
-	}
-
-	public void setPatientFirstName(String patientFirstName) {
-
-		this.patientFirstName = patientFirstName;
-
-	}
-
-	public String getPatientMidName() {
-
-		return patientMidName;
-
-	}
-
-	public void setPatientMidName(String patientMidName) {
-
-		this.patientMidName = patientMidName;
-
-	}
-
-	public String getPatientTitle() {
-
-		return patientTitle;
-
-	}
-
-	public void setPatientTitle(String patientTitle) {
-
-		this.patientTitle = patientTitle;
-
-	}
-
-	public String getPatientBirthdate() {
-
-		return patientBirthdate;
-
-	}
-
-	public void setPatientBirthdate(String patientBirthdate) {
-
-		this.patientBirthdate = patientBirthdate;
-
-	}
-
-	public String getRelationToSubsCode() {
-
-		return relationToSubsCode;
-
-	}
-
-	public void setRelationToSubsCode(String relationToSubsCode) {
-
-		this.relationToSubsCode = relationToSubsCode;
-
-	}
-
-	public String getPatientSexCode() {
-
-		return patientSexCode;
-
-	}
-
-	public void setPatientSexCode(String patientSexCode) {
-
-		this.patientSexCode = patientSexCode;
-
-	}
-
-	public String getEffectiveDate() {
-
-		return effectiveDate;
-
-	}
-
-	public void setEffectiveDate(String effectiveDate) {
-
-		this.effectiveDate = effectiveDate;
-
-	}
-
-	public String getReceivedTime() {
-
-		return receivedTime;
-
-	}
-
-	public void setReceivedTime(String receivedTime) {
-
-		this.receivedTime = receivedTime;
-
-	}
-
-	public String getPrvdrSbmTime() {
-
-		return prvdrSbmTime;
-
-	}
-
-	public void setPrvdrSbmTime(String prvdrSbmTime) {
-
-		this.prvdrSbmTime = prvdrSbmTime;
-
-	}
-
-	public String getPrvdrSbmDate() {
-
-		return prvdrSbmDate;
-
-	}
-
-	public void setPrvdrSbmDate(String prvdrSbmDate) {
-
-		this.prvdrSbmDate = prvdrSbmDate;
-
-	}
-
-	public String getTransactionCd() {
-
-		return transactionCd;
-
-	}
-
-	public void setTransactionCd(String transactionCd) {
-
-		this.transactionCd = transactionCd;
-
-	}
-
-	public String getPostedDt() {
-
-		return postedDt;
-
-	}
-
-	public void setPostedDt(String postedDt) {
-
-		this.postedDt = postedDt;
-
-	}
-
-	public String getSpvdrEntTypeQualCd() {
-
-		return spvdrEntTypeQualCd;
-
-	}
-
-	public void setSpvdrEntTypeQualCd(String spvdrEntTypeQualCd) {
-
-		this.spvdrEntTypeQualCd = spvdrEntTypeQualCd;
-
-	}
-
-	public String getSpvdrContactName() {
-
-		return spvdrContactName;
-
-	}
-
-	public void setSpvdrContactName(String spvdrContactName) {
-
-		this.spvdrContactName = spvdrContactName;
-
-	}
-
-	public String getSubsIdQualCode() {
-
-		return subsIdQualCode;
-
-	}
-
-	public void setSubsIdQualCode(String subsIdQualCode) {
-
-		this.subsIdQualCode = subsIdQualCode;
-
-	}
-
-	public String getSubsTrceRefNo() {
-
-		return subsTrceRefNo;
-
-	}
-
-	public void setSubsTrceRefNo(String subsTrceRefNo) {
-
-		this.subsTrceRefNo = subsTrceRefNo;
-
-	}
-
-	public String getDepIdQualCode() {
-
-		return depIdQualCode;
-
-	}
-
-	public void setDepIdQualCode(String depIdQualCode) {
-
-		this.depIdQualCode = depIdQualCode;
-
-	}
-
-	public String getDepTrceRefNo() {
-
-		return depTrceRefNo;
-
-	}
-
-	public void setDepTrceRefNo(String depTrceRefNo) {
-
-		this.depTrceRefNo = depTrceRefNo;
-
-	}
-
-	public String getCoverForPCPInd() {
-
-		return coverForPCPInd;
-
-	}
-
-	public void setCoverForPCPInd(String coverForPCPInd) {
-
-		this.coverForPCPInd = coverForPCPInd;
-
-	}
-
-	public String getEmpGroupIdCode() {
-
-		return empGroupIdCode;
-
-	}
-
-	public void setEmpGroupIdCode(String empGroupIdCode) {
-
-		this.empGroupIdCode = empGroupIdCode;
-
-	}
-
-	public String getPrvdrNetworkIdCode() {
-
-		return prvdrNetworkIdCode;
-
-	}
-
-	public void setPrvdrNetworkIdCode(String prvdrNetworkIdCode) {
-
-		this.prvdrNetworkIdCode = prvdrNetworkIdCode;
-
-	}
-
-	public String getAltRouteIdCode() {
-
-		return altRouteIdCode;
-
-	}
-
-	public void setAltRouteIdCode(String altRouteIdCode) {
-
-		this.altRouteIdCode = altRouteIdCode;
-
-	}
-
-	public String getAltRouteTypeCode() {
-
-		return altRouteTypeCode;
-
-	}
-
-	public void setAltRouteTypeCode(String altRouteTypeCode) {
-
-		this.altRouteTypeCode = altRouteTypeCode;
-
-	}
-
-	public String getEmployerName() {
-
-		return employerName;
-
-	}
-
-	public void setEmployerName(String employerName) {
-
-		this.employerName = employerName;
-
-	}
-
-	public String getRoutingId() {
-
-		return routingId;
-
-	}
-
-	public void setRoutingId(String routingId) {
-
-		this.routingId = routingId;
-
-	}
-
-	public String getRoutingTypeCode() {
-
-		return routingTypeCode;
-
-	}
-
-	public void setRoutingTypeCode(String routingTypeCode) {
-
-		this.routingTypeCode = routingTypeCode;
-
-	}
-
-	public String getCumbIdNo() {
-
-		return cumbIdNo;
-
-	}
-
-	public void setCumbIdNo(String cumbIdNo) {
-
-		this.cumbIdNo = cumbIdNo;
-
-	}
-
-	public String getPrvdrIdNo() {
-
-		return prvdrIdNo;
-
-	}
-
-	public void setPrvdrIdNo(String prvdrIdNo) {
-
-		this.prvdrIdNo = prvdrIdNo;
-
-	}
-
-	public String getPrvdrOrgNo() {
-
-		return prvdrOrgNo;
-
-	}
-
-	public void setPrvdrOrgNo(String prvdrOrgNo) {
-
-		this.prvdrOrgNo = prvdrOrgNo;
-
-	}
-
-	public String getSpComm1QualCode() {
-
-		return spComm1QualCode;
-
-	}
-
-	public void setSpComm1QualCode(String spComm1QualCode) {
-
-		this.spComm1QualCode = spComm1QualCode;
-
-	}
-
-	public String getVersionReleaseCode() {
-
-		return versionReleaseCode;
-
-	}
-
-	public void setVersionReleaseCode(String versionReleaseCode) {
-
-		this.versionReleaseCode = versionReleaseCode;
-
-	}
-
-	public String getMswContactCode() {
-
-		return mswContactCode;
-
-	}
-
-	public void setMswContactCode(String mswContactCode) {
-
-		this.mswContactCode = mswContactCode;
-
-	}
-
-	public String getSpCommunication2No() {
-
-		return spCommunication2No;
-
-	}
-
-	public void setSpCommunication2No(String spCommunication2No) {
-
-		this.spCommunication2No = spCommunication2No;
-
-	}
-
-	public String getSpComm2QualCode() {
-
-		return spComm2QualCode;
-
-	}
-
-	public void setSpComm2QualCode(String spComm2QualCode) {
-
-		this.spComm2QualCode = spComm2QualCode;
-
-	}
-
-	public String getEntityIdCode() {
-
-		return entityIdCode;
-
-	}
-
-	public void setEntityIdCode(String entityIdCode) {
-
-		this.entityIdCode = entityIdCode;
-
-	}
-
-	public String getPvdrIdCodeQualCode() {
-
-		return pvdrIdCodeQualCode;
-
-	}
-
-	public void setPvdrIdCodeQualCode(String pvdrIdCodeQualCode) {
-
-		this.pvdrIdCodeQualCode = pvdrIdCodeQualCode;
-
-	}
-
-	public String getFamilyLevelInd() {
-
-		return familyLevelInd;
-
-	}
-
-	public void setFamilyLevelInd(String familyLevelInd) {
-
-		this.familyLevelInd = familyLevelInd;
-
-	}
-
-	public String getPosCode() {
-
-		return posCode;
-
-	}
-
-	public void setPosCode(String posCode) {
-
-		this.posCode = posCode;
+		setDateSecLevPosted("0001-01-01");
 
 	}
 
 	
 
+	/**
+
+	 * @return the aetnaId
+
+	 */
+
+	public String getAetnaId() {
+
+		return aetnaId;
+
+	}
+
+
+
+	/**
+
+	 * @param aetnaId the aetnaId to set
+
+	 */
+
+	public void setAetnaId(String aetnaId) {
+
+		this.aetnaId = aetnaId;
+
+	}
+
+
+
+	public Date getLastLoginDt() {
+
+		return lastLoginDt;
+
+	}
+
+
+
+	public void setLastLoginDt(Date lastLoginDt) {
+
+		this.lastLoginDt = lastLoginDt;
+
+	}
+
+
+
+	public List<String> getMemberOf() {
+
+		return memberOf;
+
+	}
+
+
+
+	public void setMemberOf(List<String> memberOf) {
+
+		this.memberOf = memberOf;
+
+	}
+
+
+
 	
+
+	/**
+
+	 * Returns true if the member is part of the group sent in the input parameter.
+
+	 * 
+
+	 * @param groupName
+
+	 * @return boolean
+
+	 */
+
+	public boolean isMemberOf(String groupName)
+
+	{
+
+		if(memberOf == null || memberOf.isEmpty())
+
+				return false;
+
+		
+
+		for(String group : memberOf){
+
+			if(group.equalsIgnoreCase(groupName)){
+
+				return true;
+
+			}
+
+		}
+
+	
+
+		return false;
+
+	}
+
+
+
+	/**
+
+	 * @return the securityLevel
+
+	 */
+
+	public String getSecurityLevel() {
+
+		return securityLevel;
+
+	}
+
+
+
+	/**
+
+	 * @param securityLevel the securityLevel to set
+
+	 */
+
+	public void setSecurityLevel(String securityLevel) {
+
+		this.securityLevel = securityLevel;
+
+	}
+
+
+
+	/**
+
+	 * @return the name
+
+	 */
+
+	public String getName() {
+
+		return name;
+
+	}
+
+
+
+	/**
+
+	 * @param name the name to set
+
+	 */
+
+	public void setName(String name) {
+
+		this.name = name;
+
+	}
+
+
+
+	/**
+
+	 * @return the dateSecLevPosted
+
+	 */
+
+	public String getDateSecLevPosted() {
+
+		return dateSecLevPosted;
+
+	}
+
+
+
+	/**
+
+	 * @param dateSecLevPosted the dateSecLevPosted to set
+
+	 */
+
+	public void setDateSecLevPosted(String dateSecLevPosted) {
+
+		this.dateSecLevPosted = dateSecLevPosted;
+
+	}
+
+
 
 	
 
