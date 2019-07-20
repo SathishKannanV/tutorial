@@ -1,59 +1,23 @@
-<!--Chrome Upgrade-N127627--><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <!--END--><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!--Chrome Upgrade-N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+
+<!--Chrome Upgrade-N127627-->
+<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--END-->
+
 <HTML>
-<HEAD>
-<TITLE>UserLookupForm.html</TITLE>
-<SCRIPT>
-
-var relPath="<%=request.getContextPath()%>";
-	
-	$(document).ready( function(e) {
-	$('#LookUp').click(function(){
-		var action = relPath+'/usrsec/GatherUser';
-		$("#userForm").attr('action', action).submit();
-	});
-	
-	$('#Add').click(function(){
-		var action = relPath+'/usrsec/AddNewUserRow';
-		$("#userForm").attr('action', action).submit();	
-	});
-});
-
-</SCRIPT>
-</HEAD>
-<BODY bgcolor="#e1eeb9" onload=document.userForm.AetnaId.focus()>
-<H1 align="center">User Access </H1>
-<H4 align="center"> RTE Table Maintainance Access Look Up<BR>
-Values stored on the RBRC table.</H4>
-<P align="center"><I>Enter Aetna Id (lower case 'a'/'n'). Then Click LookUp</I></P>
-<DIV align="center">
-<form:form commandName="rbrcVO" name="userForm" id="userForm"  method="POST">
-<TABLE>
-    <TBODY>
-        <TR>
-            <TD>Aetna Id</TD>
-            <TD><form:input path="dbRiderCd" id="dbRiderCd" size="7" type="text" name="AetnaId" tabindex="1" maxlength="7"/></TD>
-        </TR>
-         <TR>
-            <TD>Site Code (all Zs)</TD>
-            <TD><form:input path="dbSiteCd" id="dbSiteCd" size="5" type="text" readonly="true" name="SiteCd" tabindex="2" maxlength="4" value="ZZZZ"/></TD>
-        </TR>
-        <TR>
-            <TD>Service Type (all 9s)</TD>
-            <TD><form:input path="dbSvcTypeCd" id="dbSvcTypeCd" size="5" type="text" readonly="true" name="SvcTypeCd" tabindex="3" maxlength="5"  value="99999"/></TD>
-        </TR>
-    </TBODY>
-</TABLE>
-<BR>
-<INPUT type="button" id="LookUp" value="Look Up" tabindex="4" style="margin-left: 20px">
-<INPUT type="button" id="Add" value="Add New" style="margin-left: 20px" tabindex="5" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if> ><BR>
-<BR>
-</form:form>
-</DIV>
+<BODY align="left" style="font-size: 9pt" bgcolor="#e1eeb9">
+<P>
+<FONT  face="ARIAL">
+<P><c:out value="${userMessage}"></c:out></P><br>
+</FONT>
+</P>
 </BODY>
 </HTML>
