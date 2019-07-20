@@ -1,22 +1,18 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.web.controller;
-
-
-
-import java.util.HashMap;
-
-import java.util.LinkedHashMap;
-
-import java.util.LinkedList;
-
-import java.util.List;
-
-import java.util.Map;
 
 
 
 import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
 
 import org.apache.commons.logging.Log;
 
@@ -34,41 +30,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
 import org.springframework.web.servlet.ModelAndView;
 
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
+import org.springframework.web.servlet.view.RedirectView;
 
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+
 
 import com.aetna.prvrte.rteintranet.facade.Facade;
-
-import com.aetna.prvrte.rteintranet.translator.RTETranslator;
 
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
-import com.aetna.prvrte.rteintranet.vo.LookUpTableListVO;
-
-import com.aetna.prvrte.rteintranet.vo.RbrcVO;
+import com.aetna.prvrte.rteintranet.vo.UserVO;
 
 
 
 /**
 
- * 
-
- * The UserController is responsible for handling
-
- * ModelAndView the request and return a ModelAndView object which the
-
- * DispatcherServlet will render as view
-
- * 
-
- * @author N624926
+ * @author N657186
 
  * Cognizant_Offshore
 
@@ -76,37 +56,9 @@ import com.aetna.prvrte.rteintranet.vo.RbrcVO;
 
 @Controller
 
-@RequestMapping(value = "/usrsec/*")
+public class UserSecurityLevelController {
 
-public class UserController {
-
-
-
-	/*
-
-	 * Tile name of the user Home view.
-
-	 */
-
-	public static final String USER_HOME = ".userHome";
-
-	/*
-
-	 * Tile name of the user Display view.
-
-	 */
-
-	public static final String USER_LOOKUP = ".userLookUpDisplay";
-
-	/*
-
-	 * Tile name of the Add New user Form view.
-
-	 */
-
-	public static final String USER_ADD = ".userAdd";
-
-
+	
 
 	/*
 
@@ -114,7 +66,7 @@ public class UserController {
 
 	 */
 
-	private static final Log log = LogFactory.getLog(UserController.class);
+	private static final Log log = LogFactory.getLog(UserSecurityLevelController.class);
 
 	
 
@@ -140,145 +92,65 @@ public class UserController {
 
 	
 
-	/*
-
-	 * Model and view of failure operation.
-
-	 */
-
 	private ModelAndView errormav;
 
-	
 
-	/**
 
-	 * Method to getUserLookUpHome view
+	@RequestMapping(value="/home", method ={ RequestMethod.POST , RequestMethod.GET})
 
-	 * 
-
-	 * @param model
-
-	 * 
-
-	 * @return view of userLookUp, if fails return error page
-
-	 */
-
-	@RequestMapping(value="/userHome", method ={ RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView getUserLookUpHome(final HttpServletRequest request,Model model) {	
-
-		log.warn("Entered UserController - getUserLookUpHome()");
-
-		String securityLevel ="";
-
-		try {
-
-		securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-		ModelAndView mav = new ModelAndView(USER_HOME, "rbrcVO",  new RbrcVO());
-
-		mav.addObject("securityLevel", securityLevel);
-
-		log.warn("UserController - securityLevel: "+ securityLevel);
-
-		log.warn("Exit from UserController - getUserLookUpHome()");
-
-		return mav;
-
-		} catch (ApplicationException e){
-
-			log.error("Exception occured in UserController - getUserLookUpHome() method:"+e.getErrorMessage());
-
-			String errorMsg ="Error encountered when extracting data from the database (GatherProcex). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-	}
-
-	
-
-	/**
-
-	 * Method to get the getUserLookUpTable List from data store.
-
-	 * 
-
-	 * @param rbrcVO
-
-	 *            form view object of rbrc.
-
-	 * @return view of userDisplay, if fails return error page
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/GatherUser", method = RequestMethod.POST)
-
-	public ModelAndView getUserLookUpTable(HttpServletRequest request,@ModelAttribute("userForm")RbrcVO rbrcVO){
-
-		log.warn("Entered UserController - getUserLookUpTable()");
-
-		String securityLevel ="";
-
-		ModelAndView mav ;
-
-		Map userResultMap = new HashMap();
-
-		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
+	public ModelAndView getSecurityLevel(final HttpServletRequest request, final HttpSession session,Model model){
 
 		try{
 
-			RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
+			log.error("getSecurityLevel Login Start");
 
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+			String userMsg = "";
 
-			userResultMap = facade.getUserLookUpTable(rbrcDTO);
+			log.warn("UserSecurityLevelController getSecurityLevel() : IsSessionNull " + (session == null));
 
-			if(userResultMap.get("rbrcList")!=null){
+			UserVO currentUser = (UserVO) session.getAttribute("user");
 
-				rbrcDtoList = (List<RbrcDTO>) userResultMap.get("rbrcList");
+			log.warn("UserSecurityLevelController getSecurityLevel() : IsCurrentUserNull " + (currentUser == null));
 
-				rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
+			if(currentUser != null) {
 
-			}
+				String firstName = RteIntranetUtils.getTrimmedString(currentUser.getFirstName());
 
-			lookUpListVO.setRbrcVOList(rbrcVoList);
+				String lastName = RteIntranetUtils.getTrimmedString(currentUser.getLastName());
 
-			facade.getApplicationState().setRbrcList(rbrcVoList);
+				if(!"".equals(firstName) || !"".equals(lastName)){
 
-			mav = new ModelAndView(USER_LOOKUP, "lookUpListVO", lookUpListVO);
+					userMsg = ApplicationConstants.WELCOME + firstName+ " "+lastName;
 
-			mav.addObject("userMessage", userResultMap.get("newMessage"));
+				}
 
-			mav.addObject("securityLevel", securityLevel);
+			} 
 
-			log.warn("getUserLookUpTable - userMessage: "+ userResultMap.get("newMessage"));
+			mav = new ModelAndView(".rteHome", "userVO", currentUser);
 
-			log.warn("Exit from UserController - getUserLookUpTable()");
+			log.warn("user message: "+ userMsg);
+
+			mav.addObject("userMessage", userMsg);
+
+			mav.addObject("securityLevel", RteIntranetUtils.getUserSecurityLevel(request));
+
+			log.error("getSecurityLevel Login End");
 
 			return mav;
 
-		}catch (ApplicationException e){
+			
 
-			log.error("Exception occured in UserController - getUserLookUpTable() method:"+RteIntranetUtils.getTrimmedString(e.getErrorMessage()));
+		}catch (Exception e){
 
-			String errorMsg ="getUserLookUpTable() :"+ApplicationConstants.ERROR_GET_LOOKUP + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+			log.error("Exception occured in UserSecurityLevelController - getSecurityLevel() method:"+e.getMessage());
 
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
+			
+
+			String errorMsg ="Error encountered getting security level from the database (UserSecurityLevel). "+
+
+			RteIntranetUtils.getTrimmedString(e.getMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
 
 			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
 
@@ -286,707 +158,21 @@ public class UserController {
 
 		}
 
-	}
-
-	
-
-	
-
-	/**
-
-	 * Method to display get add new User form home view.
-
-	 * 
-
-	 * @return view of loadAddNewUserRowScreen, if fails return error page
-
-	 */
-
-	@RequestMapping(value="/AddNewUserRow")
-
-	public ModelAndView loadAddNewUserRowScreen(Model model) {	
-
-		log.warn("Entered UserController - loadAddNewUserRowScreen()");
-
-		ModelAndView mav = new ModelAndView(USER_ADD, "rbrcVO",  new RbrcVO());
-
-		log.warn("Exit from UserController - loadAddNewUserRowScreen()");
-
-		return mav;
-
-	}
-
-	
-
-	/**
-
-	 * Method to add the data database
-
-	 * 
-
-	 * @param rbrcVO form view object of Rbrc.
-
-	 * @return view of userDisplay, if fails return error page
-
-	 * 
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/AddUser", method = RequestMethod.POST)
-
-	public ModelAndView addNewUser(@ModelAttribute("addUserForm")RbrcVO rbrcVO,final HttpServletRequest request){
-
-		log.warn("Entered UserController - addNewUser()");
-
-		ModelAndView mav ;
-
-		Map userResultMap = new HashMap();
-
-		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
-
-		String securityLevel ="";
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-			RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
-
-			userResultMap = facade.addNewUser(rbrcDTO);
-
-			if(userResultMap.get("rbrcList")!=null){
-
-				rbrcDtoList = (List<RbrcDTO>) userResultMap.get("rbrcList");
-
-				rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
-
-			}
-
-			lookUpListVO.setRbrcVOList(rbrcVoList);
-
-			facade.getApplicationState().setRbrcList(rbrcVoList);
-
-			mav = new ModelAndView(USER_LOOKUP, "lookUpListVO", lookUpListVO);
-
-			mav.addObject("securityLevel", securityLevel);
-
-			mav.addObject("userMessage", userResultMap.get("rbrcMessage"));
-
-			log.warn("addNewUser - userMessage: "+ userResultMap.get("rbrcMessage"));
-
-			log.warn("Exit from UserController - addNewUser()");			
-
-			return mav;	
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in UserController - addNewUser() method:"+RteIntranetUtils.getTrimmedString(e.getErrorMessage()));
-
-			String errorMsg ="addNewUser() :"+ApplicationConstants.ERROR_ADD_ROW + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
 		
 
-	}
+		}
 
 	
 
-	/**
-
-	 * Method to delete the Rbrc List from data store.
-
-	 * @param lookUpListVO
-
-	 *            lookUpListVO object from view
-
-	 * @param takeAction
-
-	 * 			List of selected index.
-
-	 * @return view of rbrcDisplay, if fails return error page
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/deleteUser", method = RequestMethod.POST)
-
-	public ModelAndView deleteUser(final HttpServletRequest request,@ModelAttribute("userDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered UserController - deleteUser()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		boolean isRbrcDeleted = true;
-
-		String securityLevel ="";
-
-		Map userResultMap = new HashMap();
-
-		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			rbrcList = lookUpListVO.getRbrcVOList();
-
-			int i;
-
-			if ((rbrcList != null) && (takeAction != null)) {
-
-				for(RbrcVO rbrcVO : rbrcList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-				for (int j = takeAction.length - 1; j >= 0; j--) {
-
-					i = Integer.parseInt(takeAction[j]);
-
-
-
-					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
-
-					if (existingRbrc.getDbUpdatedInd() != ApplicationConstants.COPY) {
-
-						RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(existingRbrc);
-
-						userResultMap = facade.deleteUser(rbrcDTO);
-
-						rbrcMsg = (String) userResultMap.get("rbrcMsg");
-
-						isRbrcDeleted = (Boolean) userResultMap.get("isRbrcDeleted");
-
-						
-
-						if(isRbrcDeleted == true){
-
-							rbrcList.remove(i);
-
-						}else{
-
-							j = 0;
-
-						}
-
-					}else{
-
-						rbrcList.remove(i);
-
-					}				
-
-			}
-
-				if(isRbrcDeleted == true)
-
-					rbrcMsg = "Rows selected were Deleted in the database/list";
-
-				
-
-		}else
-
-			rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			facade.getApplicationState().setRbrcList(rbrcList);
-
-			lookUpListVO.setRbrcVOList(rbrcList);
-
-			mav = new ModelAndView(USER_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		    mav.addObject("userMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("deleteUser - userMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from UserController - deleteUser()");
-
-			return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in UserController - deleteUser() method:"+RteIntranetUtils.getTrimmedString(e.getErrorMessage()));
-
-			String errorMsg ="deleteUser() :"+ApplicationConstants.ERROR_DELETE_ROW + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-		
-
-	}
+	
 
 	
 
-	/**
-
-	 * Method to copy the Rbrc List from data store.
-
-	 * @param lookUpListVO
-
-	 *            lookUpListVO object from view
-
-	 * @param takeAction
-
-	 * 			List of selected index.
-
-	 * @return view of userDisplay, if fails return error page
-
-	 */
-
-	@RequestMapping(value="/copyUser", method = RequestMethod.POST)
-
-	public ModelAndView copyUser(final HttpServletRequest request,@ModelAttribute("userDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered from UserController - copyUser()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		String securityLevel ="";
-
-		int i;
-
-		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			rbrcList = lookUpListVO.getRbrcVOList();
-
-			if ((rbrcList != null) && (takeAction != null)) {
-
-				for(RbrcVO rbrcVO : rbrcList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-				for (int j = 0; j < takeAction.length; j++) {
-
-					i = Integer.parseInt(takeAction[j]);
-
-					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
-
-					
-
-					RbrcVO copyRbrc = new RbrcVO(existingRbrc.getDbSiteCd(), existingRbrc.getDbRiderCd() , existingRbrc.getDbSvcTypeCd() ,
-
-							existingRbrc.getDbPostedDate(),  existingRbrc.getDbDescTxt() , existingRbrc.getDbIONtwkCd() ,
-
-							existingRbrc.getDbTOSCd() , existingRbrc.getDbHMOSrcBnInd() , existingRbrc.getTextSendInd() ,
-
-							existingRbrc.getPrevCareInd() , existingRbrc.getGenderCd() ,
-
-							ApplicationConstants.COPY);
-
-					rbrcList.add(copyRbrc);
-
-				}
-
-				rbrcMsg = "Copied rows were placed at the bottom of the list and highlighted.";
-
-			}else
-
-				rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			facade.getApplicationState().setRbrcList(rbrcList);
-
-			lookUpListVO.setRbrcVOList(rbrcList);
-
-			mav = new ModelAndView(USER_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		    mav.addObject("userMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("copyUser - userMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from UserController - copyUser()");
-
-			return mav;		
-
-		}catch (Exception e){
-
-			log.error("Exception occured in UserController - copyUser() method:"+e.getMessage());
-
-			String errorMsg ="copyUser() :"+ApplicationConstants.ERROR_COPY_ROW + RteIntranetUtils.getTrimmedString(e.getMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-				
-
-	}
-
 	
-
-	/**
-
-	 * Method to Add/Update the Rbrc List from data store.
-
-	 * @param lookUpListVO
-
-	 *            lookUpListVO object from view
-
-	 * @param takeAction
-
-	 * 			List of selected index.
-
-	 * @return view of rbrcDisplay, if fails return error page
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/addUpdateUser", method = RequestMethod.POST)
-
-	public ModelAndView addUpdateUser(final HttpServletRequest request,@ModelAttribute("userDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered from UserController - addUpdateUser()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		String securityLevel ="";
-
-		List<RbrcVO> updatedrbrcList = new LinkedList<RbrcVO>();
-
-		List<RbrcDTO> updatedRbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
-
-		List<RbrcVO> modifiedRbrcVoList = new LinkedList<RbrcVO>();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>(); 
-
-		boolean isRbrcAddOrUpdated = false;
-
-		Map userResultMap = new HashMap();
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			 rbrcVoList = facade.getApplicationState().getRbrcList();
-
-			 modifiedRbrcVoList = lookUpListVO.getRbrcVOList();
-
-			int i;
-
-			if (takeAction != null && takeAction.length != 0) {
-
-				if(rbrcVoList != null && rbrcVoList.size() != 0 
-
-						&& modifiedRbrcVoList.size() != 0 && modifiedRbrcVoList != null){
-
-				for(RbrcVO rbrcVO : rbrcVoList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-				rbrcDtoList = RTETranslator.toRbrcDTOList(rbrcVoList);
-
-				for (int j = 0; j < takeAction.length; j++) {
-
-					char updatedInd = ApplicationConstants.UPDATE_IND_Y;
-
-					i = Integer.parseInt(takeAction[j]);
-
-					RbrcVO seletedRbrc = (RbrcVO) rbrcVoList.get(i);
-
-					RbrcVO editedRbrc = (RbrcVO) modifiedRbrcVoList.get(i);
-
-					RbrcVO editedRbrcVO = new RbrcVO(editedRbrc.getDbSiteCd(), editedRbrc.getDbRiderCd() , editedRbrc.getDbSvcTypeCd() ,
-
-							editedRbrc.getDbPostedDate(),  editedRbrc.getDbDescTxt() , editedRbrc.getDbIONtwkCd() ,
-
-							editedRbrc.getDbTOSCd() , editedRbrc.getDbHMOSrcBnInd() , editedRbrc.getTextSendInd() ,
-
-							editedRbrc.getPrevCareInd() , editedRbrc.getGenderCd(),updatedInd);
-
-					RbrcDTO editedRbrcDTO = RTETranslator.toRbrcDTO(editedRbrcVO);
-
-					userResultMap = facade.addUpdateUser(editedRbrcDTO, rbrcDtoList, i , seletedRbrc.getDbUpdatedInd());
-
-					updatedRbrcDtoList = (List<RbrcDTO>) userResultMap.get("rbrcDtoList");
-
-					updatedrbrcList = RTETranslator.toRbrcVOList(updatedRbrcDtoList);
-
-					isRbrcAddOrUpdated = (Boolean) userResultMap.get("isRbrcAddOrUpdated") ;
-
-					rbrcMsg = (String) userResultMap.get("rbrcMsg") ;
-
-					if(isRbrcAddOrUpdated!= true){
-
-						j = takeAction.length;
-
-					}
-
-				}
-
-				if(isRbrcAddOrUpdated==true){
-
-					rbrcMsg = "Rows added were placed at the bottom of the list. All rows that changed the database are highlighted.";
-
-					String xSiteCd, ySiteCd, xUserId, yUserId, xSTC, ySTC;
-
-					for (int x = updatedrbrcList.size() - 1 ; x > 0;  x--) {
-
-						RbrcVO xRbrc = (RbrcVO) updatedrbrcList.get(x);
-
-						xSiteCd= xRbrc.getDbSiteCd();
-
-						xUserId= xRbrc.getDbRiderCd();
-
-						xSTC = xRbrc.getDbSvcTypeCd();
-
-						if (xRbrc.getDbUpdatedInd() != 'C') {
-
-							for (int y = x - 1; y > -1; y--) {
-
-								RbrcVO yRbrc = (RbrcVO) updatedrbrcList.get(y);
-
-								ySiteCd= yRbrc.getDbSiteCd();
-
-								yUserId= yRbrc.getDbRiderCd();
-
-								ySTC = yRbrc.getDbSvcTypeCd();
-
-								if (xSiteCd.equals(ySiteCd) && xUserId.equals(yUserId)&&xSTC.equals(ySTC)) {
-
-									updatedrbrcList.remove(y); 
-
-									x--;
-
-								}
-
-							}
-
-						}
-
-					}
-
-				}
-
-				lookUpListVO.setRbrcVOList(updatedrbrcList);
-
-				facade.getApplicationState().setRbrcList(updatedrbrcList);
-
-				} else {
-
-					throw new ApplicationException(ApplicationConstants.SESSION_EXPIRED);	
-
-				}
-
-		}else{
-
-			rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			lookUpListVO.setRbrcVOList(rbrcVoList);
-
-			facade.getApplicationState().setRbrcList(rbrcVoList);
-
-		}
-
-			mav = new ModelAndView(USER_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		    mav.addObject("userMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("addUpdateUser - rbrcMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from UserController - addUpdateUser()");
-
-			return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in UserController - addUpdateUser() method:"+RteIntranetUtils.getTrimmedString(e.getErrorMessage()));
-
-			String errorMsg ="addUpdateUser() :"+ApplicationConstants.ERROR_ADD_UPDATE_ROW + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-		
-
-	}
 
 	
 
 
-
-	/**
-
-      * Method to export USER look up table to excel work book
-
-      * 
-
-      * @param lookUpTableListVO
-
-      *            list of user object.
-
-      * @param response
-
-      *            response object to return
-
-      * @return exported file to view.
-
-      */
-
-      @RequestMapping(value = "/userExport", method = RequestMethod.POST)
-
-      public ModelAndView userExport(HttpServletResponse response){
-
-            List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
-            LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-      String userMsg="";
-
-            try{
-
-                  rbrcList = facade.getApplicationState().getRbrcList();
-
-                  if(rbrcList != null && rbrcList.size() != 0){
-
-                  // Key map to create header
-
-                  Map<String,String> keyMap = new LinkedHashMap<String,String>();
-
-                  keyMap.put("dbDescTxt", "User Name");
-
-                  keyMap.put("dbRiderCd", "Aetna Id");
-
-                  keyMap.put("dbIONtwkCd", "Access Level");
-
-                  keyMap.put("dbSiteCd", "Site Code");
-
-                  keyMap.put("dbSvcTypeCd", "Svc Type");
-
-                  keyMap.put("dbTOSCd", "TOS Code");
-
-                  RteIntranetUtils.exportToExcel(response, rbrcList, keyMap);
-
-                  userMsg = "LookUp table exported successfully.";
-
-                  } else {
-
-                        userMsg = "No data found.";
-
-                  }
-
-                lookUpTableListVO.setRbrcVOList(rbrcList);  
-
-              mav = new ModelAndView(USER_LOOKUP,"lookUpTableListVO", lookUpTableListVO);
-
-                mav.addObject("userMessage",userMsg);
-
-                  return mav;
-
-            }catch (ApplicationException e) {
-
-                  log.error("Exception occured in UserController - userExport() method:"
-
-                              + e.getMessage());
-
-                  String errorMsg = "Error encountered while export to excel. ";
-
-                  errorMsg.concat(e.toString());
-
-                  errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-                  errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
-
-                  return errormav;
-
-            }
-
-      }
-
-      
-
-      /**
-
-  	 * Method to display error view.
-
-  	 * 
-
-  	 * @return error page
-
-  	 */
-
-  	@RequestMapping(value = "/error", method = {RequestMethod.GET,RequestMethod.POST})
-
-  	public ModelAndView getErrorPage() {
-
-  		 log.warn("----------------------- Enter UserController  - getErrorPage() ");
-
-  			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-  			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,ApplicationConstants.ERROR_IN_BULK_SUBMIT);
-
-  			 log.warn("----------------------- Exit UserController  - getErrorPage() : "
-
-                                + ApplicationConstants.ERROR_IN_BULK_SUBMIT);
-
-  			return errormav;
-
-  		
-
-  	}
 
 }
 
