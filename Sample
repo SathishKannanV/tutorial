@@ -37,8 +37,12 @@ $(document).ready(function(){
 			
 		});
 	});
+function ModuleView(){
+var relPath="<%=request.getContextPath()%>";
+var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longRunTransModuleHelp';
+window.open(adasvctLookUpPath,null, "height=600,width=750,scrollbars,resizable");
+	}
 </script>
-
 </head>
 <body style="font-size: 10pt" bgcolor="#e1eeb9">
 	<font face="ARIAL"></font>
@@ -50,26 +54,25 @@ $(document).ready(function(){
 	
 	<c:choose>
 							<c:when test="${(reportNumber ne 'Report1')}">
-								<b><font size="+2">LONG RUNNING TRANSACTION REPORT BY MODULES</font> </B>
+								<b><font size="+2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT BY MODULES</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a> </B>
 							</c:when>
 							<c:when test="${(reportNumber ne 'Report2')}">
-								<b><font size="+2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT BY TRANSACTIONS</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a> </B>
+								<b><font size="+2">LONG RUNNING TRANSACTION REPORT BY TRANSACTIONS</font> </B>
 							</c:when>
 						</c:choose>
 		<center>
-		<h2 align="center"><FONT color="black"><nav>
-				<div class="box1"><a
+		<h2 align="center"><FONT color="black"><nav>				
+				<div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
-					by Transactions</a></div> <div class="box"><a
+					by Transactions</a></div> <div class="box1"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
 					by Modules</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
 					by Minutes</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
 					by Category</a></div>
-			</nav></FONT></h2>	
-
+			</nav></FONT></h2>		
 	</center>
 
 	<center>
@@ -85,7 +88,8 @@ $(document).ready(function(){
 						<td width="100" style="font-weight: bold">Type Code</td>
 						<c:choose>
 							<c:when test="${(reportNumber ne 'Report1')}">
-								<td width="30" style="font-weight: bold">Module Name</td>
+							
+								<td width="30" style="font-weight: bold"><u><A href="javascript:ModuleView()">Module</A></u></td>
 							</c:when>
 						</c:choose>
 						
