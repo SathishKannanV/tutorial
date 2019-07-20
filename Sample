@@ -1,62 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<!--Chrome Upgrade-N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
+<html>
 
-<configuration>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+  <title>Login To Aetna</title>
+<SCRIPT LANGUAGE="JavaScript">
+function resetCredFields()
+{
+  document.Login.PASSWORD.value = "";
+}
+</SCRIPT>
 
- 
-	<appender name="CA" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder>
-			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
+</head>
 
-	<appender name="RFA" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/var/webapps/RteIntranet2/log/RteIntranet_debug.log</file>
-    		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      			<fileNamePattern>RteIntranet_debug.%i.log.zip</fileNamePattern>
-      			<minIndex>1</minIndex>
-      			<maxIndex>3</maxIndex>
-		</rollingPolicy>
-		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      			<maxFileSize>5MB</maxFileSize>
-    		</triggeringPolicy>
-		<encoder>
-			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
+<body BGCOLOR="#ffffff" TEXT="#000000" onLoad = "resetCredFields();">
 
- 
+<!-- Customer Brand -->
+<IMG alt=Logo src="https://www.aetna.com/assets/graphics/chrome_logo.gif">
 
-	<!-- CXF request/response logging -->
-	<logger name="com.aetna.aetnainternational.serviceagents.wrapper" level="WARN" additivity="false">
-		<appender-ref ref="RFA"/>
-	</logger>
-	
-	<root level="INFO">
-		<appender-ref ref="RFA"/>
-	</root>
+<div align="center">
+<form NAME="Login" action="aefw_security_check" METHOD="POST">
+<INPUT TYPE=HIDDEN NAME="SMENC" VALUE="ISO-8859-1">
+<INPUT type=HIDDEN name="SMLOCALE" value="US-EN">
 
-	<appender name="RFAE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>/var/webapps/RteIntranet2/log/RteIntranet_error.log</file>
-    		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      			<fileNamePattern>CSW_error.%i.log.zip</fileNamePattern>
-      			<minIndex>1</minIndex>
-      			<maxIndex>3</maxIndex>
-		</rollingPolicy>
-		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-      			<maxFileSize>5MB</maxFileSize>
-    		</triggeringPolicy>
-		<encoder>
-			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
- </appender>
 
-   <root level="ERROR">
-    <appender-ref ref="CA"/>
-   <appender-ref ref="RFAE"/>
-  </root>
-  
-  <root level="WARN">
-		<appender-ref ref="RFA"/>
-	</root>
-  
-</configuration>
+<!-- outer table with border -->
+<table width="50%" height=200 border=1 cellpadding=0 cellspacing=0 >
+  <tr> 
+    <td>
+	  <!-- Login table -->
+      <table WIDTH="100%" HEIGHT=200 BGCOLOR="#FFEFD5" border=0 cellpadding=0 cellspacing=0 >
+
+	<tr>
+	  <td ALIGN="CENTER" VALIGN="middle" HEIGHT=40 COLSPAN=4 NOWRAP BGCOLOR="#FFDAB9">
+		<font size="+1" face="Arial,Helvetica">
+		<b>Please Login</b></font>
+	      </td>
+	</tr>
+
+	<tr> <td colspan=4 height=10> <font size=1> &nbsp; </font> </td> </tr>
+
+	<tr>
+	  <td WIDTH=20 >&nbsp;</td>
+	  <td ALIGN="LEFT" > 
+		    <b><font size=-1 face="arial,helvetica" ><label for="aefw_username">Username:</label> </font></b>
+		  </td>
+	  <td ALIGN="LEFT" >
+			&nbsp; <input type="text" name="aefw_username" size="30" style="margin-left: 1px" value="X058591"/>  <!-- Do *NOT* change name of field, must be USER -->
+		  </td>
+	  <td WIDTH=20 >&nbsp;</td>
+	</tr>
+
+	<tr> <td colspan=4 height=10> <font size=1> &nbsp; </font> </td> </tr>
+
+	<tr>
+	  <td WIDTH=20 >&nbsp;</td>
+	  <td >
+		    <b><font size=-1 face="arial,helvetica" > <label for="aefw_password">Password:</label></font></b>
+	      </td>
+	  <td ALIGN="left" >
+			&nbsp;  <input type="password" name="aefw_password" size="30" style="margin-left: 1px" value ="##Z42B$H" />  <!-- Do *NOT* change name of field, must be PASSWORD -->
+	  </td>
+	  <td WIDTH=20 >&nbsp;</td>
+	</tr>
+
+	<tr> <td colspan=4 height=10> <font size=1> &nbsp; </font> </td> </tr>
+
+	<tr>
+	  <td colspan=4 NOWRAP WIDTH="50%" HEIGHT="25" align="CENTER">
+	  		<!-- BEGIN: Required Siteminder fields; do *NOT* change or remove. -->
+	      <input type=hidden name=target value="$$target$$">
+	      <input type=hidden name=smauthreason value="$$smauthreason$$">
+	  		<!-- END: Required Siteminder fields; do *NOT* change.remove. -->
+	      
+	  		<!-- BEGIN: Optional Siteminder fields. -->
+	      <input type=hidden name=postpreservationdata value="$$postpreservationdata$$">
+	  		<!-- END: Optional Siteminder fields. -->
+
+	      <input type="submit" value="Login" onClick="submitForm();">
+	  </td>
+	</tr>
+
+	<tr> <td colspan=4 height=5> <font size=1> &nbsp; </font> </td> </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+
+<script language="javascript">
+  document.forms["Login"].elements["USER"].focus();
+</script>
+
+</body>
+</html>
