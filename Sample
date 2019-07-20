@@ -1,56 +1,163 @@
-<%@page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
-<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
-<head>
-<title>RTE Testing Tool</title>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<link rel="stylesheet" type="text/css"
-	href="${context}/css/datepicker.css">
-<link rel="stylesheet" type="text/css"
-	href="${context}/css/jquery-ui.css">
-<link rel="stylesheet" type="text/css"
-	href="${context}/css/LongRunTab.css">
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-<script type="text/javascript"
-	src="${context}/js/jquery/dateValidator.js"></script>
-<script type="text/javascript" src="${context}/js/jquery/jquery-ui.js"></script>
-<script>
-$(document).ready(function(){
-		var rtePath = "<%=request.getContextPath()%>";
-		$("#Home").click(function(){
-			var HomePath = rtePath + "/eventtrack/testingtool/testingtoolHome";
-			
-				$("#testingtoolForm").attr('action',HomePath).submit();
-			
-		});
-	});
-</script>
-</head>
-<BODY bgcolor="#e1eeb9">
-	<H1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RTE TESTING TOOL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/RTE Testing Tool Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></H1>
-	<form:form commandName="testingToolVO" name="testingtoolForm"
-		id="testingtoolForm" method="POST">
 
-		<c:if test="${requestScope.isSessionActive }">
-			<c:out value="Welcome Session" />
-		</c:if>
-		<c:set var="message" value="${message}"></c:set>
-		<c:set var="messageMailGroup" value="${messageMailGroup}"></c:set> 
-		<c:set var="FTPmessage" value="${FTPmessage}"></c:set> 
-		<br><br>
-	<center><H2><P>The request has been submitted.<br>
-	<br> Response will be sent to the mail group  <c:out value="${messageMailGroup}"></c:out> <br>
-	<br>For any issues or mail not received, please contact RTE AD Team.
-	<br>
-	</P></H2>
-	<H2><P><c:out value="${FTPmessage}"></c:out>
-	<br></P></H2>
-	<input type="button" name="LookUp" value="Home"
-				style="padding-left: 1mm; padding-right: 1mm" id="Home" ></center>
-	</form:form>
-	</BODY>
+<!--Chrome Upgrade-N127627-->
+<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--END-->
+<c:set var="userMessage" value="${userMessage}"></c:set>
+<HEAD>
+<TITLE>UserDisplay.jsp</TITLE>
+<STYLE type="text/css"></STYLE>
+<SCRIPT>
+var relPath="<%=request.getContextPath()%>";
+$(document).ready( function(e) {
+
+$('#LookUp').click(function(){
+	var action = relPath+'/usrsec/userHome';
+	$("#userDisplayForm").attr('action', action).submit();	
+	});
+
+$('#deleteBtn').click(function(){
+var action = relPath+'/usrsec/deleteUser';
+	$("#userDisplayForm").attr('action', action).submit();
+	});
+	
+	$('#copyBtn').click(function(){
+var action = relPath+'/usrsec/copyUser';
+	$("#userDisplayForm").attr('action', action).submit();
+	});
+	
+	$('#addUpdateBtn').click(function(){
+var action = relPath+'/usrsec/addUpdateUser';
+	$("#userDisplayForm").attr('action', action).submit();
+	});
+	
+$('#exportBtn').click(function(){
+var action = relPath+'/usrsec/userExport';
+	$("#userDisplayForm").attr('action', action).submit();
+	});
+});
+</SCRIPT>
+</HEAD>
+<BODY style="font-size: 9pt" bgcolor="#e1eeb9"><FONT face="arial">
+<P><c:out value="${userMessage}"></c:out></P>
+<BR><BR>
+<CENTER><B><FONT size="+2">User and Granted Access List</FONT></B>
+</CENTER>
+<FONT face="arial"><BR>
+To make a change on the database using these rows, change any field to the appropriate value, click on the Take Action square for every row changed and then click on the button for the action desired. Multiple rows may be selected for any given action. <BR>
+<BR>
+Labels that are <B>bold</B> identify key columns. A change to any value in these columns will <B>Add</B> rows to the database, not update existing rows.
+<BR><BR>
+Values that are 'blued out' can not be changed.
+</FONT><BR>
+<form:form commandName="lookUpListVO" name="userDisplayForm" id="userDisplayForm"  method="POST">
+<CENTER>
+	<input type="image" id="exportBtn" src="${context}/images/rte_export.jpg" class="export" style="padding-left: 1mm; padding-right: 1mm">
+<TABLE cellspacing="5" style="background-color: #9393ff" border="1" class="lookupTable">
+    <COL span="1" align="center">
+    <COL span="13">
+    <COL span="1" align="center">
+    <TBODY>
+        <TR>
+            <TD>Take Action?</TD>
+            <TD>User Name</TD>
+            <TD width="7" style="font-weight: bold">Aetna Id</TD>
+            <TD width="5">Access Level</TD>
+            <TD>Posted Date</TD>
+            <TD width="5" style="font-weight: bold">Site Code</TD>
+            <TD width="6" style="font-weight: bold">Svc Type</TD>
+            <TD width="5" style="font-weight: bold">TOS Code</TD>
+        </TR>
+        
+        <c:forEach items="${lookUpListVO.rbrcVOList}" var="rbrc" varStatus="status">
+	
+		<c:choose>
+  			<c:when test="${rbrc.dbUpdatedInd == 'Y'}">
+  			
+		<TR bgcolor="#ff4242">
+		</c:when>
+		<c:when test="${rbrc.dbUpdatedInd == 'C'}">
+		<TR bgcolor="#80ffff">
+		</c:when>
+		 <c:otherwise>
+		<TR bgcolor="#9393ff">
+		</c:otherwise>
+		</c:choose>
+            
+            <TD>
+             <div id="divHidden" style="display: none;">
+            		<input type="text" name="rbrcVOList[${status.index}].dbUpdatedInd" value="${rbrc.dbUpdatedInd}"/> 
+            	</div>
+				<input id="takeAction" type="checkbox" name="takeAction" value="${status.index}" >
+	        </TD>
+           
+            <TD>
+            	<input  name="rbrcVOList[${status.index}].dbDescTxt" size="30" maxlength="30" type="text"
+				value="${rbrc.dbDescTxt}" >
+           </TD>
+           
+            <TD>
+				<INPUT name="rbrcVOList[${status.index}].dbRiderCd" size="7" maxlength="8" type="text" value="${rbrc.dbRiderCd}"
+													onchange="javascript:this.value=this.value.toLowerCase();">
+			</TD>
+			
+            <TD align="center">
+            	<INPUT name="rbrcVOList[${status.index}].dbIONtwkCd" size="1" maxlength="1" type="text" value="${rbrc.dbIONtwkCd}"
+            										onchange="javascript:this.value=this.value.toUpperCase();">
+            </TD>
+            
+            <TD>
+                <INPUT size="10"
+                	style="font-size: 12px; text-align: left; border-width: 0px;
+                			font-style: normal; background-color: #9393ff"
+                	type="text" name="rbrcVOList[${status.index}].dbPostedDate" value="${rbrc.dbPostedDate}" readonly>
+            </TD>
+            
+            <TD>
+				<INPUT name="rbrcVOList[${status.index}].dbSiteCd" size="6" maxlength="4"
+                	style="font-size: 12px; text-align: left; border-width: 0px;
+                			font-style: normal; background-color: #9393ff"
+					type="text" readonly value="${rbrc.dbSiteCd}">
+			</TD>
+			
+            <TD>
+				<INPUT name="rbrcVOList[${status.index}].dbSvcTypeCd" size="3" maxlength="2"
+                	style="font-size: 12px; text-align: left; border-width: 0px;
+                			font-style: normal; background-color: #9393ff"
+					type="text" readonly value="${rbrc.dbSvcTypeCd}">
+			</TD>
+			
+            <TD>
+				<INPUT name="rbrcVOList[${status.index}].dbTOSCd" size="3" maxlength="2"
+                	style="font-size: 12px; text-align: left; border-width: 0px;
+                			font-style: normal; background-color: #9393ff"
+					type="text" readonly value="${rbrc.dbTOSCd}">
+			</TD>
+        </TR>
+       </c:forEach>
+    </TBODY>
+</TABLE>
+<BR>
+<BR>
+<INPUT type="button" id="copyBtn" value="Copy" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if> >
+<INPUT type="button" id="addUpdateBtn" value="Add/Update" style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if> >
+<INPUT type="button" id="deleteBtn" value="Delete" style="padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if> >
+<INPUT type="button" id="LookUp" value="Look Up"  style="padding-left: 1mm; padding-right: 1mm">
+
+</CENTER>
+<BR>
+<FONT face="arial"><BR>
+"B"	= Read/Write on BPLVS only.<BR>
+"R" = Read only on everything except security tables.<BR>
+"W" = Read/Write on everything except security tables.<BR>
+"A" = Read/Write all including the Security rows on RBRC.
+</FONT>
+</form:form>
+</BODY>
