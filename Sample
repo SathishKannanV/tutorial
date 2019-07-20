@@ -1,15 +1,219 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:p="http://www.springframework.org/schema/p"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:mvc="http://www.springframework.org/schema/mvc"
-	   
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
- 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/spring-context.xsd 
- 	   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/spring-mvc.xsd"> 
-	   
-	   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	   <property name="maxUploadSize" value="10240000"></property>
-	   </bean>
-</beans>
+home.title=Home
+
+
+
+home.label.theme=Theme
+
+home.theme.blue=Blue
+
+home.theme.green=Green
+
+
+
+home.message.hello=Hello, {0}!
+
+home.message.welcome=Welcome to the AEFW Kickstart 3.0.1.!
+
+
+
+home.text.welcome=The AEFW Kickstart 3.0.1. is your starting point for your new AEFW-based web \
+
+application.  Frameworks and Services recommends reading through the enclosed documentation to get \
+
+a feel for what the Kickstart provides and what your next steps are.
+
+
+
+home.label.faqs=Frequently Asked Questions
+
+home.label.whatIs=What is the AEFW Kickstart 3.0.1.?
+
+home.label.benefits=What are the benefits of using the Kickstart?
+
+home.label.included=What is included in the Kickstart?
+
+home.label.nextSteps=What are my next steps?
+
+home.label.learnMore=Where can I learn more?
+
+home.label.getHelp=How can I get help?
+
+
+
+home.text.whatIs.pt1=The AEFW Kickstart 3.0.1. is a web project template and reference application \
+
+created and managed jointly by Technology Enablement and Frameworks & Services.  Either team can \
+
+perform some minimal, automated customization of \
+
+the template to make it more appropriate for use on your project.  What this means is your RAD \
+
+projects won't have generic names like <i>aefw-kickstart</i> and <i>aefw-kickstart-web</i> and your packages won't \
+
+appear as <i>com.aetna.framework.kickstart</i>, instead, these details will be updated to more accurately \
+
+represent your application.  For instance, Aetna Navigator might end up with RAD project names like \
+
+<i>navigator</i> or <i>navigator-web</i> and package names beginning with <i>com.aetna.member.navigator</i>.
+
+
+
+home.text.whatIs.pt2=Ok, so it's a customizable project template, but why use it?  Read on.
+
+
+
+home.text.benefits.pt1=The AEFW Kickstart offers numerous advantages.  First and foremost, it provides \
+
+green field development efforts with a complete, sturdy, yet flexible application infrastructure on \
+
+day one of the development effort.  The sum total of what is provided is estimated to save even the \
+
+most skilled development team up to four weeks of effort.
+
+
+
+home.text.benefits.pt2=You can think of the AEFW Kickstart 3.0.1. as a fully functional "shell" of an \
+
+application where most technical details have been worked out ahead of time.  This frees you to \
+
+immediately begin focusing on solving business problems described by your requirements.
+
+
+
+home.text.benefits.pt3=Here are some additional benefits of adopting the AEFW Kickstart 3.0.1.  The Kickstart:
+
+
+
+home.list.benefits=<li>Saves you time (and therefore money).</li> \
+
+<li>Ensures proper configuration of AEFW 3.0.1.</li> \
+
+<li>Promotes standard approaches to common needs, including: \
+
+<ul> \
+
+<li>Composite view</li> \
+
+<li>Theming</li> \
+
+<li>Internationalization (i18n)</li> \
+
+</ul> \
+
+</li> \
+
+<li>Promotes a standard base architecture.</li> \
+
+<li>Promotes best practices for: \
+
+<ul> \
+
+<li>Java development with Spring</li> \
+
+<li>Java web development with Spring MVC</li> \
+
+<li>General web development</li> \
+
+<li>Presentation</li> \
+
+</ul> \
+
+</li>
+
+
+
+home.text.benefits.pt4=Adhering to the standards promoted by the AEFW Kickstart 3.0.1 maximizes the level \
+
+of support available to your application from centralized support areas like Frameworks and Services \
+
+and Web Engineering.
+
+
+
+home.text.included.pt1=The AEFW Kickstart 3.0.1 provides the following features out-of-the-box:
+
+
+
+home.list.included=<li>Basic web configuration including: \
+
+<ul> \
+
+<li>Spring and AEWF bootstrapping</li> \
+
+<li>DispatcherServlet configuration (to enable Spring MVC)</li> \
+
+<li>Predefined reference for container-managed resources like the Queue and QueueConnectionFactory \
+
+used for enterprise logging</li> \
+
+</ul> \
+
+</li> \
+
+<li>Basic AEFW configuration, including environmental-awareness.</li> \
+
+<li>Application state management via normal Java semantics, provided by Spring.</li> \
+
+<li>Composite view support via Tiles (including integration with Spring MVC).</li> \
+
+<li>Internationalization (i18n) support via Spring.</li> \
+
+<li>Theme support via Spring MVC.</li> \
+
+<li>Support for reuse.jar integration.</li> \
+
+<li>Attractive, "tableless" layout via Cascading Style Sheets.</li> \
+
+<li>Scripts for installing AEFW 3.0.1. and the AEFW Kickstart3.0.1. onto a local WebSphere 7.0 test server.</li> \
+
+<li>A build process that runs on XDMAN1D or locally. (Some profile configuration required for local.)</li>
+
+
+
+home.text.included.pt2=The Kickstart also includes a mock employee editing facility as a sample use \
+
+case realization that demonstrates best practices for Java web development with AEFW, Spring, Spring \
+
+MVC, Tiles, JSP, JSTL, and CSS.  The sample code and configuration is easily removed.
+
+
+
+home.text.nextSteps.pt1=If you're reading this page, you already have the AEFW Kickstart 3.0.1. up and \
+
+running- in which case your next steps depend on your level of experience with Java, AEFW, Spring, \
+
+Spring MVC, and the other technologies in play.
+
+
+
+home.text.nextSteps.pt2=If you're comfortable with the technology stack that's been provided, you're \
+
+ready to get started by developing your own business code.  If more training is required, see the next \
+
+section to learn about self-guided and instructor-lead training options.
+
+
+
+home.text.learnMore.pt1=Thorough Java AEFW and AEFW Kickstart documentation is located here:
+
+
+
+home.link.aefwInAction=Java AEFW in Action, Third Edition
+
+
+
+home.text.getHelp.pt1=If you've already read the documentation thoroughly and attended the "Introduction to Java \
+
+AEFW 3.0.1" course and still require further assistance, contact your <i>assigned</i> Frameworks and Services adoption consultant.
+
+
+
+home.text.getHelp.pt2=If no adoption consultant has been assigned to your project, please engage \
+
+Frameworks and Services only through the link below.  Adhereing to this formal work intake process \
+
+ensures that Frameworks and Services accurately tracks all work we are engaged in.
+
+
+
+home.link.requestAssistance=Request Assistance
