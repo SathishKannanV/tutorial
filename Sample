@@ -1,6 +1,249 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="security"%>
+<head>
+<title>AdasvctDisplay</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Rational Application Developer">
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
+<!--Chrome Upgrade-N127627-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--END-->
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<script>
+//Chrome Upgrade-N127627
+$(document).ready( function(e) {
+ $('form').on('submit',function(){
+   $(this).attr('target', '_self');
+});
 
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+});
+//End
+$(document).ready(function(){
+		var rtePath = "<%=request.getContextPath()%>";
+		var count = $("#adasvctDisplay").find('input[type="checkbox"]').length;
+		var errorPath = rtePath + "/usrsec/error";
+		$("#adasvctCopy").click(function(){
+			var adasvctCopyPath = rtePath + "/adasvct/copyAdasvct";
+			if(count > 1000){
+				adasvctCopyPath = errorPath;
+				$("#form1").attr('action',adasvctCopyPath).submit();
+			} else {
+				$("#adasvctDisplay").attr('action',adasvctCopyPath).submit();
+			}
+		});
+		$("#adasvctAddUpdate").click(function(){
+			var adasvctAddUpdatePath = rtePath + "/adasvct/addUpdateAdasvct";
+			if(count > 1000){
+				adasvctAddUpdatePath = errorPath;
+				$("#form1").attr('action',adasvctAddUpdatePath).submit();
+			} else {
+				$("#adasvctDisplay").attr('action',adasvctAddUpdatePath).submit();
+			}
+		});
+		$("#adasvctDelete").click(function(){
+			var adasvctDeletePath = rtePath + "/adasvct/deleteAdasvct";
+			if(count > 1000){
+				adasvctDeletePath = errorPath;
+				$("#form1").attr('action',adasvctDeletePath).submit();
+			} else {
+				$("#adasvctDisplay").attr('action',adasvctDeletePath).submit();
+			}
+		});
+		$("#adasvctLookUpHome").click(function(){
+			var adasvctHomePath = rtePath + "/adasvct/adasvctHome";
+			$("#adasvctDisplay").attr('action',adasvctHomePath).submit();
+		});
+		$("#adasvctExport").click(function(){
+			var adasvctExport = rtePath + "/adasvct/adasvctExport";
+			$("#form1").attr('action',adasvctExport).submit();
+		});
+	});
+	
+function ValidateDate(dateVal) {
+	if (dateVal.value == "" ||
+		dateVal.value.substring(0,1) == " ") { 
+		alert("You must Enter a Valid Date");
+//Chrome Upgrade-N127627 --add to break recursive call in Chrome
+		//dateVal.focus();
+		window.setTimeout(function () { 
+		dateVal.focus();
+            }, 0);  	
+  //End	
+		return false;
+	} else
+	 var dateToVal = dateVal.value;
+	 var dateValYY = dateToVal.substring(0,4);
+	 var dateValMM = dateToVal.substring(5,7);
+	 var dateValDD = dateToVal.substring(8,10);
+		var lastDay = "00";
+		numYr = parseInt(dateValYY);
+		liftYear = numYr % 4;
+		switch (dateValMM) {
+			case "01":
+			case "03":
+			case "05":
+			case "07":
+			case "08":
+			case "10":
+			case "12":
+				lastDay = "31"
+				break
+			case "04":
+			case "06":
+			case "09":
+			case "11":
+				lastDay = "30"
+				break
+			case "02":
+				if (liftYear == 0) {
+					lastDay = "29"
+				} else {
+					lastDay = "28"
+				}
+				break
+		}
+	 var validDate = true
+	 var numCheck = "" + numYr
+	 var num = parseInt(dateValYY, 10); 
+	 if (dateToVal.charAt(4) != '-' || 
+	 	dateToVal.charAt(7) != '-' ||  
+	 	dateValMM < "01" ||
+	 	dateValMM > 12 ||
+	 	dateValDD < "01" ||
+	 	dateValDD > lastDay ||
+	 	numCheck != dateValYY ||
+	 	isNaN(num) ||
+	 	num < 1970) {
+	 	alert("Invalid Date Entry. \nPlease Enter valid Date with Correct Format, \nor CTL-Z to undo change!.")
+//Chrome Upgrade-N127627 --add to break recursive call in Chrome
+	 	//dateVal.focus();
+	 	window.setTimeout(function () { 
+	 	dateVal.focus();
+            }, 0); 
+//End
+		validDate = false
+		return false;
+	}
+}
+</script>
+</head>
+<body style="font-size: 9pt" bgcolor="#e1eeb9">
+	<font face="ARIAL"></font>
+	<c:set var="adasvctMsgVar" value="${adasvctMsg}"></c:set> 
+	<P><c:out value="${adasvctMsgVar}"></c:out></P>
+	<br>
+	<br>
+	<center>
+		<b><font size="+2">ADASVCT Table Search List</font> </B>
+		
+		<br> <br> <font FACE="ARIAL"> To make a change on the
+			database using these rows, change any field to the appropriate value,<br>
+			click on the Take Action square for every row changed and then click
+			on the button for the action desired.<br> Multiple rows may be
+			selected for any given action. Labels that are <b>bold</B> identify
+			key columns.<br> A change to any value in these columns will <b>Add</B>
+			rows to the database, not update existing rows. </font>
+	</center>
+	<br>
+	<br>
+	<center>
+		<input type="image" id="adasvctExport" src="${context}/images/rte_export.jpg" class="export" style="padding-left: 1mm; padding-right: 1mm">
+	<form:form modelAttribute="lookUpTableListVO" id="adasvctDisplay" name="adasvctDisplay" method="POST">
+		
+			<table cellspacing="5" style="background-color: #9393ff" border="1"
+				class="lookupTable">
+				<tbody>
+					<tr>
+						<td width="30">Take Action?</td>
+						<td width="30" style="font-weight: bold">ADA Code</td>
+						<td width="30">Svc Type CD</td>
+						<td width="30" style="font-weight: bold">Effective Date</td>
+						<td width="30">Expiration Date</td>
+						<td width="30">Posted Date</td>
+					</tr>
+					<c:forEach items="${lookUpTableListVO.adasvctVOList}" var="adasvctvo" varStatus="status">
+						<c:choose>
+							<c:when test="${adasvctvo.updatedInd eq 'Y'}">
+								<tr bgcolor="#ff4242">
+								<div id="divHidden" style="display: none;">
+									<input type="text" name="adasvctVOList[${status.index}].updatedInd" value="N" />
+								</div>
+							</c:when>
+							<c:when test="${adasvctvo.updatedInd eq 'C'}">
+								<tr bgcolor="#80ffff">
+								<div id="divHidden" style="display: none;">
+									<input type="text" name="adasvctVOList[${status.index}].updatedInd" value="${adasvctvo.updatedInd}" />
+								</div>
+							</c:when>
+							<c:otherwise>
+								<tr bgcolor="#9393ff">
+								<div id="divHidden" style="display: none;">
+									<input type="text" name="adasvctVOList[${status.index}].updatedInd" value="${adasvctvo.updatedInd}" />
+								</div>
+							</c:otherwise>
+						</c:choose>
 
+						<td><input type="checkbox" id="takeAction" name="takeAction" value="${status.index}" /></td>
+						
+						<td>
+							<input name="adasvctVOList[${status.index}].adaCd" id="txtAadaCd" size="6" maxlength="5"
+							type="text"
+							onchange="javascript:this.value=this.value.toUpperCase();"
+							value="${adasvctvo.adaCd}" /></td>
+						<td>
+							<input name="adasvctVOList[${status.index}].svcTypeCd" id="txtSvcTypeCd" size="3"
+							maxlength="2" type="text"
+							onchange="javascript:this.value=this.value.toUpperCase();"
+							value="${adasvctvo.svcTypeCd}" /></td>
+						<td>
+							<input name="adasvctVOList[${status.index}].effDate" id="txtEffDate" size="10" maxlength="10"
+							type="text" onblur="ValidateDate(this)"
+							value="${adasvctvo.effDate}" /></td>
+						<td>
+							<input name="adasvctVOList[${status.index}].expDate" id="txtExpDate" size="10" maxlength="10"
+							type="text" onblur="ValidateDate(this)"
+							value="${adasvctvo.expDate}" /></td>
+						<td>
+							<input name="adasvctVOList[${status.index}].postedDate" id="txtExpDate" readonly="readonly"
+							style="font-size: 12px; text-align: left; border-width: 0px; font-style: normal; background-color: #9393ff"
+							onblur="ValidateDate(this)" value="${adasvctvo.postedDate}" /></td>
+						</tr>
+					</c:forEach>
+					
+				</tbody>
+			</table>
+			<br>
+			<br>
+			<c:choose>
+				<c:when test="${(securityLevel ne 'RW')}">
+					<input type="button" name="Copy" value="Copy" id="adasvctCopy"
+					style="padding-left: 3mm; padding-right: 3mm" disabled="disabled">
+					<input type="button" name="AddUpdate" value="Add/Update" id="adasvctAddUpdate"
+						style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" disabled="disabled">
+					<input type="button" name="Delete" value="Delete" id="adasvctDelete"
+						style="padding-left: 1mm; padding-right: 1mm" disabled="disabled">
+					<input type="button" name="Export" value="Export"
+						style="padding-left: 1mm; padding-right: 1mm" id="adasvctExport" disabled="disabled">
+				</c:when>
+				<c:otherwise>
+					<input type="button" name="Copy" value="Copy" id="adasvctCopy"
+						style="padding-left: 3mm; padding-right: 3mm">
+					<input type="button" name="AddUpdate" value="Add/Update" id="adasvctAddUpdate"
+						style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" >
+					<input type="button" name="Delete" value="Delete" id="adasvctDelete"
+						style="padding-left: 1mm; padding-right: 1mm">
+				 </c:otherwise>
+			</c:choose>
+			<input type="button" name="LookUp" value="Look Up"
+				style="padding-left: 1mm; padding-right: 1mm" id="adasvctLookUpHome" >
+				
+		</center>
+	</form:form>
+	<form name="form1" id="form1" method="POST"></form>
+</body>
