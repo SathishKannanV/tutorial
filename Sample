@@ -6,117 +6,535 @@ import java.io.Serializable;
 
 
 
-public class EventTrackingVO implements Serializable{
+public class LongRunTransactionVO implements Serializable {
+
+
+
+	private static final long serialVersionUID = 1L;
+
+	private String startDate = "";
+
+	private String startHrs = "";
+
+	private String startMns = "";
+
+	private String startSecs = "";
+
+	private String endDate = "";
+
+	private String endHrs = "";
+
+	private String endMns = "";
+
+	private String endSecs = "";
+
+	private String secondsCalc = "";
+
+	private String minutesCalc = "";
+
+	private String module = "";
+
+	private String startTimestamp = "";
+
+	private String endTimestamp = "";
+
+	private String convrsnCDResult = "";
+
+	private String vanIDCDResult = "";
+
+	private String typCDResult = "";
+
+	private String loadNameResult = "";
+
+	private String resultSecondsResult = "";
+
+	private String result3CNT = "";
+
+	private String result3StartTime = "";
+
+	private String result3TimeTaken = "";
+
+	private String result3EndTime="";
+
+	private String report = "";
+
+	private char updatedInd;
+
+
+
+	public LongRunTransactionVO() {
+
+		super();
+
+		// TODO Auto-generated constructor stub
+
+	}
+
+
+
+	public LongRunTransactionVO(String startDate, String startHrs,
+
+			String startMns, String startSecs, String endDate, String endHrs,
+
+			String endMns, String endSecs, String secondsCalc,
+
+			String minutesCalc, String module, String startTimestamp,
+
+			String endTimestamp, String convrsnCDResult, String vanIDCDResult,
+
+			String typCDResult, String loadNameResult,
+
+			String resultSecondsResult, String result3cnt,
+
+			String result3StartTime, String result3EndTime,
+
+			String result3TimeTaken, String report, char updatedInd) {
+
+		super();
+
+		this.startDate = startDate;
+
+		this.startHrs = startHrs;
+
+		this.startMns = startMns;
+
+		this.startSecs = startSecs;
+
+		this.endDate = endDate;
+
+		this.endHrs = endHrs;
+
+		this.endMns = endMns;
+
+		this.endSecs = endSecs;
+
+		this.secondsCalc = secondsCalc;
+
+		this.minutesCalc = minutesCalc;
+
+		this.module = module;
+
+		this.startTimestamp = startTimestamp;
+
+		this.endTimestamp = endTimestamp;
+
+		this.convrsnCDResult = convrsnCDResult;
+
+		this.vanIDCDResult = vanIDCDResult;
+
+		this.typCDResult = typCDResult;
+
+		this.loadNameResult = loadNameResult;
+
+		this.resultSecondsResult = resultSecondsResult;
+
+		result3CNT = result3cnt;
+
+		this.result3StartTime = result3StartTime;
+
+		this.result3EndTime = result3EndTime;
+
+		this.result3TimeTaken = result3TimeTaken;
+
+		this.report = report;
+
+		this.updatedInd = updatedInd;
+
+	}
+
+	public String getResult3EndTime() {
+
+		return result3EndTime;
+
+	}
+
+
+
+	public void setResult3EndTime(String result3EndTime) {
+
+		this.result3EndTime = result3EndTime;
+
+	}
+
+
+
+	public String getStartDate() {
+
+		return startDate;
+
+	}
+
+
+
+	public void setStartDate(String startDate) {
+
+		this.startDate = startDate;
+
+	}
+
+
+
+	public String getStartHrs() {
+
+		return startHrs;
+
+	}
+
+
+
+	public void setStartHrs(String startHrs) {
+
+		this.startHrs = startHrs;
+
+	}
+
+
+
+	public String getStartMns() {
+
+		return startMns;
+
+	}
+
+
+
+	public void setStartMns(String startMns) {
+
+		this.startMns = startMns;
+
+	}
+
+
+
+	public String getStartSecs() {
+
+		return startSecs;
+
+	}
+
+
+
+	public void setStartSecs(String startSecs) {
+
+		this.startSecs = startSecs;
+
+	}
+
+
+
+	public String getEndDate() {
+
+		return endDate;
+
+	}
+
+
+
+	public void setEndDate(String endDate) {
+
+		this.endDate = endDate;
+
+	}
+
+
+
+	public String getEndHrs() {
+
+		return endHrs;
+
+	}
+
+
+
+	public void setEndHrs(String endHrs) {
+
+		this.endHrs = endHrs;
+
+	}
+
+
+
+	public String getEndMns() {
+
+		return endMns;
+
+	}
+
+
+
+	public void setEndMns(String endMns) {
+
+		this.endMns = endMns;
+
+	}
+
+
+
+	public String getEndSecs() {
+
+		return endSecs;
+
+	}
+
+
+
+	public void setEndSecs(String endSecs) {
+
+		this.endSecs = endSecs;
+
+	}
+
+
+
+	public String getSecondsCalc() {
+
+		return secondsCalc;
+
+	}
+
+
+
+	public void setSecondsCalc(String secondsCalc) {
+
+		this.secondsCalc = secondsCalc;
+
+	}
+
+
+
+	public String getMinutesCalc() {
+
+		return minutesCalc;
+
+	}
+
+
+
+	public void setMinutesCalc(String minutesCalc) {
+
+		this.minutesCalc = minutesCalc;
+
+	}
+
+
+
+	public String getModule() {
+
+		return module;
+
+	}
+
+
+
+	public void setModule(String module) {
+
+		this.module = module;
+
+	}
+
+
+
+	public String getStartTimestamp() {
+
+		return startTimestamp;
+
+	}
+
+
+
+	public void setStartTimestamp(String startTimestamp) {
+
+		this.startTimestamp = startTimestamp;
+
+	}
+
+
+
+	public String getEndTimestamp() {
+
+		return endTimestamp;
+
+	}
+
+
+
+	public void setEndTimestamp(String endTimestamp) {
+
+		this.endTimestamp = endTimestamp;
+
+	}
+
+
+
+	public String getConvrsnCDResult() {
+
+		return convrsnCDResult;
+
+	}
+
+
+
+	public void setConvrsnCDResult(String convrsnCDResult) {
+
+		this.convrsnCDResult = convrsnCDResult;
+
+	}
+
+
+
+	public String getVanIDCDResult() {
+
+		return vanIDCDResult;
+
+	}
+
+
+
+	public void setVanIDCDResult(String vanIDCDResult) {
+
+		this.vanIDCDResult = vanIDCDResult;
+
+	}
+
+
+
+	public String getTypCDResult() {
+
+		return typCDResult;
+
+	}
+
+
+
+	public void setTypCDResult(String typCDResult) {
+
+		this.typCDResult = typCDResult;
+
+	}
+
+
+
+	public String getLoadNameResult() {
+
+		return loadNameResult;
+
+	}
+
+
+
+	public void setLoadNameResult(String loadNameResult) {
+
+		this.loadNameResult = loadNameResult;
+
+	}
+
+
+
+	public String getResultSecondsResult() {
+
+		return resultSecondsResult;
+
+	}
+
+
+
+	public void setResultSecondsResult(String resultSecondsResult) {
+
+		this.resultSecondsResult = resultSecondsResult;
+
+	}
 
 
 
 	/**
 
-	 * 
+	 * @return the updatedInd
 
 	 */
 
-	private static final long serialVersionUID = 1L;
+	public char getUpdatedInd() {
 
-	private String convIdCode ="";
-
-	private String vanIdCd = "";
-
-	private String typeCd = "";
-
-	private String postedDt = "";
-
-	private String tranType ="";
-
-
-
-	public  EventTrackingVO() {
-
-		super();
-
-	} 
-
-		
-
-	
-
-	
-
-	public EventTrackingVO(String convIdCode, String vanIdCd, String typeCd,
-
-			String postedDt, String tranType) {
-
-		super();
-
-		this.convIdCode = convIdCode;
-
-		this.vanIdCd = vanIdCd;
-
-		this.typeCd = typeCd;
-
-		this.postedDt = postedDt;
-
-		this.tranType = tranType;
+		return updatedInd;
 
 	}
 
-	public String getConvIdCode() {
 
-		return convIdCode;
 
-	}
+	/**
 
-	public void setConvIdCode(String convIdCode) {
+	 * @param updatedInd
 
-		this.convIdCode = convIdCode;
+	 *            the updatedInd to set
 
-	}
+	 */
 
-	public String getVanIdCd() {
+	public void setUpdatedInd(char updatedInd) {
 
-		return vanIdCd;
+		this.updatedInd = updatedInd;
 
 	}
 
-	public void setVanIdCd(String vanIdCd) {
 
-		this.vanIdCd = vanIdCd;
 
-	}
+	public String getResult3CNT() {
 
-	public String getTypeCd() {
-
-		return typeCd;
+		return result3CNT;
 
 	}
 
-	public void setTypeCd(String typeCd) {
 
-		this.typeCd = typeCd;
 
-	}
+	public void setResult3CNT(String result3cnt) {
 
-	public String getPostedDt() {
-
-		return postedDt;
+		result3CNT = result3cnt;
 
 	}
 
-	public void setPostedDt(String postedDt) {
 
-		this.postedDt = postedDt;
 
-	}
+	public String getResult3StartTime() {
 
-	public String getTranType() {
-
-		return tranType;
+		return result3StartTime;
 
 	}
 
-	public void setTranType(String tranType) {
 
-		this.tranType = tranType;
+
+	public void setResult3StartTime(String result3StartTime) {
+
+		this.result3StartTime = result3StartTime;
+
+	}
+
+
+
+	public String getResult3TimeTaken() {
+
+		return result3TimeTaken;
+
+	}
+
+
+
+	public void setResult3TimeTaken(String result3TimeTaken) {
+
+		this.result3TimeTaken = result3TimeTaken;
+
+	}
+
+
+
+	public String getReport() {
+
+		return report;
+
+	}
+
+
+
+	public void setReport(String report) {
+
+		this.report = report;
 
 	}
 
@@ -124,7 +542,6 @@ public class EventTrackingVO implements Serializable{
 
 	
 
-	
+
 
 }
-
