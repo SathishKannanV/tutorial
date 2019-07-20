@@ -4,9 +4,8 @@
 <!--END-->
 <HTML>
 <HEAD>
-<BASE target="_blank">
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>RBBC Help</TITLE>
+<TITLE>RBBCList.html</TITLE>
 <STYLE type="text/css">
 BODY {/* chrome upgrade N127627 -Edited background-color: "#e1eeb9" */
 	background-color: #e1eeb9;
@@ -25,14 +24,24 @@ function WindowClose()
 	window.close()
 }
 
-</SCRIPT></HEAD>
+</SCRIPT>
+</HEAD>
 <BODY>
-<H1 align="CENTER">RBBC Help Screen</H1>
-
-<P>You must enter at least one fully specified <B>Benefit Id Code</B>, <B>Service Type Code</B>. The other field may be left blank .<BR>
-<BR>
-<B>Note:</B> When trying to update an existing row returned from a lookup, if any of the table keys are changed then a new row will be <B>added</B> to the database. The key fields are <B>Benefit Id Code</B> and <B>Service Type</B>.<BR>
-</P>
+<CENTER>
+<B><FONT size="+2">List of RBBC Codes</FONT></B>
+<TABLE border="1">
+    <TBODY>
+<TR><TD ALIGN="CENTER">M</TD><TD>Pre-admission review required </TD></TR>
+<TR><TD ALIGN="CENTER">H</TD><TD>Subject to normal procedure reviews </TD></TR>
+<TR><TD ALIGN="CENTER">X</TD><TD>Fully covered         </TD></TR>
+<TR><TD ALIGN="CENTER">L</TD><TD>Fully covered         </TD></TR>
+<TR><TD ALIGN="CENTER">A</TD><TD>Benefit may not apply </TD></TR>
+<TR><TD ALIGN="CENTER">C</TD><TD>Call Hcad for further information</TD></TR>
+<TR><TD ALIGN="CENTER">N</TD><TD>Service not covered (negative message) </TD></TR>
+<TR><TD ALIGN="CENTER">Z</TD><TD>Fully covered         </TD></TR>
+ </TBODY>
+</TABLE>
 <P align="center"><INPUT type="button" onclick="WindowClose()" name="CloseButton" value="Close"></P>
+</CENTER>
 </BODY>
 </HTML>
