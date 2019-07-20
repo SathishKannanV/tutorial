@@ -1,44 +1,133 @@
+<!--Chrome Upgrade-N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
+<!--Chrome Upgrade-N127627-->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 <!--Chrome Upgrade-N127627-->
-<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
+<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!--END-->
-<!--Start Chrome Upgrade - N127627 - called a different html-->
-<Script>
-function fnLogout(){
-	
-	window.open("/RteIntranet/js/chromeLogout.html", '_self','').close();
-	
-}
-//window.history.forward();
-function noBack()
-{
-    window.history.forward();
-}
+
+
+<HTML>
+<HEAD>
+
+<BASE target="BottomRight">
+<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<tiles:importAttribute name="title" />
+<title>
+	<spring:message code="${title}"></spring:message>
+</title>
+<!--Chrome Upgrade-N127627-->
+
+<script>
+$(document).ready( function(e) {
+ $('form').on('submit',function(){
+   $(this).attr('target', '_self');
+});
+
+});
+
+$(document).ready(function(){
+  $('a').attr('target', '_self');
+});
 
 </script>
-<!--End Chrome Upgrade-->
-<head>
-<style>
-table, th, td {
-    border: 0px solid black;
-}
-</style>
-</head>
-<body>
-	<%-- <table style="width:100%">
-		<tr>
-			<td align="left"><IMG SRC="${context}/images/aelogo_s.gif" ></td>
-			<td align="left"><FONT face="Gautami" size="7" color="#400040">Real Time Eligibility</FONT></td>
-			<td align="left"><A href="<%=request.getContextPath()%>/home"  target="_top">Home</A> <a href="javascript: self.close()" target="_top">Logout</a></td>
+<!--End-->
+
+</HEAD>
+<BODY bgcolor="#fffceb" vlink="#000000" alink="#6971db" link="#6971db" style="font-size: 9pt">
+<table style="font: ARIAL;">
+<tr><td align="left">  <IMG SRC="${context}/images/TOC2.gif" align="left"></td></tr>
+<tr><td align="left"><IMG SRC="${context}/images/NVTech_text0272.gif" align="left"></td></tr>
+<tr><td align="left">
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+				<H6>
+				<!-- start Chrome Upgrade-N127627 -add target="_self" in anchor tag -->
+					<A
+						href="<%=request.getContextPath()%>/adasvct/adasvctHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">ADASVCT</A><BR><A
+						href="<%=request.getContextPath()%>/benafrq/benafrqHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">BENAFRQ</A><BR> 
+						<c:if test="${securityLevel eq 'RW'}">
+						<A
+						href="<%=request.getContextPath()%>/aetCtls/aetCtlsHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">AETCTLS</A><BR>
+						 <A
+						href="<%=request.getContextPath()%>/authTrx/authTrxHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">AUTHTRX</A><BR>
+						</c:if>
+						<A
+						href="<%=request.getContextPath()%>/bplvrp/bplvrpHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">BPLVRP</A><BR>
+						<A
+						href="<%=request.getContextPath()%>/dedacsr/dedacsrHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">DEDACSR</A><BR> <A
+						href="<%=request.getContextPath()%>/erspmsg/erspmsgHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">ERSPMSG</A><BR> <A
+						href="<%=request.getContextPath()%>/indmntrp/indmntrpHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">INDMNTRP</A><BR> <A
+						href="<%=request.getContextPath()%>/plnlmEX/plnlmEXHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">PLNLMEX</A><BR> 
+						<A href="<%=request.getContextPath()%>/procex/procexHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">PROCEX</A>
+						<BR> <A
+						href="<%=request.getContextPath()%>/rbbc/rbbcHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RBBC</A><BR> <A
+						href="<%=request.getContextPath()%>/rbrc/rbrcHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RBRC</A><BR> <A
+						href="<%=request.getContextPath()%>/rtestyp/rtestypHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTESTYP</A><BR> <A
+						href="<%=request.getContextPath()%>/rtebeplm/rtebeplmHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTEBEPLM</A><BR> <A
+						href="<%=request.getContextPath()%>/rtedictr/rtedictrHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTEDICTR</A><BR> <A
+						href="<%=request.getContextPath()%>/rterbac/rterbacHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTERBAC</A><BR> 
+						<A href="<%=request.getContextPath()%>/rtestsc/rtestscHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTESTSC</A><BR> <A
+						href="<%=request.getContextPath()%>/rtetier/rtetierHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTETIER</A><BR> <A
+						href="<%=request.getContextPath()%>/rtetpbr/rtetpbrHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTETPBR</A><BR> <A
+						href="<%=request.getContextPath()%>/rtetprl/rtetprlHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTETPRL</A><BR><A
+						href="<%=request.getContextPath()%>/sitemsg/sitemsgHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">SITEMSG</A><BR> <A href="<%=request.getContextPath()%>/srchdtl/srchdtlHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">SRCHDTL</A><BR> <A
+						href="<%=request.getContextPath()%>/sstypa/sstypaHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">SSTYPA</A><BR> <A
+						href="<%=request.getContextPath()%>/ststypa/ststypaHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">STSTYPA</A><BR> <A
+						href="<%=request.getContextPath()%>/tierdmsg/tierdmsgHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">TIERDMSG</A><BR> 
+						<A href="<%=request.getContextPath()%>/tostext/tosHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">TOSText</A><BR> <A
+						href="<%=request.getContextPath()%>/tosct/tosctHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">TOSCT</A><BR>
+						<A href="<%=request.getContextPath()%>/hrprule/hrpruleHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()">HRP_Rule</A><BR>
+						<BR> 
+					<A href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">Long Running Transaction Report</A><BR><BR>
+						<A href="<%=request.getContextPath()%>/eventtrack/eventtrackHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">Event Tracking</A><BR><BR> 
+						<A href="<%=request.getContextPath()%>/eventtrack/testingtool/testingtoolHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">RTE Testing Tool</A><BR><BR>
+						<A href="<%=request.getContextPath()%>/eventtrack/testingtool/ediTestingToolHome" onFocus="if(this.blur)this.blur()"
+						onClick="this.blur()" target="_self">EDI Testing Tool</A><BR><BR> 
+						
+				</H6></td>
+				<!-- END CHROME UPGRADE -->
 		</tr>
-	</table> --%>
-	<div class="topLeft"><IMG SRC="${context}/images/aelogo_s.gif" ></div>
-    <div class="topCenter"><FONT face="Gautami" size="7" color="#400040">Real Time Eligibility</FONT></div><!-- Chrome upgrade -N127627 logout issue in chrome  -->
-    <div class="topRight"><A href="<%=request.getContextPath()%>/home"  target="_top">Home</A> <a href="#" onclick = "javascript:fnLogout(); javascript:noBack();" target="_top">Logout</a></div>
-	<!--End Chrome Upgrade-->		
-</body>    	 
+
+<tr><td align="left"><IMG SRC="${context}/images/NVTech_text0272.gif" align="left"></td></tr>
+
+</table>
+</BODY>
+</HTML>
