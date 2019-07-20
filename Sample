@@ -1,48 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xmlns:s="http://www.aetna.com/aefw/security"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-			   			   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-	   				       http://www.aetna.com/aefw/security
-	   					    http://schema.aetna.com/aefw/security/aefw-security-3.0.xsd">
-	<s:security>
-	
-	<s:localLogin defaultTargetUrl="/home"/>
-	<s:sharedLogin principalRequestHeader="aet_user"/>
-	
-	
-	<s:directory>
-		<s:directoryConnection url="${security.ldapServerUrl}" serviceAccountDn="${security.ldapServiceAccountDn}" password="${security.ldapServiceAccountPassword}"/>
-		<s:directoryLookup searchBase="${security.ldapSearchBase}" searchFilter="(cn={0})"/>
-	</s:directory>
-	
-	<s:userDetails class="com.aetna.prvrte.rteintranet.vo.UserVO" mapperClass="com.aetna.prvrte.rteintranet.web.filter.CustomUserDetailsMapper">
-	<s:roles>
-				<s:role name="ROLE_READ_WRITE"  definedBy="RTEWrite" definedByType="GROUP">
-					<s:hasAuthority name="AUTH_READ_WRITE_ACCESS"/>
-				</s:role>
-				<s:role name="ROLE_READ"  definedBy="MDDRteDb2" definedByType="GROUP">
-					<s:hasAuthority name="AUTH_READ_ACCESS"/>
-				</s:role>
-	</s:roles>
-	</s:userDetails>	
-					
-	
-	<s:resourceAuthorityMappings>
-		<s:resource pattern="/*">
-      			<s:allowedAuthority name="AUTH_READ_WRITE_ACCESS"/>
-    		</s:resource>
-    		<s:resource pattern="/*">
-      			<s:allowedAuthority name="AUTH_READ_ACCESS"/>
-    		</s:resource>
-	 	<s:resource pattern="/*">
-	 			<s:allowedAuthority name="ROLE_ANONYMOUS"/>
-      			<s:allowedAuthority name="ROLE_AUTHENTICATED_USER"/>
-    		</s:resource> 
-		</s:resourceAuthorityMappings>
-	<s:logout successUrl="http://aetnet.aetna.com"/>
-	
-</s:security>
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+ 	   http://www.springframework.org/schema/context http://www.springframework.org/schema/spring-context.xsd 
+ 	   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/spring-mvc.xsd"> 
+	   
+	   <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	   <property name="maxUploadSize" value="10240000"></property>
+	   </bean>
 </beans>
