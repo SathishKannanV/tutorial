@@ -1,306 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app id="WebApp_ID" version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
-	<display-name>RteIntranet-web</display-name>	
-	<session-config>
-		<session-timeout>20</session-timeout>
-	</session-config>
-	
-	<filter>
-		<description/>
-		<display-name>aefw.security.filterChain</display-name>
-		<filter-name>aefw.security.filterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter>
-		<description/>
-		<display-name>hiddenHttpMethodFilter</display-name>
-		<filter-name>HiddenHttpMethodFilter</filter-name>
-		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
-	</filter>
-	<filter>
-		<description></description>
-		<display-name>applicationFilterChain</display-name>
-		<filter-name>applicationFilterChain</filter-name>
-		<filter-class>com.aetna.prvrte.rteintranet.web.filter.AuthenticationFilter</filter-class>
-	</filter> 
-	
-	<filter-mapping>
-		<filter-name>aefw.security.filterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>HiddenHttpMethodFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>applicationFilterChain</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping> 
-	
-	<listener>
-		<listener-class>com.aetna.framework.web.ContextClassLoaderConditionerListener</listener-class>
-	</listener>
-	<listener>
-		<listener-class>com.aetna.framework.web.context.ContextLoaderListener</listener-class>
-	</listener>
-	<servlet>
-		<description></description>
-		<display-name>DispatcherServlet</display-name>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<servlet-class>com.aetna.framework.web.servlet.DispatcherServlet</servlet-class>
-		<init-param>
-			<param-name>contextConfigLocation</param-name>
-			<param-value>/WEB-INF/web-context/*.xml</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/welcome</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/home/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/procex/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/adasvct/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/benafrq/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/aetCtls/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/authTrx/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/bplvrp/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/dedacsr/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/erspmsg/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/indmntrp/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/plnlmEX/*</url-pattern>
-	</servlet-mapping>
-	<!-- RTETPBR  start -->
-	<servlet-mapping>
-			<servlet-name>DispatcherServlet</servlet-name>
-			<url-pattern>/rtetpbr/*</url-pattern>
-	</servlet-mapping>	
-	<!-- RTETPBR  end -->
-	<!-- For SITEMSG start -->
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/sitemsg/*</url-pattern>
-	</servlet-mapping>
-<!-- For SITEMSG end -->
-<!-- For RTETPRL start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtetprl/*</url-pattern>
-</servlet-mapping>
-<!-- For RTETPRL end -->
-<!-- For TIERDMSG start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/tierdmsg/*</url-pattern>
-</servlet-mapping>
-<!-- For TIERDMSG end -->	
-<!-- For SSTYPA start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/sstypa/*</url-pattern>
-</servlet-mapping>
-<!-- For SSTYPA end -->	
-<!-- For STSTYPA start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/ststypa/*</url-pattern>
-</servlet-mapping>
-<!-- For STSTYPA end -->		
-<!-- For TOSCT start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/tosct/*</url-pattern>
-</servlet-mapping>
-<!-- For TOSCT end -->
-<!-- For USRSEC start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/usrsec/*</url-pattern>
-</servlet-mapping>
-<!-- For USRSEC end -->	
-<!-- For TOSTEXT start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/tostext/*</url-pattern>
-</servlet-mapping>
-<!-- For TOSTEXT end -->	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rbbc/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rbrc/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtestyp/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtebeplm/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtedictr/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rterbac/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtestsc/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/rtetier/*</url-pattern>
-	</servlet-mapping>
-<!-- For HRP_Rule start -->
-<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/hrprule/*</url-pattern>
-</servlet-mapping>
-<!-- For HRP_Rule end -->
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/bplvs/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/sbmletk/*</url-pattern>
-	</servlet-mapping>
-		<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/srchdtl/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/eventtrack/*</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/errors/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>DispatcherServlet</servlet-name>
-		<url-pattern>/longruntrans/*</url-pattern>
-	</servlet-mapping>
-	<error-page>
-		<error-code>403</error-code>
-		<location>/errors/403</location>
-	</error-page>
-	<error-page>
-		<error-code>404</error-code>
-		<location>/errors/404</location>
-	</error-page>
-	<welcome-file-list>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
-	<env-entry>
-		<env-entry-name>logback/context-name</env-entry-name>
-		<env-entry-type>java.lang.String</env-entry-type>
-		<env-entry-value>RteIntranet</env-entry-value>
-	</env-entry>
-	<resource-ref id="ResourceRef_1196722496987">
-		<description>
-		</description>
-		<res-ref-name>jms/aefw.log.qcfRef</res-ref-name>
-		<res-type>javax.jms.QueueConnectionFactory</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-	<resource-ref id="ResourceRef_1196722497002">
-		<description>
-		</description>
-		<res-ref-name>jms/aefw.log.qRef</res-ref-name>
-		<res-type>javax.jms.Queue</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-	<resource-ref id="ResourceRef_1196722601647">
-		<description>
-		</description>
-		<res-ref-name>url/aefw.log.urlRef</res-ref-name>
-		<res-type>java.net.URL</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-	<resource-ref>
-		<description></description>
-		<res-ref-name>url/environment.properties</res-ref-name>
-		<res-type>java.net.URL</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-	
- <resource-ref>
-		<description></description>
-		<res-ref-name>url/policyUrl</res-ref-name>
-		<res-type>java.net.URL</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-	
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
- <resource-ref>
-		<description></description>
-		<res-ref-name>url/libraryPath</res-ref-name>
-		<res-type>java.net.URL</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref> 
 
-	<resource-ref>
-		<description>Database Connection</description>
-		<res-ref-name>jdbc/tableRef</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
 
-		<resource-ref>
-		<description>Database Connection</description>
-		<res-ref-name>jdbc/evtTrkRef</res-ref-name>
-		<res-type>javax.sql.DataSource</res-type>
-		<res-auth>Application</res-auth>
-		<res-sharing-scope>Shareable</res-sharing-scope>
-	</resource-ref>
-</web-app>
+<h1>Exception Page</h1>
+
+
+
+<h4>Exception: ${exception}</h4>
+
+
+
+<c:set var="rootCause" value="${exception}"/>
+
+<c:if test="${exception.cause != null}">
+
+	<c:set var="rootCause" value="${exception.cause}"/>
+
+</c:if>
+
+
+
+Root Cause:
+
+<c:out value="${rootCause.class.name}: ${rootCause.message}"/><br/>
+
+<c:forEach items="${rootCause.stackTrace}" var="st">
+
+	&nbsp;&nbsp;<c:out value="${st}"/><br/>
+
+</c:forEach>
+
+
+
