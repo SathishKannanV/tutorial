@@ -1,1064 +1,2005 @@
 package com.aetna.prvrte.rteintranet.web.controller;
 
-
-
-import java.sql.Date;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-
+import java.util.Iterator;
 import java.util.LinkedHashMap;
-
-import java.util.LinkedList;
-
 import java.util.List;
-
 import java.util.Map;
-
-
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpServletResponse;
-
-
-
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.logging.Log;
-
 import org.apache.commons.logging.LogFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
-
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.ModelAttribute;
-
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
+import com.aetna.prvrte.rteintranet.copybookbean.Dependent;
+import com.aetna.prvrte.rteintranet.copybookbean.DiganosisSet;
+import com.aetna.prvrte.rteintranet.copybookbean.EDIHeader;
+import com.aetna.prvrte.rteintranet.copybookbean.EDIProvider;
+import com.aetna.prvrte.rteintranet.copybookbean.Entity;
+import com.aetna.prvrte.rteintranet.copybookbean.IndividualData;
+import com.aetna.prvrte.rteintranet.copybookbean.MedicalCriteriaEntity;
+import com.aetna.prvrte.rteintranet.copybookbean.Member;
+import com.aetna.prvrte.rteintranet.copybookbean.Name;
+import com.aetna.prvrte.rteintranet.copybookbean.NonIndividualData;
+import com.aetna.prvrte.rteintranet.copybookbean.PlaceOfServiceSet;
+import com.aetna.prvrte.rteintranet.copybookbean.ProcedureInfo;
+import com.aetna.prvrte.rteintranet.copybookbean.ProcedureInfoSet;
+import com.aetna.prvrte.rteintranet.copybookbean.ServiceTypeSet;
+import com.aetna.prvrte.rteintranet.copybookbean.Subscriber;
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
 import com.aetna.prvrte.rteintranet.facade.Facade;
-
-import com.aetna.prvrte.rteintranet.translator.RTETranslator;
-
 import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
-
+import com.aetna.prvrte.rteintranet.util.FTPUtil;
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
-import com.aetna.prvrte.rteintranet.vo.LookUpTableListVO;
-
-import com.aetna.prvrte.rteintranet.vo.RbrcVO;
-
-import com.aetna.prvrte.rteintranet.vo.RbrcVO;
-
-
-
-/**
-
- * @author N657186
-
- * Cognizant_Offshore
-
- */
-
-
-
-/**
-
- * @author N657186
-
- *
-
- */
 
 @Controller
+@RequestMapping(value = "/eventtrack/testingtool/*")
+public class TestingToolController {
 
-@RequestMapping(value = "/rbrc/*")
-
-public class RbrcController {
-
-
-
-	public static final String RBRC_HOME = ".rbrcHome";
-
-	public static final String RBRC_LOOKUP = ".rbrcLookUp";
-
-	public static final String RBRC_ADD = ".rbrcAdd";
-
-	public static final String RBRC_HELP= ".rbrcHelp";
-
-	private static final String STC_LIST = ".stcList";
-
-	
-
-	
-
-	/*
-
-	 * Log factory initialization
-
-	 */
-
-	private static final Log log = LogFactory.getLog(RbrcController.class);
-
-	
-
-	/**
-
-	 * Declare a private method mav
-
-	 */
+	public static final String TESTINGTOOL_HOME = ".testingtoolHome";
+	public static final String EDI_TESTINGTOOL_HOME = ".editestingtoolHome";
+	public static final String TESTINGTOOL_RESULT = ".testingtoolResult";
+	public static final String EDI_TESTINGTOOL_RESULT = ".editestingtoolResult";
+	private static final Log log = LogFactory
+			.getLog(TestingToolController.class);
 
 	private ModelAndView mav;
-
-
-
-	/**
-
-	 * Declare a private method facade
-
+	/*
+	 * Model and view of failure operation.
 	 */
+	private ModelAndView errorModelAndView;
+	private String fileLocation;
+	private FTPUtil ftpUtil;
+	private String mailGroup;
+	private String edifileLocation;
+	private String edimailGroup;
+	private String isasegment;
+	private String filenamepattern;
 
-	@Autowired(required=true)
+	 public String getIsasegment() {
+		return isasegment;
+	}
 
+	public void setIsasegment(String isasegment) {
+		this.isasegment = isasegment;
+	}
+
+	public String getFilenamepattern() {
+		return filenamepattern;
+	}
+
+	public void setFilenamepattern(String filenamepattern) {
+		this.filenamepattern = filenamepattern;
+	}
+
+	 public String getEdimailGroup() {
+		return edimailGroup;
+	}
+
+	public void setEdimailGroup(String edimailGroup) {
+		this.edimailGroup = edimailGroup;
+	}
+
+
+	BidiMap vanIds = new DualHashBidiMap();
+	
+	 
+
+
+	public String getEdifileLocation() {
+		return edifileLocation;
+	}
+
+	public void setEdifileLocation(String edifileLocation) {
+		this.edifileLocation = edifileLocation;
+	}
+
+
+	@Autowired(required = true)
 	private Facade facade;
 
 	
+	/**P24915a Dec'16 changes begin*/
+	@SuppressWarnings("resource")
+	@RequestMapping(value = "/ediFileUpload", method = RequestMethod.POST)
+	public ModelAndView processFile(Model model,@RequestParam("csvfile")MultipartFile multifile) 
+	{
+		try
+		{
+		
+		InputStream inputStream = multifile.getInputStream();
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+		String line=null;
+		MedicalCriteriaEntity testingtoolvo = new MedicalCriteriaEntity();
+		int row=0;
+		while ((line = bufferedReader.readLine()) != null)
+		{
+		    
+		    if(row>0)
+		    {
+		    String cols[] = line.split(",");
+		    testingtoolvo = new MedicalCriteriaEntity();
+		    testingtoolvo.setHeader(new EDIHeader());
+		    testingtoolvo.getHeader().setConversation(cols[0]);
+		    testingtoolvo.getHeader().setTransactionType(cols[1]);
+		    testingtoolvo.getHeader().setVanId(cols[2]);
+		    testingtoolvo.getHeader().setVersionRels(cols[3]);
+		    testingtoolvo.getHeader().setTypeOfSearch(cols[4]);
+		    testingtoolvo.getHeader().setEligilibilityServiceDate(cols[5]);
+		    testingtoolvo.setProvider(new EDIProvider());
+		    testingtoolvo.getProvider().setProviderID(cols[6]);
+		    testingtoolvo.getProvider().setQualifier(cols[7]);
+		    testingtoolvo.getProvider().setEntity(new Entity());
+		    testingtoolvo.getProvider().getEntity().setEntityIndicator(cols[8]);
+		    if(cols[8].equals("1"))
+		    {
+		    	testingtoolvo.getProvider().getEntity().setIndividualData(new IndividualData());
+		    	testingtoolvo.getProvider().getEntity().getIndividualData().setEntityId(cols[9]);
+		    	testingtoolvo.getProvider().getEntity().getIndividualData().setFirstName(cols[10]);
+		    	testingtoolvo.getProvider().getEntity().getIndividualData().setMiddleName(cols[11]);
+		    	testingtoolvo.getProvider().getEntity().getIndividualData().setLastName(cols[12]);
+		    	testingtoolvo.getProvider().getEntity().getIndividualData().setTitleDesc(cols[13]);
+		    	
+		    }
+		    else
+		    {
+		    	testingtoolvo.getProvider().getEntity().setNonIndividualData(new NonIndividualData());
+		    	testingtoolvo.getProvider().getEntity().getNonIndividualData().setEntityId(cols[9]);
+		    	testingtoolvo.getProvider().getEntity().getNonIndividualData().setName(cols[12]);
+		    	
+		    }
+		    testingtoolvo.setMember(new Member());
+		    testingtoolvo.getMember().setIdentifier(cols[15]);
+		    testingtoolvo.getMember().setGroupID(cols[16]);
+		    testingtoolvo.setTempValue(cols[18]);
+		    testingtoolvo.setSubscriber(new Subscriber());
+		    testingtoolvo.getSubscriber().setName(new Name());
+		    testingtoolvo.getSubscriber().getName().setFirstName(cols[19]);
+		    testingtoolvo.getSubscriber().getName().setMiddleName(cols[20]);
+		    testingtoolvo.getSubscriber().getName().setLastName(cols[21]);
+		    testingtoolvo.getSubscriber().getName().setTitleDesc(cols[22]);
+		    testingtoolvo.getSubscriber().setDob(cols[23]);
+		    testingtoolvo.getSubscriber().setGender(cols[24]);
+		    testingtoolvo.getSubscriber().setCoverageTerminationDate(cols[25]);
+		    testingtoolvo.setDependent(new Dependent());
+		    testingtoolvo.getDependent().setName(new Name());
+		    testingtoolvo.getDependent().getName().setFirstName(cols[26]);
+		    testingtoolvo.getDependent().getName().setMiddleName(cols[27]);
+		    testingtoolvo.getDependent().getName().setLastName(cols[28]);
+		    testingtoolvo.getDependent().getName().setTitleDesc(cols[29]);
+		    testingtoolvo.getDependent().setDob(cols[30]);
+		    testingtoolvo.getDependent().setGender(cols[31]);
+		    testingtoolvo.getDependent().setTerminationDate(cols[32]);
+		    int servicecount = 0;
+		    if(cols[33] != null && !cols[33].trim().isEmpty())
+		    {
+		    	servicecount = Integer.parseInt(cols[33]);
+		    }
+		    testingtoolvo.setServiceTypeSet(new ServiceTypeSet());
+		    testingtoolvo.getServiceTypeSet().setServiceTypeCTR(String.valueOf(servicecount));
+		    testingtoolvo.getServiceTypeSet().setServiceTypeCode(new ArrayList<String>());
+		    for(int i=0;i<servicecount;i++)
+		    {
+		    	if(i == 0)
+		    	testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[34]);
+		    	if(i == 1)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[35]);
+		    	if(i==2)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[36]);
+		    	if(i==3)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[37]);
+		    	if(i==4)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[38]);
+		    	if(i==5)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[39]);
+		    	if(i==6)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[40]);
+		    	if(i==7)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[41]);
+		    	if(i==8)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[42]);
+		    	if(i==9)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[43]);
+		    	if(i==10)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[44]);
+		    	if(i==11)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[45]);
+		    	if(i==12)
+		    		testingtoolvo.getServiceTypeSet().getServiceTypeCode().add(cols[46]);
+		    	
+		    }
+		    testingtoolvo.setProcedureInfoSet(new ProcedureInfoSet());
+		    testingtoolvo.getProcedureInfoSet().setProcedureInfo(new ArrayList<ProcedureInfo>());
+		    
+		    int proCnt = 0;
+		    if(cols[47] != null && !cols[47].trim().isEmpty())
+		    {
+		    	proCnt = Integer.parseInt(cols[47]);
+		    }
+		    testingtoolvo.getProcedureInfoSet().setProcedureInfoCtr(String.valueOf(proCnt));
+		  
+		    for(int i=0;i<proCnt;i++)
+		    {
+		    	if(i==0)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[48]);
+		    		info.setQualifier(cols[49]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==1)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[50]);
+		    		info.setQualifier(cols[51]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==2)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[52]);
+		    		info.setQualifier(cols[53]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==3)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[54]);
+		    		info.setQualifier(cols[55]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==4)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[56]);
+		    		info.setQualifier(cols[57]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==5)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[58]);
+		    		info.setQualifier(cols[59]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==6)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[60]);
+		    		info.setQualifier(cols[61]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==7)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[62]);
+		    		info.setQualifier(cols[63]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==8)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[64]);
+		    		info.setQualifier(cols[65]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    	if(i==9)
+		    	{
+		    		ProcedureInfo info = new ProcedureInfo();
+		    		info.setProcedureCode(cols[66]);
+		    		info.setQualifier(cols[67]);
+		    	  testingtoolvo.getProcedureInfoSet().getProcedureInfo().add(info);	
+		    	}
+		    }
+		    		
+		    
+		    boolean result = appendSpaceWithRow(testingtoolvo);
+		    
+		    }
+		    row++;
+		    
+		}    
+			// do your processing       
+		String ftpValue = ftpUtil.sendEDIFTP();
+		mav = new ModelAndView(EDI_TESTINGTOOL_RESULT, "testingToolVO",
+				testingtoolvo);
+		mav.addObject("message", "The request has been submitted. Response will be sent to the mail group  ");
+		mav.addObject("messageMailGroup", getEdimailGroup());
+		mav.addObject("FTPmessage", ftpValue);
+		
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			mav = new ModelAndView(EDI_TESTINGTOOL_RESULT, "testingToolVO",
+					new MedicalCriteriaEntity());
+			mav.addObject("message", "Error in File generation");
+			mav.addObject("FTPmessage", "");
+		}
+	return mav;
+	}
+			
+	@RequestMapping(value = "/ediTestingToolHome", method = { 
+			RequestMethod.GET })
+	public ModelAndView getEdiTestingToolHome(Model model,
+			HttpServletRequest request)  {
 
-	private ModelAndView errormav;
+		try
+		{
+		Map<String, Object> adasvctMap = facade.getVanList();
+		List<HashMap<String, String>> maplist = (List<HashMap<String, String>>)adasvctMap.get("vanList");
+		
+		for(HashMap<String, String> mapval:maplist)
+		{
+			for (Map.Entry<String, String> entry : mapval.entrySet())
+			{
+				 vanIds.put(entry.getValue().toString(),entry.getKey().toString());
+			     
+			}
+			
+		}
+		request.setAttribute("testingToolValues", "testingToolSession");
+		request.setAttribute("vanidlist", vanIds);
+		log.warn("Entered 270 Testing tool Controller - getTestingToolHome()");
+		
 
-	
-
-	
-
-	/**
-
-	 * @param model
-
-	 * @return
-
-	 */
-
-	@RequestMapping(value="/rbrcHome", method ={ RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView getRbrcLookUpHome(final HttpServletRequest request,Model model) {
-
-		log.warn("Entered RbrcController - getRbrcLookUpHome()");
-
-		String securityLevel ="";
-
-		try{
-
-		securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-		ModelAndView mav = new ModelAndView(RBRC_HOME, "rbrcVO",  new RbrcVO());
-
-		mav.addObject("securityLevel", securityLevel);
-
-		log.warn("RbrcController - securityLevel: "+ securityLevel);
-
-		log.warn("Exit from RbrcController - getRbrcLookUpHome()");
-
+		mav = new ModelAndView(EDI_TESTINGTOOL_HOME, "testingToolVO",
+				new MedicalCriteriaEntity());
+		log.warn("Exit from 270 Testing tool Controller - getTestingToolHome()");
 		return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in RbrcController - getRbrcLookUpHome() method:"+e.getErrorMessage());
-
-			String errorMsg ="Error encountered when extracting data from the database (GatherRBRC). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
 		}
-
+		catch (ApplicationException e) {
+			log.error("Exception occured in TestingToolController - getVanList() method:"	+ e.getErrorMessage());
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP + "(TestingToolController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+			errorModelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+			errorModelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
+			return errorModelAndView;
+		}
 	}
-
 	
-
-	/**
-
-	 * @param rbrcVO
-
-	 * @return
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/GatherRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView getRbrcLookUp(final HttpServletRequest request, @ModelAttribute("rbrcForm")RbrcVO rbrcVO){
-
-		log.warn("Entered RbrcController - getRbrcLookUp()");
-
-		ModelAndView mav ;
-
-		String securityLevel ="";
-
-		Map rbrcResultMap = new HashMap();
-
-		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
-
-		try{
-
-		RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
-
-		rbrcResultMap = facade.getRbrcLookUp(rbrcDTO);
-
-		securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-		rbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcList");
-
-		rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
-
-		lookUpListVO.setRbrcVOList(rbrcVoList);
-
-		facade.getApplicationState().setRbrcList(rbrcVoList);
-
+	@RequestMapping(value = "/ediTestingToolResult", method = { RequestMethod.POST
+			 })
+	public ModelAndView getTestingToolLookUpListsample(
+			@ModelAttribute("testingtoolForm") MedicalCriteriaEntity testingtoolVO,
+			HttpServletRequest request) throws IOException {
 		
-
-		log.warn("getRbrcLookUp - rbrcMessage: "+ rbrcResultMap.get("rbrcMessage"));
-
-		mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		mav.addObject("rbrcMessage", rbrcResultMap.get("rbrcMessage"));
-
-		mav.addObject("securityLevel", securityLevel);
-
-		log.warn("Exit from RbrcController - getRbrcLookUp()");
-
-		return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in rbrcController - getrbrcLookUp() method:"+e.getErrorMessage());
-
-			
-
-			String errorMsg ="Error encountered when extracting data from the database (GatherRBRC). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
 		
-
-	}
-
-	
-
-	/**
-
-	 * @param model
-
-	 * @return
-
-	 */
-
-	@RequestMapping(value="/AddNewRbrcRow", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView loadAddNewRbrcRowScreen(Model model, HttpServletRequest request) {	
-
-		log.warn("Entered RbrcController - loadAddNewRbrcRowScreen()");
-
-		try{
-
-			String securityLevel ="";
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			ModelAndView mav = new ModelAndView(RBRC_ADD, "rbrcVO",  new RbrcVO());
-
-			mav.addObject("securityLevel", securityLevel);
-
-			log.warn("Exit from RbrcController - loadAddNewRbrcRowScreen()");
-
-			return mav;
-
-		} catch (Exception e){
-
-			log.error("Exception occured in RbrcController - loadAddNewRbrcRowScreen() method:"+e.getMessage());
-
-			
-
-			String errorMsg ="Error encountered when loading AddNewRbrc. "+
-
-					RteIntranetUtils.getTrimmedString(e.getMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-	}
-
-	
-
-	/**
-
-	 * @param rbrcVO
-
-	 * @return
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/AddRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView addNewRbrc(final HttpServletRequest request, @ModelAttribute("addRbrcForm")RbrcVO rbrcVO){
-
-		log.warn("Entered RbrcController - addNewRbrc()");
-
-		String securityLevel ="";
-
-		Map rbrcResultMap = new HashMap();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
-
-		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			Date todaysDate = new Date(System.currentTimeMillis());
-
-			String postedDate = todaysDate.toString();
-
-			
-
-			rbrcVO.setDbPostedDate(postedDate);
-
-			rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-			RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
-
-			rbrcResultMap = facade.addNewRbrc(rbrcDTO);
-
-			
-
-			if(rbrcResultMap.get("rbrcList")!=null){
-
-				rbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcList");
-
-				rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
-
-			}
-
-			lookUpListVO.setRbrcVOList(rbrcVoList);
-
-			facade.getApplicationState().setRbrcList(rbrcVoList);
-
-			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);	
-
-			mav.addObject("rbrcMessage", rbrcResultMap.get("rbrcMessage"));
-
-			mav.addObject("securityLevel", securityLevel);
-
-			log.warn("addNewRbrc - rbrcMessage: "+ rbrcResultMap.get("rbrcMessage"));
-
-			log.warn("Exit from RbrcController - addNewRbrc()");
-
-			return mav;	
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in RbrcController - addNewRbrc() method:"+e.getErrorMessage());
-
-			
-
-			String errorMsg ="Error encountered when adding a row to the database (AddRBRC). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
 		
-
-	}
-
-	
-
-	@RequestMapping(value="/rbrcHelp")
-
-	public String loadRbrcHelp() {   
-
-		return RBRC_HELP;
-
-	}
-
-	
-
-	@RequestMapping(value="/stcList")
-
-	public String loadStcList() {	   
-
-		return STC_LIST;
-
-	}
-
-	
-
-	
-
-	/**
-
-	 * @param rbrcVO
-
-	 * @param takeAction
-
-	 * @return
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/deleteRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView deleteRbrc(final HttpServletRequest request, @ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered RbrcController - deleteRbrc()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		String securityLevel ="";
-
-		boolean isRbrcDeleted = true;
-
-		Map rbrcResultMap = new HashMap();
-
-		RbrcDTO rbrcDTO = new RbrcDTO();
-
-		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
 		
-
-		try{
-
-			 rbrcList = lookUpListVO.getRbrcVOList();
-
-			int i;
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			if ((rbrcList != null) && (takeAction != null)) {
-
-				for(RbrcVO rbrcVO : rbrcList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-			
-
-				for (int j = takeAction.length - 1; j >= 0; j--) {
-
-					i = Integer.parseInt(takeAction[j]);
-
-
-
-					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
-
-					if(existingRbrc!=null){
-
-					if (existingRbrc.getDbUpdatedInd() != ApplicationConstants.COPY) {
-
-						
-
-						rbrcDTO = RTETranslator.toRbrcDTO(existingRbrc);
-
-						
-
-						rbrcResultMap = facade.deleteRbrc(rbrcDTO);
-
-						
-
-						rbrcMsg = (String) rbrcResultMap.get("rbrcMessage");
-
-						isRbrcDeleted = (Boolean) rbrcResultMap.get("isRbrcDeleted");
-
-						
-
-						if(isRbrcDeleted){
-
-							rbrcList.remove(i);
-
-						}else{
-
-							j = 0;
-
-						}
-
-					}else{
-
-						rbrcList.remove(i);
-
-					}	
-
-					}
-
-			}
-
-				if(isRbrcDeleted)
-
-					rbrcMsg = "Rows selected were Deleted in the database/list";
-
-				
-
-		}else
-
-			rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			
-
-			facade.getApplicationState().setRbrcList(rbrcList);
-
-			lookUpListVO.setRbrcVOList(rbrcList);
-
-			
-
-			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		    mav.addObject("rbrcMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("deleteRbrc - rbrcMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from RbrcController - deleteRbrc()");
-
-			return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in RbrcController - deleteRbrc() method:"+e.getErrorMessage());
-
-			
-
-			String errorMsg ="Error encountered when extracting data from the database (ProcessRBRC). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-	}
-
-	
-
-	/**
-
-	 * @param rbrcVO
-
-	 * @param takeAction
-
-	 * @return
-
-	 */
-
-	@RequestMapping(value="/copyRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView copyRbrc(final HttpServletRequest request,@ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered RbrcController - copyRbrc()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		String securityLevel ="";
-
-		int i;
-
-		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			rbrcList = lookUpListVO.getRbrcVOList();
-
-			Date todaysDate = new Date(System.currentTimeMillis());
-
-			String postedDate = todaysDate.toString(); //Initialize Posted Date to today's date
-
-			if ((rbrcList != null) && (takeAction != null)) {
-
-				for(RbrcVO rbrcVO : rbrcList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-				for (int j = 0; j < takeAction.length; j++) {
-
-					
-
-					i = Integer.parseInt(takeAction[j]);
-
-					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
-
-					
-
-					RbrcVO copyRbrc = new RbrcVO(existingRbrc.getDbSiteCd(), existingRbrc.getDbRiderCd(), 
-
-							existingRbrc.getDbSvcTypeCd(), postedDate,
-
-							existingRbrc.getDbDescTxt(),existingRbrc.getDbIONtwkCd(), existingRbrc.getDbTOSCd(), 
-
-							existingRbrc.getDbHMOSrcBnInd(), existingRbrc.getTextSendInd(),
-
-							existingRbrc.getPrevCareInd(),existingRbrc.getGenderCd(), ApplicationConstants.COPY);
-
-					rbrcList.add(copyRbrc);
-
-				}
-
-				rbrcMsg = "Copied rows were placed at the bottom of the list and highlighted.";
-
-			}else
-
-				rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			
-
-			facade.getApplicationState().setRbrcList(rbrcList);
-
-			lookUpListVO.setRbrcVOList(rbrcList);
-
-			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
-
-
-
-		    mav.addObject("rbrcMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("copyRbrc - rbrcMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from RbrcController - copyRbrc()");
-
-			return mav;		
-
-			
-
-		}catch (Exception e){
-
-			log.error("Exception occured in RbrcController - copyRbrc() method:"+e.getMessage());
-
-			
-
-			String errorMsg ="Error encountered when extracting data from the database (ProcessRbrc). ";
-
-			errorMsg.concat(e.toString());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-				
-
-	}
-
-	
-
-	/**
-
-	 * @param request
-
-	 * @param rbrcVO
-
-	 * @param takeAction
-
-	 * @return
-
-	 */
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value="/addUpdateRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
-
-	public ModelAndView addUpdateRbrc(final HttpServletRequest request, @ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
-
-		log.warn("Entered RbrcController - addUpdateRbrc()");
-
-		ModelAndView mav ;
-
-		String rbrcMsg = "";
-
-		List<RbrcVO> updatedRbrcList = new LinkedList<RbrcVO>();
-
-
-
-	
-
-		List<RbrcDTO> updatedRbrcDtoList = new LinkedList<RbrcDTO>();
-
-		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
-
-		List<RbrcVO> modifiedRbrcVoList = new LinkedList<RbrcVO>();
-
-		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
-
-		RbrcDTO editedRbrcDTO = new RbrcDTO();
-
-		Map rbrcResultMap = new HashMap();
-
-		boolean isRbrcAddOrUpdated = false;
-
-		String securityLevel ="";
-
-		int i;
-
-		try{
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-			rbrcVoList = facade.getApplicationState().getRbrcList();
-
-			modifiedRbrcVoList = lookUpListVO.getRbrcVOList();
-
-			
-
-			Date todaysDate = new Date(System.currentTimeMillis());
-
-			String postedDate = todaysDate.toString();
-
-			if (takeAction != null && takeAction.length != 0) {
-
-				if(rbrcVoList != null && rbrcVoList.size() != 0 
-
-						&& modifiedRbrcVoList != null && modifiedRbrcVoList.size() != 0){
-
-				for(RbrcVO rbrcVO : rbrcVoList){
-
-					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
-
-						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
-
-					}
-
-				}
-
-				rbrcDtoList = RTETranslator.toRbrcDTOList(rbrcVoList);
-
-			
-
-				for (int j = 0; j < takeAction.length; j++) {
-
-					char updatedInd = ApplicationConstants.UPDATE_IND_Y;
-
-					
-
-					i = Integer.parseInt(takeAction[j]);
-
-					RbrcVO seletedRbrc = (RbrcVO) rbrcVoList.get(i);
-
-					RbrcVO editedRbrc = (RbrcVO) modifiedRbrcVoList.get(i);
-
-					log.warn("addUpdateRbrc - user selected: "+ i);
-
-					
-
-										
-
-					
-
-					RbrcVO editedRbrcVO = new RbrcVO(editedRbrc.getDbSiteCd(), editedRbrc.getDbRiderCd(), 
-
-							editedRbrc.getDbSvcTypeCd(), postedDate,
-
-							editedRbrc.getDbDescTxt(),editedRbrc.getDbIONtwkCd(), editedRbrc.getDbTOSCd(), 
-
-							editedRbrc.getDbHMOSrcBnInd(),editedRbrc.getTextSendInd(),
-
-							editedRbrc.getPrevCareInd() ,editedRbrc.getGenderCd(), updatedInd);
-
-					if(editedRbrcVO!=null){
-
-					editedRbrcDTO = RTETranslator.toRbrcDTO(editedRbrcVO);
-
-					}
-
-					rbrcResultMap = facade.addUpdateRbrc(editedRbrcDTO, rbrcDtoList, i, seletedRbrc.getDbUpdatedInd());
-
-					updatedRbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcDtoList");
-
-					if(updatedRbrcDtoList!=null){
-
-					updatedRbrcList = RTETranslator.toRbrcVOList(updatedRbrcDtoList);
-
-					}
-
-					isRbrcAddOrUpdated = (Boolean) rbrcResultMap.get("isrbrcAddorUpdated");
-
-					rbrcMsg = (String) rbrcResultMap.get("rbrcMessage") ;
-
-					if(!isRbrcAddOrUpdated){
-
-						j = takeAction.length;
-
-					}
-
-				}
-
-				
-
-				if(isRbrcAddOrUpdated){
-
-				rbrcMsg = "Rows added were placed at the bottom of the list. All rows that changed the database are highlighted.";
-
-				String xSiteCd, ySiteCd, xRiderCd, yRiderCd, xSTC, ySTC;
-
-				for (int x = updatedRbrcList.size() - 1 ; x > 0;  x--) {
-
-					RbrcVO xRBRC = (RbrcVO) updatedRbrcList.get(x);
-
-					xSiteCd= xRBRC.getDbSiteCd();
-
-					xRiderCd= xRBRC.getDbRiderCd();
-
-					xSTC = xRBRC.getDbSvcTypeCd();
-
-					if (xRBRC.getDbUpdatedInd() != ApplicationConstants.COPY) {
-
-						for (int y = x - 1; y > -1; y--) {
-
-							RbrcVO yRBRC = (RbrcVO) updatedRbrcList.get(y);
-
-							ySiteCd= yRBRC.getDbSiteCd();
-
-							yRiderCd= yRBRC.getDbRiderCd();
-
-							ySTC = yRBRC.getDbSvcTypeCd();
-
-							if (xSiteCd.equals(ySiteCd) && xRiderCd.equals(yRiderCd) && xSTC.equals(ySTC)) {
-
-								updatedRbrcList.remove(y); 
-
-								x--;
-
-							}
-
-						}
-
-					}
-
-				}
-
-				}
-
-				lookUpListVO.setRbrcVOList(updatedRbrcList);
-
-				facade.getApplicationState().setRbrcList(updatedRbrcList);
-
-			} else {
-
-				throw new ApplicationException(ApplicationConstants.SESSION_EXPIRED);
-
-			}
-
+		boolean result = appendSpace(testingtoolVO);
+		if(result){
+			String ftpValue = ftpUtil.sendEDIFTP();
+			//log.warn("FTP RESULT: "+ftpValue);
+			mav = new ModelAndView(EDI_TESTINGTOOL_RESULT, "testingToolVO",
+					testingtoolVO);
+			mav.addObject("message", "The request has been submitted. Response will be sent to the mail group  ");
+			mav.addObject("messageMailGroup", getEdimailGroup());
+			mav.addObject("FTPmessage", ftpValue);
 		}else{
-
-			rbrcMsg = "Take action was not selected for any of the displayed rows";
-
-			lookUpListVO.setRbrcVOList(rbrcVoList);	
-
-			facade.getApplicationState().setRbrcList(rbrcVoList);
-
+			mav = new ModelAndView(EDI_TESTINGTOOL_RESULT, "testingToolVO",
+					testingtoolVO);
+			mav.addObject("message", "Error in File generation");
+			mav.addObject("FTPmessage", "");
 		}
-
-			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
-
-		    mav.addObject("rbrcMessage",rbrcMsg);
-
-		    mav.addObject("securityLevel", securityLevel);
-
-		    log.warn("addUpdateRbrc - rbrcMessage: "+ rbrcMsg);
-
-		    log.warn("Exit from RbrcController - addUpdateRbrc()");
-
-			return mav;
-
-		}catch (ApplicationException e){
-
-			log.error("Exception occured in RbrcController - deleteRbrc() method:"+e.getErrorMessage());
-
-			
-
-			String errorMsg ="Error encountered when extracting data from the database (ProcessRBRC). "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
-
-			return errormav;
-
-		}
-
-		
-
+		log.warn("Exit from 270 Testing tool Controller - getTestingToolLookUpList()");
+		return mav;
+	
 	}
+	/**P24915a Dec'16 changes end*/
+	@RequestMapping(value = "/testingtoolHome", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public ModelAndView getTestingToolHome(Model model,
+			HttpServletRequest request) {
 
+		request.setAttribute("testingToolValues", "testingToolSession");
+		log.warn("Entered 270 Testing tool Controller - getTestingToolHome()");
+
+		mav = new ModelAndView(TESTINGTOOL_HOME, "testingToolVO",
+				new MedicalCriteriaEntity());
+		log.warn("Exit from 270 Testing tool Controller - getTestingToolHome()");
+		return mav;
+	}
 	
 
-	/**
-
-	 * Method to export Rbrc look up table to excel work book
-
-	 * 
-
-	 * @param lookUpTableListVO
-
-	 *            list of rbrc object.
-
-	 * @param response
-
-	 *            response object to return
-
-	 * @return exported file to view.
-
-	 */
-
-	@RequestMapping(value = "/rbrcExport", method = RequestMethod.POST)
-
-	public ModelAndView rbrcExport(HttpServletResponse response){
-
-		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
-
-		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-		String rbrcMsg="";
-
-		try{
-
-			rbrcList = facade.getApplicationState().getRbrcList();
-
-			if(rbrcList != null && rbrcList.size() != 0){
-
-			// Key map to create header
-
-			Map<String,String> keyMap = new LinkedHashMap<String,String>();
-
-			keyMap.put("dbSiteCd", "Site Code");
-
-			keyMap.put("dbRiderCd", "Rider Code");
-
-			keyMap.put("dbSvcTypeCd", "Svc Type");
-
-			keyMap.put("dbDescTxt", "Description");
-
-			keyMap.put("dbIONtwkCd", "IO Network Code");
-
-			keyMap.put("dbTOSCd", "TOS Code");
-
-			keyMap.put("dbHMOSrcBnInd", "True Ben Code Ind");
-
-			keyMap.put("textSendInd", "Text Send Ind");
-
-			keyMap.put("prevCareInd", "Prev Care Ind");
-
-			keyMap.put("genderCd", "Gender Code");
-
-			keyMap.put("dbPostedDate", "Posted Date");
-
-			
-
-			RteIntranetUtils.exportToExcel(response, rbrcList, keyMap);
-
-			rbrcMsg = "LookUp table exported successfully.";
-
-			} else {
-
-				rbrcMsg = "No data found.";
-
-			}
-
-			lookUpTableListVO.setRbrcVOList(rbrcList);
-
-	        mav = new ModelAndView(RBRC_LOOKUP,"lookUpTableListVO", lookUpTableListVO);
-
-		    mav.addObject("rbrcMessage",rbrcMsg);
-
-			return mav;
-
-		}catch (ApplicationException e) {
-
-			log.error("Exception occured in RbrcController - rbrcExport() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = "Error encountered while export to excel. "+
-
-					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
-
-			return errormav;
-
+	@RequestMapping(value = "/testingtoolResult", method = { RequestMethod.POST,
+			RequestMethod.GET })
+	public ModelAndView getTestingToolLookUpList(
+			@ModelAttribute("testingtoolForm") MedicalCriteriaEntity testingtoolVO,
+			HttpServletRequest request) {
+		log.warn("Entered 270 Testing tool Controller - getTestingToolLookUpList()");
+		boolean result = appendSpaces(testingtoolVO);
+		if(result){
+			String ftpValue = ftpUtil.sendFTP();
+			log.warn("FTP RESULT: "+ftpValue);
+			mav = new ModelAndView(TESTINGTOOL_RESULT, "testingToolVO",
+					testingtoolVO);
+			mav.addObject("message", "The request has been submitted. Response will be sent to the mail group  ");
+			mav.addObject("messageMailGroup", getMailGroup());
+			mav.addObject("FTPmessage", ftpValue);
+		}else{
+			mav = new ModelAndView(TESTINGTOOL_RESULT, "testingToolVO",
+					testingtoolVO);
+			mav.addObject("message", "Error in File generation");
+			mav.addObject("FTPmessage", "");
 		}
+		log.warn("Exit from 270 Testing tool Controller - getTestingToolLookUpList()");
+		return mav;
+	}
+	
+	public boolean appendSpaces(MedicalCriteriaEntity testingtoolVO){
+		
+		log.warn("Entered 270 Testing tool Controller - appendSpaces()");
+		log.error("File Location - appendSpaces()"+getFileLocation());
+		log.warn("File Location - appendSpaces()"+getFileLocation());
+		File file = new File(getFileLocation());
+		BufferedWriter writer = null;
+		boolean fileWrite= false;
+		try {
+			writer = new BufferedWriter(new FileWriter(file)); 
+			//EDI Header
+			EDIHeader header = new EDIHeader();
+			String str = testingtoolVO.getHeader().getTransactionType();
+			str= RteIntranetUtils.spaceFiller(3, str);
+			header.setTransactionType(str);
+			str = testingtoolVO.getHeader().getVanId();
+			str= RteIntranetUtils.spaceFiller(10, str);
+			header.setVanId(str);
+			str = testingtoolVO.getHeader().getConversation();
+			str= RteIntranetUtils.spaceFiller(30, str);
+			header.setConversation(str);
+			str = testingtoolVO.getHeader().getVersionRels();
+			str= RteIntranetUtils.spaceFiller(12, str);
+			header.setVersionRels(str);
+			str = testingtoolVO.getHeader().getTypeOfSearch();
+			str= RteIntranetUtils.spaceFiller(3, str);
+			header.setTypeOfSearch(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			header.setEligilibilityServiceDate(str);
+			testingtoolVO.setHeader(header);
+		    writer.write(header.getHeader().toString());
+		    //EDI Provider
+		    EDIProvider provider = new EDIProvider();
+			str = testingtoolVO.getProvider().getProviderID();
+			str= RteIntranetUtils.spaceFiller(17, str);
+			writer.append(str);
+			provider.setProviderID(str);
+			str = testingtoolVO.getProvider().getQualifier();
+			str= RteIntranetUtils.spaceFiller(2, str);
+			provider.setQualifier(str);
+			writer.append(str);
+			Entity entity = new Entity();
+			str= testingtoolVO.getProvider().getEntity().getEntityIndicator();
+			str= RteIntranetUtils.spaceFiller(1, str);
+			writer.append(str);
+			str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+			if(str.equals("1")){
+				
+				IndividualData indv = new IndividualData();
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getEntityId();
+				str= RteIntranetUtils.spaceFiller(2, str);
+				indv.setEntityId(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getLastName();
+				str= RteIntranetUtils.spaceFiller(60, str);
+				indv.setLastName(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getFirstName();
+				str= RteIntranetUtils.spaceFiller(35, str);
+				indv.setFirstName(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getMiddleName();
+				str= RteIntranetUtils.spaceFiller(25, str);
+				indv.setMiddleName(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getTitleDesc();
+				str= RteIntranetUtils.spaceFiller(10, str);
+				indv.setTitleDesc(str);
+				writer.append(str);
+				entity.setIndividualData(indv);
+			}else if(str.equals("2")){
+				
+				NonIndividualData nonindv = new NonIndividualData();
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getEntityId();
+				str= RteIntranetUtils.spaceFiller(2, str);
+				nonindv.setEntityId(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getName();
+				str= RteIntranetUtils.spaceFiller(60, str);
+				nonindv.setName(str);
+				writer.append(str);
+				str= RteIntranetUtils.spaceFiller(70);
+				writer.append(str);
+				entity.setNonIndividualData(nonindv);
+			}else {
+				IndividualData indv = new IndividualData();
+				str= RteIntranetUtils.spaceFiller(132, str);
+				indv.setTitleDesc(str);
+				writer.append(str);
+				entity.setIndividualData(indv);
+			}
+			
+			provider.setEntity(entity);
+			testingtoolVO.setProvider(provider);
+			Member member = new Member();
+			str = testingtoolVO.getMember().getIdentifier();
+			str= RteIntranetUtils.spaceFiller(17, str);
+			member.setIdentifier(str);
+			writer.append(str);
+			str = testingtoolVO.getMember().getGroupID();
+			str= RteIntranetUtils.spaceFiller(17, str);
+			member.setGroupID(str);
+			writer.append(str);
+			testingtoolVO.setMember(member);
+			Subscriber subscriber = new Subscriber();
+			str = testingtoolVO.getSubscriber().getSsn();
+			str= RteIntranetUtils.ZeroFiller(9, str);
+			subscriber.setSsn(str);
+			writer.append(str);
+			Name name = new Name();
+			str = testingtoolVO.getSubscriber().getName().getFirstName();
+			str= RteIntranetUtils.spaceFiller(25, str);
+			name.setFirstName(str);
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getMiddleName();
+			str= RteIntranetUtils.spaceFiller(25, str);
+			name.setMiddleName(str);
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getLastName();
+			str= RteIntranetUtils.spaceFiller(35, str);
+			name.setLastName(str);
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getTitleDesc();
+			str= RteIntranetUtils.spaceFiller(10, str);
+			name.setTitleDesc(str);
+			writer.append(str);
+			subscriber.setName(name);
+			str = testingtoolVO.getSubscriber().getDob();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			subscriber.setDob(str);
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getGender();
+			str= RteIntranetUtils.spaceFiller(1, str);
+			subscriber.setGender(str);
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getCoverageTerminationDate();
+			str= RteIntranetUtils.zeroFiller(8, str);
+			subscriber.setCoverageTerminationDate(str);
+			writer.append(str);
+			testingtoolVO.setSubscriber(subscriber);
+			Dependent dependent = new Dependent();
+			name = new Name();
+			str = testingtoolVO.getDependent().getName().getFirstName();
+			str= RteIntranetUtils.spaceFiller(25, str);
+			name.setFirstName(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getMiddleName();
+			str= RteIntranetUtils.spaceFiller(25, str);
+			name.setMiddleName(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getLastName();
+			str= RteIntranetUtils.spaceFiller(35, str);
+			name.setLastName(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getTitleDesc();
+			str= RteIntranetUtils.spaceFiller(10, str);
+			name.setTitleDesc(str);
+			writer.append(str);
+			dependent.setName(name);
+			str = testingtoolVO.getDependent().getDob();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			dependent.setDob(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getGender();
+			str= RteIntranetUtils.spaceFiller(1, str);
+			dependent.setGender(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getRelationship();
+			str= RteIntranetUtils.spaceFiller(2, str);
+			dependent.setRelationship(str);
+			writer.append(str);
+			str = testingtoolVO.getDependent().getTerminationDate();
+			str= RteIntranetUtils.zeroFiller(8, str);
+			dependent.setTerminationDate(str);
+			writer.append(str);
+			testingtoolVO.setDependent(dependent);
+			ServiceTypeSet serviceTypeSet = new ServiceTypeSet();
+			str = testingtoolVO.getServiceTypeSet().getServiceTypeCTR();
+			str= RteIntranetUtils.zeroFiller(2, str);
+			serviceTypeSet.setServiceTypeCTR(str);
+			writer.append(str);
+			writer.append(testingtoolVO.getServiceTypeSet().getServiceType().toString());
+			serviceTypeSet.setServiceTypeCode(testingtoolVO.getServiceTypeSet().getServiceTypeCode());
+			testingtoolVO.setServiceTypeSet(serviceTypeSet);
+			ProcedureInfoSet procedure = new ProcedureInfoSet();
+			str = testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr();
+			str= RteIntranetUtils.zeroFiller(2, str);
+			procedure.setProcedureInfoCtr(str);
+			writer.append(str);
+			writer.append(testingtoolVO.getProcedureInfoSet().getProcedure().toString());
+			DiganosisSet diganosisSet = new DiganosisSet();
+			str = testingtoolVO.getDiganosisSet().getDiganosisCtr();
+			str= RteIntranetUtils.zeroFiller(2, str);
+			diganosisSet.setDiganosisCtr(str);
+			writer.append(str);
+			writer.append(testingtoolVO.getDiganosisSet().getDiganosisSet().toString());
+			PlaceOfServiceSet placeOfService = new PlaceOfServiceSet();
+			str = testingtoolVO.getPlaceOfServiceSet().getPlaceOfServiceCtr();
+			str= RteIntranetUtils.zeroFiller(2, str);
+			placeOfService.setPlaceOfServiceCtr(str);
+			writer.append(str);
+			writer.append(testingtoolVO.getPlaceOfServiceSet().getPos().toString());
+			
+		} catch (IOException e) {
+			log.error(e.getStackTrace());
+			return false;
+		} finally {
+		    if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					log.error(e.getStackTrace());
+					return false;
+				}
+		}
+		
+		fileWrite = characterCountInFile();
+		log.warn("File writing is successful: "+getFileLocation());
+		log.error("File writing is successful: "+getFileLocation());
+		log.warn("Exit from 270 Testing tool Controller - appendSpaces()");
+		return fileWrite;
+	}
+	public String getCurrentTimeStamp() {
+	    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");//dd/MM/yyyy
+	    Date now = new Date();
+	    String strDate = sdfDate.format(now).replace(":", "").replace("-", "").replace(" ", "").replace(".", "");
+	    
+	    return getFilenamepattern()+strDate + System.nanoTime() + ".txt";
+	}
+	/**P24915a Dec'16 changes begin*/
+	public boolean appendSpace(MedicalCriteriaEntity testingtoolVO){
+		
+		log.warn("Entered 270 Testing tool Controller - appendSpaces()");
+		log.error("File Location - appendSpaces()"+getEdifileLocation()+getCurrentTimeStamp());
+		File file = new File(getEdifileLocation()+getCurrentTimeStamp());
+		BufferedWriter writer = null;
+		
+		boolean fileWrite= true;
+		int count=1;
+		try {
+			writer = new BufferedWriter(new FileWriter(file));
+			EDIHeader header = new EDIHeader();
+			String str = RteIntranetUtils.spaceFiller(10,testingtoolVO.getHeader().getVanId());
+			header.setVanId(str);
+			String rid=getRandom();
+			str="ISA*00*          *00*          *30*"+str+"     *01*042064683      *150723*2048*^*00501*"+rid+"*1*"+getIsasegment()+"*:";
+			writer.write(str);
+			writer.append("~");
+			str = testingtoolVO.getHeader().getVanId();
+			str = "GS*HS*"+str;
+			writer.append(str);
+			str = testingtoolVO.getHeader().getVersionRels();
+			header.setVersionRels(str);
+			str ="*"+str;
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			header.setEligilibilityServiceDate(str);
+			str = "*"+str;
+			writer.append(str);
+			str = "*105715*35152114*X*005010X279A1";
+			writer.append(str);
+			str="ST*";
+			writer.append("~");
+			writer.append(str);
+			str = testingtoolVO.getHeader().getTransactionType();
+			header.setTransactionType(str);
+			writer.append("270");
+			str="*000000001*005010X279A1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="BHT*0022*13*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getConversation();
+			header.setConversation(str);
+			writer.append(str);
+			str="WEB*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			header.setEligilibilityServiceDate(str);
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			str="*105715";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*1**20*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*PR*2*AETNA*****PI*953402799";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*2*1*21*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*";
+			writer.append(str);
+			str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+			Entity entity = new Entity();
+			EDIProvider provider = new EDIProvider();
+			if(str.equals("1"))
+			{
+				IndividualData indata = new IndividualData();
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getEntityId();//Entity type
+				indata.setEntityId(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+				entity.setEntityIndicator(str);
+				writer.append("*");
+				writer.append(str);
+				writer.append("*");
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getLastName();
+				indata.setLastName(str);
+				writer.append(str);
+				str = "*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getFirstName();
+				indata.setFirstName(str);
+				writer.append(str);
+				str="****";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getQualifier();
+				provider.setQualifier(str);
+				writer.append(str);//PROV-TYPE AS A QUALIFIER
+				str="*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getProviderID();
+				provider.setProviderID(str);
+				writer.append(str);
+				entity.setIndividualData(indata);
+			}
+			else
+			{
+				NonIndividualData nininddata = new NonIndividualData();
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getEntityId();//Entity type
+				nininddata.setEntityId(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+				entity.setEntityIndicator(str);
+				writer.append("*");
+				writer.append(str);
+				writer.append("*");
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getName();
+				nininddata.setName(str);
+				writer.append(str);
+				str="*****";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getQualifier();
+				provider.setQualifier(str);
+				writer.append(str);//PROV-TYPE AS A QUALIFIER
+				str="*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getProviderID();
+				provider.setProviderID(str);
+				writer.append(str);
+				
+			}
+			Member member = new Member();
+			
+			if(testingtoolVO.getMember().getIdentifier()==null || testingtoolVO.getMember().getIdentifier().trim().isEmpty())
+			{
+				
+				if(testingtoolVO.getTempValue().contains("Subscriber"))
+				{
+					count++;
+					writer.append("~");
+					str="HL*3*2*22*0";
+					writer.append(str);
+					count++;
+					writer.append("~");
+					str="NM1*IL*1";
+					writer.append(str);
+					if((testingtoolVO.getSubscriber().getName().getLastName() != null && !testingtoolVO.getSubscriber().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getSubscriber().getName().getFirstName() != null && !testingtoolVO.getSubscriber().getName().getFirstName().trim().isEmpty()))
+					{
+					str="*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getName().getLastName();
+					writer.append(str);
+					if(testingtoolVO.getSubscriber().getName().getFirstName() != null && !testingtoolVO.getSubscriber().getName().getFirstName().trim().isEmpty())
+					{
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getName().getFirstName();
+					writer.append(str);
+					}
+					}
+					count++;
+					writer.append("~");
+					if(!(testingtoolVO.getSubscriber().getDob().trim().isEmpty() && testingtoolVO.getSubscriber().getGender().trim().isEmpty()))
+					{
+					
+					str = "DMG*D8*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getDob();
+					 writer.append(str);
+					if(testingtoolVO.getSubscriber().getGender() != null && !testingtoolVO.getSubscriber().getGender().trim().isEmpty())
+					{
+					str="*";
+					writer.append(str);
+					if(testingtoolVO.getSubscriber().getGender().equals("1"))
+						str = "M";
+					else 
+						str = "F";
+					
+					
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+				
+					str="DTP*291*D8*";
+					writer.append(str);
+					str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+					str= RteIntranetUtils.ZeroFiller(8, str);
+					writer.append(str);
+					count++;
+					writer.append("~");
+					if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+					{
+					
+						str="EQ*";
+						writer.append(str);
+						writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+						if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+						{
+						writer.append("*");
+						str = testingtoolVO.getHeader().getTypeOfSearch();
+						writer.append(str);
+						}
+						count++;
+						writer.append("~");
+					}
+					
+					if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+					{
+						for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+						{
+							if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+							{
+							
+							writer.append("EQ**");
+							writer.append("AD");
+							writer.append(":");
+							writer.append(info.getProcedureCode());
+							if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+							{
+							writer.append("*");
+							str = testingtoolVO.getHeader().getTypeOfSearch();
+							writer.append(str);
+							}
+							count++;
+							writer.append("~");
+							}
+							
+						}
+					}
+					
+					
+					str="SE*"+count+"*000000001";
+					writer.append(str);
+					writer.append("~");
+					str="GE*1*35152114";
+					writer.append(str);
+					writer.append("~");
+					str="IEA*1*"+rid;
+					writer.append(str);
+					writer.append("~");
+				}
+				else 
+				{
+					count++;
+					writer.append("~");
+					str="HL*3*2*23*0";
+					writer.append(str);
+					count++;
+					writer.append("~");
+					str="NM1*IL*1";
+					writer.append(str);
+					if((testingtoolVO.getDependent().getName().getLastName() != null && !testingtoolVO.getDependent().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getDependent().getName().getFirstName()!=null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty()))
+					{	
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getName().getLastName();
+					writer.append(str);
+					if(testingtoolVO.getDependent().getName().getFirstName() != null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty())
+					{
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getName().getFirstName();
+					writer.append(str);
+					}
+					}
+					count++;
+					writer.append("~");
+					if(!(testingtoolVO.getDependent().getDob().trim().isEmpty() && testingtoolVO.getDependent().getGender().trim().isEmpty()))
+					{
+					
+					str = "DMG*D8*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getDob();
+					writer.append(str);
+					
+					if(testingtoolVO.getDependent().getGender() != null && !testingtoolVO.getDependent().getGender().trim().isEmpty())
+					{
+					str="*";
+					writer.append(str);
+					if(testingtoolVO.getDependent().getGender().equals("1"))
+						str = "M";
+					else 
+						str = "F";
+					
+					
+					writer.append(str);
+					}
+					
+			
+					
+					
+					count++;
+					writer.append("~");
+					}
+					
+					str="DTP*291*D8*";
+					writer.append(str);
+					str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+					str= RteIntranetUtils.ZeroFiller(8, str);
+					writer.append(str);
+					count++;
+					writer.append("~");
+					if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+					{
+						
+						str="EQ*";
+						writer.append(str);
+						writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+						if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+						{
+						writer.append("*");
+						str = testingtoolVO.getHeader().getTypeOfSearch();
+						writer.append(str);
+						}
+						count++;
+						writer.append("~");
+					}
+					
+					if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+					{
+						for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+						{
+							if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+							{
+							
+							writer.append("EQ**");
+							writer.append("AD");
+							writer.append(":");
+							writer.append(info.getProcedureCode());
+							if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+							{
+							writer.append("*");
+							str = testingtoolVO.getHeader().getTypeOfSearch();
+							writer.append(str);
+							}
+							count++;
+							writer.append("~");
+							}
+							
+						}
+					}
+					
+					
+					str="SE*"+count+"*000000001";
+					writer.append(str);
+					writer.append("~");
+					str="GE*1*35152114";
+					writer.append(str);
+					writer.append("~");
+					str="IEA*1*"+rid;
+					writer.append(str);
+					writer.append("~");
+				}
+			}
+			else
+			{
+			
+			if(testingtoolVO.getTempValue().contains("Subscriber"))
+			{
+			count++;
+			writer.append("~");
+			str="HL*3*2*22*0";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*IL*1";
+			writer.append(str);
+			str="*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getLastName();
+			writer.append(str);
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getFirstName();
+			writer.append(str);
+			str = "****MI*";
+			writer.append(str);
+			str = testingtoolVO.getMember().getIdentifier();
+			member.setIdentifier(str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			
+			if(!(testingtoolVO.getSubscriber().getDob().trim().isEmpty() && testingtoolVO.getSubscriber().getGender().trim().isEmpty()))
+			{
+			
+			str = "DMG*D8*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getDob();
+			 
+			writer.append(str);
+			if(testingtoolVO.getSubscriber().getGender() != null && !testingtoolVO.getSubscriber().getGender().trim().isEmpty())
+			{
+			str="*";
+			writer.append(str);
+			if(testingtoolVO.getSubscriber().getGender().equals("1"))
+				str = "M";
+			else 
+				str = "F";
+			
+			
+			writer.append(str);
+			}
+			count++;
+			writer.append("~");
+			}
+			
+			str="DTP*291*D8*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+			{
+				
+				str="EQ*";
+				writer.append(str);
+				writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+				if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+				{
+				writer.append("*");
+				str = testingtoolVO.getHeader().getTypeOfSearch();
+				writer.append(str);
+				}
+				count++;
+				writer.append("~");
+			
+			}
+			
+			if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+			{
+			
+				for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+				{
+					if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+					{
+					
+					writer.append("EQ**");
+					writer.append("AD");
+					writer.append(":");
+					writer.append(info.getProcedureCode());
+					if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+					{
+					writer.append("*");
+					str = testingtoolVO.getHeader().getTypeOfSearch();
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+					
+				}
+		
+			}
+			
+			str="SE*"+count+"*000000001";
+			writer.append(str);
+			writer.append("~");
+			str="GE*1*35152114";
+			writer.append(str);
+			writer.append("~");
+			str="IEA*1*"+rid;
+			writer.append(str);
+			writer.append("~");
+			
+			
+			}
+			else 
+			{
+			count++;
+			writer.append("~");
+			str="HL*3*2*22*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*IL*1******MI*";
+			writer.append(str);
+			str = testingtoolVO.getMember().getIdentifier();
+			member.setIdentifier(str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*4*3*23*0";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*03*1";
+			writer.append(str);
+			if((testingtoolVO.getDependent().getName().getLastName() != null && !testingtoolVO.getDependent().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getDependent().getName().getFirstName()!=null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty()))
+			{	
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getLastName();
+			writer.append(str);
+			if(testingtoolVO.getDependent().getName().getFirstName() != null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty())
+			{
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getFirstName();
+			writer.append(str);
+			}
+			}
+			
+			count++;
+			writer.append("~");
+			if(!(testingtoolVO.getDependent().getDob().trim().isEmpty() && testingtoolVO.getDependent().getGender().trim().isEmpty()))
+			{
+			
+			str = "DMG*D8*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getDob();
+			writer.append(str);
+			if(testingtoolVO.getDependent().getGender() != null && !testingtoolVO.getDependent().getGender().trim().isEmpty())
+			{
+			str="*";
+			writer.append(str);
+			if(testingtoolVO.getDependent().getGender().equals("1"))
+				str = "M";
+			else 
+				str = "F";
+			
+			
+			writer.append(str);
+			}
+			count++;
+			writer.append("~");
+			}
+			
+			str="DTP*291*D8*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+			{
+				
+				str="EQ*";
+				writer.append(str);
+				writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+				if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+				{
+				writer.append("*");
+				str = testingtoolVO.getHeader().getTypeOfSearch();
+				writer.append(str);
+				}
+				count++;
+				writer.append("~");
+			}
+			
+			if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+			{
+				for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+				{
+					if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+					{
+					
+					writer.append("EQ**");
+					writer.append("AD");
+					writer.append(":");
+					writer.append(info.getProcedureCode());
+					if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+					{
+					writer.append("*");
+					str = testingtoolVO.getHeader().getTypeOfSearch();
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+					
+				}
+			}
+			
+			
+			str="SE*"+count+"*000000001";
+			writer.append(str);
+			writer.append("~");
+			str="GE*1*35152114";
+			writer.append(str);
+			writer.append("~");
+			str="IEA*1*"+rid;
+			writer.append(str);
+			writer.append("~");
+			}
+			}
+			
+		
+			
+			
+		} catch (IOException e) {
+			log.error(e);
+			return false;
+		} finally {
+		    if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					log.error(e.getStackTrace());
+					return false;
+				}
+		}
+		
+		//fileWrite = characterCountInFile();
+		
+		return fileWrite;
+	}
+	public boolean appendSpaceWithRow(MedicalCriteriaEntity testingtoolVO){
+		
+		log.warn("Entered 270 Testing tool Controller - appendSpaces()");
+		log.error("File Location - appendSpaces()"+getEdifileLocation()+getCurrentTimeStamp());
+		File file = new File(getEdifileLocation()+getCurrentTimeStamp());
+		BufferedWriter writer = null;
+		
+		boolean fileWrite= true;
+		int count=1;
+		try {
+			writer = new BufferedWriter(new FileWriter(file));
+			EDIHeader header = new EDIHeader();
+			String vid = (String)vanIds.getKey(testingtoolVO.getHeader().getVanId());
+			String str = RteIntranetUtils.spaceFiller(10,vid);
+			header.setVanId(str);
+			String rid=getRandom();
+			str="ISA*00*          *00*          *30*"+str+"     *01*042064683      *150723*2048*^*00501*"+rid+"*1*"+getIsasegment()+"*:";
+			writer.write(str);
+			writer.append("~");
+			str = (String)vanIds.getKey(testingtoolVO.getHeader().getVanId());
+			str = "GS*HS*"+str;
+			writer.append(str);
+			str = testingtoolVO.getHeader().getVersionRels();
+			header.setVersionRels(str);
+			
+			str ="*"+str;
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			header.setEligilibilityServiceDate(str);
+			str = "*"+str;
+			writer.append(str);
+			str = "*105715*35152114*X*005010X279A1";
+			writer.append(str);
+			str="ST*";
+			writer.append("~");
+			writer.append(str);
+			str = testingtoolVO.getHeader().getTransactionType();
+			header.setTransactionType(str);
+			writer.append("270");
+			str="*000000001*005010X279A1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="BHT*0022*13*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getConversation();
+			header.setConversation(str);
+			writer.append(str);
+			str="WEB*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			header.setEligilibilityServiceDate(str);
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			str="*105715";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*1**20*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*PR*2*AETNA*****PI*953402799";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*2*1*21*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*";
+			writer.append(str);
+			str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+			Entity entity = new Entity();
+			EDIProvider provider = new EDIProvider();
+			if(str.equals("1"))
+			{
+				IndividualData indata = new IndividualData();
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getEntityId();//Entity type
+				indata.setEntityId(str);
+			
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+				entity.setEntityIndicator(str);
+				writer.append("*");
+				writer.append(str);
+				writer.append("*");
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getLastName();
+				indata.setLastName(str);
+			
+				writer.append(str);
+				str = "*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getIndividualData().getFirstName();
+				indata.setFirstName(str);
+				writer.append(str);
+				str="****";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getQualifier();
+				provider.setQualifier(str);
+			
+				writer.append(str);//PROV-TYPE AS A QUALIFIER
+				str="*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getProviderID();
+				provider.setProviderID(str);
+			
+				writer.append(str);
+				entity.setIndividualData(indata);
+			}
+			else
+			{
+				NonIndividualData nininddata = new NonIndividualData();
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getEntityId();//Entity type
+				nininddata.setEntityId(str);
+				writer.append(str);
+				str = testingtoolVO.getProvider().getEntity().getEntityIndicator();
+				entity.setEntityIndicator(str);
+				writer.append("*");
+				writer.append(str);
+				writer.append("*");
+				str = testingtoolVO.getProvider().getEntity().getNonIndividualData().getName();
+				nininddata.setName(str);
+				writer.append(str);
+				str="*****";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getQualifier();
+				provider.setQualifier(str);
+				writer.append(str);//PROV-TYPE AS A QUALIFIER
+				str="*";
+				writer.append(str);
+				str = testingtoolVO.getProvider().getProviderID();
+				provider.setProviderID(str);
+				writer.append(str);
+				
+			}
+			Member member = new Member();
+			
+			if(testingtoolVO.getMember().getIdentifier()==null || testingtoolVO.getMember().getIdentifier().trim().isEmpty())
+			{
+				
+				if(testingtoolVO.getTempValue().contains("Subscriber"))
+				{
+					count++;
+					writer.append("~");
+					str="HL*3*2*22*0";
+					writer.append(str);
+					count++;
+					writer.append("~");
+					str="NM1*IL*1";
+					writer.append(str);
+					if((testingtoolVO.getSubscriber().getName().getLastName() != null && !testingtoolVO.getSubscriber().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getSubscriber().getName().getFirstName() != null && !testingtoolVO.getSubscriber().getName().getFirstName().trim().isEmpty()))
+					{
+					str="*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getName().getLastName();
+					writer.append(str);
+					if(testingtoolVO.getSubscriber().getName().getFirstName() != null && !testingtoolVO.getSubscriber().getName().getFirstName().trim().isEmpty())
+					{
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getName().getFirstName();
+					writer.append(str);
+					}
+					}
+					count++;
+					writer.append("~");
+					if(!(testingtoolVO.getSubscriber().getDob().trim().isEmpty() && testingtoolVO.getSubscriber().getGender().trim().isEmpty()))
+					{
+					
+					str = "DMG*D8*";
+					writer.append(str);
+					str = testingtoolVO.getSubscriber().getDob();
+					 writer.append(str);
+					if(testingtoolVO.getSubscriber().getGender() != null && !testingtoolVO.getSubscriber().getGender().trim().isEmpty())
+					{
+					str="*";
+					writer.append(str);
+					if(testingtoolVO.getSubscriber().getGender().equals("1"))
+						str = "M";
+					else 
+						str = "F";
+					
+					
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+				
+					str="DTP*291*D8*";
+					writer.append(str);
+					str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+					str= RteIntranetUtils.ZeroFiller(8, str);
+					writer.append(str);
+					count++;
+					writer.append("~");
+					if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+					{
+					
+						str="EQ*";
+						writer.append(str);
+						writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+						if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+						{
+						writer.append("*");
+						str = testingtoolVO.getHeader().getTypeOfSearch();
+						writer.append(str);
+						}
+						count++;
+						writer.append("~");
+					}
+					
+					if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+					{
+						for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+						{
+							if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+							{
+							
+							writer.append("EQ**");
+							writer.append("AD");
+							writer.append(":");
+							writer.append(info.getProcedureCode());
+							if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+							{
+							writer.append("*");
+							str = testingtoolVO.getHeader().getTypeOfSearch();
+							writer.append(str);
+							}
+							count++;
+							writer.append("~");
+							}
+							
+						}
+					}
+					
+					
+					str="SE*"+count+"*000000001";
+					writer.append(str);
+					writer.append("~");
+					str="GE*1*35152114";
+					writer.append(str);
+					writer.append("~");
+					str="IEA*1*"+rid;
+					writer.append(str);
+					writer.append("~");
+				}
+				else 
+				{
+					count++;
+					writer.append("~");
+					str="HL*3*2*23*0";
+					writer.append(str);
+					count++;
+					writer.append("~");
+					str="NM1*IL*1";
+					writer.append(str);
+					if((testingtoolVO.getDependent().getName().getLastName() != null && !testingtoolVO.getDependent().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getDependent().getName().getFirstName()!=null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty()))
+					{	
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getName().getLastName();
+					writer.append(str);
+					if(testingtoolVO.getDependent().getName().getFirstName() != null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty())
+					{
+					str = "*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getName().getFirstName();
+					writer.append(str);
+					}
+					}
+					count++;
+					writer.append("~");
+					if(!(testingtoolVO.getDependent().getDob().trim().isEmpty() && testingtoolVO.getDependent().getGender().trim().isEmpty()))
+					{
+					
+					str = "DMG*D8*";
+					writer.append(str);
+					str = testingtoolVO.getDependent().getDob();
+					writer.append(str);
+					
+					if(testingtoolVO.getDependent().getGender() != null && !testingtoolVO.getDependent().getGender().trim().isEmpty())
+					{
+					str="*";
+					writer.append(str);
+					if(testingtoolVO.getDependent().getGender().equals("1"))
+						str = "M";
+					else 
+						str = "F";
+					
 
+					writer.append(str);
+					}
+					
+			
+					
+
+					count++;
+					writer.append("~");
+					}
+					
+					str="DTP*291*D8*";
+					writer.append(str);
+					str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+					str= RteIntranetUtils.ZeroFiller(8, str);
+					writer.append(str);
+					count++;
+					writer.append("~");
+					if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+					{
+						
+						str="EQ*";
+						writer.append(str);
+						writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+						if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+						{
+						writer.append("*");
+						str = testingtoolVO.getHeader().getTypeOfSearch();
+						writer.append(str);
+						}
+						count++;
+						writer.append("~");
+					}
+					
+					if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+					{
+						for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+						{
+							if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+							{
+							
+							writer.append("EQ**");
+							writer.append("AD");
+							writer.append(":");
+							writer.append(info.getProcedureCode());
+							if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+							{
+							writer.append("*");
+							str = testingtoolVO.getHeader().getTypeOfSearch();
+							writer.append(str);
+							}
+							count++;
+							writer.append("~");
+							}
+							
+						}
+					}
+				
+					
+					str="SE*"+count+"*000000001";
+					writer.append(str);
+					writer.append("~");
+					str="GE*1*35152114";
+					writer.append(str);
+					writer.append("~");
+					str="IEA*1*"+rid;
+					writer.append(str);
+					writer.append("~");
+				}
+			}
+			else
+			{
+			
+			if(testingtoolVO.getTempValue().contains("Subscriber"))
+			{
+			count++;
+			writer.append("~");
+			str="HL*3*2*22*0";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*IL*1";
+			writer.append(str);
+			str="*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getLastName();
+			writer.append(str);
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getName().getFirstName();
+			writer.append(str);
+			str = "****MI*";
+			writer.append(str);
+			
+			str = testingtoolVO.getMember().getIdentifier();
+			member.setIdentifier(str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			
+			if(!(testingtoolVO.getSubscriber().getDob().trim().isEmpty() && testingtoolVO.getSubscriber().getGender().trim().isEmpty()))
+			{
+			
+			str = "DMG*D8*";
+			writer.append(str);
+			str = testingtoolVO.getSubscriber().getDob();
+			 writer.append(str);
+			if(testingtoolVO.getSubscriber().getGender() != null && !testingtoolVO.getSubscriber().getGender().trim().isEmpty())
+			{
+			str="*";
+			writer.append(str);
+			if(testingtoolVO.getSubscriber().getGender().equals("1"))
+				str = "M";
+			else 
+				str = "F";
+			
+		
+			writer.append(str);
+			}
+			count++;
+			writer.append("~");
+			}
+			
+			str="DTP*291*D8*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+			{
+				
+				str="EQ*";
+				writer.append(str);
+				writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+				if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+				{
+				writer.append("*");
+				str = testingtoolVO.getHeader().getTypeOfSearch();
+				writer.append(str);
+				}
+				count++;
+				writer.append("~");
+			
+			}
+			
+			if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+			{
+			
+				for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+				{
+					if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+					{
+					
+					writer.append("EQ**");
+					writer.append("AD");
+					writer.append(":");
+					writer.append(info.getProcedureCode());
+					if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+					{
+					writer.append("*");
+					str = testingtoolVO.getHeader().getTypeOfSearch();
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+					
+				}
+		
+			}
+			
+			str="SE*"+count+"*000000001";
+			writer.append(str);
+			writer.append("~");
+			str="GE*1*35152114";
+			writer.append(str);
+			writer.append("~");
+			str="IEA*1*"+rid;
+			writer.append(str);
+			writer.append("~");
+			
+			
+			}
+			else 
+			{
+			count++;
+			writer.append("~");
+			str="HL*3*2*22*1";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*IL*1******MI*";
+			writer.append(str);
+			str = testingtoolVO.getMember().getIdentifier();
+			member.setIdentifier(str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="HL*4*3*23*0";
+			writer.append(str);
+			count++;
+			writer.append("~");
+			str="NM1*03*1";
+			writer.append(str);
+			if((testingtoolVO.getDependent().getName().getLastName() != null && !testingtoolVO.getDependent().getName().getLastName().trim().isEmpty()) || (testingtoolVO.getDependent().getName().getFirstName()!=null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty()))
+			{	
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getLastName();
+			
+			writer.append(str);
+			if(testingtoolVO.getDependent().getName().getFirstName() != null && !testingtoolVO.getDependent().getName().getFirstName().trim().isEmpty())
+			{
+			str = "*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getName().getFirstName();
+			writer.append(str);
+			}
+			}
+			
+			count++;
+			writer.append("~");
+			if(!(testingtoolVO.getDependent().getDob().trim().isEmpty() && testingtoolVO.getDependent().getGender().trim().isEmpty()))
+			{
+			
+			str = "DMG*D8*";
+			writer.append(str);
+			str = testingtoolVO.getDependent().getDob();
+			 
+			writer.append(str);
+			if(testingtoolVO.getDependent().getGender() != null && !testingtoolVO.getDependent().getGender().trim().isEmpty())
+			{
+			str="*";
+			writer.append(str);
+			if(testingtoolVO.getDependent().getGender().equals("1"))
+				str = "M";
+			else 
+				str = "F";
+			
+			
+			writer.append(str);
+			}
+			count++;
+			writer.append("~");
+			}
+			
+			str="DTP*291*D8*";
+			writer.append(str);
+			str = testingtoolVO.getHeader().getEligilibilityServiceDate();
+			str= RteIntranetUtils.ZeroFiller(8, str);
+			writer.append(str);
+			count++;
+			writer.append("~");
+			if(!testingtoolVO.getServiceTypeSet().getServiceTypeCTR().equals("0"))
+			{
+				
+				str="EQ*";
+				writer.append(str);
+				writer.append(getService(testingtoolVO.getServiceTypeSet()).toString());
+				if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+				{
+				writer.append("*");
+				str = testingtoolVO.getHeader().getTypeOfSearch();
+				writer.append(str);
+				}
+				count++;
+				writer.append("~");
+			}
+			
+			if(!testingtoolVO.getProcedureInfoSet().getProcedureInfoCtr().equals("0"))
+			{
+			
+				for(ProcedureInfo info:testingtoolVO.getProcedureInfoSet().getProcedureInfo())
+				{
+					if(!info.getProcedureCode().trim().isEmpty() && !info.getQualifier().trim().isEmpty())
+					{
+					
+					writer.append("EQ**");
+					writer.append("AD");
+					writer.append(":");
+					writer.append(info.getProcedureCode());
+					if(testingtoolVO.getHeader().getTypeOfSearch()!=null && !testingtoolVO.getHeader().getTypeOfSearch().trim().isEmpty())
+					{
+					writer.append("*");
+					str = testingtoolVO.getHeader().getTypeOfSearch();
+					writer.append(str);
+					}
+					count++;
+					writer.append("~");
+					}
+					
+				}
+	
+			}
+			
+			
+			str="SE*"+count+"*000000001";
+			writer.append(str);
+			writer.append("~");
+			str="GE*1*35152114";
+			writer.append(str);
+			writer.append("~");
+			str="IEA*1*"+rid;
+			writer.append(str);
+			writer.append("~");
+			}
+			}
+} catch (IOException e) {
+			log.error(e);
+			return false;
+		} finally {
+		    if (writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					log.error(e.getStackTrace());
+					return false;
+				}
+		}
+		
+		//fileWrite = characterCountInFile();
+		
+		return fileWrite;	
+		}
+	/**P24915a Dec'16 changes end*/
+	public boolean characterCountInFile(){
+		boolean result = false;
+
+
+		int char_count = 0;
+		String s;
+		StringTokenizer st;
+		try {
+			BufferedReader buf = new BufferedReader(new FileReader(getFileLocation()));
+			while ((s = buf.readLine()) != null) {
+				st = new StringTokenizer(s, "");
+				while (st.hasMoreTokens()) {
+					s = st.nextToken();
+					char_count += s.length();
+				}
+			}
+			log.error("Character Count : " + char_count);
+			buf.close();
+			if(char_count==953){
+				result = true;
+			}
+		} catch (IOException e) {
+			log.error(e.getStackTrace());
+			return false;
+		}
+		return result;
+	}
+	public String getFileLocation() {
+		return fileLocation;
 	}
 
-}
+	public void setFileLocation(String fileLocation) {
+		this.fileLocation = fileLocation;
+	}
 
+
+	public FTPUtil getFtpUtil() {
+		return ftpUtil;
+	}
+
+
+	public void setFtpUtil(FTPUtil ftpUtil) {
+		this.ftpUtil = ftpUtil;
+	}
+
+
+	public String getMailGroup() {
+		return mailGroup;
+	}
+
+
+	public void setMailGroup(String mailGroup) {
+		this.mailGroup = mailGroup;
+	}
+	public StringBuilder getService(ServiceTypeSet serSet)
+	{
+		int popCount;
+		StringBuilder type = new StringBuilder();
+      //  popCount = getServiceTypeCode().size();
+		popCount = Integer.parseInt(serSet.getServiceTypeCTR());
+       
+		for(int i=0; i<popCount; i++) {
+			type.append(RteIntranetUtils.spaceFiller(2, serSet.getServiceTypeCode().get(i)));
+			if(i<popCount-1)
+			{
+				type.append("^");
+			}
+				
+		}
+		return type;
+	}
+	
+	public String getRandom()
+	{
+		long timeSeed = System.nanoTime(); 
+		double randSeed = Math.random() * 1000; 
+        long midSeed = (long) (timeSeed * randSeed);
+        String s = midSeed + "";
+        String subStr = s.substring(0, 9);
+        return subStr;
+
+	}
+	
+}
