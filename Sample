@@ -4,106 +4,509 @@
 package com.aetna.prvrte.rteintranet.util;
 
 /**
- * @author N657186
+ * @author N726899
  * Cognizant_Offshore
  */
 /**
- * A Constants class used throughout the application
+ * A Constants class For Adapter classes.
  * 
  */
-
-public interface ApplicationConstants {
-
+public interface DBConstants {
 	/**
-	 * Error code data access
+	 * SQL response Constants.
 	 */
-	public static final String ERR_IR_ACCESS = "error.inq.accces";
-
+	public static final String LS_SQLCODE = "LS_SQLCODE";
+	public static final String OUT_CODE = "OUT_CODE";
+	public static final String OUT_LS_SQLCODE = "OUT_LS_SQLCODE";
+	public static final String LS_ADD_UPDATE = "LS_ADD_UPDATE";
+	public static final String OUT_ACTION_CD = "OUT_ACTION_CD";
+	public static final String LS_ACTION_CD = "LS_ACTION_CD";
+	public static final String LS_ACTION_CODE = "LS_ACTION_CODE";
 	/**
-	 * Error code for no data
+	 * DB cursor name constants.
 	 */
-	public static final String ERR_IR_NODATA = "error.inq.nodata";
-
+	public static final String READ_CURSOR3 = "READ_CURSOR3";
+	public static final String READ_CURSOR4 = "READ_CURSOR4";
+	public static final String READ_CURSOR5 = "READ_CURSOR5";
+	public static final String READ_CURSOR6 = "READ_CURSOR6";
 	/**
-	 * Error code for no data
+	 * Adasvct DB input Constants.
 	 */
-	public static final String ERR_GENERIC = "error.generic";
+	public static final String LS_ADASVCT_ADA_CD = "LS_ADASVCT_ADA_CD";
+	public static final String LS_SVCTYP_CD = "LS_SVCTYP_CD";
+	public static final String LS_ADASVCT_EFF_DT = "LS_ADASVCT_EFF_DT";
+	public static final String LS_ADASVCT_EXP_DT = "LS_ADASVCT_EXP_DT";
+	public static final String LS_ADASVCT_POSTED_DT = "LS_ADASVCT_POSTED_DT";
 	
-	public static final String RTE_INTRANET_USER_ROLE = "rteIntranet_userRole_key";
-	public static final String WELCOME = "Welcome ";
-	public static final String MDDRteDb2 = "MDDRteDb2";
-	public static final String RTEWrite = "RTEWrite";
+	/**
+	 * VanId DB input Constants.
+	 */
+	public static final String RTEGENL_DB2VW_NM="IN-RTEGENL-DB2VW-NM";
+	public static final String IN_RTEGENL_DB2VW_NM="RTEGENL-DB2VW-NM";
+	public static final String RTEGENL_VALUE_CD="RTEGENL_VALUE_CD";
+	public static final String RTEGENL_DESC_TXT="RTEGENL_DESC_TXT";
+	//RTEGENL_VALUE_CD
+	/**
+	 * Adasvct DB output Constants.
+	 */
+	public static final String ADASVCT_EXP_DT = "ADASVCT_EXP_DT";
+	public static final String ADASVCT_ADA_CD = "ADASVCT_ADA_CD";
+	public static final String ADASVCT_POSTED_DT = "ADASVCT_POSTED_DT";
+	public static final String SVCTYP_CD = "SVCTYP_CD";
+	public static final String ADASVCT_EFF_DT = "ADASVCT_EFF_DT";
+	/**
+	 * AetCtls DB input Constants.
+	 */
+	public static final String IN_CTL_NO = "IN_CTL_NO";
+	/**
+	 * AetCtls DB out Constants.
+	 */
+	public static final String AETCTLS_CTL_NO = "AETCTLS_CTL_NO";
+	/**
+	 * AuthTrx DB input Constants.
+	 */
+	public static final String IN_USERID_NO = "IN_USERID_NO";
+	/**
+	 * AuthTrx DB input Constants.
+	 */
+	public static final String AUTHTRX_USERID_CD = "AUTHTRX_USERID_CD";
+	/**
+	 * Benafrq DB input/output Constants.
+	 */
+	public static final String BENAFRQ_AFREQ_CD = "BENAFRQ_AFREQ_CD";
+	public static final String RTEBEPLM_BNFT_CD = "RTEBEPLM_BNFT_CD";
+	public static final String BENAFRQ_LIMIT_TXT = "BENAFRQ_LIMIT_TXT";
+	public static final String RTEBEPLM_EPLC_CD = "RTEBEPLM_EPLC_CD";
+	public static final String BENAFRQ_EFF_DT = "BENAFRQ_EFF_DT";
+	public static final String BENAFRQ_EXP_DT = "BENAFRQ_EXP_DT";
+	public static final String BENAFRQ_POSTED_DTS = "BENAFRQ_POSTED_DTS";
+	public static final String APPL_USER_ID = "APPL_USER_ID";
+	/**
+	 * Bplvrp DB input Constants.
+	 */
+	public static final String LS_BNFT_ID_CD = "LS_BNFT_ID_CD";
+	public static final String LS_BPRO_NO = "LS_BPRO_NO";
+	public static final String LS_BPLV_NO = "LS_BPLV_NO";
+	public static final String LS_RFRL_IND = "LS_RFRL_IND";
+	public static final String LS_PRCRT_IND = "LS_PRCRT_IND";
+	public static final String LS_PRXSTNG_IND = "LS_PRXSTNG_IND";
+	/**
+	 * Bplvrp DB output Constants.
+	 */
+	public static final String BNFT_ID_CD = "BNFT_ID_CD";
+	public static final String BPLVRP_PRCRT_IND = "BPLVRP_PRCRT_IND";
+	public static final String BPLV_NO = "BPLV_NO";
+	public static final String BPRO_NO = "BPRO_NO";
+	public static final String BPLVRP_PRXSTNG_IND = "BPLVRP_PRXSTNG_IND";
+	public static final String BPLVRP_RFRL_IND = "BPLVRP_RFRL_IND";
+	/**
+	 * Dedacsr DB input Constants.
+	 */
+	public static final String LS_RTESTYP_CD = "LS_RTESTYP_CD";
+	public static final String LS_DEFACUM_ACCUM_CD = "LS_DEFACUM_ACCUM_CD";
+	/**
+	 * Dedacsr DB output Constants.
+	 */
+	public static final String RTESTYP_CD ="RTESTYP_CD";
+	public static final String DEFACUM_ACCUM_CD = "DEFACUM_ACCUM_CD";
+	/**
+	 * Erspmsg DB input Constants.
+	 */
+	public static final String LS_ERSPMSG_ID = "LS_ERSPMSG_ID";
+	public static final String LS_ERSPMSG_SHORT_TXT = "LS_ERSPMSG_SHORT_TXT";
+	public static final String LS_ERSPMSG_MSGTYP_CD = "LS_ERSPMSG_MSGTYP_CD";
+	public static final String LS_ERSPMSG_LONG_TXT = "LS_ERSPMSG_LONG_TXT";
+	public static final String LS_ERSPMSG_POSTED_DTS = "LS_ERSPMSG_POSTED_DTS";
+	public static final String LS_ERSPMSG_USER_ID = "LS_ERSPMSG_USER_ID";
+	
+	public static final String LS_OUT_ERSPMSG_ID = "LS_OUT_ERSPMSG_ID";
+	/**
+	 * Erspmsg DB output Constants.
+	 */
+	public static final String ERSPMSG_ID = "ERSPMSG_ID";
+	public static final String ERSPMSG_MSGTYP_CD = "ERSPMSG_MSGTYP_CD";
+	public static final String ERSPMSG_SHORT_TXT = "ERSPMSG_SHORT_TXT";
+	public static final String ERSPMSG_LONG_TXT = "ERSPMSG_LONG_TXT";
+	public static final String ERSPMSG_USER_ID = "ERSPMSG_USER_ID";
+	public static final String ERSPMSG_POSTED_DTS = "ERSPMSG_POSTED_DTS";
+	
+	/**
+	 * Indmntrp DB input Constants.
+	 */
+	public static final String LS_INDMNTY_CD = "LS_INDMNTY_CD";
+	public static final String LS_SHRT_NM = "LS_SHRT_NM";
+	public static final String LS_NM = "LS_NM";
+	public static final String LS_SELRQ_IND = "LS_SELRQ_IND";
+	/**
+	 * Indmntrp DB output Constants.
+	 */
+	public static final String INDMNTY_CD = "INDMNTY_CD";
+	public static final String INDMNTY_NM = "INDMNTY_NM";
+	public static final String INDMNTRP_PRCRT_IND = "INDMNTRP_PRCRT_IND";
+	public static final String INDMNTRP_RFRL_IND = "INDMNTRP_RFRL_IND";
+	public static final String INDMNTY_SHRT_NM = "INDMNTY_SHRT_NM";
+	public static final String INDMNTRP_SELRQ_IND = "INDMNTRP_SELRQ_IND";
+	
+	/**
+	 * PlnlmEx DB input/output Constants.
+	 */
+	public static final String PLNLMEX_EXPLNT_CD = "PLNLMEX_EXPLNT_CD";
+	public static final String PLNLMEX_QLFR_CD = "PLNLMEX_QLFR_CD";
+	public static final String PLNLMEX_RSPNSTP_CD = "PLNLMEX_RSPNSTP_CD";
+	public static final String PLNLMEX_RSPNS_TXT = "PLNLMEX_RSPNS_TXT";
+	public static final String PLNLMEX_EPLC_CD = "PLNLMEX_EPLC_CD";
+	public static final String PLNLMEX_TXT_SND_CD = "PLNLMEX_TXT_SND_CD";
+	public static final String PLNLMEX_PLNLVL_IND = "PLNLMEX_PLNLVL_IND";
+	public static final String PLNLMEX_FDB_IND = "PLNLMEX_FDB_IND";
 
-	/** * constant for Error Page */
-	public static final String ERROR_PAGE = ".errorMsgDisplay";
-	public static final String EXCP_ERR_MESSAGE = "expErrorMsg";
-	public static final String ZERO_0 = "0";
-	public static final char COPY = 'C';
-	public static final char UPDATE_IND_N = 'N';
-	public static final char UPDATE_IND_Y = 'Y';
-	public static final int UPDATE_IND_1 = 1;
-	public static final String ADD = "A";
-	public static final int ZERO = 0;
-	public static final char COMMA = ',';
-	public static final String DATE_FORMAT = "yyyy-MM-dd";
-	public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
-	public static final String USER = "user";
-	public static final String EMPTY = " ";
-	public static final String DOUBLE_QUOTES = "\"";
+	
 	/**
-	 * User Security Levelconstants.
+	 * Rtetpbr DB input/output Constants.
 	 */
-	public static final String USER_SECURITY_LEVEL_R = "R";
-	public static final String USER_SECURITY_LEVEL_B = "B";
-	public static final String USER_SECURITY_LEVEL_A ="RW";
-	public static final String USER_SECURITY_LEVEL_W ="W";
+	public static final String IN_RTETPBR_EFF_DT_VALUE = "0001-01-01";
+	public static final String IN_RTETPBR_ID = "IN_RTETPBR_ID";
+	public static final String IN_RTETPBR_EFF_DT = "IN_RTETPBR_EFF_DT";
+	public static final String IN_RTETPBR_BENRL_CD = "IN_RTETPBR_BENRL_CD";
+	public static final String IN_RTETPBR_SVC_TYP_CD = "IN_RTETPBR_SVC_TYP_CD";
+	public static final String IN_RTETPBR_ACASTOS_CD = "IN_RTETPBR_ACASTOS_CD";
+	public static final String IN_RTETPBR_ACASPOS_CD = "IN_RTETPBR_ACASPOS_CD";
+	public static final String IN_RTETPBR_EXPRTN_DT = "IN_RTETPBR_EXPRTN_DT";
+	public static final String IN_RTETPBR_PSTD_DTS = "IN_RTETPBR_PSTD_DTS";
+	public static final String IN_RTETPBR_USER_ID = "IN_RTETPBR_USER_ID";
+	public static final String IN_RTETPBR_VALUE_TXT = "IN_RTETPBR_VALUE_TXT";
+	public static final String RTETPBR_ID = "RTETPBR_ID";
+	public static final String RTETPBR_BENRL_CD = "RTETPBR_BENRL_CD";
+	public static final String RTETPBR_SVC_TYP_CD = "RTETPBR_SVC_TYP_CD";
+	public static final String RTETPBR_ACASTOS_CD = "RTETPBR_ACASTOS_CD";
+	public static final String RTETPBR_ACASPOS_CD = "RTETPBR_ACASPOS_CD";
+	public static final String RTETPBR_EFF_DT = "RTETPBR_EFF_DT";
+	public static final String RTETPBR_EXPRTN_DT = "RTETPBR_EXPRTN_DT";
+	public static final String RTETPBR_PSTD_DTS = "RTETPBR_PSTD_DTS";
+	public static final String RTETPBR_USER_ID = "RTETPBR_USER_ID";
+	public static final String RTETPBR_VALUE_TXT = "RTETPBR_VALUE_TXT";
+	public static final String OUT_LS_ADD_UPDATE = "OUT_LS_ADD_UPDATE";
+	public static final String OUT_LS_SQLCODE1 = "OUT_LS_SQLCODE";
+	
+	
 	/**
-	 * DB Message Constants.
+	 * Rtetprl DB input/output Constants.
 	 */
-	public static final String NO_ACTION_TAKEN = "Take action was not selected for any of the displayed rows";
-	public static final String ROWS_DELETED = "Rows selected were Deleted in the database/list";
-	public static final String ROWS_COPIED = "Copied rows were placed at the bottom of the list and highlighted.";
-	public static final String ADD_UPDATE_ROWS = "Rows added were placed at the bottom of the list. All rows that changed the database are highlighted.";
-	public static final String EXPORT_SUCCESS = "LookUp table exported successfully.";
-	public static final String NO_DATA = "No data found.";
-	public static final String ROW_ADDED = "This row added to the database";
-	public static final String ROW_ALREADY_EXISTS = "Row already exists on the database. It was updated with entered values.";
-	public static final String ADD_ROW_FAILS = "Unable to add row to the database. SQLCODE = ";
-	public static final String ADD_UPDATE_ROW_FAILS = "Adding/updating of rows failed with a SQLCODE code of ";
-	public static final String DELETE_ROW_FAILS = "Deleting of rows failed with a SQLCODE code of ";
+	public static final String IN_RTETPRL_STC_CD = "IN_RTETPRL_STC_CD";
+	public static final String IN_RTETPRL_TOS_CD = "IN_RTETPRL_TOS_CD";
+	public static final String IN_RTETPRL_POS_CD = "IN_RTETPRL_POS_CD";
+	public static final String IN_RTETPRL_GROUP_CD = "IN_RTETPRL_GROUP_CD";
+	public static final String IN_RTETPRL_RULE_CD = "IN_RTETPRL_RULE_CD";
+	public static final String IN_RTETPRL_ORDER_NO = "IN_RTETPRL_ORDER_NO";
+	public static final String IN_RTETPRL_EFF_DT = "IN_RTETPRL_EFF_DT";
+	public static final String IN_RTETPRL_EXPRTN_DT = "IN_RTETPRL_EXPRTN_DT";
+	public static final String IN_RTETPRL_POSTED_DTS = "IN_RTETPRL_POSTED_DTS";	
+	public static final String IN_RTETPRL_USER_ID = "IN_RTETPRL_USER_ID";
+	public static final String RTETPRL_STC_CD = "RTETPRL_STC_CD";
+	public static final String RTETPRL_TOS_CD = "RTETPRL_TOS_CD";
+	public static final String RTETPRL_POS_CD = "RTETPRL_POS_CD";
+	public static final String RTETPRL_GROUP_CD = "RTETPRL_GROUP_CD";
+	public static final String RTETPRL_RULE_CD = "RTETPRL_RULE_CD";
+	public static final String RTETPRL_ORDER_NO = "RTETPRL_ORDER_NO";
+	public static final String RTETPRL_EFF_DT = "RTETPRL_EFF_DT";
+	public static final String RTETPRL_EXPRTN_DT = "RTETPRL_EXPRTN_DT";
+	public static final String RTETPRL_POSTED_DTS = "RTETPRL_POSTED_DTS";
+	public static final String RTETPRL_USER_ID = "RTETPRL_USER_ID";
+	
+	
 	/**
-	 * Controller Error Message Constants.
+	 * Sitemsg DB input/output Constants.
 	 */
-	public static final String ERROR_LOOKUP_VIEW = "Error encountered when loading lookup page. ";
-	public static final String ERROR_GET_LOOKUP = "Error encountered when extracting data from the database ";
-	public static final String ERROR_ADD_VIEW = "Error encountered when loading add form. ";
-	public static final String ERROR_ADD_ROW = "Error encountered when adding a row to the database ";
-	public static final String ERROR_DELETE_ROW = "Error encountered when deleting rows from database. ";
-	public static final String ERROR_COPY_ROW = "Error encountered when copying data. ";
-	public static final String ERROR_ADD_UPDATE_ROW = "Error encountered when Add/Updating to database. ";
-	public static final String ERROR_EXPOT_TABLE  = "Error encountered when export lookup table to excel. ";
+	public static final String IN_SITE_CD = "IN_SITE_CD";
+	public static final String IN_SVCTYP_CD = "IN_SVCTYP_CD";
+	public static final String SITEMSG_AUTHCRT_CD = "SITEMSG_AUTHCRT_CD";
+	public static final String SITEMSG_BENRSP_CD = "SITEMSG_BENRSP_CD";
+	public static final String SITEMSG_COMP_CD = "SITEMSG_COMP_CD";
+	public static final String SITEMSG_CUSTSM_TXT = "SITEMSG_CUSTSM_TXT";
+	public static final String SITEMSG_IONTWK_CD = "SITEMSG_IONTWK_CD";
+	public static final String SITEMSG_NTWK_ID_NO = "SITEMSG_NTWK_ID_NO";
+	public static final String SITEMSG_PCP_IND = "SITEMSG_PCP_IND";
+	public static final String SITEMSG_PLNNTW_CD = "SITEMSG_PLNNTW_CD";
+	public static final String SITEMSG_PLNTYP_CD = "SITEMSG_PLNTYP_CD";
+	public static final String SITEMSG_POSTED_DT = "SITEMSG_POSTED_DT";
+	public static final String SITEMSG_PRVDRM_TXT = "SITEMSG_PRVDRM_TXT";
+	public static final String SITEMSG_SEQ_NO = "SITEMSG_SEQ_NO";
+	public static final String SITEMSG_SITE_CD = "SITEMSG_SITE_CD";
+	public static final String SITEMSG_SVCTYP_CD = "SITEMSG_SVCTYP_CD";
+	public static final String LS_AUTHCRT_CD = "LS_AUTHCRT_CD";
+	public static final String LS_BENRSP_CD = "LS_BENRSP_CD";
+	public static final String LS_COMP_CD = "LS_COMP_CD";
+	public static final String LS_CUSTSM_TXT = "LS_CUSTSM_TXT";
+	public static final String LS_IONTWK_TXT = "LS_IONTWK_TXT";
+	public static final String LS_NTWK_ID_NO = "LS_NTWK_ID_NO";	
+	public static final String LS_PCP_IND = "LS_PCP_IND";
+	public static final String LS_PLNNTW_CD = "LS_PLNNTW_CD";
+	public static final String LS_POSTED_DT = "LS_POSTED_DT";
+	public static final String LS_PLNTYP_DT = "LS_PLNTYP_DT";
+	public static final String LS_PRVDRM_DT = "LS_PRVDRM_DT";
+	public static final String LS_SEQ_NO = "LS_SEQ_NO";
+	public static final String LS_SITE_CD = "LS_SITE_CD";
+	
+	
 	/**
+	 * Ststypa DB input/output Constants.
 	 * 
 	 */
-	public static final String NO_AUTHORITY  = "You do not have sufficient authority to view or change this table.";
-	public static final String SESSION_EXPIRED  = "User session time-out. Please login again to continue.";
+	public static final String LS_STSTYPA_ST_CD = "LS_STSTYPA_ST_CD";
+	public static final String LS_STSTYPA_COLL_CD = "LS_STSTYPA_COLL_CD";
+	public static final String STSTYPA_ID = "STSTYPA_ID";
+	public static final String STSTYPA_ST_CD = "STSTYPA_ST_CD";
+	public static final String STSTYPA_COLL_CD = "STSTYPA_COLL_CD";
+	public static final String STSTYPA_INDV_CD = "STSTYPA_INDV_CD";
+	public static final String STSTYPA_EFF_DT = "STSTYPA_EFF_DT";
+	public static final String STSTYPA_EXP_DT = "STSTYPA_EXP_DT";
+	public static final String STSTYPA_POSTED_DT = "STSTYPA_POSTED_DT";
+	public static final String STSTYPA_VERSNRLS_CD = "STSTYPA_VERSNRLS_CD";
+	public static final String LS_STSTYPA_ID = "LS_STSTYPA_ID";
+	public static final String LS_STSTYPA_INDV_CD = "LS_STSTYPA_INDV_CD";
+	public static final String LS_STSTYPA_EFF_DT = "LS_STSTYPA_EFF_DT";
+	public static final String LS_STSTYPA_EXP_DT = "LS_STSTYPA_EXP_DT";
+	public static final String LS_STSTYPA_POSTED_DT = "LS_STSTYPA_POSTED_DT";	
+	public static final String LS_STSTYPA_VERSNRLS_CD = "LS_STSTYPA_VERSNRLS_CD";
+	public static final String LS_OUT_SSTYPA_ID = "LS_OUT_SSTYPA_ID";
+	public static final String IN_ID = "IN_ID";
 	
-	public static final String ERROR_IN_BULK_SUBMIT = "Error encountered when extracting data from the database.  java.lang.IllegalArgumentException ";
 	
-	/*	Begin #Resource_Type_Cognizant_Offshore #Resource_ID_N742407 updated for SR P08-P23175a */
-
-	public static final String M1 = "M1"; // Added for RTE Dental and  tables
-	public static final String M2 = "M2";
-	public static final String M3 = "M3";
-	public static final String M4 = "M4";
-
-	public static final String T1 = "T1"; // Added for RTE traditional and  tables
-	public static final String T2 = "T2";
-	public static final String T3 = "T3";
-	public static final String T4 = "T4";
-	public static final String T5 = "T5";
-	public static final String T6 = "T6";
-	public static final String T7 = "T7";
-	public static final String T8 = "T8";
-/*	End #Resource_Type_Cognizant_Offshore #Resource_ID_N742407 updated for SR P08-P23175a */
+	/**
+	 * Sstypa DB input/output Constants.
+	 * 
+	 */
+	public static final String IN_COLLECTION_CD = "IN_COLLECTION_CD";
+	public static final String SSTYPA_ID = "SSTYPA_ID";
+	public static final String SSTYPA_COLL_CD = "SSTYPA_COLL_CD";
+	public static final String SSTYPA_INDV_CD = "SSTYPA_INDV_CD";
+	public static final String SSTYPA_EFF_DT = "SSTYPA_EFF_DT";
+	public static final String SSTYPA_EXP_DT = "SSTYPA_EXP_DT";
+	public static final String SSTYPA_POSTED_DT = "SSTYPA_POSTED_DT";
+	public static final String SSTYPA_VERSNRLS_CD = "SSTYPA_VERSNRLS_CD";
+	public static final String IN_INDIVIDUAL_CD = "IN_INDIVIDUAL_CD";
+	public static final String IN_EFF_DATE = "IN_EFF_DATE";
+	public static final String IN_EXP_DATE = "IN_EXP_DATE";
+	public static final String IN_POSTED_DATE = "IN_POSTED_DATE";	
+	public static final String IN_VERSNRLS_CD = "IN_VERSNRLS_CD";
+	public static final String OUT_ID = "OUT_ID";
+	
+	
+	/**
+	 * TierdMsg DB input/output Constants.
+	 * 
+	 */
+	public static final String TIERDMSG_TYPE_CD = "TIERDMSG_TYPE_CD";
+	public static final String TIERDMSG_TIERST_CD = "TIERDMSG_TIERST_CD";
+	public static final String SQLCODE = "SQLCODE";
+	public static final String TIERDMSG_EFF_DT = "TIERDMSG_EFF_DT";
+	public static final String TIERDMSG_EXPRTN_DT = "TIERDMSG_EXPRTN_DT";
+	public static final String TIERDMSG_PSTD_DTS = "TIERDMSG_PSTD_DTS";
+	public static final String TIERDMSG_USER_ID = "TIERDMSG_USER_ID";
+	public static final String TIERDMSG_EXP_DT = "TIERDMSG_EXP_DT";
+	public static final String ADD_UPD_IND = "ADD_UPD_IND";
+	public static final String OUT_ERSPMSG_ID = "OUT_ERSPMSG_ID";
+	
+	
+	/**
+	 * Tosct DB input/output Constants.
+	 * 
+	 */
+	public static final String LS_STC_CD = "LS_STC_CD";
+	public static final String LS_TOS_CD = "LS_TOS_CD";
+	public static final String LS_POS_CD = "LS_POS_CD";
+	public static final String LS_ADA_CD = "LS_ADA_CD";
+	public static final String LS_SQL_TYPE = "LS_SQL_TYPE";
+	public static final String TOSCT_SVC_TYPE_CD = "TOSCT_SVC_TYPE_CD";
+	public static final String TOSCT_PNTFRMAGE_NO = "TOSCT_PNTFRMAGE_NO";
+	public static final String TOSCT_PNTTOAGE_NO = "TOSCT_PNTTOAGE_NO";
+	public static final String TOSCT_PATIENTSX_CD = "TOSCT_PATIENTSX_CD";
+	public static final String TOSCT_TOS_CD = "TOSCT_TOS_CD";
+	public static final String TOSCT_POS_CD = "TOSCT_POS_CD";
+	public static final String TOSCT_SPCLCOVG_CD = "TOSCT_SPCLCOVG_CD";
+	public static final String TOSCT_ADA_CODE = "TOSCT_ADA_CODE";
+	public static final String TOSCT_AEXCEL_IND = "TOSCT_AEXCEL_IND";
+	public static final String TOSCT_TOSCAT_CD = "TOSCT_TOSCAT_CD";
+	public static final String TOSCT_PCPCVG_IND = "TOSCT_PCPCVG_IND";
+	public static final String TOSCT_USAGE_CD = "TOSCT_USAGE_CD";
+	public static final String LS_PNTFRMAGE_NO = "LS_PNTFRMAGE_NO";
+	public static final String LS_PNTTOAGE_NO = "LS_PNTTOAGE_NO";
+	public static final String LS_PATIENTSX_CD = "LS_PATIENTSX_CD";
+	public static final String LS_SPCLCOVG_CD = "LS_SPCLCOVG_CD";
+	public static final String TOSCT_AEXCEL = "TOSCT_AEXCEL";
+	
+	
+	/**
+	 * TOSTxt DB input/output Constants.
+	 * 
+	 */
+	public static final String WS_TOS_CD = "WS_TOS_CD";
+	public static final String TOS_CD = "TOS_CD";
+	public static final String TOS_EFF_DT = "TOS_EFF_DT";
+	public static final String TOS_EXP_DT = "TOS_EXP_DT";
+	public static final String TOS_STATUS_CD = "TOS_STATUS_CD";
+	public static final String APPRVL_CD = "APPRVL_CD";
+	public static final String TOS_DSPLY_NM = "TOS_DSPLY_NM";
+	public static final String TOS_SHRT_NM = "TOS_SHRT_NM";
+	public static final String TOS_NM = "TOS_NM";
+	public static final String TOS_POSTED_DTS = "TOS_POSTED_DTS";
+	public static final String TOS_LSTUPD_DTS = "TOS_LSTUPD_DTS";
+	public static final String TOS_CMMNTS_TXT = "TOS_CMMNTS_TXT";
+	public static final String TOS_UPDRSN_TXT = "TOS_UPDRSN_TXT";
+	public static final String LS_TOS_EFF_DT = "LS_TOS_EFF_DT";
+	public static final String LS_TOS_EXP_DT = "LS_TOS_EXP_DT";
+	public static final String LS_TOS_STATUS_CD = "LS_TOS_STATUS_CD";
+	public static final String LS_APPRVL_CD = "LS_APPRVL_CD";
+	public static final String LS_TOS_DSPLY_NM = "LS_TOS_DSPLY_NM";
+	public static final String LS_TOS_SHRT_NM = "LS_TOS_SHRT_NM";
+	public static final String LS_TOS_NM = "LS_TOS_NM";
+	public static final String LS_TOS_POSTED_DTS = "LS_TOS_POSTED_DTS";
+	public static final String LS_TOS_LSTUPD_DTS = "LS_TOS_LSTUPD_DTS";
+	public static final String LS_APPL_USER_ID = "LS_APPL_USER_ID";
+	public static final String LS_TOS_COMMNTS_TXT = "LS_TOS_COMMNTS_TXT";
+	public static final String LS_TOS_UPDRSN_TXT = "LS_TOS_UPDRSN_TXT";
+	public static final String OUT_SQLCODE = "OUT_SQLCODE";
+	
+	
+	/**
+	 * Usrsec DB input/output Constants.
+	 * 
+	 */
+	public static final String LS_RIDER_CD = "LS_RIDER_CD";
+	public static final String SITE_CD = "SITE_CD";
+	public static final String RIDER_CD = "RIDER_CD";
+	public static final String RBRC_SVCTYP_CD = "RBRC_SVCTYP_CD";
+	public static final String RBRC_SRCE_PSTD_DT = "RBRC_SRCE_PSTD_DT";
+	public static final String RBRC_DESC_TXT = "RBRC_DESC_TXT";
+	public static final String RBRC_IONTWK_CD = "RBRC_IONTWK_CD";
+	public static final String RBRC_HMOSRCBN_IND = "RBRC_HMOSRCBN_IND";
+	public static final String RBRC_TXT_SND_CD = "RBRC_TXT_SND_CD";
+	public static final String PREV_CARE_IND = "PREV_CARE_IND";
+	public static final String GENDER_CD = "GENDER_CD";
+	public static final String LS_SRCE_PSTD_DT = "LS_SRCE_PSTD_DT";
+	public static final String LS_DESC_TXT = "LS_DESC_TXT";
+	public static final String LS_IONTWK_CD = "LS_IONTWK_CD";
+	public static final String LS_HMOSRCBN_IND = "LS_HMOSRCBN_IND";
+	public static final String LS_TXT_SND_CD = "LS_TXT_SND_CD";
+	
+	
+	/**
+	 * Procex DB input/output Constants.
+	 * 
+	 */
+	public static final String IN_PROCEX_CD = "IN_PROCEX_CD";
+	public static final String IN_SEARCH_CD = "IN_SEARCH_CD";
+	public static final String IN_DESC_TXT = "IN_DESC_TXT";
+	
+	/**
+	 * RBBC DB input/output Constants.
+	 * 
+	 */
+	public static final String IN_BNFT_ID_CD = "IN_BNFT_ID_CD";
+	public static final String IN_RBBC_CD = "IN_RBBC_CD";
+	public static final String READ_CURSOR1 = "READ_CURSOR1";
+	public static final String LS_RBBC_CD = "LS_RBBC_CD";
+	public static final String LS_EFF_DATE = "LS_EFF_DATE";
+	public static final String LS_POSTED = "LS_POSTED";
+	
+	/**
+	 * RBRC DB input/output Constants.
+	 * 
+	 */
+	
+	public static final String READ_CURSOR = "READ_CURSOR";
+	
+	/**
+	 * RTESTYP DB input/output Constants.
+	 * 
+	 */
+	public static final String IN_CATEGORY_CD = "IN_CATEGORY_CD";
+	public static final String IN_DESCRIPTION = "IN_DESCRIPTION";
+	public static final String IN_PCPELG_IND = "IN_PCPELG_IND";
+	public static final String IN_RTESTYP_BENTYP_CD = "IN_RTESTYP_BENTYP_CD";
+	public static final String RTESTYP_SRC_IND = "RTESTYP_SRC_IND";
+	public static final String RTESTYP_ASH_IND = "RTESTYP_ASH_IND";
+	public static final String RTESTYP_PLNSVCT_CD = "RTESTYP_PLNSVCT_CD";
+	public static final String OUT_ADD_UPDATE = "OUT_ADD_UPDATE";
+	
+	/**
+	 * RTEBEPLM DB input/output Constants.
+	 * 
+	 */
+	public static final String LS_RTEBEPLM_BNFT_CD = "LS_RTEBEPLM_BNFT_CD";
+	public static final String LS_RTEBEPLM_EPLC_CD = "LS_RTEBEPLM_EPLC_CD";
+	public static final String LS_RTEBEPLM_FREQ_IND = "LS_RTEBEPLM_FREQ_IND";
+	public static final String LS_RTEBEPLM_ELPC_CD = "LS_RTEBEPLM_ELPC_CD";
+	public static final String LS_RTEBEPLM_EFF_DT = "LS_RTEBEPLM_EFF_DT";
+	public static final String LS_RTEBEPLM_EXP_DT = "LS_RTEBEPLM_EXP_DT";
+	public static final String LS_RTEBEPLM_POSTED_DTS = "LS_RTEBEPLM_POSTED_DTS";
+	
+	/**
+	 * RTEDICTR DB input/output Constants.
+	 * 
+	 */
+	public static final String RTEDICTR_DITEM_CD = "RTEDICTR_DITEM_CD";
+	public static final String RTEDICTR_DICT_CD = "RTEDICTR_DICT_CD";
+	public static final String RTEDICTR_EFF_DATE = "RTEDICTR_EFF_DATE";
+	public static final String RTEDICTRL_EXP_DTE = "RTEDICTRL_EXP_DTE";
+	public static final String POSTED_DTS = "POSTED_DTS";
+	public static final String USER_ID = "USER_ID";
+	/**
+	 * RTETIER DB input/output Constants.
+	 */
+	public static final String RTETIER_SAVINGS_CD = "RTETIER_SAVINGS_CD";
+	public static final String RTETIER_POSTED_DTS = "RTETIER_POSTED_DTS";
+	public static final String RTETIER_EFF_DT = "RTETIER_EFF_DT";
+	public static final String RTETIER_CD = "RTETIER_CD";
+	public static final String RTETIER_DESC_TXT = "RTETIER_DESC_TXT";
+	public static final String RTETIER_EXP_DT = "RTETIER_EXP_DT";
+	
+	/**
+	 * RTERBAC DB input/output Constants.
+	 */
+	public static final String RTERBAC_ACCUM_CD = "RTERBAC_ACCUM_CD";
+	public static final String RTERBAC_BNFT_CD = "RTERBAC_BNFT_CD";
+	public static final String IN_RTERBAC_ACCUM_CD = "IN_RTERBAC_ACCUM_CD";
+	public static final String IN_RTERBAC_BNFT_CD = "IN_RTERBAC_BNFT_CD";
+	public static final String IN_RTERBAC_RSTRCT_IND = "IN_RTERBAC_RSTRCT_IND";
+	public static final String IN_RTERBAC_EFF_DT = "IN_RTERBAC_EFF_DT";
+	public static final String IN_RTERBAC_EXP_DT = "IN_RTERBAC_EXP_DT";
+	public static final String IN_ERSPMSG_ID = "IN_ERSPMSG_ID";
+	public static final String IN_ERSPMSG_MSGTYP_CD = "IN_ERSPMSG_MSGTYP_CD";
+	public static final String IN_ERSPMSG_SHORT_TXT = "IN_ERSPMSG_SHORT_TXT";
+	public static final String IN_ERSPMSG_LONG_TXT = "IN_ERSPMSG_LONG_TXT";
+	public static final String IN_RTERBAC_POSTED_DTS = "IN_RTERBAC_POSTED_DTS";
+	public static final String IN_APPL_USER_ID = "IN_APPL_USER_ID";
+	
+	/**
+	 * HRP_RULE DB input/output Constants.
+	 */
+	public static final String HRPRL_SVTYP_CD = "HRPRL_SVTYP_CD";
+	public static final String HRPRL_RL_CD = "HRPRL_RL_CD";
+	public static final String HRPRL_EFF_DT = "HRPRL_EFF_DT";
+	public static final String HRPRL_TERM_DT = "HRPRL_TERM_DT";
+	public static final String HRPRL_RLE_DESC = "HRPRL_RLE_DESC";
+	public static final String HRPRL_CNSPF_IND = "HRPRL_CNSPF_IND";
+	public static final String HRPRL_RLCTG_IND = "HRPRL_RLCTG_IND";
+	public static final String HRPRL_CVG_IND = "HRPRL_CVG_IND";
+	public static final String HRPRL_TXSD_IND = "HRPRL_TXSD_IND";
+	public static final String HRPRL_PSTS_IND = "HRPRL_PSTS_IND";
+	public static final String HRPRL_TYP_CD = "HRPRL_TYP_CD";
+	public static final String HRPRL_PLSVC_CD = "HRPRL_PLSVC_CD";
+	public static final String HRPRL_ST_CD = "HRPRL_ST_CD";
+	public static final String HRPRL_AMTRFT_IND = "HRPRL_AMTRFT_IND";
+	public static final String HRPRL_BUSRL01_CD = "HRPRL_BUSRL01_CD";
+	public static final String HRPRL_BUSRL02_CD = "HRPRL_BUSRL02_CD";
+	public static final String HRPRL_BUSRL03_CD = "HRPRL_BUSRL03_CD";
+	public static final String HRPRL_BUSRL04_CD = "HRPRL_BUSRL04_CD";
+	public static final String HRPRL_BUSRL05_CD = "HRPRL_BUSRL05_CD";
+	public static final String HRPRL_BUSRL06_CD = "HRPRL_BUSRL06_CD";
+	public static final String HRPRL_BUSRL07_CD = "HRPRL_BUSRL07_CD";
+	public static final String HRPRL_BUSRL08_CD = "HRPRL_BUSRL08_CD";
+	public static final String HRPRL_BUSRL09_CD = "HRPRL_BUSRL09_CD";
+	public static final String HRPRL_BUSRL10_CD = "HRPRL_BUSRL10_CD";
+	public static final String HRPRL_BUSRL11_CD = "HRPRL_BUSRL11_CD";
+	public static final String HRPRL_BUSRL12_CD = "HRPRL_BUSRL12_CD";
+	public static final String HRPRL_BUSRL13_CD = "HRPRL_BUSRL13_CD";
+	public static final String HRPRL_BUSRL14_CD = "HRPRL_BUSRL14_CD";
+	public static final String HRPRL_BUSRL15_CD = "HRPRL_BUSRL15_CD";
 }
