@@ -1,111 +1,722 @@
-<!--Chrome Upgrade- N127627-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
-<!--END-->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
 <!--Chrome Upgrade-N127627-->
-<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <!--END-->
 <HTML>
 <HEAD>
-<TITLE>AddUserAccess</TITLE>
-<SCRIPT>
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>BICList.html</TITLE>
+<STYLE type="text/css">
 
-var relPath="<%=request.getContextPath()%>";
-
-$(document).ready( function(e) {
-$('#AddNewUser').click(function(){
-	var action = relPath+'/usrsec/AddUser';
-	//alert("invoked action:"+action);
-	var flag = ValidateInput();
-	//alert("invoked flag:"+flag);
-	if(flag==true){
-	$("#addUserForm").attr('action', action).submit();
-	}
-	});
-});
+BODY { /* chrome upgrade N127627-Edited background-color: "e1eeb9" */
+	background-color: #e1eeb9;
+	font-style: italic
+}
 
 
-function ValidateInput(){
-		
-	if ($.trim($('#dbRiderCd').val()) == "") { 
-		alert("You must enter an Aetna Id.");
-		$('#dbRiderCd').focus();
-		return false;
-	} else
-	if ((!$.trim($('#dbRiderCd').val()).substring(0,1) == "a") && (!$.trim($('#dbRiderCd').val()).substring(0,1) == "n")) {
-		alert("Aetna Id must have either an 'a' or an 'n' as first Character.");
-		$('#dbRiderCd').focus();
-		return false;
-	}
-	
-	if ((!$('#dbIONtwkCd').val() == "A")
-	 && (!$('#dbIONtwkCd').val() == "B")
-	 && (!$('#dbIONtwkCd').val() == "R")
-	 && (!$('#dbIONtwkCd').val() == "W")) {
-		alert("Security Level must be one of the following values: A, B, C, D, R, or W.");
-		$('#dbIONtwkCd').focus();
-		return false;
-	}
-	return true;
+</STYLE>
+<SCRIPT language="JavaScript">
+
+// Drag the item from the left window and
+// drop it here.  Or, click the right mouse button
+// and select 'Insert to Script' from the popup menu.
+// The code is inserted at the current
+// cursor position.
+function WindowClose()
+{
+	window.close()
 }
 
 </SCRIPT>
 </HEAD>
-<BODY bgcolor="#e1eeb9" onload=document.addUserForm.userName.focus()>
-<H1 align="center">Add Access Rows to RBRC table</H1>
-
-<center>
-<FONT FACE="ARIAL">
-<B><U>Note:</U>  *=required field</B>
-</FONT>
-<form:form commandName="rbrcVO" name="addUserForm" id="addUserForm"  method="POST">
-<TABLE >
-	<TBODY>
-		<TR>
-			<TD>First &amp; Last Name</TD>
-			<TD><form:input path="dbDescTxt" id="dbDescTxt" size="30" type="text" maxlength="30" Name="userName" tabindex="1"/></TD>
-		</TR>
-		<TR>
-			<TD>Aetna Id*</TD>
-			<TD><form:input path="dbRiderCd" id="dbRiderCd" size="7" type="text" maxlength="7" name="aetnaId" tabindex="2"
-										onchange="javascript:this.value=this.value.toLowerCase();"/></TD>
-		</TR>
-		<TR>
-			<TD>Security Level*</TD>
-			<TD><form:input path="dbIONtwkCd" id="dbIONtwkCd" size="1" type="text" maxlength="1" name="secLevel" tabindex="3"
-									onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
-		</TR>
-		<TR>
-			<TD>Site Code</TD>
-			<TD><form:input path="dbSiteCd" id="dbSiteCd" size="7" type="text" maxlength="4" name="siteCd" value="ZZZZ" readonly /></TD>
-		</TR>
-		<TR>
-			<TD>Service Type</TD>
-			<TD><form:input path="dbSvcTypeCd" id="dbSvcTypeCd" size="5" type="text" maxlength="5" name="svcTypeCd" value="99999" readonly /></TD>
-		</TR>
-	</TBODY>
+<BODY>
+<CENTER>
+<B><FONT size="+3">List of Benefit Id Codes</FONT></B>
+<TABLE border="1">
+    <TBODY>
+        <TR>
+            <TD align="right"><FONT color="#0000ff"><B>BIC Cd</B></FONT></TD>
+            <TD><B><FONT color="#0000ff">Descriptions</FONT></B></TD>
+        </TR>
+        <TR>
+            <TD align="center">11010</TD>
+            <TD>Term Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">11015</TD>
+            <TD>Supplemental Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">11020</TD>
+            <TD>Dependents Term life</TD>
+        </TR>
+        <TR>
+            <TD align="center">11025</TD>
+            <TD>Dependents Supplemental Term Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">11410</TD>
+            <TD>Survivor Income Benefit</TD>
+        </TR>
+        <TR>
+            <TD align="center">11510</TD>
+            <TD>Transition (Term)</TD>
+        </TR>
+        <TR>
+            <TD align="center">11511</TD>
+            <TD>Bridge (Term)</TD>
+        </TR>
+        <TR>
+            <TD align="center">11610</TD>
+            <TD>Disability 65 Life Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">11620</TD>
+            <TD>D65 (Term)</TD>
+        </TR>
+        <TR>
+            <TD align="center">11621</TD>
+            <TD>D65 - Pension Supplement (Term)</TD>
+        </TR>
+        <TR>
+            <TD align="center">11622</TD>
+            <TD>D65 Pension Accrual (Term)</TD>
+        </TR>
+        <TR>
+            <TD align="center">11710</TD>
+            <TD>Wholesale</TD>
+        </TR>
+        <TR>
+            <TD align="center">11711</TD>
+            <TD>Individual Term 90</TD>
+        </TR>
+        <TR>
+            <TD align="center">11712</TD>
+            <TD>Directors Special</TD>
+        </TR>
+        <TR>
+            <TD align="center">14010</TD>
+            <TD>Paid-Up Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">14110</TD>
+            <TD>Paid-Up Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">14115</TD>
+            <TD>Supplemental Paid-Up</TD>
+        </TR>
+        <TR>
+            <TD align="center">14120</TD>
+            <TD>Dependents Paid-Up Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">14130</TD>
+            <TD>Preliminary Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">14210</TD>
+            <TD>Group Permanent</TD>
+        </TR>
+        <TR>
+            <TD align="center">14211</TD>
+            <TD>Cash Value</TD>
+        </TR>
+        <TR>
+            <TD align="center">14310</TD>
+            <TD>Group Permanent term</TD>
+        </TR>
+        <TR>
+            <TD align="center">14410</TD>
+            <TD>Survivor Income Benefit (Paid Up)</TD>
+        </TR>
+        <TR>
+            <TD align="center">14510</TD>
+            <TD>Transition (Paid Up)</TD>
+        </TR>
+        <TR>
+            <TD align="center">14511</TD>
+            <TD>Bridge (Paid Up)</TD>
+        </TR>
+        <TR>
+            <TD align="center">14610</TD>
+            <TD>D65 - Life Paid Up</TD>
+        </TR>
+        <TR>
+            <TD align="center">14620</TD>
+            <TD>D65 - Paid Up</TD>
+        </TR>
+        <TR>
+            <TD align="center">14621</TD>
+            <TD>D65 - Pension Supplement (Paid Up)</TD>
+        </TR>
+        <TR>
+            <TD align="center">14622</TD>
+            <TD>D65 - Pension Accrual (Paid Up)</TD>
+        </TR>
+        <TR>
+            <TD align="center">14810</TD>
+            <TD>Group Universal Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">14910</TD>
+            <TD>Universal Life Fund</TD>
+        </TR>
+        <TR>
+            <TD align="center">17010</TD>
+            <TD>Credit Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">17110</TD>
+            <TD>Savings Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">17210</TD>
+            <TD>Mortgage Life</TD>
+        </TR>
+        <TR>
+            <TD align="center">17220</TD>
+            <TD>Critical Period</TD>
+        </TR>
+        <TR>
+            <TD align="center">21010</TD>
+            <TD>Accidental Death &amp; Dismemberment</TD>
+        </TR>
+        <TR>
+            <TD align="center">21015</TD>
+            <TD>Supplemental AD&amp;D</TD>
+        </TR>
+        <TR>
+            <TD align="center">22010</TD>
+            <TD>Group Accident</TD>
+        </TR>
+        <TR>
+            <TD align="center">23010</TD>
+            <TD>Mortgage Accidental Death</TD>
+        </TR>
+        <TR>
+            <TD align="center">30001</TD>
+            <TD>Temporary Disability Income</TD>
+        </TR>
+        <TR>
+            <TD align="center">30400</TD>
+            <TD>California Disability - 40 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">30401</TD>
+            <TD>California Disability - 41 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">30404</TD>
+            <TD>California Disability - 44 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">30405</TD>
+            <TD>California Disability - 45 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">30408</TD>
+            <TD>California Disability - 48 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">31000</TD>
+            <TD>Long Term Care Disability</TD>
+        </TR>
+        <TR>
+            <TD align="center">32900</TD>
+            <TD>New Jersey Disability 290 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">32901</TD>
+            <TD>New Jersey Disability 291 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">32904</TD>
+            <TD>New Jersey Disability 294 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">32905</TD>
+            <TD>New Jersey Disability 295 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">32908</TD>
+            <TD>New Jersey Disability 298 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">32909</TD>
+            <TD>New Jersey Disability 299 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33100</TD>
+            <TD>New York Disability 310 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33101</TD>
+            <TD>New York Disability 311 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33104</TD>
+            <TD>New York Disability 314 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33105</TD>
+            <TD>New York Disability 315 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33108</TD>
+            <TD>New York Disability 318 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">33109</TD>
+            <TD>NewYork Disability 319 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35200</TD>
+            <TD>Hawaii Disability 520 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35201</TD>
+            <TD>Hawaii Disability 521 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35205</TD>
+            <TD>Hawaii Disability 525 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35801</TD>
+            <TD>Puerto Rico Disability 581 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35804</TD>
+            <TD>Puerto Rico Disability 584 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">35808</TD>
+            <TD>Puerto Rico Disability 588 (TDI)</TD>
+        </TR>
+        <TR>
+            <TD align="center">37110</TD>
+            <TD>Credit Disability</TD>
+        </TR>
+        <TR>
+            <TD align="center">37210</TD>
+            <TD>Mortgage Disability</TD>
+        </TR>
+        <TR>
+            <TD align="center">37220</TD>
+            <TD>Mortgage Accidental Disability</TD>
+        </TR>
+        <TR>
+            <TD align="center">38100</TD>
+            <TD>Managed Disability - Short Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">38200</TD>
+            <TD>Managed Disability - Long Term</TD>
+        </TR>
+        <TR>
+            <TD align="center">39700</TD>
+            <TD>Long Term Disability</TD>
+        </TR>
+        <TR>
+            <TD align="center">39701</TD>
+            <TD>LTD Pension Supplement</TD>
+        </TR>
+        <TR>
+            <TD align="center">39702</TD>
+            <TD>LTD Pension Accrual</TD>
+        </TR>
+        <TR>
+            <TD align="center">41000</TD>
+            <TD>Hospital</TD>
+        </TR>
+        <TR>
+            <TD align="center">41012</TD>
+            <TD>Surgical</TD>
+        </TR>
+        <TR>
+            <TD align="center">41013</TD>
+            <TD>In-Hospital Physician</TD>
+        </TR>
+        <TR>
+            <TD align="center">41014</TD>
+            <TD>Physicians Non-Disabling</TD>
+        </TR>
+        <TR>
+            <TD align="center">41015</TD>
+            <TD>Diagnostic X-ray and Lab</TD>
+        </TR>
+        <TR>
+            <TD align="center">41016</TD>
+            <TD>Supplemental Accident</TD>
+        </TR>
+        <TR>
+            <TD align="center">41017</TD>
+            <TD>Anesthesia</TD>
+        </TR>
+        <TR>
+            <TD align="center">41018</TD>
+            <TD>X-ray and Radioactive Therapy</TD>
+        </TR>
+        <TR>
+            <TD align="center">41020</TD>
+            <TD>Catastrophic Expense Benefit</TD>
+        </TR>
+        <TR>
+            <TD align="center">41021</TD>
+            <TD>Ambulance</TD>
+        </TR>
+        <TR>
+            <TD align="center">41022</TD>
+            <TD>Surgical Assistance</TD>
+        </TR>
+        <TR>
+            <TD align="center">41023</TD>
+            <TD>Consultation</TD>
+        </TR>
+        <TR>
+            <TD align="center">41024</TD>
+            <TD>Outpatient Services</TD>
+        </TR>
+        <TR>
+            <TD align="center">41025</TD>
+            <TD>Convalescent Facility</TD>
+        </TR>
+        <TR>
+            <TD align="center">41026</TD>
+            <TD>Chemotherapy</TD>
+        </TR>
+        <TR>
+            <TD align="center">41027</TD>
+            <TD>Durable Medical Equipment</TD>
+        </TR>
+        <TR>
+            <TD align="center">41028</TD>
+            <TD>Outpatient Physical Therapy</TD>
+        </TR>
+        <TR>
+            <TD align="center">41029</TD>
+            <TD>Prosthetic Devices</TD>
+        </TR>
+        <TR>
+            <TD align="center">41030</TD>
+            <TD>Voluntary Sterilization</TD>
+        </TR>
+        <TR>
+            <TD align="center">41031</TD>
+            <TD>Basic Drug (NP)</TD>
+        </TR>
+        <TR>
+            <TD align="center">41032</TD>
+            <TD>Eye Exam</TD>
+        </TR>
+        <TR>
+            <TD align="center">41033</TD>
+            <TD>Polio</TD>
+        </TR>
+        <TR>
+            <TD align="center">41034</TD>
+            <TD>Emergency Medical Physicians</TD>
+        </TR>
+        <TR>
+            <TD align="center">41035</TD>
+            <TD>Specified Diseases</TD>
+        </TR>
+        <TR>
+            <TD align="center">41036</TD>
+            <TD>Visiting Nurse</TD>
+        </TR>
+        <TR>
+            <TD align="center">41039</TD>
+            <TD>Miscellaneous</TD>
+        </TR>
+        <TR>
+            <TD align="center">41040</TD>
+            <TD>Speech Therapy</TD>
+        </TR>
+        <TR>
+            <TD align="center">41041</TD>
+            <TD>Second Surgical Opinion</TD>
+        </TR>
+        <TR>
+            <TD align="center">41900</TD>
+            <TD>Prescription Drug (PAR)</TD>
+        </TR>
+        <TR>
+            <TD align="center">42000</TD>
+            <TD>Major Medical</TD>
+        </TR>
+        <TR>
+            <TD align="center">42001</TD>
+            <TD>Major Medical Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">42002</TD>
+            <TD>Major Medical Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">43000</TD>
+            <TD>Comprehensive Medical</TD>
+        </TR>
+        <TR>
+            <TD align="center">43001</TD>
+            <TD>Comprehensive Medical Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">43002</TD>
+            <TD>Comprehensive Medical Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">43003</TD>
+            <TD>Preferred Comprehensive Medical</TD>
+        </TR>
+        <TR>
+            <TD align="center">43004</TD>
+            <TD>Preferred Comprehensive Medical - MBH</TD>
+        </TR>
+        <TR>
+            <TD align="center">43100</TD>
+            <TD>PPO Medical</TD>
+        </TR>
+        <TR>
+            <TD align="center">43101</TD>
+            <TD>PPO Medical Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">43102</TD>
+            <TD>PPO Medical Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">43103</TD>
+            <TD>PPO Medical Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">43200</TD>
+            <TD>Select Choice Medical</TD>
+        </TR>
+        <TR>
+            <TD align="center">43201</TD>
+            <TD>Select Choice Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">43202</TD>
+            <TD>Select Choice Drug</TD>
+        </TR>
+        <TR>
+            <TD align="center">43203</TD>
+            <TD>Select Choice Mental Nervous</TD>
+        </TR>
+        <TR>
+            <TD align="center">43205</TD>
+            <TD>Select Choice Chemical Dependency</TD>
+        </TR>
+        <TR>
+            <TD align="center">43207</TD>
+            <TD>Select Choice Durable Medical Equip.</TD>
+        </TR>
+        <TR>
+            <TD align="center">43208</TD>
+            <TD>Select Choice Hearing</TD>
+        </TR>
+        <TR>
+            <TD align="center">43213</TD>
+            <TD>Select Choice Chiropractic</TD>
+        </TR>
+        <TR>
+            <TD align="center">43214</TD>
+            <TD>Select Choice Infertility</TD>
+        </TR>
+        <TR>
+            <TD align="center">43215</TD>
+            <TD>Select Choice Non Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">43300</TD>
+            <TD>MCP HMO</TD>
+        </TR>
+        <TR>
+            <TD align="center">43301</TD>
+            <TD>MCP HMO Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">43400</TD>
+            <TD>MCP DUAL</TD>
+        </TR>
+        <TR>
+            <TD align="center">43401</TD>
+            <TD>MCP DUAL Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">43500</TD>
+            <TD>MCP EPO</TD>
+        </TR>
+        <TR>
+            <TD align="center">43501</TD>
+            <TD>MCP EPO Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">43600</TD>
+            <TD>Elect Choice</TD>
+        </TR>
+        <TR>
+            <TD align="center">43700</TD>
+            <TD>Managed Behavioral Health</TD>
+        </TR>
+        <TR>
+            <TD align="center">43701</TD>
+            <TD>Managed Behavioral Health Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">44000</TD>
+            <TD>Basic Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">44100</TD>
+            <TD>Comprehensive Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">44200</TD>
+            <TD>Dental Maintenance Organization NP</TD>
+        </TR>
+        <TR>
+            <TD align="center">44201</TD>
+            <TD>Dental Maintenance Organization Pref</TD>
+        </TR>
+        <TR>
+            <TD align="center">44300</TD>
+            <TD>PPO Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">44301</TD>
+            <TD>PPO Dental Preferred</TD>
+        </TR>
+        <TR>
+            <TD align="center">45000</TD>
+            <TD>Basic Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">45100</TD>
+            <TD>Comprehensive Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">45200</TD>
+            <TD>Participating Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">45210</TD>
+            <TD>Non Participating Vision</TD>
+        </TR>
+        <TR>
+            <TD align="center">45400</TD>
+            <TD>Participating Hearing</TD>
+        </TR>
+        <TR>
+            <TD align="center">45410</TD>
+            <TD>Non Participating Hearing</TD>
+        </TR>
+        <TR>
+            <TD align="center">46000</TD>
+            <TD>Long Term Care Reimbursement</TD>
+        </TR>
+        <TR>
+            <TD align="center">46100</TD>
+            <TD>Managed Behavioral Health 3rd Party</TD>
+        </TR>
+        <TR>
+            <TD align="center">46101</TD>
+            <TD>Managed Behavioral Health 3rd Party Pref</TD>
+        </TR>
+        <TR>
+            <TD align="center">46200</TD>
+            <TD>Freedom of Choice Dental PPO NP</TD>
+        </TR>
+        <TR>
+            <TD align="center">46201</TD>
+            <TD>Freedom of Choice Dental PPO PR</TD>
+        </TR>
+        <TR>
+            <TD align="center">46300</TD>
+            <TD>FOC Dental Maintenance Org NP</TD>
+        </TR>
+        <TR>
+            <TD align="center">46301</TD>
+            <TD>FOC Dental Maintenance Org P</TD>
+        </TR>
+        <TR>
+            <TD align="center">46400</TD>
+            <TD>PPO Dental Non-pref 2000</TD>
+        </TR>
+        <TR>
+            <TD align="center">46401</TD>
+            <TD>PPO Dental Pref 2000</TD>
+        </TR>
+        <TR>
+            <TD align="center">46500</TD>
+            <TD>Open Access Managed Choice</TD>
+        </TR>
+        <TR>
+            <TD align="center">46501</TD>
+            <TD>Open Access Managed Choice PR</TD>
+        </TR>
+        <TR>
+            <TD align="center">47100</TD>
+            <TD>Occupational Managed Compensation</TD>
+        </TR>
+        <TR>
+            <TD align="center">47200</TD>
+            <TD>Freedom of Choice Dental</TD>
+        </TR>
+        <TR>
+            <TD align="center">47300</TD>
+            <TD>Comprehensive Dental 2000</TD>
+        </TR>
+        <TR>
+            <TD align="center">47400</TD>
+            <TD>Open Access Elect Choice</TD>
+        </TR>
+        <TR>
+            <TD align="center">47500</TD>
+            <TD>Open Access Select Choice</TD>
+        </TR>
+        <TR>
+            <TD align="center">47600</TD>
+            <TD>Informed Health</TD>
+        </TR>
+        <TR>
+            <TD align="center">47800</TD>
+            <TD>Employee Assistance Program</TD>
+        </TR>
+        <TR>
+            <TD align="center">48100</TD>
+            <TD>Medicare Integration</TD>
+        </TR>
+        <TR>
+            <TD align="center">49000</TD>
+            <TD>HMO Reinstatement</TD>
+        </TR>
+        <TR>
+            <TD align="center">49001</TD>
+            <TD>HMO Stop Loss</TD>
+        </TR>
+        <TR>
+            <TD align="center">71000</TD>
+            <TD>Medical Spending Account</TD>
+        </TR>
+        <TR>
+            <TD align="center">71010</TD>
+            <TD>Dependent Care Spending Account</TD>
+        </TR>
+        <TR>
+            <TD align="center">71011</TD>
+            <TD>Legal Spending Account</TD>
+        </TR>
+        <TR>
+            <TD align="center">71012</TD>
+            <TD>Miscellaneous Spending Account</TD>
+        </TR>
+    </TBODY>
 </TABLE>
-<BR>
-<INPUT type="button" id="AddNewUser" value="Add" tabindex="4" accesskey="a"
-												style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm">
-<INPUT type="button" id="Cancel" value="Cancel" onclick="history.back();" tabindex="5" accesskey="C"
-												style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
-<BR>
-<FONT face="arial"><BR>
-<p align="center">
-"A" = Read/Write all including the Security tables.<br>
-"B" = Read/Write on BPLVS only.<br>
-"R" = Read only on everything except security tables.<br>
-"W" = Read/Write on everything except security tables.<br>
-</p>
-</FONT>
-</form:form>
-</center>
+<P align="center"><INPUT type="button" onclick="WindowClose()" name="CloseButton" value="Close"></P>
+</CENTER>
 </BODY>
 </HTML>
