@@ -1,114 +1,264 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/security/tags"
-	prefix="security"%>
-<head>
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
-<title>Long Run Transaction Look Up</title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="GENERATOR" content="Rational Application Developer">
+<head>
+<title>Long Running Transaction Search</title>
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-	src="${context}/js/jquery/jquery-1.7.2.js"></script>
+<link rel="stylesheet" type="text/css" href="${context}/css/datepicker.css">
+<link rel="stylesheet" type="text/css" href="${context}/css/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="${context}/css/LongRunTab.css">
+<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<script type="text/javascript" src="${context}/js/jquery/dateValidator.js"></script>
+<script type="text/javascript" src="${context}/js/jquery/jquery-ui.js"></script>
 <script>
-$(document).ready(function(){
-		var rtePath = "<%=request.getContextPath()%>";
-				$("#longrunTransHome").click(function() {
-							
-							var longRunTransHomePath = rtePath
-									+ "/eventtrack/longruntrans/longRunTransHome4";
-							$("#longRunTransDisplay").attr('action',
-									longRunTransHomePath).submit();
-						});
-				$("#longrunTransExport").click(function() {
-							
-							var longRunTransHomePath = rtePath + "/eventtrack/longruntrans/longRunTransExport4";
-							$("#form1").attr('action',longRunTransHomePath).submit();
-						});
-			});
+$(document).ready( function() {
+	var relPath="<%=request.getContextPath()%>";
+	var d = new Date();
+	var month = d.getMonth()+1;
+	var day = d.getDate();
+	var output = d.getFullYear() + '-' +(month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;
+	$("#endDate").attr("value", output);
+	$("#endHrs").attr("value", ((d.getHours()<10?'0':'') + d.getHours()));
+	$("#endMns").attr("value", ((d.getMinutes()<10?'0':'') + d.getMinutes()));
+	$("#endSecs").attr("value", ((d.getSeconds()<10?'0':'') + d.getSeconds()));
+	$('#Lookup').click(function(){
+		var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longruntransLookUp';
+		var adasvctLookUp2Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport2';
+		var adasvctLookUp3Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport3';
+		var adasvctLookUp4Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport4';
+		var reportValue = $("#report").val();
+		if (($('#secondsCalc').val() == "")) {
+   			$("#secondsCalc").attr("value", "00");
+   		}
+		if (($('#startHrs').val() == "")) {
+   			$("#startHrs").attr("value", "00");
+   		}if (($('#startMns').val() == "")) {
+   			$("#startMns").attr("value", "00");
+   		}if (($('#startSecs').val() == "")) {
+   			$("#startSecs").attr("value", "00");
+   		}
+		var retVal = validate();
+		if(retVal == true){
+			if(($("#report").val()=="Report3")){
+				$("#longruntransForm").attr('action', adasvctLookUp3Path).submit();
+			}else if(($("#report").val()=="Report4")){
+				$("#longruntransForm").attr('action', adasvctLookUp4Path).submit();
+			}else if(($("#report").val()=="Report2")){
+				$("#longruntransForm").attr('action', adasvctLookUp2Path).submit();
+			}
+			else{
+				$("#longruntransForm").attr('action', adasvctLookUpPath).submit();
+			}
+			
+		}
+		
+	});
+	$("#startDate").datepicker( {
+						showOn : 'button',
+						buttonImageOnly : true,
+						buttonImage : relPath+'/images/calendar.gif',
+						dateFormat : 'yy-mm-dd'
+					});
+	$("#endDate").datepicker( {
+						showOn : 'button',
+						buttonImageOnly : true,
+						buttonImage : relPath+'/images/calendar.gif',
+						dateFormat : 'yy-mm-dd'
+					});
+	
+
+$("#module").bind('keyup', function (e) {
+    if (e.which >= 97 && e.which <= 122) {
+        var newKey = e.which - 32;
+        // I have tried setting those
+        e.keyCode = newKey;
+        e.charCode = newKey;
+    }
+
+$("#module").val(($("#module").val()).toUpperCase());
+});
+
+$("#secondsCalc").bind("keydown", function (event) {
+if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || 
+            (event.keyCode >= 96 && event.keyCode <= 105) || 
+            event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+            event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+        } else {
+            event.preventDefault();
+        }
+
+        if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+            event.preventDefault(); 
+        //if a decimal has been added, disable the "."-button
+});
+
+$("#minutesCalc").bind("keydown", function (event) {
+if (event.shiftKey == true) {
+            event.preventDefault();
+        }
+
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || 
+            (event.keyCode >= 96 && event.keyCode <= 105) || 
+            event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+            event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
+
+        } else {
+            event.preventDefault();
+        }
+
+        if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+            event.preventDefault(); 
+        //if a decimal has been added, disable the "."-button
+});	
+});
+function validate()
+{
+   var retVal=true;
+   var startdate = $('#startDate').val();
+   var enddate = $('#endDate').val();
+   var effDate = new Date(startdate);
+   var expDate = new Date(enddate);
+   if(effDate.getTime() > expDate.getTime()) {
+   			alert("Start Date should be less than or equal to End Date");
+			return false;			
+		}
+   var startTime = ($('#startHrs').val())+":"+($('#startMns').val())+":"+($('#startSecs').val());
+   var endTime = ($('#endHrs').val())+":"+($('#endMns').val())+":"+($('#endSecs').val());
+   var validStartTime = (startTime.search(/^\d{2}:\d{2}:\d{2}$/) != -1) &&
+            (startTime.substr(0,2) >= 0 && startTime.substr(0,2) <= 24) &&
+            (startTime.substr(3,2) >= 0 && startTime.substr(3,2) <= 59) &&
+            (startTime.substr(6,2) >= 0 && startTime.substr(6,2) <= 59);
+   var validEndTime = (endTime.search(/^\d{2}:\d{2}:\d{2}$/) != -1) &&
+            (endTime.substr(0,2) >= 0 && endTime.substr(0,2) <= 24) &&
+            (endTime.substr(3,2) >= 0 && endTime.substr(3,2) <= 59) &&
+            (endTime.substr(6,2) >= 0 && endTime.substr(6,2) <= 59);
+      if (($('#startDate').val() == "")) {
+   		alert("Please enter valid Start time");
+   		return false;
+   }
+   if (($('#endDate').val() == "")) {
+   		alert("Please enter valid End time");
+   		return false;
+   }
+   if(validStartTime == false){
+   		alert("Please Enter Valid Start Time");
+   		return false;
+   }if(validEndTime == false){
+   		alert("Please Enter Valid End Time");
+   		return false;
+   }if(($('#report').val()) == "select"){
+   		alert("Please Select the report");
+   		return false;
+   }if((($('#report').val()) == "Report2") && ((($('#module').val()) == ""))){
+   		alert("Please Enter the Module for Report 2");
+   		return false;
+   }if((($('#report').val()) == "Report3") && ((($('#minutesCalc').val()) == ""))){
+   		alert("Please Enter the Minutes Split for Report 3");
+   		return false;
+   }
+      return retVal
+}
 </script>
 </head>
-<body style="font-size: 10pt" bgcolor="#e1eeb9">
-	<font face="ARIAL"></font>
-	<c:set var="longRunTransMessageVar" value="${longRunTransMessage}"></c:set>
-	<P>
-		<c:out value="${longRunTransMessageVar}"></c:out>
-	</P>
-	<br>
-		
-		<b><font size="+2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT BY CATEGORY</font> 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></B>
-		<center><h2 align="center"><FONT color="black"><nav>
-				<div class="box"><a
+<BODY bgcolor="#e1eeb9">
+
+	<H1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></H1>
+		<h2 align="center"><FONT color="black"><nav>
+				<div class="box1"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
 					by Transactions</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
 					by Modules</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
-					by Minutes</a></div> <div class="box1"><a
+					by Minutes</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
 					by Category</a></div>
 			</nav></FONT></h2>
+	<H1 align="center">REPORT BY TRANSACTIONS</H1>
+	<P align="center">
+		
+	</P>
+	
+	<form:form commandName="LongRunTransVO" name="longruntransForm"
+		id="longruntransForm" method="POST">
 
-	</center>
+		<c:if test="${requestScope.isSessionActive }">
+			<c:out value="Welcome Session" />
+		</c:if>
+		<CENTER>
+			<TABLE>
+				<TBODY>
+					<TR>
+						<TD>Start Time</TD>
+						<TD><form:input path="startDate" id="startDate"
+								value="${sessionScope.startDate}" maxlength="11" size="11"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD></TD>
+						<TD><form:input path="startHrs" id="startHrs"
+								value="${sessionScope.startHrs}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD>:</TD>
+						<TD><form:input path="startMns" id="startMns"
+								value="${sessionScope.startMns}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD>:</TD>
+						<TD><form:input path="startSecs" id="startSecs"
+								value="${sessionScope.startSecs}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
+					</TR>
+					<TR>
+						<TD>End Time</TD>
+						<TD><form:input path="endDate" id="endDate"
+								value="${sessionScope.endDate}" maxlength="11" size="11"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD></TD>
+						<TD><form:input path="endHrs" id="endHrs"
+								value="${sessionScope.endHrs}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD>:</TD>
+						<TD><form:input path="endMns" id="endMns"
+								value="${sessionScope.endMns}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD>:</TD>
+						<TD><form:input path="endSecs" id="endSecs"
+								value="${sessionScope.endSecs}" maxlength="2" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
+					</TR>
+					<TR>
+						<TD>Seconds *</TD>
+						<TD><form:input path="secondsCalc" id="secondsCalc"
+								value="${sessionScope.secondsCalc}" maxlength="3" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
 
-	<center>
-		<input type="image" id="longrunTransExport"
-			src="${context}/images/rte_export.jpg" class="export"
-			style="padding-left: 1mm; padding-right: 1mm">
-		<form:form modelAttribute="lookUpTableListVO" id="longRunTransDisplay"
-			name="longRunTransDisplay" method="POST">
+					</TR>
+					<input type="hidden" name="report" id="report" value="Report1" />
 
-			<table cellspacing="5" style="background-color: #9393ff" border="1"
-				class="lookupTable">
-				<tbody>
-					<tr>
-						<td width="30" style="font-weight: bold">Seconds</td>
-						<td width="100" style="font-weight: bold">DM PROCESS</td>
-						<td width="30" style="font-weight: bold">TRADITIONAL</td>
-						<td width="30" style="font-weight: bold">DENTAL</td>
-						<td width="30" style="font-weight: bold">HMO</td>
-						<td width="30" style="font-weight: bold">OUTBOUND</td>
-						<td width="30" style="font-weight: bold">PROVIDER</td>
-						<td width="30" style="font-weight: bold">HRP</td>
-						<td width="30" style="font-weight: bold">ASH/SRC</td>
-					</tr>
-					<c:forEach items="${lookUpTableListVO.longRunTransactionVOList4}"
-						var="longRunTransactionvo" varStatus="status">
-						<tr>
-						<td>${longRunTransactionvo.seconds}</td>
-						<td bgcolor="white">${longRunTransactionvo.dmCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.tradCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.dentalCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.hmoCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.outBoundCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.providerCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.hrpCount}</td>
-						<td bgcolor="white">${longRunTransactionvo.asjCount}</td>
-						</tr>
-					</c:forEach>
+				</TBODY>
 
-				</tbody>
-			</table>
-			<br>
-			<br>
-			<c:choose>
-				<c:when test="${(securityLevel ne 'RW')}">
 
-					<input type="button" name="Export" value="Export"
-						style="padding-left: 1mm; padding-right: 1mm"
-						id="longrunTransExport" disabled="disabled">
-				</c:when>
-			</c:choose>
-			<input type="button" name="LookUp" value="Home"
-				style="padding-left: 1mm; padding-right: 1mm" id="longrunTransHome">
-	</center>
+			</TABLE>
+			<BR> <BR> <INPUT type="button" id="Lookup" name="Lookup"
+				value="Submit" tabindex="5" style="margin-left: 10px"> <input
+				type="hidden" name="start" id="start"
+				value="<%=request.getAttribute("longrunValues")%>">
+
+
+
+		</CENTER>
 	</form:form>
-
-<FONT face="ARIAL" style="font-size: 9pt"> Missing seconds do not have any transactions.
+	<FONT face="ARIAL" style="font-size: 9pt"> * - Transactions
+		taking more than submitted seconds<BR> 
 	</FONT>
-</body>
+</BODY>
