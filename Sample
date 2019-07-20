@@ -11,10 +11,10 @@
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 <link rel="stylesheet" type="text/css" href="${context}/css/datepicker.css">
 <link rel="stylesheet" type="text/css" href="${context}/css/jquery-ui.css">
-<link rel="stylesheet" type="text/css" href="${context}/css/LongRunTab.css">
 <!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
 <script type="text/javascript" src="${context}/js/jquery/dateValidator.js"></script>
 <script type="text/javascript" src="${context}/js/jquery/jquery-ui.js"></script>
+<link rel="stylesheet" type="text/css" href="${context}/css/LongRunTab.css">
 <script>
 $(document).ready( function() {
 	var relPath="<%=request.getContextPath()%>";
@@ -26,22 +26,38 @@ $(document).ready( function() {
 	$("#endHrs").attr("value", ((d.getHours()<10?'0':'') + d.getHours()));
 	$("#endMns").attr("value", ((d.getMinutes()<10?'0':'') + d.getMinutes()));
 	$("#endSecs").attr("value", ((d.getSeconds()<10?'0':'') + d.getSeconds()));
+	$('#checkSecs').click(function() {
+			$('#secondsCalc').val("");
+        	$('#module').val("");
+        if ($(this).is(':checked')) {
+        	$('#secondsCalc').removeAttr('disabled');
+        	$('#secondsCalc').attr("value", "");
+        	$('#module').attr("value", "");
+            $('#module').attr('disabled', 'disabled');
+        } else {
+        	$('#secondsCalc').attr("value", "");
+            $('#secondsCalc').attr('disabled', 'disabled');
+            $('#module').removeAttr('disabled');
+        	$('#module').attr("value", "");            
+        }
+    });
 	$('#Lookup').click(function(){
+	
 		var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longruntransLookUp';
-		var adasvctLookUp2Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport2';
 		var adasvctLookUp3Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport3';
 		var adasvctLookUp4Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport4';
+		var adasvctLookUp2Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport2';
 		var reportValue = $("#report").val();
-		if (($('#secondsCalc').val() == "")) {
-   			$("#secondsCalc").attr("value", "00");
-   		}
 		if (($('#startHrs').val() == "")) {
    			$("#startHrs").attr("value", "00");
    		}if (($('#startMns').val() == "")) {
    			$("#startMns").attr("value", "00");
    		}if (($('#startSecs').val() == "")) {
    			$("#startSecs").attr("value", "00");
+   		}if (($('#secondsCalc').val() == "")) {
+   			$("#secondsCalc").val("00");
    		}
+   		  		
 		var retVal = validate();
 		if(retVal == true){
 			if(($("#report").val()=="Report3")){
@@ -62,7 +78,9 @@ $(document).ready( function() {
 						showOn : 'button',
 						buttonImageOnly : true,
 						buttonImage : relPath+'/images/calendar.gif',
-						dateFormat : 'yy-mm-dd'
+						dateFormat : 'yy-mm-dd',
+						
+						
 					});
 	$("#endDate").datepicker( {
 						showOn : 'button',
@@ -128,6 +146,9 @@ function validate()
    var enddate = $('#endDate').val();
    var effDate = new Date(startdate);
    var expDate = new Date(enddate);
+   if(!($('#checkSecs').is(':checked'))){
+   	$('#secondsCalc').attr("value", "0");
+   }
    if(effDate.getTime() > expDate.getTime()) {
    			alert("Start Date should be less than or equal to End Date");
 			return false;			
@@ -142,7 +163,7 @@ function validate()
             (endTime.substr(0,2) >= 0 && endTime.substr(0,2) <= 24) &&
             (endTime.substr(3,2) >= 0 && endTime.substr(3,2) <= 59) &&
             (endTime.substr(6,2) >= 0 && endTime.substr(6,2) <= 59);
-      if (($('#startDate').val() == "")) {
+   if (($('#startDate').val() == "")) {
    		alert("Please enter valid Start time");
    		return false;
    }
@@ -156,39 +177,39 @@ function validate()
    }if(validEndTime == false){
    		alert("Please Enter Valid End Time");
    		return false;
-   }if(($('#report').val()) == "select"){
-   		alert("Please Select the report");
-   		return false;
-   }if((($('#report').val()) == "Report2") && ((($('#module').val()) == ""))){
-   		alert("Please Enter the Module for Report 2");
-   		return false;
-   }if((($('#report').val()) == "Report3") && ((($('#minutesCalc').val()) == ""))){
-   		alert("Please Enter the Minutes Split for Report 3");
+   }if(($('#checkSecs').is(':checked')) && (($('#secondsCalc').val() == ""))){
+   		alert("Please Enter Seconds for Report 2");
    		return false;
    }
-      return retVal
+   if((!($('#checkSecs').is(':checked'))) && ((($('#module').val()) == ""))){
+   		alert("Please Enter the Module for Report 2");
+   		return false;
+   }
+   return retVal
 }
+function ModuleView(){
+var relPath="<%=request.getContextPath()%>";
+var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longRunTransModuleHelp';
+window.open(adasvctLookUpPath,null, "height=600,width=750,scrollbars,resizable");
+	}
 </script>
 </head>
 <BODY bgcolor="#e1eeb9">
-
 	<H1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></H1>
-		<h2 align="center"><FONT color="black"><nav>
-				<div class="box1"><a
-					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
-					by Transactions</a></div> <div class="box"><a
+		<h2 align="center"> <FONT color="black"><nav>			
+				<div class="box"><a
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report by Transactions
+					</a></div> <div class="box1"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
 					by Modules</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
 					by Minutes</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
 					by Category</a></div>
-			</nav></FONT></h2>
-	<H1 align="center">REPORT BY TRANSACTIONS</H1>
+			</nav></FONT></h2>			<H1 align="center">REPORT BY MODULES</H1>
 	<P align="center">
 		
 	</P>
-	
 	<form:form commandName="LongRunTransVO" name="longruntransForm"
 		id="longruntransForm" method="POST">
 
@@ -240,16 +261,28 @@ function validate()
 						<TD>Seconds *</TD>
 						<TD><form:input path="secondsCalc" id="secondsCalc"
 								value="${sessionScope.secondsCalc}" maxlength="3" size="2"
-								onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
-
+								onchange="javascript:this.value=this.value.toUpperCase();" disabled="true"/></TD><td></td>
+						<TD><input type ="checkbox" id="checkSecs" /></TD>
+						<TD></TD>
+						<TD></TD>
+						<TD></TD>
+						<TD></TD>
+						<TD><I>Select the Check box to include Seconds in the input</I></TD>
 					</TR>
-					<input type="hidden" name="report" id="report" value="Report1" />
+
+					<TR>
+					
+						<TD><font color="blue"><u><A href="javascript:ModuleView()">Module</A></u></font> ^</TD>
+						<TD><form:input size="8" path="module" id="module"
+								value="${sessionScope.module}" maxlength="10" /></TD>
+					</TR>
+					<input type="hidden" name="report" id="report" value="Report2" />
 
 				</TBODY>
 
 
 			</TABLE>
-			<BR> <BR> <INPUT type="button" id="Lookup" name="Lookup"
+			<BR> <BR> <INPUT type="button" id="Lookup" name="Submit"
 				value="Submit" tabindex="5" style="margin-left: 10px"> <input
 				type="hidden" name="start" id="start"
 				value="<%=request.getAttribute("longrunValues")%>">
@@ -259,6 +292,7 @@ function validate()
 		</CENTER>
 	</form:form>
 	<FONT face="ARIAL" style="font-size: 9pt"> * - Transactions
-		taking more than submitted seconds<BR> 
+		taking more than submitted seconds<BR> ^ - Transactions report
+		for the submitted module<BR>
 	</FONT>
 </BODY>
