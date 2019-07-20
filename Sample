@@ -1,144 +1,22 @@
-package com.aetna.prvrte.rteintranet.web.filter;
-
-
-
-import java.util.ArrayList;
-
-import java.util.List;
-
-import java.util.StringTokenizer;
-
-
-
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.ldap.core.DirContextOperations;
-
-
-
-import com.aetna.framework.security.userdetails.AefwActiveDirectoryUserDetailsMapper;
-
-import com.aetna.framework.security.userdetails.AefwUserDetailsImpl;
-
-import com.aetna.prvrte.rteintranet.vo.UserVO;
-
-
-
-
-
-/**
-
- * Provides capabilities to map additional attributes from Active Directory through an extension point
-
- * available in AefwActiveDirectoryUserDetailsMapper - through performCustomMappings method
-
- * 
-
- * @author Cognizant
-
- *
-
- */
-
-public class CustomUserDetailsMapper extends AefwActiveDirectoryUserDetailsMapper {
-
-	private static final Log log = LogFactory.getLog(CustomUserDetailsMapper.class);
-
-	
-
-	/**
-
-	 * Provides capabilities to map additional attributes from Active Directory
-
-	 * 
-
-	 */
-
-	@Override
-
-	public void performCustomMappings(DirContextOperations context, AefwUserDetailsImpl userDetails)
-
-	{
-
-		/*log.warn("Inside CustomUserDetailsMapper");
-
-		log.warn("userDetails.getFirstName()>> "+userDetails.getFirstName());*/
-
-		
-
-		String[] memberOf = context.getStringAttributes("memberOf");
-
-		//log.warn("memberOf : "+ memberOf);
-
-		((UserVO)userDetails).setMemberOf(parseMemberOf(memberOf));
-
-		//log.warn("Exit CustomUserDetailsMapper");
-
-	
-
-	}
-
-	
-
-	
-
-	/**
-
-	 * Parse the list of group membership tokens and extract the group names (CN names)
-
-	 *  
-
-	 * @param groupList
-
-	 * @return list of group names
-
-	 */
-
-	private List<String> parseMemberOf(String[] groupList)
-
-	{
-
-		ArrayList<String> memberOf = new ArrayList<String>();
-
-
-
-		for (String group : groupList)
-
-		{
-
-			StringTokenizer st = new StringTokenizer(group, "=,");
-
-			String key = "";
-
-			String val = "";
-
-			while(st.hasMoreTokens())
-
-			{
-
-				key = st.nextToken();
-
-				val = st.nextToken();
-
-				if(key.equalsIgnoreCase("cn")){
-
-					memberOf.add(val);
-
-					//log.warn("val: "+val);
-
-				}
-
-			}
-
-		}
-
-		
-
-		return memberOf;
-
-	}
-
-}
-
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<bean id="aefw.application" parent="aefw.applicationBase">
+		<property name="configId" value="RteIntranet"/>
+		<property name="configRoot" value="${environment.root}/${configId}/config"/>
+	</bean>
+
+	<bean id="aefw.propertyValues" parent="aefw.props">
+		<property name="locations">
+			<list>
+				
+			<value>${configRoot}/application.${environment.name}.properties</value>				
+				
+			
+			</list>
+		</property>
+	</bean>
+
+</beans>
