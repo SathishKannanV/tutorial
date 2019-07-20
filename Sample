@@ -1,147 +1,115 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/security/tags"
-	prefix="security"%>
-<head>
-<title>AddAdasvct</title>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<meta name="GENERATOR" content="Rational Application Developer">
-<script language="JavaScript">
+
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<HTML>
+<HEAD>
+<META name="GENERATOR" content="IBM WebSphere Studio">
+<TITLE>AddRowRBRCForm</TITLE>
+<SCRIPT>
+var relPath="<%=request.getContextPath()%>";
 $(document).ready( function(e) {
-	var relPath="<%=request.getContextPath()%>";
-	$('#adasvctAddNew').click(function(){
-		var action = relPath+'/adasvct/addAdasvct';
-		$("#addAdasvctForm").attr('action',action).submit();
-	});
-});
-function ValidateDate(dateVal) {
-	if (dateVal.value == "" ||
-		dateVal.value.substring(0,1) == " ") { 
-		alert("You must Enter a Valid Date");
-		//Chrome Upgrade-N127627 --add to break recursive call in Chrome
-		//dateVal.focus();
-		
-		window.setTimeout(function () { 
-           dateVal.focus(); 
-            }, 0);  	
-       //End
 
-		return false;
-	} else
-	 var dateToVal = dateVal.value;
-	 var dateValYY = dateToVal.substring(0,4);
-	 var dateValMM = dateToVal.substring(5,7);
-	 var dateValDD = dateToVal.substring(8,10);
-		var lastDay = "00";
-		numYr = parseInt(dateValYY);
-		liftYear = numYr % 4;
-		switch (dateValMM) {
-			case "01":
-			case "03":
-			case "05":
-			case "07":
-			case "08":
-			case "10":
-			case "12":
-				lastDay = "31"
-				break
-			case "04":
-			case "06":
-			case "09":
-			case "11":
-				lastDay = "30"
-				break
-			case "02":
-				if (liftYear == 0) {
-					lastDay = "29"
-				} else {
-					lastDay = "28"
-				}
-				break
-		}
-	 var validDate = true
-	 var numCheck = "" + numYr
-	 var num = parseInt(dateValYY, 10); 
-	 if (dateToVal.charAt(4) != '-' || 
-	 	dateToVal.charAt(7) != '-' ||  
-	 	dateValMM < "01" ||
-	 	dateValMM > 12 ||
-	 	dateValDD < "01" ||
-	 	dateValDD > lastDay ||
-	 	numCheck != dateValYY ||
-	 	isNaN(num) ||
-	 	num < 1970) {
-	 	alert("Invalid Date Entry. \nPlease Enter valid Date with Correct Format, \nor CTL-Z to undo change!.")
-	 	//Chrome Upgrade-N127627 --add to break recursive call in Chrome
-		//dateVal.focus();
-		
-		window.setTimeout(function () { 
-           dateVal.focus(); 
-            }, 0);  	
-       //End
-
-		validDate = false
-		return false;
+$('#AddNewRbrc').click(function(){
+var action = relPath+'/rbrc/AddRbrc';
+var flag = ValidateInput();
+if(flag){
+	$("#addRbrcForm").attr('action', action).submit();
 	}
+	});
+	
+	});
+	
+	
+function ListSTCs()
+	{
+	window.open(relPath+'/rbrc/stcList', null, "height=550,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
+	}
+
+function ValidateInput(){
+var returnFlag = true;
+	if ($.trim($('#siteCd').val()) == "") { 
+		alert("You must Enter Site Code!");
+		$('#siteCd').focus();
+		returnFlag = false;
+	} else
+
+	if ($('#siteCd').val().substring(0,1) == " ") {
+		alert("You must not Enter Space as first Character for Site Code!");
+		$('#siteCd').focus();
+		returnFlag = false;
+	} else	
+	if ($.trim($('#riderCd').val()) == "") { 
+		alert("You must Enter Rider Code!");
+		$('#riderCd').focus();
+		returnFlag = false;
+	} else
+	if ($('#riderCd').val().substring(0,1) == " ") {
+		alert("You must not Enter Space as first Character for Rider Code!");
+		$('#riderCd').focus();
+		returnFlag = false;
+	} else	
+	if ($.trim($('#svcTypeCd').val()) == "") {
+		alert("You must select Service Type Code!");
+		$('#svcTypeCd').focus();
+		returnFlag = false;
+	} 
+	return returnFlag;
 }
-</script>
-</head>
-<body bgcolor="#e1eeb9">
-	<H1 align="CENTER">Add Rows to ADASVCT Table</H1>
-	<center>
-		<%-- <form name="form1" method="POST" action="ProcessRequest"> --%>
-		<form:form modelAttribute="adasvctVO" id="addAdasvctForm"
-			name="addAdasvctForm" method="POST">
-			<table>
-				<tbody>
-					<tr>
-						<td>ADA Code *</td>
-						<td><form:input size="6" type="text" maxlength="5"
-								name="AdaCd" path="adaCd"
-								onChange="javascript:this.value=this.value.toUpperCase();" /></td>
-					</tr>
-					<tr>
-						<td>Service Type *</td>
-						<td><form:input size="5" type="text" maxlength="2"
-								path="svcTypeCd" name="SvcTypeCd"
-								onChange="javascript:this.value=this.value.toUpperCase();" /></td>
-						</td>
-					<tr>
-						<td>Effective Date *</td>
-						<td><form:input size="12" type="text" maxlength="10"
-								path="effDate" name="EffDate" onblur="ValidateDate(this)" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>(yyyy-mm-dd)</td>
-					</tr>
-					<tr>
-						<td>Expiration Date *</td>
-						<td><form:input size="12" type="text" maxlength="10"
-								path="expDate" name="ExpDate" value="9999-12-31" /></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td>-------</td>
-					</tr>
-					<tr>
-						<td><input type="button" name="Add" value="Add" id="adasvctAddNew"
-								style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm">
-						</td>
-						<td><input type="button" onclick="history.back();"
-								name="Cancel" value="Cancel"
-								style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
-						</td>
-					</tr>
-					<tr>
-						<td>*required</td>
-					</tr>
-				</tbody>
-			</table>
-			<br>
-		</form:form>
-	</center>
-</body>
+
+</SCRIPT>
+
+<BODY bgcolor="#e1eeb9">
+
+<H2 align="center">Add Rows to RBRC Table</H2>
+<form:form commandName="rbrcVO" name="addRbrcForm" id="addRbrcForm"  method="POST">
+<PRE>
+<B>Site Code</B>        * <form:input path="dbSiteCd" size="7" type="text" maxlength="4"
+	id="siteCd" value="USHC" tabindex="1"
+	onchange=" javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>Rider Code</B>       * <form:input path="dbRiderCd" size="7" type="text" maxlength="5"
+	id="riderCd" tabindex="2"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<A href="javascript:ListSTCs()"
+	onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
+	onmouseout="window.status = '';"><B>Service Type</B></A>     * <INPUT
+	path="dbSvcTypeCd" size="5" type="text" maxlength="5" id="svcTypeCd" tabindex="3"
+	onchange="javascript:this.value=this.value.toUpperCase();"/> <I>     Ex: 98 </I><BR>
+<B>Description</B>        <form:input path="dbDescTxt" size="30" type="text" maxlength="30"
+	id="descTxt" tabindex="4"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>I/O Network Code</B>   <form:input path="dbIONtwkCd" size="1" type="text" maxlength="1"
+	id="ioNtwkCd" tabindex="5"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>TOS Code</B>           <form:input path="dbTOSCd" size="5" type="text" maxlength="3"
+	id="toSCd" tabindex="6"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>True Ben Code Ind</B>   <form:input path="dbHMOSrcBnInd" size="1" type="text" maxlength="1"
+	id="hmoSrcBnInd" tabindex="7"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>Text Send Ind</B>      <form:input path="textSendInd" size="1" type="text" maxlength="1"
+	id="textSendInd" tabindex="8"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>Prev Care Ind</B>      <form:input path="prevCareInd" size="1" type="text" maxlength="1"
+	id="prevCareInd" tabindex="9"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+<B>Gender Code</B>        <form:input path="genderCd" size="1" type="text" maxlength="1"
+	id="genderCd" tabindex="10"
+	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
+
+<BR><BR></PRE>
+
+<INPUT type="button" id="AddNewRbrc" value="Add" tabindex="4" accesskey="a" 
+													style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm"> 
+<INPUT type="button" id="Cancel" value="Cancel" onclick="history.back();" tabindex="5" accesskey="c"
+													style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
+<BR><BR>
+* required
+</form:form>
+</BODY>
+
+</HTML>
