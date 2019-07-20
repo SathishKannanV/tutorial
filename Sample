@@ -1,414 +1,452 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.util;
 
-import java.io.File;
-import java.io.FileInputStream;
+
+
 import java.io.IOException;
-import java.security.AlgorithmParameters;
-import java.security.spec.KeySpec;
-import java.util.Arrays;
-import java.util.Random;
 
-import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.DESedeKeySpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
+import java.io.PrintWriter;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.List;
+
+import java.util.Map;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+import javax.servlet.http.HttpSession;
+
+
+
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.commons.logging.Log;
+
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.io.CopyStreamException;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
-
-public class FTPUtil {
-
-	private String fileLocation;
-	private String gdgLocation;
-	private String ftpBaseLocation;
-	private String hostName;
-	private String userName;
-	private String password;
-	private String edihostName;
-	private String ediuserName;
-	static AlgorithmParameters pbeAlgoParms;
-	private static int ITERATIONS = 100;
-	private static int SALT_ARRAY_STRING_SIZE = 12;
-	
-    private static final String UNICODE_FORMAT = "UTF8";
-    public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
-    private KeySpec ks;
-    private SecretKeyFactory skf;
-    private Cipher cipher;
-    byte[] arrayBytes;
-    private String myEncryptionKey;
-    private String myEncryptionScheme;
-    SecretKey key;
-
-    public FTPUtil() throws Exception {
-        myEncryptionKey = "ThisIsSpartaThisIsSparta";
-        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
-        arrayBytes = myEncryptionKey.getBytes(UNICODE_FORMAT);
-        ks = new DESedeKeySpec(arrayBytes);
-        skf = SecretKeyFactory.getInstance(myEncryptionScheme);
-        cipher = Cipher.getInstance(myEncryptionScheme);
-        key = skf.generateSecret(ks);
-    }
-	
+import org.codehaus.jackson.map.ObjectMapper;
 
 
-	public String getEdihostName() {
-		return edihostName;
-	}
 
-	public void setEdihostName(String edihostName) {
-		this.edihostName = edihostName;
-	}
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-	public String getEdiuserName() {
-		return ediuserName;
-	}
+import com.aetna.prvrte.rteintranet.vo.UserVO;
 
-	public void setEdiuserName(String ediuserName) {
-		this.ediuserName = ediuserName;
-	}
 
-	public String getEdipassword() {
-		return edipassword;
-	}
 
-	public void setEdipassword(String edipassword) {
-		this.edipassword = edipassword;
-	}
 
-	private String edipassword;
+
+/**
+
+ * @author N657186
+
+ *
+
+ */
+
+public class RteIntranetUtils {
+
+	/**
+
+	* This method used to trim the string argument. If the string is null then
+
+	* it will return blank value.
+
+	* @param str
+
+	* @return String
+
+	* 
+
+	*/
+
 	private static final Log log = LogFactory
-			.getLog(FTPUtil.class);
+
+			.getLog(RteIntranetUtils.class);
+
+	public static String getTrimmedString(String str) {
+
+		if (str != null) {
+
+			return str.trim();
+
+		} else {
+
+			return "";
+
+		}
+
+	}
+
+	/**
+
+	 * Method to return todays Date in the format of yyyy-MM-dd
+
+	 * 
+
+	 * @return string of current date.
+
+	 */
+
+	public static String getTodaysDate(){
+
+		long systemTime = System.currentTimeMillis();
+
+		java.sql.Date date = new java.sql.Date(systemTime);
+
+		String todaysDate = String.valueOf(date);
+
+		return RteIntranetUtils.getTrimmedString(todaysDate);
+
+	}
+
+	/**
+
+	 * Method to return todays Date in the format of yyyy-MM-dd HH:mm:ss
+
+	 * 
+
+	 * @return string of current date and time.
+
+	 */
+
+	public static String getTodaysDateTime(){
+
+		long systemTime = System.currentTimeMillis();
+
+		java.sql.Timestamp dateTime = new java.sql.Timestamp(systemTime);
+
+		String todaysDateTime = String.valueOf(dateTime);
+
+		return RteIntranetUtils.getTrimmedString(todaysDateTime);
+
+		
+
+		
+
+	}
+
 	
-public String sendFTP(){
-		
-		FTPClient ftp = new FTPClient();
-		
-		boolean ftpStore = true;
-		String ftpGDGLocation = getGdgLocation();
-		String ftpBaseLocation = getFtpBaseLocation();
-		String outputLocation = getFileLocation();
-		String latestVersionGDG = "";
-		String hostName = getHostName();
-		String userName = getUserName();
-		String password = getPassword();
+
+	/**
+
+	 * Method to export the look up table to excel.
+
+	 * 
+
+	 * @param response
+
+	 *            response object
+
+	 * @param listToExport
+
+	 *            list of object to export the look up table.
+
+	 * @param keyMap
+
+	 *            keyMap to create header.
+
+	 * @throws IOException
+
+	 *             IOException if write to export fails.
+
+	 * @throws ApplicationException
+
+	 *             ApplicationException if export fails.
+
+	 */
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	public static void exportToExcel(HttpServletResponse response, List listToExport, Map<String,String> keyMap) throws ApplicationException{
+
+		try{
+
+			response.setContentType("application/csv");
+
+			PrintWriter printWriter;
+
+			printWriter = response.getWriter();
+
+			response.reset();
+
+			response.setHeader("Content-disposition", "attachment; filename=LookUpData.csv");
+
+			response.setHeader("Cache-Control","private");
+
+		    response.setHeader("Pragma","private");
+
+			/*response.setHeader("Cache-Control", "no-cache");       
+
+			response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+
+			response.setDateHeader("Expires", 0);*/ // Proxies.
+
+			StringBuilder includeHeader = new StringBuilder();
+
+			//excel header.
+
+			for(String key :keyMap.keySet()){
+
+				if(includeHeader != null && includeHeader.length() != 0) {
+
+					includeHeader.append(ApplicationConstants.COMMA);
+
+				}
+
+				includeHeader.append(RteIntranetUtils.getTrimmedString(keyMap.get(key)));
+
+			}
+
+			//<< Placeholder for Defining Columns and Rows >>
+
+			printWriter.println(includeHeader);
+
+			//append content value
+
+			for (int i = 0; i < listToExport.size(); i++) {
+
+				StringBuilder contentValue = new StringBuilder();
+
+				ObjectMapper mapper = new ObjectMapper();
+
+				Object tempObj = listToExport.get(i);
+
+				if(tempObj instanceof String){
+
+					if(contentValue != null && contentValue.length() != 0) {
+
+						contentValue.append(ApplicationConstants.COMMA);
+
+					}
+
+					contentValue.append(RteIntranetUtils.getTrimmedString(String.valueOf(listToExport.get(i))));
+
+				} else {
+
+					Map<String,Object> mapObject = mapper.convertValue(tempObj, Map.class);
+
+					for (String mapKey : keyMap.keySet()) {
+
+						if(contentValue != null && contentValue.length() != 0) {
+
+							contentValue.append(ApplicationConstants.COMMA);
+
+						}
+
+						String mapValue = String.valueOf(mapObject.get(mapKey));
+
+						mapValue = ApplicationConstants.DOUBLE_QUOTES + mapValue + ApplicationConstants.DOUBLE_QUOTES;
+
+						contentValue.append(RteIntranetUtils.getTrimmedString(mapValue));
+
+					}
+
+				}
+
+				
+
+				printWriter.println(contentValue);
+
+			}
+
+			printWriter.flush();
+
+			printWriter.close();
+
+		} catch (IOException ioe) {
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, ioe.getMessage(), ioe);
+
+		}catch (Exception e) {
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
+
+		}
+
+	}
+
+	
+
+	/**
+
+	 * Method to current user id.
+
+	 * 
+
+	 * @param request
+
+	 * 		request Object.
+
+	 * @return loggedIn user id.
+
+	 */
+
+	public static String getUserId(HttpServletRequest request) throws ApplicationException{
+
+		String userId = "";
+
 		try {
 
-			String dirLocation = "";
-			dirLocation = outputLocation;
-			File dir = new File(dirLocation);
-			log.warn(" File Location"+outputLocation);
-			if (!dir.isDirectory()) {
-				log.error(" Not a Directory");
-				return "Please provide a valid FTP directory Location";
-			}
-			File[] fileList = dir.listFiles();
-			Arrays.sort(fileList);
-			for (int i = 0; i < fileList.length; i++) {
-				if(fileList[i].getName().startsWith("file"))
-				{
-				File tempFile = new File(dirLocation + fileList[i].getName());
-				log.error("File "+i+ " "+tempFile);
-				}
-			}
-			for (int i = 0; i < fileList.length; i++) {
-				if(fileList[i].getName().startsWith("file"))
-				{
-				File tempFile = new File(dirLocation + fileList[i].getName());
-				ftp.connect(hostName);
-				String replyText = ftp.getReplyString();
-				ftp.login(userName, password);
-log.error("user" + userName);
-log.error("password" + password);
-				replyText = ftp.getReplyString();
-				log.error("ReplyText after login to Mainframe Server for 270 Testing Tool ****"
-								+ replyText);
-				outputLocation = dirLocation + tempFile.getName();
+			HttpSession session = request.getSession(true);
 
-				File file = new File(outputLocation);
-				FileInputStream inputStream1 = new FileInputStream(file);
-				ftp.setFileTransferMode(FTP.ASCII_FILE_TYPE);
-				ftp.setFileType(FTP.ASCII_FILE_TYPE);
-				ftp.sendSiteCommand("RECFM=FB lrecl=1000");
-				ftp.sendSiteCommand("BLKSIZE=279200");
-				replyText = ftp.getReplyString();
-				log.error("reply text ::::::" + replyText);
-				log.error("Creating the GDG version for first time "
-									+ ftpGDGLocation + "FTP file "
-									+ tempFile.getName());
-				ftpStore = ftp.storeFile(ftpGDGLocation, inputStream1);
-				log.error("After FTP: "+ftp.getReplyString());
-				}
-			}
-			
-		} catch (CopyStreamException e) {
-			e.printStackTrace();
-			log.error("Total bytes transferred : "
-					+ e.getTotalBytesTransferred()
-					+ ".\n Io Exception occured : " + e.getIOException()
-					+ ". \nError Message : " + e.getMessage());
-			Exception ex = e.getIOException();
-			log.error(ex.getStackTrace());
-			return "Exception occured during FTP:  "+ e.getIOException()
-					+ ". \nError Message : " + e.getMessage()+"Total bytes transfered is "+e.getTotalBytesTransferred();
+			UserVO currentUser = (UserVO) session.getAttribute("user");
 
-		} catch (Exception ep) {
-			log.error("exception...");
-			return "Exception Occured during FTP";
-		} finally {
-			if (ftpStore) {
-				try {
-					ftp.changeWorkingDirectory(ftpBaseLocation);
-				} catch (IOException e) {
-					
-					log.error(e.getStackTrace());
-					return "Exception Occured during FTP";
-				}
-				 
-				try {
-					String[] listOfFiles = ftp.listNames();
-					Arrays.sort(listOfFiles);
-					latestVersionGDG = listOfFiles[listOfFiles.length - 1];
-					log.error("ListOf GDG files Length in finally block ***************"
-									+ listOfFiles.length
-									+ "LatestDATASET written to "
-									+ latestVersionGDG);
-				} catch (IOException e) {
-					
-					log.error(e.getStackTrace());
-				}
-				
-			}
-			try {
-				ftp.quit();
-			} catch (IOException e) {
-				
-				log.error(e.getStackTrace());
-			}
-			if (!ftpStore){
-				log.error("FTP failed  ");
-				return "FTP failed  ";
-			}
-				
-				
-			
+			userId = RteIntranetUtils.getTrimmedString(currentUser.getAetnaId());
+
+			return userId;
+
+		} catch (Exception e) {
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
+
 		}
-		String str = "GDG Location: "+ftpBaseLocation+"\t\tGDG Version: "+latestVersionGDG;
-		return "";
-		
+
 	}
-public String sendEDIFTP(){
-	
-	FTPClient ftp = new FTPClient();
-	
-	boolean ftpStore = true;
-	
-	String outputLocation = getFileLocation();
-	String latestVersionGDG = "";
-	String hostName = getEdihostName();
-	String userName = getEdiuserName();
-	String password = getEdipassword();
-	try {
 
-		String dirLocation = "";
-		dirLocation = outputLocation;
-		File dir = new File(dirLocation);
-		log.warn(" File Location"+outputLocation);
-		if (!dir.isDirectory()) {
-			log.error(" Not a Directory");
-			return "Please provide a valid FTP directory Location";
-		}
-		File[] fileList = dir.listFiles();
-		Arrays.sort(fileList);
-		for (int i = 0; i < fileList.length; i++) {
-			if(!fileList[i].getName().startsWith("file"))
-			{
-			File tempFile = new File(dirLocation + fileList[i].getName());
-			log.error("File "+i+ " "+tempFile);
-			}
-		}
-log.error("user######" + userName);
-log.error("password#####" + password);
-log.error("hostname#####" + hostName);
-//		String decrypted=null;
-//		decrypted = decrypt(password);
-		ftp.connect(hostName);
-		String replyText = ftp.getReplyString();
-		ftp.login(userName, password);
-		replyText = ftp.getReplyString();
-		
-		log.error("ReplyText after login to Edi Server for 270 Testing Tool ****"
-						+ replyText);
-		
-		for (int i = 0; i < fileList.length; i++) {
-			if(!fileList[i].getName().startsWith("file"))
-			{
-				
-					File tempFile = new File(dirLocation + fileList[i].getName());
-			
-			
-			
-					outputLocation = dirLocation + tempFile.getName();
+	/**
 
-					File file = new File(outputLocation);
-					FileInputStream inputStream1 = new FileInputStream(file);
-					ftp.setFileTransferMode(FTP.ASCII_FILE_TYPE);
-					ftp.setFileType(FTP.ASCII_FILE_TYPE);
-				/*	ftp.sendSiteCommand("RECFM=FB lrecl=1000");
-					ftp.sendSiteCommand("BLKSIZE=279200");*/
-					replyText = ftp.getReplyString();
-					log.error("reply text ::::::" + replyText);
-					
-								ftpStore = ftp.storeFile(fileList[i].getName(), inputStream1);
-								if(ftpStore)
-								{	
-									log.error("After FTP: "+"-"+fileList[i].getName()+"-"+ftp.getReplyString());
-									inputStream1.close();
-									File deletedfile = new File(outputLocation);
-									deletedfile.delete();
-								}
-			}	
-		}
-		
-	} catch (CopyStreamException e) {
-		e.printStackTrace();
-		log.error("Total bytes transferred : "
-				+ e.getTotalBytesTransferred()
-				+ ".\n Io Exception occured : " + e.getIOException()
-				+ ". \nError Message : " + e.getMessage());
-		Exception ex = e.getIOException();
-		log.error(ex.getStackTrace());
-		return "Exception occured during FTP:  "+ e.getIOException()
-				+ ". \nError Message : " + e.getMessage()+"Total bytes transfered is "+e.getTotalBytesTransferred();
+	 * Method to current user security level.
 
-	} catch (Exception ep) {
-		log.error("exception...",ep);
-		return "Exception Occured during FTP";
-	} finally {
-		if (ftpStore) {
-		/*	try {
-				ftp.changeWorkingDirectory(ftpBaseLocation);
-			} catch (IOException e) {
-				
-				log.error(e.getStackTrace());
-				return "Exception Occured during FTP";
-			}*/
-			 
-			try {
-				String[] listOfFiles = ftp.listNames();
-				Arrays.sort(listOfFiles);
-				latestVersionGDG = listOfFiles[listOfFiles.length - 1];
-				log.error("ListOf EDI files Length in finally block ***************"
-								+ listOfFiles.length
-								+ "LatestDATASET written to "
-								+ latestVersionGDG);
-			} catch (IOException e) {
-				
-				log.error(e.getStackTrace());
-			}
-			
-		}
+	 * 
+
+	 * @param request
+
+	 * 		request Object.
+
+	 * @return loggedIn user security level.
+
+	 */
+
+	public static String getUserSecurityLevel(HttpServletRequest request) throws ApplicationException{
+
+		String securityLevel = "";
+
 		try {
-			ftp.quit();
-		} catch (IOException e) {
-			
-			log.error(e.getStackTrace());
+
+			HttpSession session = request.getSession(true);
+
+			//System.out.println("getUserSecurityLevel session : " + session  + " is session null " + (session == null));
+
+			if(session != null){
+
+				securityLevel = (String) session.getAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE);
+
+				//System.out.println(securityLevel);
+
+				//securityLevel = (securityLevel == null) ? securityLevel = "" : securityLevel;
+
+			}
+
+			return securityLevel;
+
+		} catch (Exception e) {
+
+			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
+
 		}
-		if (!ftpStore){
-			log.error("FTP failed  ");
-			return "FTP failed  ";
-		}
-			
-			
+
 		
+
 	}
+
 	
-	return "";
+
+	public static String zeroFiller(int length, String value){
+
+		if(value==null)
+
+		{
+
+			value="";
+
+		}
+
+		String paddedValue =StringUtils.leftPad(value, length, "0");
+
+		return paddedValue;
+
+	}
+
 	
+
+	/**
+
+	 * @param length
+
+	 * @param value
+
+	 * @return
+
+	 */
+
+	public static String spaceFiller(int length, String value){
+
+		
+
+		String paddedValue =StringUtils.rightPad(value, length, " ");
+
+		return paddedValue;
+
+	}
+
+public static String ZeroFiller(int length, String value){
+
+		
+
+		String paddedValue =StringUtils.leftPad(value, length, "0");
+
+		return paddedValue;
+
+	}
+
+	public static String spaceCalculator(int length, String value){
+
+		int lengString = value.length();
+
+		int calcSpace = length - lengString;
+
+		String paddedValue = "";
+
+		paddedValue = spaceFiller(calcSpace, value);
+
+		return paddedValue;
+
+	}
+
+	/**
+
+	 * @param length
+
+	 * @param value
+
+	 * @return
+
+	 */
+
+	public static String spaceFiller(int length){
+
+		StringBuilder paddedValue = new StringBuilder();
+
+		for(int i = 0; i< length; i++){
+
+			paddedValue.append(" ");
+
+		}
+
+		return paddedValue.toString();
+
+	}
+
+	
+
 }
 
-
-public String getFtpBaseLocation() {
-	return ftpBaseLocation;
-}
-
-public void setFtpBaseLocation(String ftpBaseLocation) {
-	this.ftpBaseLocation = ftpBaseLocation;
-}
-
-public String getHostName() {
-	return hostName;
-}
-
-public void setHostName(String hostName) {
-	this.hostName = hostName;
-}
-
-public String getUserName() {
-	return userName;
-}
-
-public void setUserName(String userName) {
-	this.userName = userName;
-}
-
-public String getPassword() {
-	return password;
-}
-
-public void setPassword(String password) {
-	this.password = password;
-}
-
-public String getFileLocation() {
-	return fileLocation;
-}
-
-public void setFileLocation(String fileLocation) {
-	this.fileLocation = fileLocation;
-}
-
-public String getGdgLocation() {
-	return gdgLocation;
-}
-
-public void setGdgLocation(String gdgLocation) {
-	this.gdgLocation = gdgLocation;
-}
-
-public String encrypt(String unencryptedString) {
-    String encryptedString = null;
-    try {
-        cipher.init(Cipher.ENCRYPT_MODE, key);
-        byte[] plainText = unencryptedString.getBytes(UNICODE_FORMAT);
-        byte[] encryptedText = cipher.doFinal(plainText);
-        encryptedString = new String(Base64.encodeBase64(encryptedText));
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return encryptedString;
-}
-
-
-public String decrypt(String encryptedString) {
-    String decryptedText=null;
-    try {
-        cipher.init(Cipher.DECRYPT_MODE, key);
-        byte[] encryptedText = Base64.decodeBase64(encryptedString.getBytes());
-        byte[] plainText = cipher.doFinal(encryptedText);
-        decryptedText= new String(plainText);
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return decryptedText;
-}
-}
