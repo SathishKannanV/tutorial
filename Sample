@@ -1,62 +1,131 @@
-<!--Chrome Upgrade-N127627--><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <!--END--><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
-<style type="text/css">.menuItemSelected { border:2 2 2 2px solid #0080C0;}</style>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="security"%>
+<head>
+
+<title>Long Run Transaction Look Up</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta name="GENERATOR" content="Rational Application Developer">
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 <!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-<HTML>
-<HEAD>
-
-<title>
-	<spring:message code="home.title"></spring:message>
-</title>
-<META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<META name="GENERATOR" content="IBM WebSphere Studio">
+<link rel="stylesheet" type="text/css" href="${context}/css/LongRunTab.css">
 <script>
-
-var relPath="<%=request.getContextPath()%>";
-$(document).ready( function(e) {
-$('#aetnaId').val("");
-
-$('#btnOk').click(function(){
-var action = relPath+'/welcome';
-	$("#homeForm").attr('action', action).submit();
+$(document).ready(function(){
+		var rtePath = "<%=request.getContextPath()%>";
+		$("#longrunTransHome").click(function(){
+			var longRunTransHomePath = rtePath + "/eventtrack/longruntrans/longRunTransHome";
+			var longRunTransHomePath2 = rtePath + "/eventtrack/longruntrans/longRunTransHome2";
+			if($("#reportNumber").val() == 'Report1'){
+				$("#longRunTransDisplay").attr('action',longRunTransHomePath).submit();
+			}else if($("#reportNumber").val() == 'Report2'){
+				$("#longRunTransDisplay").attr('action',longRunTransHomePath2).submit();
+			}
+			
+		});
+		$("#longrunTransExport").click(function(){
+		if($("#reportNumber").val() == 'Report1'){
+			var longrunTransactionExport = rtePath + "/eventtrack/longruntrans/longRunTransExport";
+			$("#form1").attr('action',longrunTransactionExport).submit();
+		}else if($("#reportNumber").val() == 'Report2'){
+			var longrunTransactionExport = rtePath + "/eventtrack/longruntrans/longRunTransExport2";
+			$("#form1").attr('action',longrunTransactionExport).submit();
+		}
+			
+		});
 	});
-	
-});
-
-
 </script>
-</HEAD>
-<BODY bgcolor="#e1eeb9" >
-<P></P>
-<form:form commandName="userVO" name="homeForm" id="homeForm"  method="POST">
 
-<DIV align="center">
-<FONT face="Century" size="5" color="blue"><BR>
-<BR>
-<BR>Welcome to RTE's Table Maintainance Facility.<BR>
-<BR>Please re-enter your Aetna Id and Click<BR>
-<BR> on the OK button to continue.<BR>
-<BR>
-Aetna ID:  <form:input path="aetnaId" id="aetnaId" maxlength="7" onchange="javascript:this.value=this.value.toLowerCase();"/>
+</head>
+<body style="font-size: 10pt" bgcolor="#e1eeb9">
+	<font face="ARIAL"></font>
+	<c:set var="longRunTransMessageVar" value="${longRunTransMessage}"></c:set> 
+	<P><c:out value="${longRunTransMessageVar}"></c:out></P>
+	
+	<br>
+	<br>
+	
+	<c:choose>
+							<c:when test="${(reportNumber ne 'Report1')}">
+								<b><font size="+2">LONG RUNNING TRANSACTION REPORT BY MODULES</font> </B>
+							</c:when>
+							<c:when test="${(reportNumber ne 'Report2')}">
+								<b><font size="+2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT BY TRANSACTIONS</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a> </B>
+							</c:when>
+						</c:choose>
+		<center>
+		<h2 align="center"><FONT color="black"><nav>
+				<div class="box1"><a
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
+					by Transactions</a></div> <div class="box"><a
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
+					by Modules</a></div> <div class="box"><a
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
+					by Minutes</a></div> <div class="box"><a
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
+					by Category</a></div>
+			</nav></FONT></h2>	
 
-<br>
-<br>
-</FONT>
-</DIV>
-<center>
-<br><br>
+	</center>
 
-<button  id ='btnOk' >OK</button>
-</center>
-</form:form>
-</BODY>
-</HTML>
-
-
-
-
+	<center>
+		<input type="image" id="longrunTransExport" src="${context}/images/rte_export.jpg" class="export" style="padding-left: 1mm; padding-right: 1mm">
+	<form:form modelAttribute="lookUpTableListVO" id="longRunTransDisplay" name="longRunTransDisplay" method="POST">
+		
+			<table cellspacing="5" style="background-color: #9393ff" border="1"
+				class="lookupTable">
+				<tbody>
+					<tr>
+						<td width="100" style="font-weight: bold">Conversation Code</td>
+						<td width="100" style="font-weight: bold">VAN ID</td>
+						<td width="100" style="font-weight: bold">Type Code</td>
+						<c:choose>
+							<c:when test="${(reportNumber ne 'Report1')}">
+								<td width="30" style="font-weight: bold">Module Name</td>
+							</c:when>
+						</c:choose>
+						
+						<td width="200" style="font-weight: bold">Time Taken in seconds</td>
+					</tr>
+					<c:forEach items="${lookUpTableListVO.longRunTransactionVOList}" var="longRunTransactionvo" varStatus="status">
+						<td bgcolor="white">
+							${longRunTransactionvo.convrsnCDResult}
+						<td bgcolor="white">
+							${longRunTransactionvo.vanIDCDResult}</td>
+						<td bgcolor="white">
+							${longRunTransactionvo.typCDResult}</td>
+						<c:choose>
+							<c:when test="${(reportNumber ne 'Report1')}">
+								<td bgcolor="white">
+									${longRunTransactionvo.loadNameResult}</td>
+							</c:when>
+						</c:choose>
+						<td bgcolor="white">
+							${longRunTransactionvo.resultSecondsResult}</td>
+			
+						</tr>
+					</c:forEach>
+					
+				</tbody>
+			</table>
+			<br>
+			<br>
+			<c:choose>
+				<c:when test="${(securityLevel ne 'RW')}">
+					
+					<input type="button" name="Export" value="Export"
+						style="padding-left: 1mm; padding-right: 1mm" id="longrunTransExport" disabled="disabled">
+				</c:when>
+			</c:choose>
+			<input type="button" name="LookUp" value="Home"
+				style="padding-left: 1mm; padding-right: 1mm" id="longrunTransHome" >
+				
+		</center>
+	</form:form>
+	<form name="form1" id="form1" method="POST"></form>
+	<input type="hidden" name="reportNumber" id="reportNumber" value="${reportNumber}" />
+</body>
