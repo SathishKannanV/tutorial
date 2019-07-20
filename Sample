@@ -2,57 +2,62 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans
-	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   					   http://www.springframework.org/schema/aop
+	   					   http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+
+	<bean id="applicationState" class="com.aetna.prvrte.rteintranet.facade.state.ApplicationState" scope="session">
+		<aop:scoped-proxy/>
+	</bean>
 	
-	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-		<property name="messageInterpolator">
-			<bean class="org.springframework.validation.beanvalidation.LocaleContextMessageInterpolator">
-				<constructor-arg>
-					<bean class="org.hibernate.validator.engine.ResourceBundleMessageInterpolator"/>
-				</constructor-arg>
-			</bean>
+	<bean id="baseDataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>jdbc/tableRef</value>
+		</property>
+		<property name="resourceRef" value="true" /> 
+	</bean>
+	
+	<bean id="baseDataSourceEvt" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>jdbc/evtTrkRef</value>
+		</property>
+		<property name="resourceRef" value="true" /> 
+	</bean>
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.WebSphereDataSourceAdapter">
+		<property name="targetDataSource" ref="baseDataSource"/> 
+		<property name="username" value="${datasource.username}"/>
+		<property name="password" value="${datasource.password}"/>
+	</bean> 
+	
+	<bean id="dataSourceEvt" class="org.springframework.jdbc.datasource.WebSphereDataSourceAdapter">
+		<property name="targetDataSource" ref="baseDataSourceEvt"/> 
+		<property name="username" value="${datasource.username}"/>
+		<property name="password" value="${datasource.password}"/>
+	</bean>
+ 
+<!--	 The following two beans are used for transaction management -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="dataSource" />
 		</property>
 	</bean>
+	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+	</bean>  
 
-	<bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-		
+<bean id="transactionManagerEvt" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="dataSourceEvt" />
+		</property>
 	</bean>
-
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-		<property name="alwaysUseFullPath" value="true"/>
-		
-	</bean>
-	
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
-		<property name="alwaysUseFullPath" value="true"/>
-		<property name="webBindingInitializer" ref="webBindingInitializer"/>
-	</bean>
-	
-	<bean id="webBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
-		<property name="validator" ref="validator"/>
-		<property name="conversionService" ref="conversionService"/>
-	</bean>
- 	<bean id="messageSource"
-	    class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-	   <property name="basename" value="classpath:messages" /> 
-	   <property name="defaultEncoding" value="UTF-8"/>
-	</bean>
-	 
-	<bean id="localeChangeInterceptor"
-	    class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-	    <property name="paramName" value="lang" />
-	</bean>
-	 
-	<bean id="localeResolver"
-	    class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
-	    <property name="defaultLocale" value="en"/>
-	</bean>
-	 
-	<bean id="handlerMapping"
-	    class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
-	    <property name="interceptors">
-	        <ref bean="localeChangeInterceptor" />
-	    </property>
-	</bean> 
+	<bean id="transactionTemplateEvt" class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="transactionManager">
+			<ref bean="transactionManagerEvt" />
+		</property>
+	</bean>  
 </beans>
