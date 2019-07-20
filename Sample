@@ -1,180 +1,401 @@
-<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
-<!--Chrome Upgrade-N127627-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
-<!--END-->
-<HTML>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
+
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<c:set var="spntprvMessage" value="${spntprvMessage}"></c:set>
 <HEAD>
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>STCList.html</TITLE>
-<STYLE type="text/css">
-BODY {/* chrome upgrade N127627 -Edited background-color: "#e1eeb9" */ 
-	background-color: #e1eeb9;
-	font-style: italic
-}
+<TITLE>SpntprvEvntTrckDisplay.jsp</TITLE>
 
-</STYLE>
-<SCRIPT language="JavaScript">
-// Drag the item from the left window and
-// drop it here.  Or, click the right mouse button
-// and select 'Insert to Script' from the popup menu.
-// The code is inserted at the current
-// cursor position.
-function WindowClose()
-{
-	window.close()
-}
-</SCRIPT>
-</HEAD>
-<BODY>
+<SCRIPT>
+
+var relPath="<%=request.getContextPath()%>";
+$(document).ready( function(e) {
+
+
+
+$('#newSearch').click(function(){
+var action = relPath+'/eventtrack/eventtrackHome';
+	$("#submsnDisplayForm").attr('action', action).submit();
+	});	
+$("#next").click(function(){
+	$("#actionName").val('next');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#submsnDisplayForm").attr('action', action).submit();
+});
+$("#previous").click(function(){
+	$("#actionName").val('previous');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#submsnDisplayForm").attr('action', action).submit();
+});
+
+$('#topnewSearch').click(function(){
+var action = relPath+'/eventtrack/eventtrackHome';
+	$("#submsnDisplayForm").attr('action', action).submit();
+	});	
+$("#topnext").click(function(){
+	$("#actionName").val('next');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#submsnDisplayForm").attr('action', action).submit();
+});
+$("#topprevious").click(function(){
+	$("#actionName").val('previous');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#submsnDisplayForm").attr('action', action).submit();
+});
+});
+
+
+</SCRIPT></HEAD>
+<BODY style="font-size: 9pt" bgcolor="#e1eeb9">
+
+<P><c:out value="${submsnMessage}"></c:out></P>
+<H2 align="center">SUBMSN Table Display</H2>
+
+<c:set var="totalCount" value="${totalCount}"></c:set>
+<c:set var="indexCount" value="${indexCount}"></c:set>
+<form:form commandName="lookUpListVO" name="submsnDisplayForm" id="submsnDisplayForm"  method="POST">
+
 <CENTER>
-<B><FONT size="+2">List of Service Type Codes</FONT></B>
-<TABLE border="1">
-    <TBODY>
-<TR><TD ALIGN="CENTER">1 </TD><TD>Medical Care          </TD></TR>
-<TR><TD ALIGN="CENTER">2 </TD><TD>Surgical              </TD></TR>
-<TR><TD ALIGN="CENTER">3 </TD><TD>Consultation          </TD></TR>
-<TR><TD ALIGN="CENTER">4 </TD><TD>Diagnostic X-Ray      </TD></TR>
-<TR><TD ALIGN="CENTER">5 </TD><TD>Diagnostic Lab        </TD></TR>
-<TR><TD ALIGN="CENTER">6 </TD><TD>Radiation Therapy     </TD></TR>
-<TR><TD ALIGN="CENTER">7 </TD><TD>Anesthesia Lab        </TD></TR>
-<TR><TD ALIGN="CENTER">8 </TD><TD>Surgical Assistance   </TD></TR>
-<TR><TD ALIGN="CENTER">9 </TD><TD>Other Medical         </TD></TR>
-<TR><TD ALIGN="CENTER">10</TD><TD>Blood Charges         </TD></TR>
-<TR><TD ALIGN="CENTER">11</TD><TD>Used Durable Medical Equipment</TD></TR>
-<TR><TD ALIGN="CENTER">12</TD><TD>Durable Medical Equipment Purchase</TD></TR>
-<TR><TD ALIGN="CENTER">13</TD><TD>Ambulatory Service Center Facility</TD></TR>
-<TR><TD ALIGN="CENTER">14</TD><TD>Renal Supplies in the Home</TD></TR>
-<TR><TD ALIGN="CENTER">15</TD><TD>Alternate Method Dialysis</TD></TR>
-<TR><TD ALIGN="CENTER">16</TD><TD>Chronic Renal Disease (CRD) Equipment</TD></TR>
-<TR><TD ALIGN="CENTER">17</TD><TD>Pre-Admission Testing </TD></TR>
-<TR><TD ALIGN="CENTER">18</TD><TD>Durable Medical Equipment Rental</TD></TR> 
-<TR><TD ALIGN="CENTER">19</TD><TD>Pneumonia Vaccine     </TD></TR> 
-<TR><TD ALIGN="CENTER">20</TD><TD>Second Surgical Opinion</TD></TR>
-<TR><TD ALIGN="CENTER">21</TD><TD>Third Surgical Opinion</TD></TR> 
-<TR><TD ALIGN="CENTER">22</TD><TD>Social Work           </TD></TR> 
-<TR><TD ALIGN="CENTER">23</TD><TD>Diagnostic Dental     </TD></TR> 
-<TR><TD ALIGN="CENTER">24</TD><TD>Periodontics          </TD></TR> 
-<TR><TD ALIGN="CENTER">25</TD><TD>Restorative           </TD></TR> 
-<TR><TD ALIGN="CENTER">26</TD><TD>Endodontics           </TD></TR> 
-<TR><TD ALIGN="CENTER">27</TD><TD>Maxillofacial Prosthetics</TD></TR> 
-<TR><TD ALIGN="CENTER">28</TD><TD>Adjunctive Dental Services</TD></TR> 
-<TR><TD ALIGN="CENTER">30</TD><TD>Health Benefit Plan Coverage</TD></TR> 
-<TR><TD ALIGN="CENTER">32</TD><TD>Plan Waiting Period   </TD></TR> 
-<TR><TD ALIGN="CENTER">33</TD><TD>Chiropractic          </TD></TR> 
-<TR><TD ALIGN="CENTER">34</TD><TD>Chiropractic Office Visits</TD></TR> 
-<TR><TD ALIGN="CENTER">35</TD><TD>Dental Care           </TD></TR> 
-<TR><TD ALIGN="CENTER">36</TD><TD>Dental Crowns         </TD></TR> 
-<TR><TD ALIGN="CENTER">37</TD><TD>Dental Accident       </TD></TR> 
-<TR><TD ALIGN="CENTER">38</TD><TD>Orthodontics          </TD></TR>
-<TR><TD ALIGN="CENTER">39</TD><TD>Prosthodontics        </TD></TR>
-<TR><TD ALIGN="CENTER">40</TD><TD>Oral Surgery          </TD></TR>
-<TR><TD ALIGN="CENTER">41</TD><TD>Routine (Preventive) Dental</TD></TR>
-<TR><TD ALIGN="CENTER">42</TD><TD>Home Health Care      </TD></TR>
-<TR><TD ALIGN="CENTER">43</TD><TD>Home Health Prescriptions</TD></TR>
-<TR><TD ALIGN="CENTER">44</TD><TD>Home Health Visits    </TD></TR>
-<TR><TD ALIGN="CENTER">45</TD><TD>Hospice               </TD></TR>
-<TR><TD ALIGN="CENTER">46</TD><TD>Respite Care          </TD></TR>
-<TR><TD ALIGN="CENTER">47</TD><TD>Hospital              </TD></TR>
-<TR><TD ALIGN="CENTER">48</TD><TD>Hospital - Inpatient  </TD></TR>
-<TR><TD ALIGN="CENTER">49</TD><TD>Hospital - Room and Board</TD></TR>
-<TR><TD ALIGN="CENTER">50</TD><TD>Hospital - Outpatient </TD></TR>
-<TR><TD ALIGN="CENTER">51</TD><TD>Hospital - Emergency Accident</TD></TR>
-<TR><TD ALIGN="CENTER">52</TD><TD>Hospital - Emergency Medical</TD></TR>
-<TR><TD ALIGN="CENTER">53</TD><TD>Hospital - Ambulatory Surgical</TD></TR>
-<TR><TD ALIGN="CENTER">54</TD><TD>Long Term Care        </TD></TR>
-<TR><TD ALIGN="CENTER">55</TD><TD>Major Medical         </TD></TR> 
-<TR><TD ALIGN="CENTER">56</TD><TD>Medically Related Transportation</TD></TR>
-<TR><TD ALIGN="CENTER">57</TD><TD>Air Transportation    </TD></TR>
-<TR><TD ALIGN="CENTER">58</TD><TD>Cabulance             </TD></TR>
-<TR><TD ALIGN="CENTER">59</TD><TD>Licensed Ambulance    </TD></TR>
-<TR><TD ALIGN="CENTER">60</TD><TD>General Benefits      </TD></TR>
-<TR><TD ALIGN="CENTER">61</TD><TD>In-vitro Fertilization</TD></TR>
-<TR><TD ALIGN="CENTER">62</TD><TD>MRI/CAT Scan          </TD></TR>
-<TR><TD ALIGN="CENTER">63</TD><TD>Donor Procedures      </TD></TR>
-<TR><TD ALIGN="CENTER">64</TD><TD>Acupuncture           </TD></TR>
-<TR><TD ALIGN="CENTER">65</TD><TD>Newborn Care          </TD></TR>
-<TR><TD ALIGN="CENTER">66</TD><TD>Pathology             </TD></TR>
-<TR><TD ALIGN="CENTER">67</TD><TD>Smoking Cessation     </TD></TR>
-<TR><TD ALIGN="CENTER">68</TD><TD>Well Baby Care        </TD></TR>
-<TR><TD ALIGN="CENTER">69</TD><TD>Maternity             </TD></TR>
-<TR><TD ALIGN="CENTER">70</TD><TD>Transplants           </TD></TR>
-<TR><TD ALIGN="CENTER">71</TD><TD>Audiology Exam        </TD></TR>
-<TR><TD ALIGN="CENTER">72</TD><TD>Inhalation Therapy    </TD></TR>
-<TR><TD ALIGN="CENTER">73</TD><TD>Diagnostic Medical    </TD></TR>
-<TR><TD ALIGN="CENTER">74</TD><TD>Private Duty Nursing  </TD></TR>
-<TR><TD ALIGN="CENTER">75</TD><TD>Prosthetic Device     </TD></TR>
-<TR><TD ALIGN="CENTER">76</TD><TD>Dialysis              </TD></TR>
-<TR><TD ALIGN="CENTER">77</TD><TD>Otological Exam       </TD></TR>
-<TR><TD ALIGN="CENTER">78</TD><TD>Chemotherapy          </TD></TR>
-<TR><TD ALIGN="CENTER">79</TD><TD>Allergy Testing       </TD></TR>
-<TR><TD ALIGN="CENTER">80</TD><TD>Immunizations         </TD></TR>
-<TR><TD ALIGN="CENTER">81</TD><TD>Routine Physical      </TD></TR>
-<TR><TD ALIGN="CENTER">82</TD><TD>Family Planning       </TD></TR>
-<TR><TD ALIGN="CENTER">83</TD><TD>Infertility           </TD></TR>
-<TR><TD ALIGN="CENTER">84</TD><TD>Abortion              </TD></TR>
-<TR><TD ALIGN="CENTER">85</TD><TD>AIDS                  </TD></TR>
-<TR><TD ALIGN="CENTER">86</TD><TD>Emergency Services    </TD></TR>
-<TR><TD ALIGN="CENTER">87</TD><TD>Cancer                </TD></TR>
-<TR><TD ALIGN="CENTER">88</TD><TD>Pharmacy              </TD></TR>
-<TR><TD ALIGN="CENTER">89</TD><TD>Free Standing Prescription Drug</TD></TR>
-<TR><TD ALIGN="CENTER">90</TD><TD>Mail Order Prescription Drug</TD></TR>
-<TR><TD ALIGN="CENTER">91</TD><TD>Brand Name Prescription Drug</TD></TR>
-<TR><TD ALIGN="CENTER">92</TD><TD>Generic Prescription Drug</TD></TR>  
-<TR><TD ALIGN="CENTER">93</TD><TD>Podiatry              </TD></TR>  
-<TR><TD ALIGN="CENTER">94</TD><TD>Podiatry - Office Visits</TD></TR>  
-<TR><TD ALIGN="CENTER">95</TD><TD>Podiatry - Nursing Home Visits</TD></TR>  
-<TR><TD ALIGN="CENTER">96</TD><TD>Professional (Physician)</TD></TR>
-<TR><TD ALIGN="CENTER">97</TD><TD>Anesthesiologist      </TD></TR>  
-<TR><TD ALIGN="CENTER">98</TD><TD>Professional (Physician) Visit - Office</TD></TR>  
-<TR><TD ALIGN="CENTER">99</TD><TD>Professional (Physician) Visit - Inpatient</TD></TR>  
-<TR><TD ALIGN="CENTER">A0</TD><TD>Professional (Physician) Visit - Outpatient</TD></TR>  
-<TR><TD ALIGN="CENTER">A1</TD><TD>Professional (Physician) Visit - Nursing home</TD></TR>  
-<TR><TD ALIGN="CENTER">A2</TD><TD>Professional (Physician) Visit - Skilled Nursing Facility</TD></TR>  
-<TR><TD ALIGN="CENTER">A3</TD><TD>Professional (Physician) Visit - Home</TD></TR>  
-<TR><TD ALIGN="CENTER">A4</TD><TD>Psychiatric           </TD></TR>  
-<TR><TD ALIGN="CENTER">A5</TD><TD>Psychiatric - Room and Board</TD></TR>  
-<TR><TD ALIGN="CENTER">A6</TD><TD>Psychotherapy         </TD></TR>  
-<TR><TD ALIGN="CENTER">A7</TD><TD>Psychiatric - Inpatient</TD></TR>  
-<TR><TD ALIGN="CENTER">A8</TD><TD>Psychiatric - Outpatient</TD></TR>  
-<TR><TD ALIGN="CENTER">A9</TD><TD>Rehabilitation        </TD></TR>  
-<TR><TD ALIGN="CENTER">AA</TD><TD>Rehabilitation - Room and Board</TD></TR>
-<TR><TD ALIGN="CENTER">AB</TD><TD>Rehabilitation - Inpatient</TD></TR>
-<TR><TD ALIGN="CENTER">AC</TD><TD>Rehabilitation - Outpatient</TD></TR>
-<TR><TD ALIGN="CENTER">AD</TD><TD>Occupational Therapy</TD></TR>
-<TR><TD ALIGN="CENTER">AE</TD><TD>Physical Medicine     </TD></TR>
-<TR><TD ALIGN="CENTER">AF</TD><TD>Speech Therapy        </TD></TR>
-<TR><TD ALIGN="CENTER">AG</TD><TD>Skilled Nursing Care  </TD></TR>
-<TR><TD ALIGN="CENTER">AH</TD><TD>Skilled Nursing Care - Room and Board</TD></TR>
-<TR><TD ALIGN="CENTER">AI</TD><TD>Substance Abuse       </TD></TR>
-<TR><TD ALIGN="CENTER">AJ</TD><TD>Alcoholism            </TD></TR>
-<TR><TD ALIGN="CENTER">AK</TD><TD>Drug Addiction        </TD></TR>
-<TR><TD ALIGN="CENTER">AL</TD><TD>Vision (Optometry)    </TD></TR>
-<TR><TD ALIGN="CENTER">AM</TD><TD>Frames                </TD></TR>
-<TR><TD ALIGN="CENTER">AN</TD><TD>Routine Exam          </TD></TR>
-<TR><TD ALIGN="CENTER">AO</TD><TD>Lenses                </TD></TR>
-<TR><TD ALIGN="CENTER">AQ</TD><TD>Nonmedically Necessary Physical</TD></TR>
-<TR><TD ALIGN="CENTER">AR</TD><TD>Experimental Drug Therapy</TD></TR>
-<TR><TD ALIGN="CENTER">BA</TD><TD>Independent Medical Evaluation</TD></TR>
-<TR><TD ALIGN="CENTER">BB</TD><TD>Partial Hospitalization (Psychiatric)</TD></TR>
-<TR><TD ALIGN="CENTER">BC</TD><TD>Day Care (Psychiatric)</TD></TR>
-<TR><TD ALIGN="CENTER">BD</TD><TD>Cognitive Therapy     </TD></TR>
-<TR><TD ALIGN="CENTER">BE</TD><TD>Massage Therapy       </TD></TR>
-<TR><TD ALIGN="CENTER">BF</TD><TD>Pulmonary Rehabilitation</TD></TR>
-<TR><TD ALIGN="CENTER">BG</TD><TD>Cardiac Rehabilitation</TD></TR>
-<TR><TD ALIGN="CENTER">BH</TD><TD>Pediatric             </TD></TR>
-<TR><TD ALIGN="CENTER">BI</TD><TD>Nursery               </TD></TR>
-<TR><TD ALIGN="CENTER">BJ</TD><TD>Skin                  </TD></TR>
-<TR><TD ALIGN="CENTER">BK</TD><TD>Orthopedic            </TD></TR>
-<TR><TD ALIGN="CENTER">BL</TD><TD>Cardiac               </TD></TR>
-<TR><TD ALIGN="CENTER">BM</TD><TD>Lymphatic             </TD></TR>
-<TR><TD ALIGN="CENTER">BN</TD><TD>Gastrointestinal      </TD></TR>
-<TR><TD ALIGN="CENTER">BP</TD><TD>Endocrine             </TD></TR>
-<TR><TD ALIGN="CENTER">BQ</TD><TD>Neurology             </TD></TR>
-<TR><TD ALIGN="CENTER">BR</TD><TD>Eye                   </TD></TR>
-<TR><TD ALIGN="CENTER">BS</TD><TD>Invasive Procedures   </TD></TR>
-  </TBODY>
+<INPUT type="button" id="topprevious" value="Prev Submsn" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
+<INPUT type="button" id="topnext" value="Next Submsn" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
+<INPUT type="button" id="topnewSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
+<TABLE align="center">
+
+<div style="display: none;">
+<input id="count" value="${indexCount}" name="count" />
+<input id="moduleName" value="submsn" name="moduleName" />
+<input id="actionName" value="next" name="actionName" />
+<input id="message" value="${message}" name="message" />
+</div>
+
+<%-- <c:iterator value ="${lookUpListVO.submsnVOList}" var="submsn" varStatus="status"> --%>
+<c:forEach items="${lookUpListVO.submsnVOList}" var="submsn" varStatus="status">
+
+	<TR>
+		<TD align="right">Transaction Type: </TD>
+		<TD><FONT color="#ff0000">${submsn.tranType}</FONT></TD>
+    </TR>
+	<TR>
+		<TD align="right">Conversation Id Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.convIdCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Van Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.vanIdCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Trans Type Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.typeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">AuthorizationId: </TD>
+		<TD><FONT color="#ff0000">${submsn.authorizationId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Security Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.securityId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Interchange Sender Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.intrchngSendId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Interchange Receiver Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.intrchngRcvrId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Interchange Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.interchangeDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Interchange Time: </TD>
+		<TD><FONT color="#ff0000">${submsn.interchangeTime}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Interchange Control No: </TD>
+		<TD><FONT color="#ff0000">${submsn.intrcngCntrlNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">App Sender Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.appSendCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">App Receiver Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.appRcvrCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Group Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.groupDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Group Time: </TD>
+		<TD><FONT color="#ff0000">${submsn.groupTime}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Group Control No: </TD>
+		<TD><FONT color="#ff0000">${submsn.grpControlNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Transaction Purpose Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Transaction Type Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.trnsctnTypeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Service Type Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.serviceTypeCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Requested Benefit Type Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.reqstdBnftCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">As Of Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.asOfDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">To Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.toDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submitting Provider Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPrvdrId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Last Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrLastName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider First Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrFirstName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Middle Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrMidName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Title: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrTitle}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Address 1: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrAddr1}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Address 2: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrAddr2}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submitting Provider City: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrCity}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submitting Provider State: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmtPvdrState}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Provider Zip Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.sbmPvdrZipCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Prvdr Comm1 No: </TD>
+		<TD><FONT color="#ff0000">${submsn.sPCommunication1No}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Id Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.subscriberIdCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Member Id Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.memberIdCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Employee Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.employeeId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Last Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsLastName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber First Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsFirstName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Middle Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsMidName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Title: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsTitle}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Last Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientLastName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient First Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientFirstName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Middle Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientMidName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Title: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientTitle}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patients Birth Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientBirthdate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Relation To Subscriber Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.relationToSubsCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Sex Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.patientSexCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Effective Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.effectiveDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Received Time: </TD>
+		<TD><FONT color="#ff0000">${submsn.receivedTime}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Submitted Time: </TD>
+		<TD><FONT color="#ff0000">${submsn.prvdrSbmTime}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Submitted Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.prvdrSbmDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Transaction Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.transactionCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Posted Date: </TD>
+		<TD><FONT color="#ff0000">${submsn.postedDt}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Submit Prvdr Entity Type Qual Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.spvdrEntTypeQualCd}</FONT></TD>
+    </TR>
+	<TR>
+		<TD align="right">Submit Prvdr Contact Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.spvdrContactName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Id Qual Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsIdQualCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Trace Ref No: </TD>
+		<TD><FONT color="#ff0000">${submsn.subsTrceRefNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Dependent Id Qual Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.depIdQualCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Dependent Trace Ref No: </TD>
+		<TD><FONT color="#ff0000">${submsn.depTrceRefNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Covering For PCP Ind: </TD>
+		<TD><FONT color="#ff0000">${submsn.coverForPCPInd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Employer Group Id Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.empGroupIdCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Network Id Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.prvdrNetworkIdCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Alternate Routing Id Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.altRouteIdCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Alternate Routing Type Cd: </TD>
+		<TD><FONT color="#ff0000">${submsn.altRouteTypeCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Employer Name: </TD>
+		<TD><FONT color="#ff0000">${submsn.employerName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Routing Id: </TD>
+		<TD><FONT color="#ff0000">${submsn.routingId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Routing Type Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.routingTypeCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cumb Id No: </TD>
+		<TD><FONT color="#ff0000">${submsn.cumbIdNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Id No: </TD>
+		<TD><FONT color="#ff0000">${submsn.prvdrIdNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Org No: </TD>
+		<TD><FONT color="#ff0000">${submsnVOList.prvdrOrgNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sub Pvdr Comm1 Qual Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.spComm1QualCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Entity Id Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.versionReleaseCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Prvdr Id Cd Qual Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.mswContactCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Family Level Ind: </TD>
+		<TD><FONT color="#ff0000">${submsn.familyLevelInd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">POS Code: </TD>
+		<TD><FONT color="#ff0000">${submsn.posCode}</FONT></TD>
+	</TR>
+	
+	</c:forEach>
 </TABLE>
-<P align="center"><INPUT type="button" onclick="WindowClose()" name="CloseButton" value="Close"></P>
+
+
+
+
+
+<BR>
+
+
+
+
+
+
+<INPUT type="button" id="previous" value="Prev Submsn" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
+<INPUT type="button" id="next" value="Next Submsn" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
+<INPUT type="button" id="newSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
 </CENTER>
+</form:form>
 </BODY>
-</HTML>
+
