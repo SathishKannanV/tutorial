@@ -8,92 +8,160 @@
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 <!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
 
-<%-- <c:set var="procexMessage" value="${procexMessage}"></c:set> --%>
+
 
 <HEAD>
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>Module Name LookUp</TITLE>
+<TITLE>RBBCDisplay.jsp</TITLE>
 
 <SCRIPT>
-$(document).ready( function(e) {
 
- $('#close').click(function(){
-	window.close();
-	}); 
+var relPath="<%=request.getContextPath()%>";
+
+	$(document).ready(function(e) {
+		var count = $("#plnlmEXDisplay").find('input[type="checkbox"]').length;
+		var errorPath = relPath + "/usrsec/error";
+		$('#LookUp').click(function() {
+			var action = relPath + '/rbbc/rbbcHome';
+			$("#rbbcDisplayForm").attr('action', action).submit();
+		});
+
+		$('#deleteBtn').click(function() {
+			var action = relPath + '/rbbc/deleteRbbc';
+			if (count >= 1000) {
+				$("#form1").attr('action', errorPath).submit();
+			}else{
+			$("#rbbcDisplayForm").attr('action', action).submit();
+			}
+		});
+
+		$('#copyBtn').click(function() {
+			var action = relPath + '/rbbc/copyRbbc';
+			if (count >= 1000) {
+				$("#form1").attr('action', errorPath).submit();
+			}else{
+			$("#rbbcDisplayForm").attr('action', action).submit();
+			}
+		});
+
+		$('#addUpdateBtn').click(function() {
+			var action = relPath + '/rbbc/addUpdateRbbc';
+			if (count >= 1000) {
+				$("#form1").attr('action', errorPath).submit();
+			}else{
+			$("#rbbcDisplayForm").attr('action', action).submit();
+			}
+		});
+
+		$("#rbbcExport").click(function() {
+			var action = relPath + "/rbbc/rbbcExport";
+			$("#form1").attr('action', action).submit();
+		});
+	
 });
+
+
+function ListBICs()
+	{
+	window.open(relPath+'/rbbc/bicList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
+	}
+
+function ListSTCs()
+	{
+	window.open(relPath+'/rbbc/stcList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
+	}
+
+function ListRBBCs()
+	{
+	window.open(relPath+'/rbbc/rbbcList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
+	}
+
+
 </SCRIPT></HEAD>
 <BODY style="font-size: 9pt" bgcolor="#e1eeb9">
-<center><b><font size="+2">Long Running Transaction Reports - Module Name LookUp</FONT></B>
 
-</center>
-<br><br>
-<form:form commandName="longRunModule" name="Module" id="Module"  method="POST">
-
-
-<CENTER>
-<table><tr>
-<td> <TABLE cellspacing="1" style="background-color: #9393ff" border="1">
-	
-	<TBODY>
-		<TR>
-            <td style="font-weight: bold">Module Name</td>
-            <td style="font-weight: bold">Description</td>
-         </TR>
-<tr><td>	M1E7UR23	</td><td>	Member Process	</td></tr>
-<tr><td>	M1E7UR89	</td><td>	Traditional Process	</td></tr>
-<tr><td>	M1E7UR71	</td><td>	ASH/SRC	</td></tr>
-<tr><td>	M1E7UR83	</td><td>	HMO Process	</td></tr>
-<tr><td>	M1E7UR87	</td><td>	Dental Process	</td></tr>
-<tr><td>	M1E7UR91	</td><td>	Outbound Process 	</td></tr>
-<tr><td>	M1E7VR71	</td><td>	HRP Process	</td></tr>
-<tr><td>	M1E7KC28	</td><td>	Provider PTI Service	</td></tr>
-<tr><td>	M1E7KC24	</td><td>	Trad PFI Service	</td></tr>
-<tr><td>	M1E7KC31	</td><td>	Trad Accum Service	</td></tr>
-<tr><td>	M1E7KC32	</td><td>	Dental Accum Service	</td></tr>
-<tr><td>	M1E7KC16	</td><td>	HMO MFI Service	</td></tr>
-<tr><td>	EDH-SERV	</td><td>	EDH Subscription ID Service	</td></tr>
-<tr><td>	EIE-SERV	</td><td>	EIE Eligibility Service	</td></tr>
-<tr><td>	M1E7KC01	</td><td>	MembershipInq Service	</td></tr>
-<tr><td>	M1E7KC06	</td><td>	Member Existsby StandardizedName Service	</td></tr>
-<tr><td>	M1E7KC08	</td><td>	Individual Instance Inquiry Service	</td></tr>
-<tr><td>	M1E7KC09	</td><td>	Members Plan Inquiry Service	</td></tr>
-	</TBODY>
-</TABLE></td>
-<td><TABLE cellspacing="1" style="background-color: #9393ff" border="1">
-	
-	<TBODY>
-		<TR>
-            <td style="font-weight: bold">Module Name</td>
-            <td style="font-weight: bold">Description</td>
-         </TR>
-
-<tr><td>	M1E7KC10	</td><td>	HMO Plan Name Service	</td></tr>
-<tr><td>	M1E7KC15	</td><td>	PlanInProcessInq Service	</td></tr>
-<tr><td>	M1E7KC22	</td><td>	NetworkCatInq Service	</td></tr>
-<tr><td>	M1E7KC23	</td><td>	PlanProductInq Service	</td></tr>
-<tr><td>	M1E7KC25	</td><td>	PSOfferingsInq Service	</td></tr>
-<tr><td>	M1E7KC26	</td><td>	BrndngCharsSvc	</td></tr>
-<tr><td>	M1E7KC29	</td><td>	MbrBillDtlInq	</td></tr>
-<tr><td>	M1E7KC17	</td><td>	SrcBenefitInq Service	</td></tr>
-<tr><td>	M1E7KC18	</td><td>	ASHBenefitInq Service	</td></tr>
-<tr><td>	M1E7KC20	</td><td>	MedicareSuppInq	</td></tr>
-<tr><td>	M1E7KC30	</td><td>	NetworkCatInq Service	</td></tr>
-<tr><td>	M1E7KC33	</td><td>	ContractStateById Service	</td></tr>
-<tr><td>	M1E7KC34	</td><td>	HMOBenDetInq Service	</td></tr>
-<tr><td>	M1E7KC35	</td><td>	NetworkDeterm Service	</td></tr>
-<tr><td>	M1E7KC12	</td><td>	getSpecialProgramsTrad Service	</td></tr>
-<tr><td>	M1E7KC13	</td><td>	MMMInquiry Service	</td></tr>
-<tr><td>	M1E7KC14	</td><td>	getSpecialProgramsHMO Service	</td></tr>
-<tr><td>	M1E7KC19	</td><td>	PlanBenefitInq Service	</td></tr>
-
-	</TBODY>
-</TABLE></td>
-</tr></table>
+<FONT face="ARIAL">
+<c:out value="${rbbcMessage}"></c:out>
+</FONT>
+<BR><BR>
+<CENTER><B><FONT size="+2">RBBC Table Search List</FONT></B></CENTER><BR>
+<BR>
+<FONT FACE="ARIAL">
+To make a change on the database using these rows, change any field to the appropriate value, click on the Take Action square for every row changed and then click on the button for the action desired. Multiple rows may be selected for any given action. Labels that are <B>bold</B> identify key columns. A change to any value in these columns will <B>Add</B> rows to the database, not update existing rows.
+</FONT>
+<BR>
+<BR>
 
 <CENTER>
-<P><INPUT type="button"  id="close"  name="Close" value="Close"></P>
-</CENTER>
+<input type="image" id="rbbcExport" src="${context}/images/rte_export.jpg"  class="export" style="padding-left: 1mm; padding-right: 1mm">	
+<form:form commandName="lookUpListVO" name="rbbcDisplayForm" id="rbbcDisplayForm"  method="POST">
+<TABLE cellspacing="5" style="background-color: #9393ff" border="1" class="lookupTable">
+    <COL span="1" align="center">
+    <COL span="13">
+    <COL span="1" align="center">
+    <TBODY>
+        <TR>
+            <TD>Take Action?</TD>
+            <TD width="30" style="font-weight: bold"><A href="javascript:ListSTCs()"
+            			onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
+            			onmouseout="window.status = '';">Svc Type</A></TD>
+            <TD width="40" style="font-weight: bold"><A href="javascript:ListBICs()"
+            			onmouseover="window.status = 'Display List of Benefit Id Code (BIC)'; return true;"
+            			onmouseout="window.status = '';">Benefit Id Cd</A></TD>
+            <TD width="30" style="font-weight: bold"><A href="javascript:ListRBBCs()"
+            			onmouseover="window.status = 'Display List of Benefit Id Code (BIC)'; return true;"
+            			onmouseout="window.status = '';">RBBC Cd</A></TD>
+            <TD>Effective Date</TD>
+            <TD>Posted Date</TD>
+        </TR>
+        <c:forEach items="${lookUpListVO.rbbcVOList}" var="rbbc" varStatus="status">
+		<c:choose>
+		<c:when test="${rbbc.dbUpdatedInd == 'Y'}">
+  			
+        <TR bgcolor="#ff4242">
+           </c:when>
+		<c:when test="${rbbc.dbUpdatedInd == 'C'}">
+        <TR bgcolor="#80ffff">
+          </c:when>
+		 <c:otherwise>
+        <TR bgcolor="#9393ff">
+           </c:otherwise>
+		</c:choose>
+		<input type="input" name="rbbcVOList[${status.index}].dbUpdatedInd" value="${rbbc.dbUpdatedInd}" style="display: none;"/>
+            <TD>
+	            <INPUT type="checkbox" name="takeAction" value="${status.index}"></TD>
+           	<TD>
+				
+			<INPUT name="rbbcVOList[${status.index}].dbSvcTypeCd" size="2" maxlength="2" type="text" value="${rbbc.dbSvcTypeCd}" >
+			</TD>
+            <TD>
+            	
+            	<INPUT name="rbbcVOList[${status.index}].dbBnftIdCd" size="7" maxlength="5" type="text" value="${rbbc.dbBnftIdCd}" onblur="ValidateBIC(this)"></TD>
+            <TD>
+            	
+            	<INPUT name="rbbcVOList[${status.index}].dbRBBCCd" size="2" maxlength="1" type="text" value="${rbbc.dbRBBCCd}"></TD>
+            <TD>
+            
+            	<INPUT name="rbbcVOList[${status.index}].dbEffDate" size="10" maxlength="10" type="text" value="${rbbc.dbEffDate}" onblur="ValidateEffDt(this)"></TD>
+            <TD>
+            
+                <INPUT size="10" style="font-size: 12px; text-align: left;
+                						 border-width: 0px; font-style: normal; background-color: #9393ff"
+                						 type="text" name="rbbcVOList[${status.index}].dbPostedDate" value="${rbbc.dbPostedDate}" readonly>
+        </TD>
+        </TR>
+       </c:forEach>
+    </TBODY>
+</TABLE>
+<BR>
 
+<INPUT type="button" id="copyBtn" value="Copy" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
+<INPUT type="button" id="addUpdateBtn" value="Add/Update" style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
+<INPUT type="button" id="deleteBtn" value="Delete" style="padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
+
+<INPUT type="button" id="LookUp" value="Look Up" style="padding-left: 1mm; padding-right: 1mm">
+			
 </CENTER>
 </form:form>
+<form name="form1" id="form1" method="POST"></form>
 </BODY>
