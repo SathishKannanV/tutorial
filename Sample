@@ -1,30 +1,191 @@
-<!--Chrome Upgrade-N127627-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
-<!--END-->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627-->
-<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--END-->
 
-<HTML>
-<HEAD>
-<META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>ErrorMsgDisplay.jsp</TITLE>
-</HEAD>
-<BODY style='background-color: #e1eeb9'>
+<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
 
-<P align = center>The Following error was encountered while processing your request, please bring it to the attention of your application support area:</P>
-<P align=center><TEXTAREA rows="10" cols="80" readonly name="TextArea1" style='background-color: #fffcfc'>
-<c:if test="${expErrorMsg != null}">	
-					<c:out value="${expErrorMsg}"/> 
-				</c:if>
-				</TEXTAREA><BR></P>
-<BR>
-<P align=center>
 
-<INPUT type="button" name="Back" value="Back" onclick="history.back();" tabindex="5" accesskey="c"></P>
+
+
+
+<TITLE>Event Tracking SearchForm.jsp</TITLE>
+<SCRIPT>
+var relPath="<%=request.getContextPath()%>";
+$(document).ready( function(e) {
+$('#Sbrsrxb').click(function(){
+var action = relPath+'/eventtrack/GatherSbrsrxb';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+
+$('#Spntprv').click(function(){
+var action = relPath+'/eventtrack/GatherSpntprv';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+	$('#Sbmrdep').click(function(){
+var action = relPath+'/eventtrack/GatherSbmrdep';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+	$('#Submsn').click(function(){
+var action = relPath+'/eventtrack/GatherSubmsn';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+		$('#Srapidtl').click(function(){
+var action = relPath+'/eventtrack/GatherSrapidtl';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+	$('#Sbmletk').click(function(){
+var action = relPath+'/eventtrack/GatherSbmletk';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+	$('#Sbmsnr').click(function(){
+var action = relPath+'/eventtrack/GatherSbmsnr';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+	$('#Sbmrpln').click(function(){
+var action = relPath+'/eventtrack/GatherSbmrpln';
+var retFlag =validate();
+if(retFlag == true){
+	$("#eventtrackForm").attr('action', action).submit();
+	}
+	})
+});
+
+
+function validate()
+{
+   var retVal=true;
+   if(($('#vanIdCd').val() == "")||($('#typeCd').val() == ""))
+   {
+   	alert("Required fields empty.");
+   	return false;
+   	
+   }else if(($('#convIdCode').val() == "")&&($('#postedDt').val() == ""))
+   {
+   alert("Enter either Conversation Id or Posted Date (Submsn & Sbmsnr only).");
+   return flase
+   }
+   return retVal
+}
+
+</SCRIPT>
+<BODY bgcolor="#e1eeb9">
+<H1 align="center">Event Tracking</H1>
+
+<P align="center"><I>Enter values into first three fields, optionally Posted Date.
+<BR>Then Click button for search desired.</I></P>
+<form:form commandName="EventTrackingVO" name="eventtrackForm" id="eventtrackForm"  method="POST">
+
+<c:if test="${requestScope.isSessionActive }">
+		<c:out value="Welcome Session"/>
+	</c:if>
+
+<%-- 
+<c:if test="${sessionScope.isSessionActive }">
+		<c:out value = "Welcome Session 1"></c:out>
+	</c:if>
+
+<% 
+if(session!=null){
+String uname=request.getParameter("ConversationIdCode"); 
+out.print("Welcome "+ ConversationIdCode);
+}
+%> 
+
+<% 
+if(session!=null){
+String uname=request.getAttribute("ConversationIdCode"); 
+out.print("Welcome "+ ConversationIdCode);
+}
+%>  
+ --%>
+<CENTER>
+<TABLE>
+<TBODY>
+        <TR>
+            <TD>Conversation Id*</TD>
+            <TD>
+            <form:input path="convIdCode" id="convIdCode"  value="${sessionScope.evntConIdCode}" maxlength="30" size="30" onchange="javascript:this.value=this.value.toUpperCase();" />
+            </TD>
+        </TR>
+        <TR>
+            <TD>Van Id</TD>
+            <TD>
+            		<form:input path="vanIdCd" id="vanIdCd" value="${sessionScope.evntVanId}"  maxlength="10" size="8" onchange="javascript:this.value=this.value.toUpperCase();"/>
+            		</TD>
+        </TR>
+         <TR>
+            <TD>Trans Type Cd</TD>
+            <TD>
+            		<form:input path="typeCd" id="typeCd"   value="${sessionScope.evntTransType}" maxlength="3" size="2" onchange="javascript:this.value=this.value.toUpperCase();"/>
+            		</TD>
+           
+        </TR>
+	
+         <TR>
+            <TD>Posted Date**</TD>
+            <TD><form:input size="8" path="postedDt" id="postedDt"  value="${sessionScope.evntPostdate}"  maxlength="10" /></TD>
+        </TR>
+         <TR>
+            <TD></TD>
+            <TD>(yyyy-mm-dd)</TD>
+        </TR>
+      <TR>
+			<TD>Transaction Type</TD>
+			<TD width="4">
+				<form:select  path="tranType" id="tranType" name="tranType">
+                	<OPTION value="5010" selected="selected">5010</OPTION>     
+	            </form:select>
+	        </TD>
+		</TR>
+    </TBODY>  
+  
+	
+</TABLE>
+<FIELDSET><LEGEND>Search to perform</LEGEND>
+
+<INPUT type="button" id="Submsn" name="Submsn" value="Submsn" tabindex="5" style="margin-left: 10px">
+<INPUT type="button" id="Sbmletk" name="Sbmletk" value="Sbmletk" tabindex="6" style="margin-left: 10px">
+<INPUT type="button" id="Sbmsnr" name="Sbmsnr" value="Sbmsnr" tabindex="7" style="margin-left: 10px">
+ <INPUT type="button" id="Sbmrpln" name="Sbmrpln" value="Sbmrpln" tabindex="9" style="margin-left: 10px" style="visibility"> 
+<INPUT type="button" id="Srapidtl" name="Srapidtl" value="Srapidtl" tabindex="10" style="margin-left: 10px">
+<INPUT type="button" id="Sbmrdep" name="Sbmrdep" value="Sbmrdep" tabindex="11" style="margin-left: 10px">
+<INPUT type="button" id="Spntprv" name="Spntprv" value="Spntprv" tabindex="12" style="margin-left: 10px">
+<INPUT type="button" id="Sbrsrxb" name="Sbrsrxb" value="Sbrsrxb" tabindex="13" style="margin-left: 10px">
+
+
+<input type="hidden" name="start" id = "start" value="<%=request.getAttribute("evntValues")%>" >
+
+</FIELDSET>
+
+</CENTER>
+</form:form>
+<FONT face="ARIAL" style="font-size: 9pt">
+*Can use wild card (%) in Conv Id on SUBMSN, SBMSNR, SPNTPRV, SBMRDEP and SBRSRXB search<BR>
+** can be used on SUBMSN &amp; SBMSRN search, leave Conversation Id blank<BR>
+</FONT>
 </BODY>
-</HTML>
