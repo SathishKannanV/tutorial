@@ -2,15 +2,11 @@ package com.aetna.prvrte.rteintranet.web.controller;
 
 
 
-import java.util.ArrayList;
+import java.sql.Date;
 
 import java.util.HashMap;
 
-import java.util.Iterator;
-
 import java.util.LinkedHashMap;
-
-import java.util.LinkedHashSet;
 
 import java.util.LinkedList;
 
@@ -42,11 +38,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.servlet.ModelAndView;
 
-
-
-import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
@@ -58,47 +54,53 @@ import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
 
 import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
 
-import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
-
-import com.aetna.prvrte.rteintranet.vo.LongRunTransReport3VO;
-
-import com.aetna.prvrte.rteintranet.vo.LongRunTransReport4VO;
-
-import com.aetna.prvrte.rteintranet.vo.LongRunTransactionVO;
-
 import com.aetna.prvrte.rteintranet.vo.LookUpTableListVO;
 
+import com.aetna.prvrte.rteintranet.vo.RbrcVO;
 
+import com.aetna.prvrte.rteintranet.vo.RbrcVO;
+
+
+
+/**
+
+ * @author N657186
+
+ * Cognizant_Offshore
+
+ */
+
+
+
+/**
+
+ * @author N657186
+
+ *
+
+ */
 
 @Controller
 
-@RequestMapping(value = "/eventtrack/longruntrans/*")
+@RequestMapping(value = "/rbrc/*")
 
-public class LongRunTransController {
+public class RbrcController {
 
 
 
-	public static final String LONGRUNTRANS_HOME = ".longRunTransHome";
+	public static final String RBRC_HOME = ".rbrcHome";
 
-	public static final String LONGRUNTRANS_HOME2 = ".longRunTransHome2";
+	public static final String RBRC_LOOKUP = ".rbrcLookUp";
 
-	public static final String LONGRUNTRANS_MODULE = ".longRunHelpLink";
+	public static final String RBRC_ADD = ".rbrcAdd";
 
-	public static final String LONGRUNTRANS_HOME3 = ".longRunTransHome3";
+	public static final String RBRC_HELP= ".rbrcHelp";
 
-	public static final String LONGRUNTRANS_HOME4 = ".longRunTransHome4";
+	private static final String STC_LIST = ".stcList";
 
-	public static final String LONGRUNTRANS_HOMEPAGE = ".longRunTransHomePage";
+	
 
-	public static final String LONGRUNTRANS_LOOKUP = ".longruntransLookUp";
-
-	public static final String LONGRUNTRANS_LOOKUP2 = ".longruntransLookUpReport2";
-
-	public static final String LONGRUNTRANS_LOOKUP3 = ".longruntransLookUpReport3";
-
-	public static final String LONGRUNTRANS_LOOKUP4 = ".longruntransLookUpReport4";
-
-	public static final String LONGRUNTRANS_DISPLAY = ".longruntransDisplay";
+	
 
 	/*
 
@@ -106,11 +108,9 @@ public class LongRunTransController {
 
 	 */
 
-	private static final Log log = LogFactory
+	private static final Log log = LogFactory.getLog(RbrcController.class);
 
-			.getLog(LongRunTransController.class);
-
-
+	
 
 	/**
 
@@ -128,411 +128,59 @@ public class LongRunTransController {
 
 	 */
 
-	@Autowired(required = true)
+	@Autowired(required=true)
 
 	private Facade facade;
 
-
+	
 
 	private ModelAndView errormav;
 
+	
 
+	
 
+	/**
 
+	 * @param model
 
-	@SuppressWarnings("unchecked")
+	 * @return
 
-	@RequestMapping(value = "/longRunTransHome", method = { RequestMethod.POST,
+	 */
 
-			RequestMethod.GET })
+	@RequestMapping(value="/rbrcHome", method ={ RequestMethod.POST , RequestMethod.GET})
 
-	public ModelAndView getLongrunTransLookUpHome(Model model,
+	public ModelAndView getRbrcLookUpHome(final HttpServletRequest request,Model model) {
 
-			HttpServletRequest request) {
+		log.warn("Entered RbrcController - getRbrcLookUpHome()");
 
+		String securityLevel ="";
 
+		try{
 
-		request.setAttribute("longrunValues", "longrunSession");
+		securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
 
-		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome()");
+		ModelAndView mav = new ModelAndView(RBRC_HOME, "rbrcVO",  new RbrcVO());
 
+		mav.addObject("securityLevel", securityLevel);
 
+		log.warn("RbrcController - securityLevel: "+ securityLevel);
 
-		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME,
-
-				"LongRunTransVO", new LongRunTransactionVO());
-
-		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome()");
-
-		return mav;
-
-	}
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longRunTransHome2", method = { RequestMethod.POST,
-
-			RequestMethod.GET })
-
-	public ModelAndView getLongrunTransLookUpHome2(Model model,
-
-			HttpServletRequest request) {
-
-
-
-		request.setAttribute("longrunValues", "longrunSession");
-
-		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome2()");
-
-
-
-		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME2,
-
-				"LongRunTransVO", new LongRunTransactionVO());
-
-		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome2()");
+		log.warn("Exit from RbrcController - getRbrcLookUpHome()");
 
 		return mav;
 
-	}
+		}catch (ApplicationException e){
 
-	@SuppressWarnings("unchecked")
+			log.error("Exception occured in RbrcController - getRbrcLookUpHome() method:"+e.getErrorMessage());
 
-	@RequestMapping(value = "/longRunTransModuleHelp", method = { RequestMethod.POST,
+			String errorMsg ="Error encountered when extracting data from the database (GatherRBRC). "+
 
-			RequestMethod.GET })
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
 
-	public ModelAndView getLongrunTransModule(Model model,
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
 
-			HttpServletRequest request) {
-
-
-
-		request.setAttribute("longrunValues", "longrunSession");
-
-		log.warn("Entered Long Run Transaction Controller - getLongrunTransModule()");
-
-
-
-		ModelAndView mav = new ModelAndView(LONGRUNTRANS_MODULE,
-
-				"longRunModule", "success");
-
-		log.warn("Exit from Eventtracking - getLongrunTransModule()");
-
-		return mav;
-
-	}
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longRunTransHome3", method = { RequestMethod.POST,
-
-			RequestMethod.GET })
-
-	public ModelAndView getLongrunTransLookUpHome3(Model model,
-
-			HttpServletRequest request) {
-
-
-
-		request.setAttribute("longrunValues", "longrunSession");
-
-		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome3()");
-
-
-
-		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME3,
-
-				"LongRunTransVO", new LongRunTransactionVO());
-
-		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome3()");
-
-		return mav;
-
-	}
-
-
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longRunTransHome4", method = { RequestMethod.POST,
-
-			RequestMethod.GET })
-
-	public ModelAndView getLongrunTransLookUpHome4(Model model,
-
-			HttpServletRequest request) {
-
-
-
-		request.setAttribute("longrunValues", "longrunSession");
-
-		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome4()");
-
-
-
-		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME4,
-
-				"LongRunTransVO", new LongRunTransactionVO());
-
-		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome3()");
-
-		return mav;
-
-	}
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longruntransLookUp", method = RequestMethod.POST)
-
-	public ModelAndView getLongRunTransLookUpList(
-
-			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
-
-			HttpServletRequest request) {
-
-		String startTimestamp = longrunTransVO.getStartDate() + " "
-
-				+ longrunTransVO.getStartHrs() + ":"
-
-				+ longrunTransVO.getStartMns() + ":"
-
-				+ longrunTransVO.getStartSecs();
-
-		String endTimestamp = longrunTransVO.getEndDate() + " "
-
-				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
-
-				+ ":" + longrunTransVO.getEndSecs();
-
-		longrunTransVO.setStartTimestamp(startTimestamp);
-
-		longrunTransVO.setEndTimestamp(endTimestamp);
-
-		
-
-		String report = "";
-
-		if (longrunTransVO.getReport().equals("Report1")) {
-
-			longrunTransVO.setModule("");
-
-			longrunTransVO.setMinutesCalc("0");
-
-			report = "Report1";
-
-		}else{
-
-			longrunTransVO.setMinutesCalc("0");
-
-			report = "Report2";
-
-		}
-
-		if(longrunTransVO.getSecondsCalc().equals("")){
-
-			longrunTransVO.setSecondsCalc("0");
-
-		}
-
-		LongRunTransactionDTO longRunTransDTO = RTETranslator
-
-				.toLongRunTransDTO(longrunTransVO);
-
-		try {
-
-			Map<String, Object> longrunTransMap = facade
-
-					.getLongRunTransLookUpList(longRunTransDTO);
-
-			List<LongRunTransactionVO> longrunTransList = (List<LongRunTransactionVO>) longrunTransMap
-
-					.get("longRunTransList");
-
-			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
-
-			log.warn("-------------------------------------- lookUp - longrunTransList size: "
-
-					+ longrunTransList.size());
-
-			facade.getApplicationState().setLongRunTransList(longrunTransList);
-
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
-
-					lookUpTableListVO);
-
-			mav.addObject("longRunTransMessage",
-
-					longrunTransMap.get("longRunTransMessage"));
-
-			mav.addObject("longrunTransList", longrunTransList);
-
-			String securityLevel = "";
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-
-
-			mav.addObject("securityLevel", securityLevel);
-
-			mav.addObject("reportNumber", report);
-
-			log.warn("-------------------------------------- lookUp - app state size: "
-
-					+ facade.getApplicationState().getLongRunTransList().size());
-
-			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
-
-			return mav;
-
-		} catch (ApplicationException e) {
-
-			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
-
-					+ "(LongRunTransController) "
-
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
-
-			return errormav;
-
-		}
-
-	}
-
-
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longruntransLookUpReport2", method = RequestMethod.POST)
-
-	public ModelAndView getLongRunTransLookUpList2(
-
-			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
-
-			HttpServletRequest request) {
-
-		String startTimestamp = longrunTransVO.getStartDate() + " "
-
-				+ longrunTransVO.getStartHrs() + ":"
-
-				+ longrunTransVO.getStartMns() + ":"
-
-				+ longrunTransVO.getStartSecs();
-
-		String endTimestamp = longrunTransVO.getEndDate() + " "
-
-				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
-
-				+ ":" + longrunTransVO.getEndSecs();
-
-		longrunTransVO.setStartTimestamp(startTimestamp);
-
-		longrunTransVO.setEndTimestamp(endTimestamp);
-
-		
-
-		String report = "";
-
-		if (longrunTransVO.getReport().equals("Report1")) {
-
-			longrunTransVO.setModule("");
-
-			longrunTransVO.setMinutesCalc("0");
-
-			report = "Report1";
-
-		}else{
-
-			longrunTransVO.setMinutesCalc("0");
-
-			report = "Report2";
-
-		}
-
-		if(longrunTransVO.getSecondsCalc().equals("")){
-
-			longrunTransVO.setSecondsCalc("0");
-
-		}
-
-		LongRunTransactionDTO longRunTransDTO = RTETranslator
-
-				.toLongRunTransDTO(longrunTransVO);
-
-		try {
-
-			Map<String, Object> longrunTransMap = facade
-
-					.getLongRunTransLookUpList(longRunTransDTO);
-
-			List<LongRunTransactionVO> longrunTransList = (List<LongRunTransactionVO>) longrunTransMap
-
-					.get("longRunTransList");
-
-			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
-
-			log.warn("-------------------------------------- lookUp - longrunTransList size: "
-
-					+ longrunTransList.size());
-
-			facade.getApplicationState().setLongRunTransList(longrunTransList);
-
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP2, "lookUpTableListVO",
-
-					lookUpTableListVO);
-
-			mav.addObject("longRunTransMessage",
-
-					longrunTransMap.get("longRunTransMessage"));
-
-			mav.addObject("longrunTransList", longrunTransList);
-
-			String securityLevel = "";
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-
-
-			mav.addObject("securityLevel", securityLevel);
-
-			mav.addObject("reportNumber", report);
-
-			log.warn("-------------------------------------- lookUp - app state size: "
-
-					+ facade.getApplicationState().getLongRunTransList().size());
-
-			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
-
-			return mav;
-
-		} catch (ApplicationException e) {
-
-			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
-
-					+ "(LongRunTransController) "
-
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
 
 			return errormav;
 
@@ -542,263 +190,129 @@ public class LongRunTransController {
 
 	
 
+	/**
+
+	 * @param rbrcVO
+
+	 * @return
+
+	 */
+
 	@SuppressWarnings("unchecked")
 
-	@RequestMapping(value = "/longruntransLookUpReport3", method = RequestMethod.POST)
+	@RequestMapping(value = "/GatherRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
 
-	public ModelAndView getLongRunTransLookUpList3(
+	public ModelAndView getRbrcLookUp(final HttpServletRequest request, @ModelAttribute("rbrcForm")RbrcVO rbrcVO){
 
-			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
+		log.warn("Entered RbrcController - getRbrcLookUp()");
 
-			HttpServletRequest request) {
+		ModelAndView mav ;
 
-		longrunTransVO.setModule("");
+		String securityLevel ="";
 
-		longrunTransVO.setSecondsCalc("0");
+		Map rbrcResultMap = new HashMap();
 
-		String startTimestamp = longrunTransVO.getStartDate() + " "
+		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
 
-				+ longrunTransVO.getStartHrs() + ":"
+		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
 
-				+ longrunTransVO.getStartMns() + ":"
+		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
 
-				+ longrunTransVO.getStartSecs();
+		try{
 
-		String endTimestamp = longrunTransVO.getEndDate() + " "
+		RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
 
-				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
+		rbrcResultMap = facade.getRbrcLookUp(rbrcDTO);
 
-				+ ":" + longrunTransVO.getEndSecs();
+		securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
 
-		longrunTransVO.setStartTimestamp(startTimestamp);
+		rbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcList");
 
-		longrunTransVO.setEndTimestamp(endTimestamp);
+		rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
+
+		lookUpListVO.setRbrcVOList(rbrcVoList);
+
+		facade.getApplicationState().setRbrcList(rbrcVoList);
 
 		
 
-		String report = "";
+		log.warn("getRbrcLookUp - rbrcMessage: "+ rbrcResultMap.get("rbrcMessage"));
 
-		if (longrunTransVO.getModule().equals("")) {
+		mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
 
-			report = "Report1";
+		mav.addObject("rbrcMessage", rbrcResultMap.get("rbrcMessage"));
 
-		} else {
+		mav.addObject("securityLevel", securityLevel);
 
-			report = "Report2";
+		log.warn("Exit from RbrcController - getRbrcLookUp()");
 
-		}
+		return mav;
 
-		if(longrunTransVO.getSecondsCalc().equals("")){
+		}catch (ApplicationException e){
 
-			longrunTransVO.setSecondsCalc("0");
-
-		}
-
-		LongRunTransactionDTO longRunTransDTO = RTETranslator
-
-				.toLongRunTransDTO(longrunTransVO);
-
-		try {
-
-			Map<String, Object> longrunTransMap = facade
-
-					.getLongRunTransLookUpList(longRunTransDTO);
-
-			List<LongRunTransReport3VO> longrunTransList = (List<LongRunTransReport3VO>) longrunTransMap
-
-					.get("longRunTransList");
+			log.error("Exception occured in rbrcController - getrbrcLookUp() method:"+e.getErrorMessage());
 
 			
 
-			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+			String errorMsg ="Error encountered when extracting data from the database (GatherRBRC). "+
 
-			lookUpTableListVO.setLongRunTransactionVOList3(longrunTransList);
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
 
-			log.warn("-------------------------------------- lookUp - longrunTransList size: "
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
 
-					+ longrunTransList.size());
-
-
-
-			facade.getApplicationState().setLongRunTransList3(longrunTransList);
-
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP3, "lookUpTableListVO",
-
-					lookUpTableListVO);
-
-			mav.addObject("longRunTransMessage",
-
-					longrunTransMap.get("longRunTransMessage"));
-
-			mav.addObject("longrunTransList", longrunTransList);
-
-			String securityLevel = "";
-
-			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
-
-
-
-			mav.addObject("securityLevel", securityLevel);
-
-			mav.addObject("reportNumber", report);
-
-			log.warn("-------------------------------------- lookUp - app state size: "
-
-					+ facade.getApplicationState().getLongRunTransList().size());
-
-			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
-
-			return mav;
-
-		} catch (ApplicationException e) {
-
-			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
-
-					+ "(LongRunTransController) "
-
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
 
 			return errormav;
 
 		}
-
-	}
-
-
-
-	
-
-	@SuppressWarnings("unchecked")
-
-	@RequestMapping(value = "/longruntransLookUpReport4", method = RequestMethod.POST)
-
-	public ModelAndView getLongRunTransLookUpList4(
-
-			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
-
-			HttpServletRequest request) {
-
-		longrunTransVO.setModule("");
-
-		longrunTransVO.setMinutesCalc("0");
-
-		if(longrunTransVO.getSecondsCalc().equals("")){
-
-			longrunTransVO.setSecondsCalc("0");
-
-		}
-
-		String startTimestamp = longrunTransVO.getStartDate() + " "
-
-				+ longrunTransVO.getStartHrs() + ":"
-
-				+ longrunTransVO.getStartMns() + ":"
-
-				+ longrunTransVO.getStartSecs();
-
-		String endTimestamp = longrunTransVO.getEndDate() + " "
-
-				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
-
-				+ ":" + longrunTransVO.getEndSecs();
-
-		longrunTransVO.setStartTimestamp(startTimestamp);
-
-		longrunTransVO.setEndTimestamp(endTimestamp);
 
 		
 
-		String report = "";
+	}
 
-		if (longrunTransVO.getModule().equals("")) {
+	
 
-			report = "Report1";
+	/**
 
-		} else {
+	 * @param model
 
-			report = "Report2";
+	 * @return
 
-		}
+	 */
 
-		LongRunTransactionDTO longRunTransDTO = RTETranslator
+	@RequestMapping(value="/AddNewRbrcRow", method =  {RequestMethod.POST , RequestMethod.GET})
 
-				.toLongRunTransDTO(longrunTransVO);
+	public ModelAndView loadAddNewRbrcRowScreen(Model model, HttpServletRequest request) {	
 
-		try {
+		log.warn("Entered RbrcController - loadAddNewRbrcRowScreen()");
 
-			Map<String, Object> longrunTransMap = facade
+		try{
 
-					.getLongRunTransLookUpList(longRunTransDTO);
-
-			List<LongRunTransReport4VO> longrunTransList = (List<LongRunTransReport4VO>) longrunTransMap
-
-					.get("longRunTransList");
-
-			
-
-			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-			lookUpTableListVO.setLongRunTransactionVOList4(longrunTransList);
-
-			log.warn("-------------------------------------- lookUp - longrunTransList size: "
-
-					+ longrunTransList.size());
-
-
-
-			facade.getApplicationState().setLongRunTransList4(longrunTransList);
-
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP4, "lookUpTableListVO",
-
-					lookUpTableListVO);
-
-			mav.addObject("longRunTransMessage",
-
-					longrunTransMap.get("longRunTransMessage"));
-
-			mav.addObject("longrunTransList", longrunTransList);
-
-			String securityLevel = "";
+			String securityLevel ="";
 
 			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
 
-
+			ModelAndView mav = new ModelAndView(RBRC_ADD, "rbrcVO",  new RbrcVO());
 
 			mav.addObject("securityLevel", securityLevel);
 
-			mav.addObject("reportNumber", report);
-
-			log.warn("-------------------------------------- lookUp - app state size: "
-
-					+ facade.getApplicationState().getLongRunTransList().size());
-
-			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
+			log.warn("Exit from RbrcController - loadAddNewRbrcRowScreen()");
 
 			return mav;
 
-		} catch (ApplicationException e) {
+		} catch (Exception e){
 
-			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
+			log.error("Exception occured in RbrcController - loadAddNewRbrcRowScreen() method:"+e.getMessage());
 
-					+ e.getErrorMessage());
+			
 
-			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
+			String errorMsg ="Error encountered when loading AddNewRbrc. "+
 
-					+ "(LongRunTransController) "
+					RteIntranetUtils.getTrimmedString(e.getMessage());
 
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
 
-			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
 
 			return errormav;
 
@@ -808,267 +322,271 @@ public class LongRunTransController {
 
 	
 
-	@RequestMapping(value = "/longRunTransExport", method = RequestMethod.POST)
+	/**
 
-	public ModelAndView longRunTransExport(HttpServletResponse response) {
+	 * @param rbrcVO
 
-		List<LongRunTransactionVO> longrunTransList = new LinkedList<LongRunTransactionVO>();
+	 * @return
 
-		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+	 */
 
-		String adasvctMsg = "";
+	@SuppressWarnings("unchecked")
 
-		try {
+	@RequestMapping(value="/AddRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
 
-			longrunTransList = facade.getApplicationState()
+	public ModelAndView addNewRbrc(final HttpServletRequest request, @ModelAttribute("addRbrcForm")RbrcVO rbrcVO){
 
-					.getLongRunTransList();
+		log.warn("Entered RbrcController - addNewRbrc()");
 
+		String securityLevel ="";
 
+		Map rbrcResultMap = new HashMap();
 
-			if (longrunTransList != null && longrunTransList.size() != 0) {
+		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
 
-				// Key map to create header
+		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
 
-				// String report = longrunTransList.get(0).getReportNumber();
+		LookUpTableListVO lookUpListVO = new LookUpTableListVO();
 
-				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+		try{
 
-				keyMap.put("convrsnCDResult", "CONVERSATION CODE");
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
 
-				keyMap.put("vanIDCDResult", "VAN ID");
+			Date todaysDate = new Date(System.currentTimeMillis());
 
-				keyMap.put("typCDResult", "TYPE CODE");
+			String postedDate = todaysDate.toString();
 
-				/*
+			
 
-				 * if(report.equals("Report2")){ keyMap.put("loadNameResult",
+			rbrcVO.setDbPostedDate(postedDate);
 
-				 * "SBMLETK_LOAD_NM"); }
+			rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
 
-				 */
+			RbrcDTO rbrcDTO = RTETranslator.toRbrcDTO(rbrcVO);
 
-				keyMap.put("resultSecondsResult", "TIME IN SECONDS");
+			rbrcResultMap = facade.addNewRbrc(rbrcDTO);
 
+			
 
+			if(rbrcResultMap.get("rbrcList")!=null){
 
-				RteIntranetUtils.exportToExcel(response, longrunTransList,
+				rbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcList");
 
-						keyMap);
-
-				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
-
-			} else {
-
-				adasvctMsg = ApplicationConstants.NO_DATA;
+				rbrcVoList = RTETranslator.toRbrcVOList(rbrcDtoList);
 
 			}
 
-			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+			lookUpListVO.setRbrcVOList(rbrcVoList);
 
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+			facade.getApplicationState().setRbrcList(rbrcVoList);
 
-					lookUpTableListVO);
+			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);	
 
-			mav.addObject("longRunTransMessage", adasvctMsg);
+			mav.addObject("rbrcMessage", rbrcResultMap.get("rbrcMessage"));
 
-			return mav;
+			mav.addObject("securityLevel", securityLevel);
 
-		} catch (ApplicationException e) {
+			log.warn("addNewRbrc - rbrcMessage: "+ rbrcResultMap.get("rbrcMessage"));
 
-			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+			log.warn("Exit from RbrcController - addNewRbrc()");
 
-					+ e.getErrorMessage());
+			return mav;	
 
-			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+		}catch (ApplicationException e){
 
-					+ "(LongRunTransController) "
+			log.error("Exception occured in RbrcController - addNewRbrc() method:"+e.getErrorMessage());
 
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+			
 
-			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+			String errorMsg ="Error encountered when adding a row to the database (AddRBRC). "+
 
-			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
 
-			return mav;
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
+
+			return errormav;
 
 		}
 
+		
+
 	}
 
+	
+
+	@RequestMapping(value="/rbrcHelp")
+
+	public String loadRbrcHelp() {   
+
+		return RBRC_HELP;
+
+	}
+
+	
+
+	@RequestMapping(value="/stcList")
+
+	public String loadStcList() {	   
+
+		return STC_LIST;
+
+	}
+
+	
+
+	
+
+	/**
+
+	 * @param rbrcVO
+
+	 * @param takeAction
+
+	 * @return
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value="/deleteRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
+
+	public ModelAndView deleteRbrc(final HttpServletRequest request, @ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
+
+		log.warn("Entered RbrcController - deleteRbrc()");
+
+		ModelAndView mav ;
+
+		String rbrcMsg = "";
+
+		String securityLevel ="";
+
+		boolean isRbrcDeleted = true;
+
+		Map rbrcResultMap = new HashMap();
+
+		RbrcDTO rbrcDTO = new RbrcDTO();
+
+		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
+
+		
+
+		try{
+
+			 rbrcList = lookUpListVO.getRbrcVOList();
+
+			int i;
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			if ((rbrcList != null) && (takeAction != null)) {
+
+				for(RbrcVO rbrcVO : rbrcList){
+
+					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
+
+						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+
+					}
+
+				}
+
+			
+
+				for (int j = takeAction.length - 1; j >= 0; j--) {
+
+					i = Integer.parseInt(takeAction[j]);
 
 
-	@RequestMapping(value = "/longRunTransExport2", method = RequestMethod.POST)
 
-	public ModelAndView longRunTransReport2Export(HttpServletResponse response) {
+					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
 
-		List<LongRunTransactionVO> longrunTransList = new LinkedList<LongRunTransactionVO>();
+					if(existingRbrc!=null){
 
-		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+					if (existingRbrc.getDbUpdatedInd() != ApplicationConstants.COPY) {
 
-		String adasvctMsg = "";
+						
 
-		try {
+						rbrcDTO = RTETranslator.toRbrcDTO(existingRbrc);
 
-			longrunTransList = facade.getApplicationState()
+						
 
-					.getLongRunTransList();
+						rbrcResultMap = facade.deleteRbrc(rbrcDTO);
 
+						
 
+						rbrcMsg = (String) rbrcResultMap.get("rbrcMessage");
 
-			if (longrunTransList != null && longrunTransList.size() != 0) {
+						isRbrcDeleted = (Boolean) rbrcResultMap.get("isRbrcDeleted");
 
-				// Key map to create header
+						
 
-				// String report = longrunTransList.get(0).getReportNumber();
+						if(isRbrcDeleted){
 
-				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+							rbrcList.remove(i);
 
-				keyMap.put("convrsnCDResult", "CONVERSATION CODE");
+						}else{
 
-				keyMap.put("vanIDCDResult", "VAN ID");
+							j = 0;
 
-				keyMap.put("typCDResult", "TYPE CODE");
+						}
 
-				keyMap.put("loadNameResult", "MODULE NAME");
+					}else{
 
-				keyMap.put("resultSecondsResult", "TIME IN SECONDS");
+						rbrcList.remove(i);
 
+					}	
 
-
-				RteIntranetUtils.exportToExcel(response, longrunTransList,
-
-						keyMap);
-
-				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
-
-			} else {
-
-				adasvctMsg = ApplicationConstants.NO_DATA;
+					}
 
 			}
 
-			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+				if(isRbrcDeleted)
 
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
-
-					lookUpTableListVO);
-
-			mav.addObject("longRunTransMessage", adasvctMsg);
-
-			return mav;
-
-		} catch (ApplicationException e) {
-
-			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
-
-					+ "(LongRunTransController) "
-
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
-
-			return mav;
-
-		}
-
-	}
-
-	@RequestMapping(value = "/longRunTransExport3", method = RequestMethod.POST)
-
-	public ModelAndView longRunTransReport3Export(HttpServletResponse response) {
-
-		List<LongRunTransReport3VO> longrunTransList = new LinkedList<LongRunTransReport3VO>();
-
-		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
-
-		String adasvctMsg = "";
-
-		try {
-
-			longrunTransList = facade.getApplicationState()
-
-					.getLongRunTransList3();
-
-
-
-			if (longrunTransList != null && longrunTransList.size() != 0) {
-
-				// Key map to create header
-
-				// String report = longrunTransList.get(0).getReportNumber();
-
-				Map<String, String> keyMap = new LinkedHashMap<String, String>();
-
-				keyMap.put("startDate", "DATE");
-
-				keyMap.put("startTime", "START TIME");
-
-				keyMap.put("endTime", "END TIME");
-
-				keyMap.put("zeroTimeTaken", "0 Second");
-
-				keyMap.put("oneTimeTaken", "1 Second");
-
-				keyMap.put("twoTimeTaken", "2 Seconds");
-
-				keyMap.put("threeTimeTaken", "3 Seconds");
-
-				keyMap.put("fourTimeTaken", "4 Seconds");
-
-				keyMap.put("fiveTimeTaken", "5 Seconds");
-
-				keyMap.put("sixTimeTaken", "6 Seconds");
-
-				keyMap.put("sevenTimeTaken", "7 Seconds and above");
+					rbrcMsg = "Rows selected were Deleted in the database/list";
 
 				
 
-				RteIntranetUtils.exportToExcel(response, longrunTransList,
+		}else
 
-						keyMap);
+			rbrcMsg = "Take action was not selected for any of the displayed rows";
 
-				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+			
 
-			} else {
+			facade.getApplicationState().setRbrcList(rbrcList);
 
-				adasvctMsg = ApplicationConstants.NO_DATA;
+			lookUpListVO.setRbrcVOList(rbrcList);
 
-			}
+			
 
-			lookUpTableListVO.setLongRunTransactionVOList3(longrunTransList);
+			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
 
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+		    mav.addObject("rbrcMessage",rbrcMsg);
 
-					lookUpTableListVO);
+		    mav.addObject("securityLevel", securityLevel);
 
-			mav.addObject("longRunTransMessage", adasvctMsg);
+		    log.warn("deleteRbrc - rbrcMessage: "+ rbrcMsg);
 
-			return mav;
-
-		} catch (ApplicationException e) {
-
-			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
-
-					+ e.getErrorMessage());
-
-			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
-
-					+ "(LongRunTransController) "
-
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
-
-			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
-
-			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+		    log.warn("Exit from RbrcController - deleteRbrc()");
 
 			return mav;
+
+		}catch (ApplicationException e){
+
+			log.error("Exception occured in RbrcController - deleteRbrc() method:"+e.getErrorMessage());
+
+			
+
+			String errorMsg ="Error encountered when extracting data from the database (ProcessRBRC). "+
+
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
+
+			return errormav;
 
 		}
 
@@ -1076,91 +594,467 @@ public class LongRunTransController {
 
 	
 
-	@RequestMapping(value = "/longRunTransExport4", method = RequestMethod.POST)
+	/**
 
-	public ModelAndView longRunTransReport4Export(HttpServletResponse response) {
+	 * @param rbrcVO
 
-		List<LongRunTransReport4VO> longrunTransList = new LinkedList<LongRunTransReport4VO>();
+	 * @param takeAction
 
-		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+	 * @return
 
-		String adasvctMsg = "";
+	 */
 
-		try {
+	@RequestMapping(value="/copyRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
 
-			longrunTransList = facade.getApplicationState()
+	public ModelAndView copyRbrc(final HttpServletRequest request,@ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
 
-					.getLongRunTransList4();
+		log.warn("Entered RbrcController - copyRbrc()");
+
+		ModelAndView mav ;
+
+		String rbrcMsg = "";
+
+		String securityLevel ="";
+
+		int i;
+
+		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
+
+		try{
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			rbrcList = lookUpListVO.getRbrcVOList();
+
+			Date todaysDate = new Date(System.currentTimeMillis());
+
+			String postedDate = todaysDate.toString(); //Initialize Posted Date to today's date
+
+			if ((rbrcList != null) && (takeAction != null)) {
+
+				for(RbrcVO rbrcVO : rbrcList){
+
+					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
+
+						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+
+					}
+
+				}
+
+				for (int j = 0; j < takeAction.length; j++) {
+
+					
+
+					i = Integer.parseInt(takeAction[j]);
+
+					RbrcVO existingRbrc = (RbrcVO) rbrcList.get(i);
+
+					
+
+					RbrcVO copyRbrc = new RbrcVO(existingRbrc.getDbSiteCd(), existingRbrc.getDbRiderCd(), 
+
+							existingRbrc.getDbSvcTypeCd(), postedDate,
+
+							existingRbrc.getDbDescTxt(),existingRbrc.getDbIONtwkCd(), existingRbrc.getDbTOSCd(), 
+
+							existingRbrc.getDbHMOSrcBnInd(), existingRbrc.getTextSendInd(),
+
+							existingRbrc.getPrevCareInd(),existingRbrc.getGenderCd(), ApplicationConstants.COPY);
+
+					rbrcList.add(copyRbrc);
+
+				}
+
+				rbrcMsg = "Copied rows were placed at the bottom of the list and highlighted.";
+
+			}else
+
+				rbrcMsg = "Take action was not selected for any of the displayed rows";
+
+			
+
+			facade.getApplicationState().setRbrcList(rbrcList);
+
+			lookUpListVO.setRbrcVOList(rbrcList);
+
+			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
 
 
 
-			if (longrunTransList != null && longrunTransList.size() != 0) {
+		    mav.addObject("rbrcMessage",rbrcMsg);
 
-				// Key map to create header
+		    mav.addObject("securityLevel", securityLevel);
 
-				// String report = longrunTransList.get(0).getReportNumber();
+		    log.warn("copyRbrc - rbrcMessage: "+ rbrcMsg);
 
-				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+		    log.warn("Exit from RbrcController - copyRbrc()");
 
-				keyMap.put("seconds", "Seconds");
+			return mav;		
 
-				keyMap.put("dmCount", "DM PROCESS");
+			
 
-				keyMap.put("tradCount", "TRADITIONAL");
+		}catch (Exception e){
 
-				keyMap.put("dentalCount", "DENTAL");
+			log.error("Exception occured in RbrcController - copyRbrc() method:"+e.getMessage());
 
-				keyMap.put("hmoCount", "HMO");
+			
 
-				keyMap.put("outBoundCount", "OUTBOUND");
+			String errorMsg ="Error encountered when extracting data from the database (ProcessRbrc). ";
 
-				keyMap.put("providerCount", "PROVIDER");
+			errorMsg.concat(e.toString());
 
-				keyMap.put("hrpCount", "HRP");
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
 
-				keyMap.put("asjCount", "ASH/SRC");
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
+
+			return errormav;
+
+		}
 
 				
 
-				RteIntranetUtils.exportToExcel(response, longrunTransList,
+	}
 
-						keyMap);
+	
 
-				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+	/**
+
+	 * @param request
+
+	 * @param rbrcVO
+
+	 * @param takeAction
+
+	 * @return
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value="/addUpdateRbrc", method =  {RequestMethod.POST , RequestMethod.GET})
+
+	public ModelAndView addUpdateRbrc(final HttpServletRequest request, @ModelAttribute("rbrcDisplayForm")LookUpTableListVO lookUpListVO, @RequestParam(required = false) String[] takeAction){
+
+		log.warn("Entered RbrcController - addUpdateRbrc()");
+
+		ModelAndView mav ;
+
+		String rbrcMsg = "";
+
+		List<RbrcVO> updatedRbrcList = new LinkedList<RbrcVO>();
+
+
+
+	
+
+		List<RbrcDTO> updatedRbrcDtoList = new LinkedList<RbrcDTO>();
+
+		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
+
+		List<RbrcVO> modifiedRbrcVoList = new LinkedList<RbrcVO>();
+
+		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
+
+		RbrcDTO editedRbrcDTO = new RbrcDTO();
+
+		Map rbrcResultMap = new HashMap();
+
+		boolean isRbrcAddOrUpdated = false;
+
+		String securityLevel ="";
+
+		int i;
+
+		try{
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			rbrcVoList = facade.getApplicationState().getRbrcList();
+
+			modifiedRbrcVoList = lookUpListVO.getRbrcVOList();
+
+			
+
+			Date todaysDate = new Date(System.currentTimeMillis());
+
+			String postedDate = todaysDate.toString();
+
+			if (takeAction != null && takeAction.length != 0) {
+
+				if(rbrcVoList != null && rbrcVoList.size() != 0 
+
+						&& modifiedRbrcVoList != null && modifiedRbrcVoList.size() != 0){
+
+				for(RbrcVO rbrcVO : rbrcVoList){
+
+					if(rbrcVO.getDbUpdatedInd()==ApplicationConstants.UPDATE_IND_Y){
+
+						rbrcVO.setDbUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+
+					}
+
+				}
+
+				rbrcDtoList = RTETranslator.toRbrcDTOList(rbrcVoList);
+
+			
+
+				for (int j = 0; j < takeAction.length; j++) {
+
+					char updatedInd = ApplicationConstants.UPDATE_IND_Y;
+
+					
+
+					i = Integer.parseInt(takeAction[j]);
+
+					RbrcVO seletedRbrc = (RbrcVO) rbrcVoList.get(i);
+
+					RbrcVO editedRbrc = (RbrcVO) modifiedRbrcVoList.get(i);
+
+					log.warn("addUpdateRbrc - user selected: "+ i);
+
+					
+
+										
+
+					
+
+					RbrcVO editedRbrcVO = new RbrcVO(editedRbrc.getDbSiteCd(), editedRbrc.getDbRiderCd(), 
+
+							editedRbrc.getDbSvcTypeCd(), postedDate,
+
+							editedRbrc.getDbDescTxt(),editedRbrc.getDbIONtwkCd(), editedRbrc.getDbTOSCd(), 
+
+							editedRbrc.getDbHMOSrcBnInd(),editedRbrc.getTextSendInd(),
+
+							editedRbrc.getPrevCareInd() ,editedRbrc.getGenderCd(), updatedInd);
+
+					if(editedRbrcVO!=null){
+
+					editedRbrcDTO = RTETranslator.toRbrcDTO(editedRbrcVO);
+
+					}
+
+					rbrcResultMap = facade.addUpdateRbrc(editedRbrcDTO, rbrcDtoList, i, seletedRbrc.getDbUpdatedInd());
+
+					updatedRbrcDtoList = (List<RbrcDTO>) rbrcResultMap.get("rbrcDtoList");
+
+					if(updatedRbrcDtoList!=null){
+
+					updatedRbrcList = RTETranslator.toRbrcVOList(updatedRbrcDtoList);
+
+					}
+
+					isRbrcAddOrUpdated = (Boolean) rbrcResultMap.get("isrbrcAddorUpdated");
+
+					rbrcMsg = (String) rbrcResultMap.get("rbrcMessage") ;
+
+					if(!isRbrcAddOrUpdated){
+
+						j = takeAction.length;
+
+					}
+
+				}
+
+				
+
+				if(isRbrcAddOrUpdated){
+
+				rbrcMsg = "Rows added were placed at the bottom of the list. All rows that changed the database are highlighted.";
+
+				String xSiteCd, ySiteCd, xRiderCd, yRiderCd, xSTC, ySTC;
+
+				for (int x = updatedRbrcList.size() - 1 ; x > 0;  x--) {
+
+					RbrcVO xRBRC = (RbrcVO) updatedRbrcList.get(x);
+
+					xSiteCd= xRBRC.getDbSiteCd();
+
+					xRiderCd= xRBRC.getDbRiderCd();
+
+					xSTC = xRBRC.getDbSvcTypeCd();
+
+					if (xRBRC.getDbUpdatedInd() != ApplicationConstants.COPY) {
+
+						for (int y = x - 1; y > -1; y--) {
+
+							RbrcVO yRBRC = (RbrcVO) updatedRbrcList.get(y);
+
+							ySiteCd= yRBRC.getDbSiteCd();
+
+							yRiderCd= yRBRC.getDbRiderCd();
+
+							ySTC = yRBRC.getDbSvcTypeCd();
+
+							if (xSiteCd.equals(ySiteCd) && xRiderCd.equals(yRiderCd) && xSTC.equals(ySTC)) {
+
+								updatedRbrcList.remove(y); 
+
+								x--;
+
+							}
+
+						}
+
+					}
+
+				}
+
+				}
+
+				lookUpListVO.setRbrcVOList(updatedRbrcList);
+
+				facade.getApplicationState().setRbrcList(updatedRbrcList);
 
 			} else {
 
-				adasvctMsg = ApplicationConstants.NO_DATA;
+				throw new ApplicationException(ApplicationConstants.SESSION_EXPIRED);
 
 			}
 
-			lookUpTableListVO.setLongRunTransactionVOList4(longrunTransList);
+		}else{
 
-			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+			rbrcMsg = "Take action was not selected for any of the displayed rows";
 
-					lookUpTableListVO);
+			lookUpListVO.setRbrcVOList(rbrcVoList);	
 
-			mav.addObject("longRunTransMessage", adasvctMsg);
+			facade.getApplicationState().setRbrcList(rbrcVoList);
+
+		}
+
+			mav = new ModelAndView(RBRC_LOOKUP, "lookUpListVO", lookUpListVO);
+
+		    mav.addObject("rbrcMessage",rbrcMsg);
+
+		    mav.addObject("securityLevel", securityLevel);
+
+		    log.warn("addUpdateRbrc - rbrcMessage: "+ rbrcMsg);
+
+		    log.warn("Exit from RbrcController - addUpdateRbrc()");
 
 			return mav;
 
-		} catch (ApplicationException e) {
+		}catch (ApplicationException e){
 
-			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+			log.error("Exception occured in RbrcController - deleteRbrc() method:"+e.getErrorMessage());
+
+			
+
+			String errorMsg ="Error encountered when extracting data from the database (ProcessRBRC). "+
+
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);			
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);			
+
+			return errormav;
+
+		}
+
+		
+
+	}
+
+	
+
+	/**
+
+	 * Method to export Rbrc look up table to excel work book
+
+	 * 
+
+	 * @param lookUpTableListVO
+
+	 *            list of rbrc object.
+
+	 * @param response
+
+	 *            response object to return
+
+	 * @return exported file to view.
+
+	 */
+
+	@RequestMapping(value = "/rbrcExport", method = RequestMethod.POST)
+
+	public ModelAndView rbrcExport(HttpServletResponse response){
+
+		List<RbrcVO> rbrcList = new LinkedList<RbrcVO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String rbrcMsg="";
+
+		try{
+
+			rbrcList = facade.getApplicationState().getRbrcList();
+
+			if(rbrcList != null && rbrcList.size() != 0){
+
+			// Key map to create header
+
+			Map<String,String> keyMap = new LinkedHashMap<String,String>();
+
+			keyMap.put("dbSiteCd", "Site Code");
+
+			keyMap.put("dbRiderCd", "Rider Code");
+
+			keyMap.put("dbSvcTypeCd", "Svc Type");
+
+			keyMap.put("dbDescTxt", "Description");
+
+			keyMap.put("dbIONtwkCd", "IO Network Code");
+
+			keyMap.put("dbTOSCd", "TOS Code");
+
+			keyMap.put("dbHMOSrcBnInd", "True Ben Code Ind");
+
+			keyMap.put("textSendInd", "Text Send Ind");
+
+			keyMap.put("prevCareInd", "Prev Care Ind");
+
+			keyMap.put("genderCd", "Gender Code");
+
+			keyMap.put("dbPostedDate", "Posted Date");
+
+			
+
+			RteIntranetUtils.exportToExcel(response, rbrcList, keyMap);
+
+			rbrcMsg = "LookUp table exported successfully.";
+
+			} else {
+
+				rbrcMsg = "No data found.";
+
+			}
+
+			lookUpTableListVO.setRbrcVOList(rbrcList);
+
+	        mav = new ModelAndView(RBRC_LOOKUP,"lookUpTableListVO", lookUpTableListVO);
+
+		    mav.addObject("rbrcMessage",rbrcMsg);
+
+			return mav;
+
+		}catch (ApplicationException e) {
+
+			log.error("Exception occured in RbrcController - rbrcExport() method:"
 
 					+ e.getErrorMessage());
 
-			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+			String errorMsg = "Error encountered while export to excel. "+
 
-					+ "(LongRunTransController) "
+					RteIntranetUtils.getTrimmedString(e.getErrorMessage());
 
-					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
 
-			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
 
-			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
-
-			return mav;
+			return errormav;
 
 		}
 
