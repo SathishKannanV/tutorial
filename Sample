@@ -1,34 +1,95 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<h1>Exception Page</h1>
-
-
-
-<h4>Exception: ${exception}</h4>
-
-
-
-<c:set var="rootCause" value="${exception}"/>
-
-<c:if test="${exception.cause != null}">
-
-	<c:set var="rootCause" value="${exception.cause}"/>
-
-</c:if>
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 
 
 
-Root Cause:
-
-<c:out value="${rootCause.class.name}: ${rootCause.message}"/><br/>
-
-<c:forEach items="${rootCause.stackTrace}" var="st">
-
-	&nbsp;&nbsp;<c:out value="${st}"/><br/>
-
-</c:forEach>
+<link rel="stylesheet" type="text/css" href="${context}/themes/blue/rteintranet.css">
 
 
 
+
+
+
+
+
+
+<html>
+
+	<head>
+
+		<%-- <title>
+
+			<c:choose>
+
+				<c:when test="${title ne null}"><c:out value="${title}"/></c:when>
+
+				<c:otherwise>
+
+					<c:set var="titleCode"><tiles:getAsString name="title"/></c:set>
+
+					<fmt:message key="${titleCode}"/>
+
+				</c:otherwise>
+
+			</c:choose>
+
+		</title> --%>
+
+		 <tiles:importAttribute name="title" />
+
+		<title>
+
+			<spring:message code="${title}"></spring:message>
+
+		</title>
+
+		
+
+	</head>
+
+	<body>
+
+	<div id="container">
+
+		<div id="header">
+
+			<tiles:insertAttribute name="header" />
+
+		</div>
+
+		<div id="bodyContent">
+
+			<div id="menu">
+
+				<tiles:insertAttribute name="menu" />
+
+			</div>
+
+			<div id="content">
+
+				<tiles:insertAttribute name="body" />
+
+			</div>
+
+		</div>
+
+		<div id="footer">
+
+			<tiles:insertAttribute name="footer" />
+
+		</div>
+
+	</div>
+
+	</body>
+
+</html>
