@@ -4,133 +4,93 @@
 
  */
 
-package com.aetna.prvrte.rteintranet.util;
+package com.aetna.prvrte.rteintranet.vo;
 
 
 
-import java.io.IOException;
-
-import java.io.PrintWriter;
-
-import java.util.List;
-
-import java.util.Map;
-
-
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.http.HttpSession;
-
-
-
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.codehaus.jackson.map.ObjectMapper;
-
-
-
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
-
-import com.aetna.prvrte.rteintranet.vo.UserVO;
-
-
+import java.io.Serializable;
 
 
 
 /**
 
- * @author N657186
+ * 
 
- *
+ * @author N726899
+
+ * Cognizant_Offshore
 
  */
 
-public class RteIntranetUtils {
+public class AdasvctVO implements Serializable {
 
 	/**
 
-	* This method used to trim the string argument. If the string is null then
-
-	* it will return blank value.
-
-	* @param str
-
-	* @return String
-
-	* 
-
-	*/
-
-	private static final Log log = LogFactory
-
-			.getLog(RteIntranetUtils.class);
-
-	public static String getTrimmedString(String str) {
-
-		if (str != null) {
-
-			return str.trim();
-
-		} else {
-
-			return "";
-
-		}
-
-	}
-
-	/**
-
-	 * Method to return todays Date in the format of yyyy-MM-dd
-
-	 * 
-
-	 * @return string of current date.
+	 * Constant serialized ID used for compatibility. 
 
 	 */
 
-	public static String getTodaysDate(){
-
-		long systemTime = System.currentTimeMillis();
-
-		java.sql.Date date = new java.sql.Date(systemTime);
-
-		String todaysDate = String.valueOf(date);
-
-		return RteIntranetUtils.getTrimmedString(todaysDate);
-
-	}
+	private static final long serialVersionUID = 1L;
 
 	/**
 
-	 * Method to return todays Date in the format of yyyy-MM-dd HH:mm:ss
-
-	 * 
-
-	 * @return string of current date and time.
+	 * String of adaCd
 
 	 */
 
-	public static String getTodaysDateTime(){
+	private String adaCd = "";
 
-		long systemTime = System.currentTimeMillis();
+	/**
 
-		java.sql.Timestamp dateTime = new java.sql.Timestamp(systemTime);
+	 * String of svcTypeCd
 
-		String todaysDateTime = String.valueOf(dateTime);
+	 */
 
-		return RteIntranetUtils.getTrimmedString(todaysDateTime);
+	private String svcTypeCd = "";
 
-		
+	/**
 
-		
+	 * String of effective date(yyyy-MM-dd)
+
+	 */
+
+	private String effDate = "";
+
+	/**
+
+	 * String of expiration date(yyyy-MM-dd)
+
+	 */
+
+	private String expDate = "";
+
+	/**
+
+	 * String of record posted date(yyyy-MM-dd)
+
+	 */
+
+	private String postedDate = "";
+
+	/**
+
+	 * char of index to update the record.
+
+	 */
+
+	private char updatedInd;
+
+
+
+	/**
+
+	 * Default Constructor.
+
+	 */
+
+	public AdasvctVO() {
+
+		super();
 
 	}
 
@@ -138,139 +98,53 @@ public class RteIntranetUtils {
 
 	/**
 
-	 * Method to export the look up table to excel.
+	 * Creates a new AdasvctVO
 
 	 * 
 
-	 * @param response
+	 * @param adaCd
 
-	 *            response object
+	 *            the value for {@link adaCd}
 
-	 * @param listToExport
+	 * @param svcTypeCd
 
-	 *            list of object to export the look up table.
+	 *            the value for {@link svcTypeCd}
 
-	 * @param keyMap
+	 * @param effDate
 
-	 *            keyMap to create header.
+	 *            the value for {@link effDate}
 
-	 * @throws IOException
+	 * @param expDate
 
-	 *             IOException if write to export fails.
+	 *            the value for {@link expDate}
 
-	 * @throws ApplicationException
+	 * @param postedDate
 
-	 *             ApplicationException if export fails.
+	 *            the value for {@link postedDate}
+
+	 * @param updatedInd
+
+	 *            the value for {@link updatedInd}
 
 	 */
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public AdasvctVO(String adaCd, String svcTypeCd, String effDate,
 
-	public static void exportToExcel(HttpServletResponse response, List listToExport, Map<String,String> keyMap) throws ApplicationException{
+			String expDate, String postedDate, char updatedInd) {
 
-		try{
+		super();
 
-			response.setContentType("application/csv");
+		this.adaCd = adaCd;
 
-			PrintWriter printWriter;
+		this.effDate = effDate;
 
-			printWriter = response.getWriter();
+		this.expDate = expDate;
 
-			response.reset();
+		this.postedDate = postedDate;
 
-			response.setHeader("Content-disposition", "attachment; filename=LookUpData.csv");
+		this.svcTypeCd = svcTypeCd;
 
-			response.setHeader("Cache-Control","private");
-
-		    response.setHeader("Pragma","private");
-
-			/*response.setHeader("Cache-Control", "no-cache");       
-
-			response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
-
-			response.setDateHeader("Expires", 0);*/ // Proxies.
-
-			StringBuilder includeHeader = new StringBuilder();
-
-			//excel header.
-
-			for(String key :keyMap.keySet()){
-
-				if(includeHeader != null && includeHeader.length() != 0) {
-
-					includeHeader.append(ApplicationConstants.COMMA);
-
-				}
-
-				includeHeader.append(RteIntranetUtils.getTrimmedString(keyMap.get(key)));
-
-			}
-
-			//<< Placeholder for Defining Columns and Rows >>
-
-			printWriter.println(includeHeader);
-
-			//append content value
-
-			for (int i = 0; i < listToExport.size(); i++) {
-
-				StringBuilder contentValue = new StringBuilder();
-
-				ObjectMapper mapper = new ObjectMapper();
-
-				Object tempObj = listToExport.get(i);
-
-				if(tempObj instanceof String){
-
-					if(contentValue != null && contentValue.length() != 0) {
-
-						contentValue.append(ApplicationConstants.COMMA);
-
-					}
-
-					contentValue.append(RteIntranetUtils.getTrimmedString(String.valueOf(listToExport.get(i))));
-
-				} else {
-
-					Map<String,Object> mapObject = mapper.convertValue(tempObj, Map.class);
-
-					for (String mapKey : keyMap.keySet()) {
-
-						if(contentValue != null && contentValue.length() != 0) {
-
-							contentValue.append(ApplicationConstants.COMMA);
-
-						}
-
-						String mapValue = String.valueOf(mapObject.get(mapKey));
-
-						mapValue = ApplicationConstants.DOUBLE_QUOTES + mapValue + ApplicationConstants.DOUBLE_QUOTES;
-
-						contentValue.append(RteIntranetUtils.getTrimmedString(mapValue));
-
-					}
-
-				}
-
-				
-
-				printWriter.println(contentValue);
-
-			}
-
-			printWriter.flush();
-
-			printWriter.close();
-
-		} catch (IOException ioe) {
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, ioe.getMessage(), ioe);
-
-		}catch (Exception e) {
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
-
-		}
+		this.updatedInd = updatedInd;
 
 	}
 
@@ -278,175 +152,169 @@ public class RteIntranetUtils {
 
 	/**
 
-	 * Method to current user id.
-
-	 * 
-
-	 * @param request
-
-	 * 		request Object.
-
-	 * @return loggedIn user id.
+	 * @return the adaCd
 
 	 */
 
-	public static String getUserId(HttpServletRequest request) throws ApplicationException{
+	public String getAdaCd() {
 
-		String userId = "";
-
-		try {
-
-			HttpSession session = request.getSession(true);
-
-			UserVO currentUser = (UserVO) session.getAttribute("user");
-
-			userId = RteIntranetUtils.getTrimmedString(currentUser.getAetnaId());
-
-			return userId;
-
-		} catch (Exception e) {
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
-
-		}
+		return adaCd;
 
 	}
+
+
 
 	/**
 
-	 * Method to current user security level.
-
-	 * 
-
-	 * @param request
-
-	 * 		request Object.
-
-	 * @return loggedIn user security level.
+	 * @param adaCd the adaCd to set
 
 	 */
 
-	public static String getUserSecurityLevel(HttpServletRequest request) throws ApplicationException{
+	public void setAdaCd(String adaCd) {
 
-		String securityLevel = "";
-
-		try {
-
-			HttpSession session = request.getSession(true);
-
-			//System.out.println("getUserSecurityLevel session : " + session  + " is session null " + (session == null));
-
-			if(session != null){
-
-				securityLevel = (String) session.getAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE);
-
-				//System.out.println(securityLevel);
-
-				//securityLevel = (securityLevel == null) ? securityLevel = "" : securityLevel;
-
-			}
-
-			return securityLevel;
-
-		} catch (Exception e) {
-
-			throw new ApplicationException(ApplicationConstants.ERR_GENERIC, e.getMessage(), e);
-
-		}
-
-		
+		this.adaCd = adaCd;
 
 	}
 
-	
 
-	public static String zeroFiller(int length, String value){
-
-		if(value==null)
-
-		{
-
-			value="";
-
-		}
-
-		String paddedValue =StringUtils.leftPad(value, length, "0");
-
-		return paddedValue;
-
-	}
-
-	
 
 	/**
 
-	 * @param length
-
-	 * @param value
-
-	 * @return
+	 * @return the svcTypeCd
 
 	 */
 
-	public static String spaceFiller(int length, String value){
+	public String getSvcTypeCd() {
 
-		
-
-		String paddedValue =StringUtils.rightPad(value, length, " ");
-
-		return paddedValue;
+		return svcTypeCd;
 
 	}
 
-public static String ZeroFiller(int length, String value){
 
-		
-
-		String paddedValue =StringUtils.leftPad(value, length, "0");
-
-		return paddedValue;
-
-	}
-
-	public static String spaceCalculator(int length, String value){
-
-		int lengString = value.length();
-
-		int calcSpace = length - lengString;
-
-		String paddedValue = "";
-
-		paddedValue = spaceFiller(calcSpace, value);
-
-		return paddedValue;
-
-	}
 
 	/**
 
-	 * @param length
-
-	 * @param value
-
-	 * @return
+	 * @param svcTypeCd the svcTypeCd to set
 
 	 */
 
-	public static String spaceFiller(int length){
+	public void setSvcTypeCd(String svcTypeCd) {
 
-		StringBuilder paddedValue = new StringBuilder();
-
-		for(int i = 0; i< length; i++){
-
-			paddedValue.append(" ");
-
-		}
-
-		return paddedValue.toString();
+		this.svcTypeCd = svcTypeCd;
 
 	}
 
-	
+
+
+	/**
+
+	 * @return the effDate
+
+	 */
+
+	public String getEffDate() {
+
+		return effDate;
+
+	}
+
+
+
+	/**
+
+	 * @param effDate the effDate to set
+
+	 */
+
+	public void setEffDate(String effDate) {
+
+		this.effDate = effDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the expDate
+
+	 */
+
+	public String getExpDate() {
+
+		return expDate;
+
+	}
+
+
+
+	/**
+
+	 * @param expDate the expDate to set
+
+	 */
+
+	public void setExpDate(String expDate) {
+
+		this.expDate = expDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the postedDate
+
+	 */
+
+	public String getPostedDate() {
+
+		return postedDate;
+
+	}
+
+
+
+	/**
+
+	 * @param postedDate the postedDate to set
+
+	 */
+
+	public void setPostedDate(String postedDate) {
+
+		this.postedDate = postedDate;
+
+	}
+
+
+
+	/**
+
+	 * @return the updatedInd
+
+	 */
+
+	public char getUpdatedInd() {
+
+		return updatedInd;
+
+	}
+
+
+
+	/**
+
+	 * @param updatedInd the updatedInd to set
+
+	 */
+
+	public void setUpdatedInd(char updatedInd) {
+
+		this.updatedInd = updatedInd;
+
+	}
 
 }
 
