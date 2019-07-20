@@ -2,29 +2,11 @@ package com.aetna.prvrte.rteintranet.web.filter;
 
 
 
-import java.io.IOException;
+import java.util.ArrayList;
 
-import java.util.Enumeration;
+import java.util.List;
 
-import java.util.Map;
-
-
-
-import javax.servlet.Filter;
-
-import javax.servlet.FilterChain;
-
-import javax.servlet.FilterConfig;
-
-import javax.servlet.ServletException;
-
-import javax.servlet.ServletRequest;
-
-import javax.servlet.ServletResponse;
-
-import javax.servlet.http.HttpServletRequest;
-
-import javax.servlet.http.HttpSession;
+import java.util.StringTokenizer;
 
 
 
@@ -32,15 +14,13 @@ import org.apache.commons.logging.Log;
 
 import org.apache.commons.logging.LogFactory;
 
-import org.springframework.security.core.context.SecurityContext;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-
-import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.ldap.core.DirContextOperations;
 
 
 
-import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
+import com.aetna.framework.security.userdetails.AefwActiveDirectoryUserDetailsMapper;
+
+import com.aetna.framework.security.userdetails.AefwUserDetailsImpl;
 
 import com.aetna.prvrte.rteintranet.vo.UserVO;
 
@@ -50,137 +30,113 @@ import com.aetna.prvrte.rteintranet.vo.UserVO;
 
 /**
 
- * @author n657186
+ * Provides capabilities to map additional attributes from Active Directory through an extension point
 
- * Cognizant_Offshore
+ * available in AefwActiveDirectoryUserDetailsMapper - through performCustomMappings method
+
+ * 
+
+ * @author Cognizant
+
+ *
 
  */
 
-public class AuthenticationFilter implements Filter{
+public class CustomUserDetailsMapper extends AefwActiveDirectoryUserDetailsMapper {
 
-	protected FilterConfig filterConfig;
+	private static final Log log = LogFactory.getLog(CustomUserDetailsMapper.class);
 
-	private static final Log log = LogFactory.getLog(AuthenticationFilter.class);
+	
 
+	/**
 
+	 * Provides capabilities to map additional attributes from Active Directory
 
-	@Override
+	 * 
 
-	public void doFilter(ServletRequest req, ServletResponse res,
-
-			FilterChain chain) throws IOException, ServletException {
-
-		try{
-
-	    	
-
-		       log.warn("Inside AuthenticationFilter Start");
-
-		      
-
-		       HttpServletRequest request = (HttpServletRequest) req;
-
-		       
-
-		       /*Enumeration headerNames = request.getHeaderNames();
-
-			   	while (headerNames.hasMoreElements()) {
-
-			   		String key = (String) headerNames.nextElement();
-
-			   		String value = request.getHeader(key);
-
-			   		log.warn("header name - key : " + key +" ;; value : "+value);
-
-			   	}*/
-
-			  log.warn("path info ::::: "+request.getPathInfo()); 	
-
-				HttpSession session = request.getSession(true);
-
-				
-
-		      if(session != null){
-
-		    	   log.warn("SecurityContextHolder.getContext() ::::: "+SecurityContextHolder.getContext().toString());
-
-		    	   SecurityContext ss= SecurityContextHolder.getContext();
-
-		    	   
-
-		    	   if((ss!=null && ss.getAuthentication()!=null && (!ss.getAuthentication().getPrincipal().toString().equalsIgnoreCase("anonymous")))){
-
-		    		   
-
-		    		   UserVO siteMinderUser = (UserVO) ss.getAuthentication().getPrincipal();
-
-			    	   log.warn("siteMinderUser.getMemberOf()::::: "+ siteMinderUser.getMemberOf());
-
-		    		   if(siteMinderUser.getMemberOf()!=null){
-
-			    		   
-
-			    		   session.setAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE, "");		    	    	   
-
-		    	    	   
-
-		    	    	   if(siteMinderUser.getMemberOf().contains(ApplicationConstants.RTEWrite)){		    	    		   
-
-		    	    		   session.setAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE, "RW");
-
-			    	    	  
-
-		    	    	   }else if(siteMinderUser.getMemberOf().contains(ApplicationConstants.MDDRteDb2)){
-
-		    	    		   session.setAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE, "R");
-
-		    	    	   }
-
-		    		   }
-
-		    		   log.warn("user role ::::: "+session.getAttribute(ApplicationConstants.RTE_INTRANET_USER_ROLE));
-
-			    	   session.setAttribute("user", siteMinderUser);
-
-		    	   }
-
-		       }
-
-		           chain.doFilter(req, res);
-
-				 log.warn("Inside AuthenticationFilter End");
-
-		       	}
-
-		       	catch(Exception e){
-
-		       		log.error("Exception occured in AuthenticationFilter : "+e.getMessage());
-
-		       		log.warn("Exception in AuthenticationFilter:"+e.getMessage());
-
-		       	}
-
-	}
+	 */
 
 	@Override
 
-	public void init(FilterConfig config) throws ServletException {
+	public void performCustomMappings(DirContextOperations context, AefwUserDetailsImpl userDetails)
 
-		this.filterConfig = config;
+	{
+
+		/*log.warn("Inside CustomUserDetailsMapper");
+
+		log.warn("userDetails.getFirstName()>> "+userDetails.getFirstName());*/
 
 		
 
+		String[] memberOf = context.getStringAttributes("memberOf");
+
+		//log.warn("memberOf : "+ memberOf);
+
+		((UserVO)userDetails).setMemberOf(parseMemberOf(memberOf));
+
+		//log.warn("Exit CustomUserDetailsMapper");
+
+	
+
 	}
 
+	
+
+	
+
+	/**
+
+	 * Parse the list of group membership tokens and extract the group names (CN names)
+
+	 *  
+
+	 * @param groupList
+
+	 * @return list of group names
+
+	 */
+
+	private List<String> parseMemberOf(String[] groupList)
+
+	{
+
+		ArrayList<String> memberOf = new ArrayList<String>();
 
 
-	@Override
 
-	public void destroy() {
+		for (String group : groupList)
 
-		this.filterConfig = null;
+		{
+
+			StringTokenizer st = new StringTokenizer(group, "=,");
+
+			String key = "";
+
+			String val = "";
+
+			while(st.hasMoreTokens())
+
+			{
+
+				key = st.nextToken();
+
+				val = st.nextToken();
+
+				if(key.equalsIgnoreCase("cn")){
+
+					memberOf.add(val);
+
+					//log.warn("val: "+val);
+
+				}
+
+			}
+
+		}
 
 		
+
+		return memberOf;
 
 	}
 
