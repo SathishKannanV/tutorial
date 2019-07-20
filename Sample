@@ -1,71 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:libraries="http://www.ibm.com/websphere/appserver/schemas/5.0/libraries.xmi">
-  <libraries:Library xmi:id="Library_1289499148790" name="AEFW v3.0.1.RELEASE" description="AEFW v3.0.1.RELEASE" isolatedClassLoader="false">
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/aefw-core-3.0.1.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/aefw-security-3.0.1.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/asm-1.5.3.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.antlr-2.7.7.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.com.mchange.v2.c3p0-0.9.1.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.com.sun.syndication-1.0.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.javassist-3.9.0.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.javax.annotation-1.0.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.javax.persistence-1.0.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.javax.validation-1.0.0.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.net.sf.cglib-2.2.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.net.sf.ehcache-1.6.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.net.sf.ezmorph-1.0.5.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.net.sf.json-2.2.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.aopalliance-1.0.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.beanutils-1.8.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.codec-1.3.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.collections-3.2.1.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.digester-1.8.1.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.fileupload-1.2.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.httpclient-3.1.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.io-1.4.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.lang-2.4.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.logging-1.0.4.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.pool-1.4.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.commons.validator-1.1.4.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.apache.velocity-1.6.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.aspectj.weaver-1.6.8.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.dom4j-1.6.1.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.hibernate-3.3.2.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.hibernate.annotations-3.4.0.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.hibernate.annotations.common-3.3.0.ga.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.hibernate.ejb-3.4.0.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.hibernate.validator-4.0.0.GA.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.jaxen-1.1.1.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.jdom-1.1.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/com.springsource.org.joda.time-1.6.0.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/groovy-all-1.7.5.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/jackson-core-asl-1.5.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/jackson-mapper-asl-1.5.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/jackson-xc-1.5.2.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/logback-classic-0.9.22.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/logback-core-0.9.22.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.aop-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.asm-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.aspects-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.beans-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.context-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.context.support-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.core-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.expression-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.jdbc-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.jms-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.ldap-1.3.0.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.orm-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.oxm-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.security.acls-3.0.4.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.security.config-3.0.4.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.security.core-3.0.4.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.security.ldap-3.0.4.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/org.springframework.transaction-3.0.5.RELEASE.jar</classPath>
-    <classPath>${AEFW_SHARED_LIBS}/aefw/v3.0.1.RELEASE/shared-libs/slf4j-api-1.6.0.jar</classPath>
-  </libraries:Library>
-   <libraries:Library xmi:id="Library_1512111888909" name="aec" description="aec" isolatedClassLoader="true">
-    <classPath>${AEFW_SHARED_LIBS}/aec/4.2.1/shared-libs</classPath>
-  </libraries:Library> 
-
-</xmi:XMI>
+<appdeployment:Deployment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:appdeployment="http://www.ibm.com/websphere/appserver/schemas/5.0/appdeployment.xmi" xmi:id="Deployment_1243628519134">
+  <deployedObject xmi:type="appdeployment:ApplicationDeployment" xmi:id="ApplicationDeployment_1243628519134" startingWeight="10">
+    <modules xmi:type="appdeployment:WebModuleDeployment" xmi:id="WebModuleDeployment_1243637347726" startingWeight="10000" uri="RteIntranet-web.war"/>
+    <classloader xmi:id="Classloader_1243628519134" mode="PARENT_FIRST">
+      <libraries xmi:id="LibraryRef_1289499206765" libraryName="AEFW v3.0"/>
+      <libraries xmi:id="LibraryRef_1511962702677" libraryName="AEFW v3.0.1.RELEASE"/>
+      <libraries xmi:id="LibraryRef_1512115033251" libraryName="aec"/>
+    </classloader>
+  </deployedObject>
+</appdeployment:Deployment>
