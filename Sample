@@ -1,54 +1,48 @@
+/*
+
+ * Created Apr 2010
+
+ */
+
 package com.aetna.prvrte.rteintranet.web.controller;
 
 
 
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
 import org.springframework.stereotype.Controller;
-
-import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import org.springframework.web.servlet.ModelAndView;
 
 
+/**
 
-import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
+ * @author Kent Rancourt
 
-import com.aetna.prvrte.rteintranet.vo.UserVO;
-
-
+ */
 
 @Controller
 
-public class HomeController {
-
-	/*
-
-	 * Log factory initialization
-
-	 */
-
-	private static final Log log = LogFactory.getLog(HomeController.class);
+public class HttpErrorController {
 
 
 
-	@RequestMapping(value = "/home_unused", method = RequestMethod.GET)
+	@RequestMapping(value = "/errors/403")
 
-	public ModelAndView getHomePage(Model model) {	   
+	public String handle403() {
 
-		ModelAndView mav = new ModelAndView(".home", "userVO",  new UserVO());
-
-		return mav;
+		return ".unauthorized";
 
 	}
 
 	
+
+	@RequestMapping(value = "/errors/404")
+
+	public String handle404() {
+
+		return ".notFound";
+
+	}
 
 	
 
