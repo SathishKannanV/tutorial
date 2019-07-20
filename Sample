@@ -1,288 +1,58 @@
-/**
+# Compiler Options
 
- * 
+compiler.debug=on
+compiler.optimize=on
+compiler.deprecation=off
 
- */
+# Host Name
 
-package com.aetna.prvrte.rteintranet.vo;
+host.name=Windows Build on host ${env.COMPUTERNAME}
 
+# WAS Home
 
+#was.home=/opt/IBMWebAS7
+was.home=/opt/IBMWebAS855
 
-import java.io.Serializable;
+#  AEFW and Dependencies
 
-import java.util.Date;
+framework.version=v3.0.1.RELEASE
 
-import java.util.List;
+shared.lib.home.root=/var/webapps/common/lib/aeframework/aefw
 
+shared.lib.home=${shared.lib.home.root}/${framework.version}
 
+aec.lib.home=/var/webapps/common/lib/aeframework/aec/4.2.1/shared-libs
 
-import com.aetna.framework.security.userdetails.AefwUserDetailsImpl;
+# Project Source Code
 
+src.java.dir=src/main/java
+src.resources.dir=src/main/resources
 
+# Working Directory for Build
 
-/**
+build.dir=build/main
+build.classes.dir=${build.dir}/classes
+build.instrumented.dir=${build.dir}/instrumented
 
- * @author N657186
+# Working Directory for Test
 
- *
+test.java.dir=src/test/java
+test.resources.dir=src/test/resources
+test.build.dir=build/test
+test.build.classes.dir=${test.build.dir}/classes
 
- */
+# Destination for Documentation
 
-public class UserVO extends AefwUserDetailsImpl implements Serializable{
+docs.dir=docs
+docs.junit.dir=${docs.dir}/junit
+docs.coverage.dir=${docs.dir}/coverage
+docs.working.dir=report.work
+docs.javadoc.dir=${docs.dir}/javadoc
 
-	/**
+# Destination for Distribution
 
-	 * 
+dist.dir=dist
 
-	 */
+master.dist.dir=../RteIntranet-build/dist
 
-	private static final long serialVersionUID = -257413148564801650L;
-
-	/**
-
-	 * Internally generated user id. serial/PK from the DB IWS User Table
-
-	 */
-
-	private String aetnaId;
-
-	
-
-	/**
-
-	 * Last Login Date
-
-	 */
-
-	private Date lastLoginDt;
-
-	
-
-	/**
-
-	 * List of Network groups that the user is part of.
-
-	 * Additional attribute retrieved from Active Directory
-
-	 */
-
-	private List <String> memberOf;
-
-
-
-	private String securityLevel = "";
-
-	private String name = "";
-
-	
-
-	private String dateSecLevPosted = "";
-
-	
-
-	public UserVO() {
-
-		super();
-
-		setSecurityLevel("R");
-
-		setName("Unknown User");
-
-		setAetnaId("z000000");
-
-		setDateSecLevPosted("0001-01-01");
-
-	}
-
-	
-
-	/**
-
-	 * @return the aetnaId
-
-	 */
-
-	public String getAetnaId() {
-
-		return aetnaId;
-
-	}
-
-
-
-	/**
-
-	 * @param aetnaId the aetnaId to set
-
-	 */
-
-	public void setAetnaId(String aetnaId) {
-
-		this.aetnaId = aetnaId;
-
-	}
-
-
-
-	public Date getLastLoginDt() {
-
-		return lastLoginDt;
-
-	}
-
-
-
-	public void setLastLoginDt(Date lastLoginDt) {
-
-		this.lastLoginDt = lastLoginDt;
-
-	}
-
-
-
-	public List<String> getMemberOf() {
-
-		return memberOf;
-
-	}
-
-
-
-	public void setMemberOf(List<String> memberOf) {
-
-		this.memberOf = memberOf;
-
-	}
-
-
-
-	
-
-	/**
-
-	 * Returns true if the member is part of the group sent in the input parameter.
-
-	 * 
-
-	 * @param groupName
-
-	 * @return boolean
-
-	 */
-
-	public boolean isMemberOf(String groupName)
-
-	{
-
-		if(memberOf == null || memberOf.isEmpty())
-
-				return false;
-
-		
-
-		for(String group : memberOf){
-
-			if(group.equalsIgnoreCase(groupName)){
-
-				return true;
-
-			}
-
-		}
-
-	
-
-		return false;
-
-	}
-
-
-
-	/**
-
-	 * @return the securityLevel
-
-	 */
-
-	public String getSecurityLevel() {
-
-		return securityLevel;
-
-	}
-
-
-
-	/**
-
-	 * @param securityLevel the securityLevel to set
-
-	 */
-
-	public void setSecurityLevel(String securityLevel) {
-
-		this.securityLevel = securityLevel;
-
-	}
-
-
-
-	/**
-
-	 * @return the name
-
-	 */
-
-	public String getName() {
-
-		return name;
-
-	}
-
-
-
-	/**
-
-	 * @param name the name to set
-
-	 */
-
-	public void setName(String name) {
-
-		this.name = name;
-
-	}
-
-
-
-	/**
-
-	 * @return the dateSecLevPosted
-
-	 */
-
-	public String getDateSecLevPosted() {
-
-		return dateSecLevPosted;
-
-	}
-
-
-
-	/**
-
-	 * @param dateSecLevPosted the dateSecLevPosted to set
-
-	 */
-
-	public void setDateSecLevPosted(String dateSecLevPosted) {
-
-		this.dateSecLevPosted = dateSecLevPosted;
-
-	}
-
-
-
-	
-
-}
-
+ftp.jar.dir=/var/webapps/RteIntranet2/config/
