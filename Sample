@@ -1,188 +1,51 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
+<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
+<!--Chrome Upgrade-N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
 
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<html>
+<head>
+<meta name="GENERATOR" content="IBM WebSphere Studio">
+<title>RBRC Help</title>
+<style type="text/css">
+BODY {/* chrome upgrade N127627 -Edited background-color: "#e1eeb9" */
+	background-color: #e1eeb9;
+	font-style: italic
+}
+</style>
+<script language="JavaScript" type="text/javascript">
 
-<HEAD>
-<META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>RBRCDisplay.jsp</TITLE>
-
-
-<SCRIPT>
-
-var relPath="<%=request.getContextPath()%>";
-$(document).ready( function(e) {
-	var count = $("#rbrcDisplayForm").find('input[type="checkbox"]').length;
-	var errorPath = relPath + "/usrsec/error";
-	$('#LookUp').click(function(){
-	var action = relPath+'/rbrc/rbrcHome';
-	$("#rbrcDisplayForm").attr('action', action).submit();	
-	});
-
-	$('#deleteBtn').click(function(){
-	var action = relPath+'/rbrc/deleteRbrc';
-	if(count >= 1000){
-		$("#form1").attr('action', errorPath).submit();
-	}else{
-	$("#rbrcDisplayForm").attr('action', action).submit();
-	}
-	});
-	
-	$('#copyBtn').click(function(){
-	var action = relPath+'/rbrc/copyRbrc';
-	if(count >= 1000){
-		$("#form1").attr('action', errorPath).submit();
-	}else{
-	$("#rbrcDisplayForm").attr('action', action).submit();
-	}
-	});
-	
-	$('#addUpdateBtn').click(function(){
-	var action = relPath+'/rbrc/addUpdateRbrc';
-	if(count >= 1000){
-		$("#form1").attr('action', errorPath).submit();
-	}else{
-	$("#rbrcDisplayForm").attr('action', action).submit();
-	}
-	});
-	
-	$("#rbrcExport").click(function(){
-		var action = relPath + "/rbrc/rbrcExport";
-		$("#form1").attr('action',action).submit();
-	});
-	
-});
-
-function ListSTCs()
-	{
-	window.open(relPath+'/rbrc/stcList', null, "height=250,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
+// Drag the item from the left window and
+// drop it here.  Or, click the right mouse button
+// and select 'Insert to Script' from the popup menu.
+// The code is inserted at the current
+// cursor position.
+function WindowClose()
+{
+	window.close()
+}
 
 
-</SCRIPT></HEAD>
+</script>
+</head>
+<body>
+<h1 align="center">RBRC Help Screen</h1>
 
-<BODY style="font-size: 9pt" bgcolor="#e1eeb9">
-
-<FONT face="ARIAL">
-<c:out value="${rbrcMessage}"></c:out>
-</FONT>
-<BR><BR>
-<CENTER><B><FONT size="+2">RBRC Table Search List</FONT></B></CENTER><BR>
-<BR>
-<FONT FACE="ARIAL">
-To make a change on the database using these rows, change any field to the appropriate value, click on the Take Action square for every row changed and then click on the button for the action desired. Multiple rows may be selected for any given action.
-<BR>
-<BR>
-Labels that are <B>bold</B> identify key columns. A change to any value in these columns will <B>Add</B> rows to the database, not update existing rows.
-</FONT>
-<BR>
-<BR>
-<CENTER>
-	<input type="image" id="rbrcExport" src="${context}/images/rte_export.jpg" class="export" style="padding-left: 1mm; padding-right: 1mm">
-<form:form commandName="lookUpListVO" name="rbrcDisplayForm" id="rbrcDisplayForm"  method="POST">
-<TABLE cellspacing="5" style="background-color: #9393ff" border="1" class="lookupTable">
-    <COL span="1" align="center">
-    <COL span="13">
-    <COL span="1" align="center">
-    <TBODY>
-        <TR>
-            <TD>Take Action?</TD>
-            <TD width="5" style="font-weight: bold">Site Code</TD>
-            <TD width="6" style="font-weight: bold">Rider Code</TD>
-            <TD width="3" style="font-weight: bold"> <A href="javascript:ListSTCs()"
-            			onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
-            			onmouseout="window.status = '';">Svc Type</A></TD>
-            <TD>Description</TD>
-            <TD width="2">IO Network Code</TD>
-            <TD width="4">TOS Code</TD>
-            <TD width="2">True Ben Code Ind</TD>
-            <TD width="2">Text Send Ind</TD>
-            <TD width="2">Prev Care Ind</TD>
-            <TD width="2">Gender Code</TD>
-            <TD width="11">Posted Date</TD>
-        </TR>
-        
-        
-<c:forEach items="${lookUpListVO.rbrcVOList}" var="rbrc" varStatus="status">
-	
-		<c:choose>
-		<c:when test="${rbrc.dbUpdatedInd == 'Y'}">
-
-        <TR bgcolor="#ff4242">
-           </c:when>
-		<c:when test="${rbrc.dbUpdatedInd == 'C'}">
-        <TR bgcolor="#80ffff">
-          </c:when>
-		 <c:otherwise>
-        <TR bgcolor="#9393ff">
-           </c:otherwise>
-		</c:choose>
-		<input type="input" name="rbrcVOList[${status.index}].dbUpdatedInd" value="${rbrc.dbUpdatedInd}" style="display: none;"/>
-            <TD>
-	            <INPUT type="checkbox" name="takeAction" value="${status.index}"></TD>
-           	<TD>
-				
-			<INPUT name="rbrcVOList[${status.index}].dbSiteCd" size="6" maxlength="4" type="text" value="${rbrc.dbSiteCd}"></TD>
-            <TD>
-            	
-            	<INPUT name="rbrcVOList[${status.index}].dbRiderCd" size="10" maxlength="18" type="text" value="${rbrc.dbRiderCd}"
-											onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            <TD>
-            	
-            	<INPUT name="rbrcVOList[${status.index}].dbSvcTypeCd" size="5" maxlength="5" type="text" value="${rbrc.dbSvcTypeCd}"
-											onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            <TD>
-            
-            	<INPUT name="rbrcVOList[${status.index}].dbDescTxt" size="30" maxlength="30" type="text" value="${rbrc.dbDescTxt}"></TD>
-           
-        <TD>
-				
-			<INPUT name="rbrcVOList[${status.index}].dbIONtwkCd" size="1" maxlength="1" type="text" value="${rbrc.dbIONtwkCd}"
-            								onchange="javascript:this.value=this.value.toUpperCase();">
-			</TD>
-            <TD>
-            	
-            	<INPUT name="rbrcVOList[${status.index}].dbTOSCd" size="4" maxlength="3" type="text" value="${rbrc.dbTOSCd}"
-							            	onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            <TD>
-            	
-            	<INPUT name="rbrcVOList[${status.index}].dbHMOSrcBnInd" size="1" maxlength="1" type="text" value="${rbrc.dbHMOSrcBnInd}"
-            								onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            <TD>
-            
-            	<INPUT name="rbrcVOList[${status.index}].textSendInd" size="1" maxlength="1" type="text" value="${rbrc.textSendInd}"
-            								onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            	<TD>
-            	
-            	<INPUT name="rbrcVOList[${status.index}].prevCareInd" size="1" maxlength="1" type="text" value="${rbrc.prevCareInd}"
-            								onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            <TD>
-            
-            	<INPUT name="rbrcVOList[${status.index}].genderCd" size="1" maxlength="1" type="text" value="${rbrc.genderCd}"
-            								onchange="javascript:this.value=this.value.toUpperCase();"></TD>
-            	<TD>
-            	
-                <INPUT size="10" style="font-size: 12px; text-align: left; border-width: 0px; font-style: normal; background-color: #9393ff"
-                							type="text" name="rbrcVOList[${status.index}].dbPostedDate" value="${rbrc.dbPostedDate}" readonly></TD>
-        </TR>
-       </c:forEach>
-    </TBODY>
-</TABLE>
-<BR>
-
-
-<INPUT type="button" id="copyBtn" value="Copy" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-<INPUT type="button" id="addUpdateBtn" value="Add/Update" style="margin-left: 0mm; padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-<INPUT type="button" id="deleteBtn" value="Delete" style="padding-left: 1mm; padding-right: 1mm" <c:if test="${securityLevel ne 'RW'}">  disabled  </c:if>>
-
-<INPUT type="button" id="LookUp" value="Look Up" style="padding-left: 1mm; padding-right: 1mm">
-</CENTER>
-
- </form:form>
- <form name="form1" id="form1" method="POST"></form>
- </BODY>
+<pre>
+<b>Please Enter your search data using the 
+following field or Combination of fields:</b>
+</pre>
+<ol>
+	<li><b>Site Code</b> only</li>
+	<li><b>Site Code</b> and <b>Rider Code</b></li>
+	<li><b>Site Code</b> and <b>Service Type</b></li>
+	<li><b>Site Code</b> , <b>Rider Code</b> and <b>Service Type</b></li>
+</ol>
+<b>Note:</b>
+When trying to update an existing row returned from a lookup, if any of
+the table keys are changed then a new row will be
+<b>added</b> to the database. The key fields are <b>Site Code</b>, <b>Rider Code</b> and <b>Service Type</b>.
+<p align="center"><input type="button" onclick="WindowClose()"
+	name="CloseButton" value="Close"></p>
+</body>
+</html>
