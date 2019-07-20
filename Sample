@@ -7,423 +7,1192 @@
 
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
 <!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-<c:set var="sbmsnrMessage" value="${sbmsnrMessage}"></c:set>
+<c:set var="srapidtlMessage" value="${srapidtlMessage}"></c:set>
 <HEAD>
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>SbmsnrEvntTrckDisplay.jsp</TITLE>
+<TITLE>SrapidtlEvntTrckDisplay.jsp</TITLE>
 
 <SCRIPT>
 
 var relPath="<%=request.getContextPath()%>";
 $(document).ready( function(e) {
 
-
 $('#newSearch').click(function(){
-var action = relPath+'/eventtrack/eventtrackHome';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-	});	
-$("#next").click(function(){
-	$("#actionName").val('next');
-	var action = relPath+'/eventtrack/getRecord';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-});
-$("#previous").click(function(){
-	$("#actionName").val('previous');
-	var action = relPath+'/eventtrack/getRecord';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-});
-$('#topnewSearch').click(function(){
-var action = relPath+'/eventtrack/eventtrackHome';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-	});	
-$("#topnext").click(function(){
-	$("#actionName").val('next');
-	var action = relPath+'/eventtrack/getRecord';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-});
-$("#topprevious").click(function(){
-	$("#actionName").val('previous');
-	var action = relPath+'/eventtrack/getRecord';
-	$("#sbmsnrDisplayForm").attr('action', action).submit();
-});
+	var action = relPath+'/eventtrack/eventtrackHome';
+	$("#srapidtlDisplayForm").attr('action', action).submit();	
+	});
+
+
+
 });
 
 
 </SCRIPT></HEAD>
 <BODY style="font-size: 9pt" bgcolor="#e1eeb9">
 
-<P><INPUT size="118" type="text" readonly name="DisplayText" value="${sbmsnrMessage}" style='border-style: none; background-color: #e1eeb9'></P>
+<P><INPUT size="118" type="text" readonly name="DisplayText" value="${srapidtlMessage}" style='border-style: none; background-color: #e1eeb9'></P>
 
-<H2 align="center">SBMSNR Table Display</H2>
-<c:set var="totalCount" value="${totalCount}"></c:set>
-<c:set var="indexCount" value="${indexCount}"></c:set>
-<form:form commandName="lookUpListVO" name="sbmsnrDisplayForm" id="sbmsnrDisplayForm"  method="POST">
-
+<H2 align="center">SRAPIDTL Table Display</H2>
+<form:form commandName="lookUpListVO" name="srapidtlDisplayForm" id="srapidtlDisplayForm"  method="POST">
+<div id="divHidden" style="display: none;">
+            		<input type="text" name="count" value="1"/> 
+            	</div>
+	<c:set var="totalCount"
+			value="${fn:length(lookUpListVO.srapidtlVOList)}"></c:set>
+			
+		<c:set var="srapidtlList"
+			value="${lookUpListVO.srapidtlVOList}"></c:set>
+			<c:choose>
+			<c:when test="${totalCount != '0'}">
+				<c:set var="i1" value="${currentSrpidtl}"></c:set>
+	<c:set var="srapidtl" value="${srapidtlList[i1]}"></c:set>
+  
 <CENTER>
-<INPUT type="button" id="topprevious" value="Prev Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
-<INPUT type="button" id="topnext" value="Next Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
 
-<INPUT type="button" id="topnewSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
 <TABLE align="center">
 
-<div style="display: none;">
-<input id="count" value="${indexCount}" name="count" />
-<input id="moduleName" value="sbmsnr" name="moduleName" />
-<input id="actionName" value="next" name="actionName" />
-<input id="message" value="${message}" name="message" />
-</div>
-<c:forEach items="${lookUpListVO.sbmsnrVOList}" var="sbmsnr" varStatus="status">
-	<TR><TD align="right">Transaction Type: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.tranType}</FONT></TD>
-    </TR>
-	<TR><TD align="right">Conversation Id Code: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.convIdCode}</FONT></TD>
-    </TR>
-	<TR>
-		<TD align="right">Van Id: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.vanIdCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Trans Type Code: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.typeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Alpha Search Ind: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.alphaSearchInd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr Last Name: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrLastName}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr First Name: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrFirstName}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr Mid Name: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrMidName}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr Title: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrTitle}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr Addr1: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrAddr1}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr Addr2: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrAddr2}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr City: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrCity}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbmt Pvdr State: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrState}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Sbm Pvdr Zip Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmPvdrZipCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">SPCommunication1No: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.spCommunication1No}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber Id Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Member Id Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber Last Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber First Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber Middle Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber Title: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-    </TR>
-	<TR>
-		<TD align="right">Patient Last Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient First Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient Middle Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient Title: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientTitle}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patients Birth Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Relation To Subscriber Code: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient Sex Code: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR> 
-		<TD align="right">Total Ben-Resp Counter: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.assistantPhoneNo}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Resp Type Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.respTypeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Posted Date: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.postedDt}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Employer Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Control No: </TD>
-		<TD><FONT color="#ff0000">0</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Suffix No: </TD>
-		<TD><FONT color="#ff0000">0</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Account No: </TD>
-		<TD><FONT color="#ff0000">0</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Offic Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Provider Type Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.providerTypeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Posted Time: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.postedTime}</FONT></TD>
-	</TR>
+<%-- <c:forEach items="${lookUpListVO.srapidtlVOList}" var="srapidtl" varStatus="status"> --%>
+		<tr>
+		<td align="right"><b>Conversation Id Code: </b></td>
+		<td><font color="#ff0000">${srapidtl.convIdCode}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Tran Type: </b></td>
+		<td><font color="#ff0000">${srapidtl.typeCd}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Van Id: </b></td>
+		<td><font color="#ff0000">${srapidtl.vanIdCd}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Plan Seq No: </b></td>
+	
+        <td><font color="#ff0000">${srapidtl.planNo}</font></td>
+	</tr>
+	<%--  P8262  Added posted date  Aug 2013 --%>	
+	<tr>
+		<td align="right"><b>Posted Date: </b></td>
+		<td><font color="#ff0000">${srapidtl.postedDt}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Control No: </b></td>
+		<td><font color="#ff0000">${srapidtl.controlNo}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BIC: </b></td>
+		<td><font color="#ff0000">${srapidtl.benefitIdCd}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PBNF Seq No: </b></td>
+		<td><font color="#ff0000">${srapidtl.pbnfSeqNo}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Plan No: </b></td>
+		<td><font color="#ff0000">${srapidtl.planNo}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Plan Summary Cd: </b></td>
+		<td><font color="#ff0000">${srapidtl.planSummaryCd}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Plan Name: </b></td>
+		<td><font color="#ff0000">${srapidtl.planName}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>Coverage type: </b></td>
+		<td><font color="#ff0000">${srapidtl.coverageTypeCd}</font></td>
+	</tr>
+	 <c:set var="recordType"  value="${fn:substring(srapidtl.coverageTypeCd,1,3)}"></c:set>
+ 
+ 	<c:set var="apiType" value="${fn:substring(srapidtl.coverageTypeCd,1,2)}"></c:set>
+	<c:choose>
+		<c:when test="${recordType == 'B1' || recordType == 'B2'||recordType == 'B3'||recordType == 'B4'||recordType == 'B5'||recordType == 'B6'||apiType=='A'}">
+	
+<%-- 	<tr>
+		<td align="right"><b>Plan Name: </b></td>
+		<td><font color="#ff0000">${srapidtl.ebsBenefitData}</font></td>
+	</tr> --%>
+		<tr>
+		<td align="right"><b>COB CARRIER NAME </b></td>
+		<td><font color="#ff0000"><c:set var="name" value="${fn:substring(srapidtl.ebsBenefitData, 0, 40)}" />${fn:replace(name, '%', ' ')}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN LEVEL DETAIL CTR </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 40, 41)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN NAME </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 41, 91)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ACTIVE PLAN IND </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 91, 92)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN ON HOLD IND </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 92, 93)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ASH PLAN ID</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 93, 98)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER PLAN EFFECTIVE DATE </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 98, 108)}</font></td>
+	</tr>	
+	<tr>
+		<td align="right"><b>MEMBER PLAN TERMINATION DATE </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 108, 118)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ORIG MEMBER EFFECTIVE DATE </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 118, 128)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN SPONSOR NAME </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 128, 163)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN NETWORK PRECERT REQUIRED</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 163, 164)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN NETWORK REFERRAL REQUIRED</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 164, 165)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTWK-PRECERT-REQUIRED</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 165, 166)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT OF NTW REFERRAL REQUIRED </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 166, 167)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT LVL DETAIL LIMIT IND</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 167, 168)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT LEVEL DETAIL CTR</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 168, 170)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-LEVEL-DETAIL</b></td>
+		
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 170, 171)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 171, 172)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 172, 173)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 173, 174)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 174, 183)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 183, 192)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 190, 193)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 193, 203)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 203, 204)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 204, 205)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 205, 208)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 208, 209)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 209, 219)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 219, 229)}</font></td>
+	</tr>
+	
+	
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 229, 230)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 230, 231)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 231, 232)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 232, 233)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 233, 242)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 242, 251)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 251, 252)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 252, 262)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 262, 263)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 263, 264)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 264, 267)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 267, 268)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 268, 278)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 2:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 278, 288)}</font></td>
+	</tr>
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 288, 299)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 299, 300)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 300, 301)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 301, 302)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 302, 311)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 311, 320)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 320, 321)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 321, 331)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 331, 332)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 332, 333)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 333, 336)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 336, 337)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 1:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 337, 347)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 3:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 347, 357)}</font></td>
+	</tr>
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 357, 358)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 358, 359)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 359, 360)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 360, 361)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 361, 370)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 370, 379)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 379, 380)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 380, 390)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 390, 391)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 391, 392)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 392, 395)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 395, 396)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 396, 406)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 4:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 406, 416)}</font></td>
+	</tr>
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 416, 417)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 417, 418)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 418, 419)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 419, 420)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 420, 429)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 429, 438)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 438, 439)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 439, 449)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 449, 450)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 450, 451)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 451, 454)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 454, 455)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 455, 465)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 5:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 465, 475)}</font></td>
+	</tr>
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 475, 476)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 476, 477)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 477, 478)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 478, 479)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 479, 488)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 488, 497)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 497, 498)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 498, 508)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 508, 509)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 509, 510)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 510, 513)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 513, 514)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 514, 524)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 6:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 524, 534)}</font></td>
+	</tr>
+	
+	
+	<tr>
+		<td align="right"><b>RESPONSE-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 534, 535)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSE-LEVEL-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 535, 536)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 536, 537)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-CAT-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 537, 538)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 538, 547)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>AMOUNT-REMAINING 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 547, 556)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>RESPONSIBILITY-TYPE-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 556, 557)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>LAST-DATE-OF-SERVICE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 557, 567)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>DEDUCTIBLE-WAIVED-IND 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 567, 568)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>APPLIES-TO-OOP-IND 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 568, 569)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-QUANTITY 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 569, 572)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PERIOD-LIMIT-CODE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 572, 573)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-EFFECTIVE-DATE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 573, 583)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-TERMINATION-DATE 7:</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 583, 593)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-MESSAGES-CTR :</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 593, 595)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-MESSAGES</b></td>
+		
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 595, 625)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 625, 655)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 655, 685)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 685, 715)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 715, 745)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 6</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 745, 775)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 775, 805)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 805, 835)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 9</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 835, 865)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROVIDER-TEXT 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 865, 895)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODES-CTR</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 895, 897)}</font></td>
+	</tr>
+		<tr>
+		<td align="right"><b>SERVICE-TYPE-CODES</b></td>	
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 897, 899)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 899, 901)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 901, 903)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 903, 905)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 905, 907)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 6</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 907, 909)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 909, 911)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 911, 913)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 9</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 913, 915)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 915, 917)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 11</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 917, 919)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 12</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 919, 921)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 13</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 921, 923)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODES-CTR</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 923, 925)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODES</b></td>
+		
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 925, 936)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 936, 938)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 2 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 938, 949)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 2</b></td>
+	<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 949, 951)}</font></td>	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 951, 962)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 962, 964)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 964, 975)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 975, 977)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 977, 988)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 988, 990)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 6</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 990, 1001)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 6 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1001, 1003)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1003, 1014)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1014, 1016)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1016, 1027)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1027, 1029)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 9</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1029, 1040)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 9 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1040, 1042)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1042, 1053)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIE1R 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 1053, 1055)}</font></td>
+	</tr>
+	
+   </c:when>
+</c:choose> 
 
-	<TR>
-		<TD align="right">Sbmsnr Type Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.sbmsnrTypeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Coverage To Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Group Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Insurance Line Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Payor Cob Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.payorCobCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Plan Network Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Site Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">SubGroup Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Covg From Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Med Unit Id Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.medUnitIdCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Benefit Id Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>	
-	<TR>
-		<TD align="right">Pbnf Seq No: </TD>
-		<TD><FONT color="#ff0000">0</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Plan No: </TD>
-		<TD><FONT color="#ff0000">0</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Plan Summary Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Subscriber Id Qual Code: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.subsIdQualCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Dependent Id Qual Code: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.depIdQualCode}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Transaction Type Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.transactionTypeCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Employee Id: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.employeeId}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">SP Comm No Qual Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.spCommNoQualCd}</FONT></TD>
-	</TR>
+
+<c:choose>
+		<c:when test="${recordType == 'SP' ||apiType=='A'}">
+
+	<tr>
+		<td align="right"><b>COB-CARRIER-NAME</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 0, 40)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-LEVEL-DETAIL-CTR</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 40, 41)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-LEVEL-DETAIL</b></td>
+		
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-NAME 1 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 40, 91)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ACTIVE-PLAN-IND 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 91, 92)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-ON-HOLD-IND 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 92, 93)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ASH-PLAN-ID 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 93, 98)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-EFFECTIVE-DATE 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 98, 108)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-TERMINATION-DATE 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 108, 118)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ORIG-MEMBER-EFFECTIVE-DATE 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 118, 128)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-SPONSOR-NAME 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 128, 163)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-PRECERT-REQUIRED 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 163, 164)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-REFERRAL-REQUIRED 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 164, 165)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTWK-PRECERT-REQUIRED 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 166, 167)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTW-REFERRAL-REQUIRED 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 167, 168)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-LVL-DETAIL-LIMIT-IND 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 168, 169)}</font></td>
+	</tr>
 	
-	<TR>
-		<TD align="right">Patient Addr1: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientAddr1}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient Addr2: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientAddr2}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient City: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientCity}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient State: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientState}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Patient Zip Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.patientZipCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Member Term Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Dep Term Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Plan Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Office Name: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeName}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Office Addr1: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeAddr1}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Office Addr2: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeAddr2}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Off Location Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOffLocationCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Office State: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeState}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Claim Office Zip Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeZipCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cob Prim Sec Cd: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.cobPrimSecCd}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Last Svc Date: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">COB Ind: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cob Carrier Name: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.cobCarrierName}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cob Policy No: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.cobPolicyNo}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cob Eff Date: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.cobEffDate}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cob Exp Date: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.cobExpDate}</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Dep Id Cd: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cap Lab Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cap Xray Name: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cap Lab Phone: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Cap Xray Phone: </TD>
-		<TD><FONT color="#ff0000">n/a</FONT></TD>
-	</TR>
-	<TR>
-		<TD align="right">Family Level Ind: </TD>
-		<TD><FONT color="#ff0000">${sbmsnr.familyLevelInd}</FONT></TD>
-	</TR>
+	<tr>
+		<td align="right"><b>PLAN-NAME 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 169, 219)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ACTIVE-PLAN-IND 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 219, 220)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-ON-HOLD-IND 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 220, 221)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ASH-PLAN-ID 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 221, 226)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-EFFECTIVE-DATE 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 226, 236)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-TERMINATION-DATE 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 236, 246)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ORIG-MEMBER-EFFECTIVE-DATE 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 246, 256)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-SPONSOR-NAME 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 256, 291)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-PRECERT-REQUIRED 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 291, 292)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-REFERRAL-REQUIRED 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 292, 293)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTWK-PRECERT-REQUIRED 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 293, 294)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTW-REFERRAL-REQUIRED 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 294, 295)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-LVL-DETAIL-LIMIT-IND 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 295, 296)}</font></td>
+	</tr>
 	
-	</c:forEach>
+	<tr>
+		<td align="right"><b>PLAN-NAME 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 296, 346)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ACTIVE-PLAN-IND 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 346, 347)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-ON-HOLD-IND 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 347, 348)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ASH-PLAN-ID 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 348, 353)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-EFFECTIVE-DATE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 353, 363)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-TERMINATION-DATE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 363, 373)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ORIG-MEMBER-EFFECTIVE-DATE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 373, 383)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-SPONSOR-NAME 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 383, 418)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-PRECERT-REQUIRED 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 418, 419)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-REFERRAL-REQUIRED 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 419, 420)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTWK-PRECERT-REQUIRED 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 420, 421)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTW-REFERRAL-REQUIRED 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 421, 422)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-LVL-DETAIL-LIMIT-IND 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 422, 423)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>PLAN-NAME 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 423, 473)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ACTIVE-PLAN-IND 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 473, 474)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-ON-HOLD-IND 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 474, 475)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ASH-PLAN-ID 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 475, 480)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-EFFECTIVE-DATE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 480, 490)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>MEMBER-PLAN-TERMINATION-DATE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 490, 500)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>ORIG-MEMBER-EFFECTIVE-DATE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 500, 510)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PLAN-SPONSOR-NAME 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 510, 545)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-PRECERT-REQUIRED 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 545, 546)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>IN-NETWORK-REFERRAL-REQUIRED 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 546, 547)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTWK-PRECERT-REQUIRED 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 547, 548)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>OUT-OF-NTW-REFERRAL-REQUIRED 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 548, 549)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>BENEFIT-LVL-DETAIL-LIMIT-IND 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 549, 550)}</font></td>
+	</tr>
+	
+<tr>
+		<td align="right"><b>BENEFIT-LEVEL-DETAIL-CTR </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 550, 552)}</font></td>
+	</tr>
+
+	<tr>
+		<td align="right"><b>RESPONSE-CODE </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 552, 553)}</font></td>
+	</tr>
+		<tr>
+		<td align="right"><b>SERVICE-TYPE-CODES-CTR </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 555, 557)}</font></td>
+	</tr>
+
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 1 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 557, 559)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 2 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 559, 561)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 561, 563)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 4 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 563, 565)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 5 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 565, 567)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 6 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 567, 569)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 7 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 569, 571)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 8 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 571, 573)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 9 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 573, 575)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 10 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 575, 577)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 11 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 577, 579)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 12 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 579, 581)}</font></td>
+	</tr>
+	
+	<tr>
+		<td align="right"><b>SERVICE-TYPE-CODE 13 </b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 581, 583)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODES-CTR</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 583, 585)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 585, 596)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 1</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 596, 598)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 598, 609)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 2</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 609, 611)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 611, 622)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 3</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 622, 624)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 624, 635)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 4</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 635, 637)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 637, 648)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 5</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 648, 650)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 6</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 650, 661)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 6</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 661, 663)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 663, 674)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 7</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 674, 676)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 676, 687)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 8</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 687, 689)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 9</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 689, 700)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 9</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 700, 702)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>PROCEDURE-CODE 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 702, 713)}</font></td>
+	</tr>
+	<tr>
+		<td align="right"><b>QUALIFIER 10</b></td>
+		<td><font color="#ff0000">${fn:substring(srapidtl.ebsBenefitData, 713, 715)}</font></td>
+	</tr>
+	 </c:when>
+</c:choose> 
+	
+	
+	
+	
+
+
+
 </TABLE>
 
-
-
-
+	</c:when>
+</c:choose>
 
 <BR>
 
 
 
 
-<INPUT type="button" id="previous" value="Prev Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
-<INPUT type="button" id="next" value="Next Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
 
 <INPUT type="button" id="newSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
 </CENTER>
