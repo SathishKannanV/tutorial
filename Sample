@@ -1,69 +1,36 @@
 /**
+
  * 
+
  */
+
 package com.aetna.prvrte.rteintranet.service;
 
-import java.util.List;
+
+
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.aetna.prvrte.rteintranet.dao.RteAdasvctDAO;
-import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
+
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
-/*
- * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService
- * @author N726899
- * Cognizant_Offshore
- * 
+
+
+/**
+
+ * @author N657186
+
+ *
+
  */
-@Service
-public class RteAdasvctServiceImpl implements RteAdasvctService {
-	/*
-	 * Instance of RteAdasvctDAO.
-	 */
-	@Autowired(required=true)
-	private RteAdasvctDAO rteAdasvctDAO;
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#getAdasvctLookUpList(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
-	 */
-	@Override
-	public Map<String, Object> getAdasvctLookUpList(AdasvctDTO adasvctDTO) throws ApplicationException {
-		return rteAdasvctDAO.getAdasvctLookUpList(adasvctDTO);
-	}
+public interface RteSecurityService {
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#getVanList()
-	 */
-	@Override
-	public Map<String, Object> getVanList() throws ApplicationException {
-		return rteAdasvctDAO.getVanList();
-	}	
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#addAdasvct(com.aetna.prvrte.rteintranet.dto.AdasvctDTO)
-	 */
-	@Override
-	public Map<String, Object> addAdasvctToDb(AdasvctDTO adasvctDTO)throws ApplicationException {
-		return rteAdasvctDAO.addAdasvctToDb(adasvctDTO);
-	}
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#deleteAdasvct(java.util.List, java.lang.String[])
-	 */
-	@Override
-	public Map<String, Object> deleteAdasvct(String adaCd, String effDate)throws ApplicationException {
-		return rteAdasvctDAO.deleteAdasvct(adaCd, effDate);
-	}
 
-	/* (non-Javadoc)
-	 * @see com.aetna.prvrte.rteintranet.service.RteAdasvctService#addUpdateAdasvct(java.util.List, java.lang.String[])
-	 */
-	@Override
-	public Map<String, Object> addUpdateAdasvct(AdasvctDTO adasvctDTO,List<AdasvctDTO> adasvctDTOList, int index)throws ApplicationException {
-		return rteAdasvctDAO.addUpdateAdasvct(adasvctDTO, adasvctDTOList, index);
-	}
+	Map getUserSecurityLevel(String userId)throws ApplicationException;
+
+
 
 }
+
