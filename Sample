@@ -1,41 +1,432 @@
-<!--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">-->
-<!--Chrome Upgrade-N127627-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
-<!--END-->
-<HTML>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="security" %>
+
+<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<c:set var="sbmsnrMessage" value="${sbmsnrMessage}"></c:set>
 <HEAD>
 <META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>RTE Home</TITLE>
-<!-- chrome_upgrade-N127627-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<TITLE>SbmsnrEvntTrckDisplay.jsp</TITLE>
+
 <SCRIPT>
+
+var relPath="<%=request.getContextPath()%>";
 $(document).ready( function(e) {
- $('form').on('submit',function(){
-   $(this).attr('target', '_self');
+
+
+$('#newSearch').click(function(){
+var action = relPath+'/eventtrack/eventtrackHome';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+	});	
+$("#next").click(function(){
+	$("#actionName").val('next');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+});
+$("#previous").click(function(){
+	$("#actionName").val('previous');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+});
+$('#topnewSearch').click(function(){
+var action = relPath+'/eventtrack/eventtrackHome';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+	});	
+$("#topnext").click(function(){
+	$("#actionName").val('next');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+});
+$("#topprevious").click(function(){
+	$("#actionName").val('previous');
+	var action = relPath+'/eventtrack/getRecord';
+	$("#sbmsnrDisplayForm").attr('action', action).submit();
+});
 });
 
-});
-</SCRIPT>
 
-<!-- End -->
+</SCRIPT></HEAD>
+<BODY style="font-size: 9pt" bgcolor="#e1eeb9">
 
-</HEAD>
+<P><INPUT size="118" type="text" readonly name="DisplayText" value="${sbmsnrMessage}" style='border-style: none; background-color: #e1eeb9'></P>
 
-<FRAMESET rows="15%,83%">
-    <FRAMESET cols="25%,63%,12%" frameborder="NO" border="0">
-        <FRAME src="TopLeftPage.jsp" name="TopLeft" noresize scrolling="NO">
-        <FRAME src="CenterTopPage.jsp" name="CenterTop" noresize scrolling="NO">
-        <FRAME src="TopRightPage.jsp" name="TopRight" noresize scrolling="NO">
-    </FRAMESET>
-    
-    <FRAMESET cols="9%,92%" frameborder="YES" border="1" >
-        <FRAME src="BottomLeftPage.jsp" name="BottomLeft" noresize scrolling="no">     
-		<FRAME SRC="BottomRightPage.jsp" name="BottomRight" noresize>
-    </FRAMESET>
-</FRAMESET>
+<H2 align="center">SBMSNR Table Display</H2>
+<c:set var="totalCount" value="${totalCount}"></c:set>
+<c:set var="indexCount" value="${indexCount}"></c:set>
+<form:form commandName="lookUpListVO" name="sbmsnrDisplayForm" id="sbmsnrDisplayForm"  method="POST">
 
-</HTML>
+<CENTER>
+<INPUT type="button" id="topprevious" value="Prev Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
+<INPUT type="button" id="topnext" value="Next Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
+
+<INPUT type="button" id="topnewSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
+<TABLE align="center">
+
+<div style="display: none;">
+<input id="count" value="${indexCount}" name="count" />
+<input id="moduleName" value="sbmsnr" name="moduleName" />
+<input id="actionName" value="next" name="actionName" />
+<input id="message" value="${message}" name="message" />
+</div>
+<c:forEach items="${lookUpListVO.sbmsnrVOList}" var="sbmsnr" varStatus="status">
+	<TR><TD align="right">Transaction Type: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.tranType}</FONT></TD>
+    </TR>
+	<TR><TD align="right">Conversation Id Code: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.convIdCode}</FONT></TD>
+    </TR>
+	<TR>
+		<TD align="right">Van Id: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.vanIdCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Trans Type Code: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.typeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Alpha Search Ind: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.alphaSearchInd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr Last Name: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrLastName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr First Name: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrFirstName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr Mid Name: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrMidName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr Title: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrTitle}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr Addr1: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrAddr1}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr Addr2: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrAddr2}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr City: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrCity}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbmt Pvdr State: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmtPvdrState}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Sbm Pvdr Zip Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmPvdrZipCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">SPCommunication1No: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.spCommunication1No}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Id Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Member Id Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Last Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber First Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Middle Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Title: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+    </TR>
+	<TR>
+		<TD align="right">Patient Last Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient First Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Middle Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Title: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientTitle}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patients Birth Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Relation To Subscriber Code: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Sex Code: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR> 
+		<TD align="right">Total Ben-Resp Counter: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.assistantPhoneNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Resp Type Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.respTypeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Posted Date: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.postedDt}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Employer Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Control No: </TD>
+		<TD><FONT color="#ff0000">0</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Suffix No: </TD>
+		<TD><FONT color="#ff0000">0</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Account No: </TD>
+		<TD><FONT color="#ff0000">0</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Offic Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Provider Type Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.providerTypeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Posted Time: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.postedTime}</FONT></TD>
+	</TR>
+
+	<TR>
+		<TD align="right">Sbmsnr Type Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.sbmsnrTypeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Coverage To Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Group Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Insurance Line Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Payor Cob Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.payorCobCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Plan Network Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Site Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">SubGroup Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Covg From Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Med Unit Id Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.medUnitIdCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Benefit Id Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>	
+	<TR>
+		<TD align="right">Pbnf Seq No: </TD>
+		<TD><FONT color="#ff0000">0</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Plan No: </TD>
+		<TD><FONT color="#ff0000">0</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Plan Summary Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Subscriber Id Qual Code: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.subsIdQualCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Dependent Id Qual Code: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.depIdQualCode}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Transaction Type Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.transactionTypeCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Employee Id: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.employeeId}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">SP Comm No Qual Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.spCommNoQualCd}</FONT></TD>
+	</TR>
+	
+	<TR>
+		<TD align="right">Patient Addr1: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientAddr1}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Addr2: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientAddr2}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient City: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientCity}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient State: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientState}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Patient Zip Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.patientZipCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Member Term Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Dep Term Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Plan Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Office Name: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Office Addr1: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeAddr1}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Office Addr2: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeAddr2}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Off Location Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOffLocationCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Office State: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeState}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Claim Office Zip Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.claimOfficeZipCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cob Prim Sec Cd: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.cobPrimSecCd}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Last Svc Date: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">COB Ind: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cob Carrier Name: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.cobCarrierName}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cob Policy No: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.cobPolicyNo}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cob Eff Date: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.cobEffDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cob Exp Date: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.cobExpDate}</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Dep Id Cd: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cap Lab Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cap Xray Name: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cap Lab Phone: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Cap Xray Phone: </TD>
+		<TD><FONT color="#ff0000">n/a</FONT></TD>
+	</TR>
+	<TR>
+		<TD align="right">Family Level Ind: </TD>
+		<TD><FONT color="#ff0000">${sbmsnr.familyLevelInd}</FONT></TD>
+	</TR>
+	
+	</c:forEach>
+</TABLE>
 
 
 
+
+
+<BR>
+
+
+
+
+<INPUT type="button" id="previous" value="Prev Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq '0'}">  disabled  </c:if>>
+<INPUT type="button" id="next" value="Next Sbmsnr" style="padding-left: 3mm; padding-right: 3mm" <c:if test="${indexCount eq totalCount-1}">  disabled  </c:if>>
+
+<INPUT type="button" id="newSearch" value="New Search" style="padding-left: 3mm; padding-right: 3mm">
+</CENTER>
+</form:form>
+</BODY>
 
