@@ -6,17 +6,41 @@ import java.util.Map;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+
+
+import com.aetna.prvrte.rteintranet.dao.LongRunTransLookUpDAO;
+
 import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 
 
-public interface LongRunTransLookUpService {
+@Service
+
+public class LongRunTransLookUpServiceImpl implements LongRunTransLookUpService{
 
 
 
-	Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO) throws ApplicationException;
+	@Autowired(required=true)
+
+	private LongRunTransLookUpDAO longrunTransDAO;
+
+	@Override
+
+	public Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO)
+
+			throws ApplicationException {
+
+		return longrunTransDAO.getLongRunTransLookUpList(longrunTransDTO);
+
+	}
+
+
 
 }
 
