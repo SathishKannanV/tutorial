@@ -1,9 +1,3 @@
-/**
-
- * 
-
- */
-
 package com.aetna.prvrte.rteintranet.vo;
 
 
@@ -12,309 +6,125 @@ import java.io.Serializable;
 
 
 
-/**
+public class EventTrackingVO implements Serializable{
 
- * 
 
- * @author N726899
-
- * Cognizant_Offshore
-
- */
-
-public class AdasvctVO implements Serializable {
 
 	/**
 
-	 * Constant serialized ID used for compatibility. 
+	 * 
 
 	 */
 
 	private static final long serialVersionUID = 1L;
 
-	/**
+	private String convIdCode ="";
 
-	 * String of adaCd
+	private String vanIdCd = "";
 
-	 */
+	private String typeCd = "";
 
-	private String adaCd = "";
+	private String postedDt = "";
 
-	/**
-
-	 * String of svcTypeCd
-
-	 */
-
-	private String svcTypeCd = "";
-
-	/**
-
-	 * String of effective date(yyyy-MM-dd)
-
-	 */
-
-	private String effDate = "";
-
-	/**
-
-	 * String of expiration date(yyyy-MM-dd)
-
-	 */
-
-	private String expDate = "";
-
-	/**
-
-	 * String of record posted date(yyyy-MM-dd)
-
-	 */
-
-	private String postedDate = "";
-
-	/**
-
-	 * char of index to update the record.
-
-	 */
-
-	private char updatedInd;
+	private String tranType ="";
 
 
 
-	/**
-
-	 * Default Constructor.
-
-	 */
-
-	public AdasvctVO() {
+	public  EventTrackingVO() {
 
 		super();
+
+	} 
+
+		
+
+	
+
+	
+
+	public EventTrackingVO(String convIdCode, String vanIdCd, String typeCd,
+
+			String postedDt, String tranType) {
+
+		super();
+
+		this.convIdCode = convIdCode;
+
+		this.vanIdCd = vanIdCd;
+
+		this.typeCd = typeCd;
+
+		this.postedDt = postedDt;
+
+		this.tranType = tranType;
+
+	}
+
+	public String getConvIdCode() {
+
+		return convIdCode;
+
+	}
+
+	public void setConvIdCode(String convIdCode) {
+
+		this.convIdCode = convIdCode;
+
+	}
+
+	public String getVanIdCd() {
+
+		return vanIdCd;
+
+	}
+
+	public void setVanIdCd(String vanIdCd) {
+
+		this.vanIdCd = vanIdCd;
+
+	}
+
+	public String getTypeCd() {
+
+		return typeCd;
+
+	}
+
+	public void setTypeCd(String typeCd) {
+
+		this.typeCd = typeCd;
+
+	}
+
+	public String getPostedDt() {
+
+		return postedDt;
+
+	}
+
+	public void setPostedDt(String postedDt) {
+
+		this.postedDt = postedDt;
+
+	}
+
+	public String getTranType() {
+
+		return tranType;
+
+	}
+
+	public void setTranType(String tranType) {
+
+		this.tranType = tranType;
 
 	}
 
 	
 
-	/**
-
-	 * Creates a new AdasvctVO
-
-	 * 
-
-	 * @param adaCd
-
-	 *            the value for {@link adaCd}
-
-	 * @param svcTypeCd
-
-	 *            the value for {@link svcTypeCd}
-
-	 * @param effDate
-
-	 *            the value for {@link effDate}
-
-	 * @param expDate
-
-	 *            the value for {@link expDate}
-
-	 * @param postedDate
-
-	 *            the value for {@link postedDate}
-
-	 * @param updatedInd
-
-	 *            the value for {@link updatedInd}
-
-	 */
-
-	public AdasvctVO(String adaCd, String svcTypeCd, String effDate,
-
-			String expDate, String postedDate, char updatedInd) {
-
-		super();
-
-		this.adaCd = adaCd;
-
-		this.effDate = effDate;
-
-		this.expDate = expDate;
-
-		this.postedDate = postedDate;
-
-		this.svcTypeCd = svcTypeCd;
-
-		this.updatedInd = updatedInd;
-
-	}
-
 	
 
-	/**
-
-	 * @return the adaCd
-
-	 */
-
-	public String getAdaCd() {
-
-		return adaCd;
-
-	}
-
-
-
-	/**
-
-	 * @param adaCd the adaCd to set
-
-	 */
-
-	public void setAdaCd(String adaCd) {
-
-		this.adaCd = adaCd;
-
-	}
-
-
-
-	/**
-
-	 * @return the svcTypeCd
-
-	 */
-
-	public String getSvcTypeCd() {
-
-		return svcTypeCd;
-
-	}
-
-
-
-	/**
-
-	 * @param svcTypeCd the svcTypeCd to set
-
-	 */
-
-	public void setSvcTypeCd(String svcTypeCd) {
-
-		this.svcTypeCd = svcTypeCd;
-
-	}
-
-
-
-	/**
-
-	 * @return the effDate
-
-	 */
-
-	public String getEffDate() {
-
-		return effDate;
-
-	}
-
-
-
-	/**
-
-	 * @param effDate the effDate to set
-
-	 */
-
-	public void setEffDate(String effDate) {
-
-		this.effDate = effDate;
-
-	}
-
-
-
-	/**
-
-	 * @return the expDate
-
-	 */
-
-	public String getExpDate() {
-
-		return expDate;
-
-	}
-
-
-
-	/**
-
-	 * @param expDate the expDate to set
-
-	 */
-
-	public void setExpDate(String expDate) {
-
-		this.expDate = expDate;
-
-	}
-
-
-
-	/**
-
-	 * @return the postedDate
-
-	 */
-
-	public String getPostedDate() {
-
-		return postedDate;
-
-	}
-
-
-
-	/**
-
-	 * @param postedDate the postedDate to set
-
-	 */
-
-	public void setPostedDate(String postedDate) {
-
-		this.postedDate = postedDate;
-
-	}
-
-
-
-	/**
-
-	 * @return the updatedInd
-
-	 */
-
-	public char getUpdatedInd() {
-
-		return updatedInd;
-
-	}
-
-
-
-	/**
-
-	 * @param updatedInd the updatedInd to set
-
-	 */
-
-	public void setUpdatedInd(char updatedInd) {
-
-		this.updatedInd = updatedInd;
-
-	}
+	
 
 }
 
