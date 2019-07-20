@@ -1,49 +1,1170 @@
-/*
-
- * Created Apr 2010
-
- */
-
 package com.aetna.prvrte.rteintranet.web.controller;
 
 
 
+import java.util.ArrayList;
+
+import java.util.HashMap;
+
+import java.util.Iterator;
+
+import java.util.LinkedHashMap;
+
+import java.util.LinkedHashSet;
+
+import java.util.LinkedList;
+
+import java.util.List;
+
+import java.util.Map;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import org.apache.commons.logging.Log;
+
+import org.apache.commons.logging.LogFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Controller;
+
+import org.springframework.ui.Model;
+
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import org.springframework.web.servlet.ModelAndView;
 
 
-/**
 
- * @author Kent Rancourt
+import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
 
- */
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+
+import com.aetna.prvrte.rteintranet.facade.Facade;
+
+import com.aetna.prvrte.rteintranet.translator.RTETranslator;
+
+import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
+
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+
+import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
+
+import com.aetna.prvrte.rteintranet.vo.LongRunTransReport3VO;
+
+import com.aetna.prvrte.rteintranet.vo.LongRunTransReport4VO;
+
+import com.aetna.prvrte.rteintranet.vo.LongRunTransactionVO;
+
+import com.aetna.prvrte.rteintranet.vo.LookUpTableListVO;
+
+
 
 @Controller
 
-public class HttpErrorController {
+@RequestMapping(value = "/eventtrack/longruntrans/*")
+
+public class LongRunTransController {
 
 
 
-	@RequestMapping(value = "/errors/403")
+	public static final String LONGRUNTRANS_HOME = ".longRunTransHome";
 
-	public String handle403() {
+	public static final String LONGRUNTRANS_HOME2 = ".longRunTransHome2";
 
-		return ".unauthorized";
+	public static final String LONGRUNTRANS_MODULE = ".longRunHelpLink";
+
+	public static final String LONGRUNTRANS_HOME3 = ".longRunTransHome3";
+
+	public static final String LONGRUNTRANS_HOME4 = ".longRunTransHome4";
+
+	public static final String LONGRUNTRANS_HOMEPAGE = ".longRunTransHomePage";
+
+	public static final String LONGRUNTRANS_LOOKUP = ".longruntransLookUp";
+
+	public static final String LONGRUNTRANS_LOOKUP2 = ".longruntransLookUpReport2";
+
+	public static final String LONGRUNTRANS_LOOKUP3 = ".longruntransLookUpReport3";
+
+	public static final String LONGRUNTRANS_LOOKUP4 = ".longruntransLookUpReport4";
+
+	public static final String LONGRUNTRANS_DISPLAY = ".longruntransDisplay";
+
+	/*
+
+	 * Log factory initialization
+
+	 */
+
+	private static final Log log = LogFactory
+
+			.getLog(LongRunTransController.class);
+
+
+
+	/**
+
+	 * Declare a private method mav
+
+	 */
+
+	private ModelAndView mav;
+
+
+
+	/**
+
+	 * Declare a private method facade
+
+	 */
+
+	@Autowired(required = true)
+
+	private Facade facade;
+
+
+
+	private ModelAndView errormav;
+
+
+
+
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longRunTransHome", method = { RequestMethod.POST,
+
+			RequestMethod.GET })
+
+	public ModelAndView getLongrunTransLookUpHome(Model model,
+
+			HttpServletRequest request) {
+
+
+
+		request.setAttribute("longrunValues", "longrunSession");
+
+		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome()");
+
+
+
+		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME,
+
+				"LongRunTransVO", new LongRunTransactionVO());
+
+		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome()");
+
+		return mav;
+
+	}
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longRunTransHome2", method = { RequestMethod.POST,
+
+			RequestMethod.GET })
+
+	public ModelAndView getLongrunTransLookUpHome2(Model model,
+
+			HttpServletRequest request) {
+
+
+
+		request.setAttribute("longrunValues", "longrunSession");
+
+		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome2()");
+
+
+
+		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME2,
+
+				"LongRunTransVO", new LongRunTransactionVO());
+
+		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome2()");
+
+		return mav;
+
+	}
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longRunTransModuleHelp", method = { RequestMethod.POST,
+
+			RequestMethod.GET })
+
+	public ModelAndView getLongrunTransModule(Model model,
+
+			HttpServletRequest request) {
+
+
+
+		request.setAttribute("longrunValues", "longrunSession");
+
+		log.warn("Entered Long Run Transaction Controller - getLongrunTransModule()");
+
+
+
+		ModelAndView mav = new ModelAndView(LONGRUNTRANS_MODULE,
+
+				"longRunModule", "success");
+
+		log.warn("Exit from Eventtracking - getLongrunTransModule()");
+
+		return mav;
+
+	}
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longRunTransHome3", method = { RequestMethod.POST,
+
+			RequestMethod.GET })
+
+	public ModelAndView getLongrunTransLookUpHome3(Model model,
+
+			HttpServletRequest request) {
+
+
+
+		request.setAttribute("longrunValues", "longrunSession");
+
+		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome3()");
+
+
+
+		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME3,
+
+				"LongRunTransVO", new LongRunTransactionVO());
+
+		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome3()");
+
+		return mav;
+
+	}
+
+
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longRunTransHome4", method = { RequestMethod.POST,
+
+			RequestMethod.GET })
+
+	public ModelAndView getLongrunTransLookUpHome4(Model model,
+
+			HttpServletRequest request) {
+
+
+
+		request.setAttribute("longrunValues", "longrunSession");
+
+		log.warn("Entered Long Run Transaction Controller - getLongrunTransLookUpHome4()");
+
+
+
+		ModelAndView mav = new ModelAndView(LONGRUNTRANS_HOME4,
+
+				"LongRunTransVO", new LongRunTransactionVO());
+
+		log.warn("Exit from Eventtracking - getLongrunTransLookUpHome3()");
+
+		return mav;
+
+	}
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longruntransLookUp", method = RequestMethod.POST)
+
+	public ModelAndView getLongRunTransLookUpList(
+
+			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
+
+			HttpServletRequest request) {
+
+		String startTimestamp = longrunTransVO.getStartDate() + " "
+
+				+ longrunTransVO.getStartHrs() + ":"
+
+				+ longrunTransVO.getStartMns() + ":"
+
+				+ longrunTransVO.getStartSecs();
+
+		String endTimestamp = longrunTransVO.getEndDate() + " "
+
+				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
+
+				+ ":" + longrunTransVO.getEndSecs();
+
+		longrunTransVO.setStartTimestamp(startTimestamp);
+
+		longrunTransVO.setEndTimestamp(endTimestamp);
+
+		
+
+		String report = "";
+
+		if (longrunTransVO.getReport().equals("Report1")) {
+
+			longrunTransVO.setModule("");
+
+			longrunTransVO.setMinutesCalc("0");
+
+			report = "Report1";
+
+		}else{
+
+			longrunTransVO.setMinutesCalc("0");
+
+			report = "Report2";
+
+		}
+
+		if(longrunTransVO.getSecondsCalc().equals("")){
+
+			longrunTransVO.setSecondsCalc("0");
+
+		}
+
+		LongRunTransactionDTO longRunTransDTO = RTETranslator
+
+				.toLongRunTransDTO(longrunTransVO);
+
+		try {
+
+			Map<String, Object> longrunTransMap = facade
+
+					.getLongRunTransLookUpList(longRunTransDTO);
+
+			List<LongRunTransactionVO> longrunTransList = (List<LongRunTransactionVO>) longrunTransMap
+
+					.get("longRunTransList");
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+
+			log.warn("-------------------------------------- lookUp - longrunTransList size: "
+
+					+ longrunTransList.size());
+
+			facade.getApplicationState().setLongRunTransList(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage",
+
+					longrunTransMap.get("longRunTransMessage"));
+
+			mav.addObject("longrunTransList", longrunTransList);
+
+			String securityLevel = "";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+
+
+			mav.addObject("securityLevel", securityLevel);
+
+			mav.addObject("reportNumber", report);
+
+			log.warn("-------------------------------------- lookUp - app state size: "
+
+					+ facade.getApplicationState().getLongRunTransList().size());
+
+			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return errormav;
+
+		}
+
+	}
+
+
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longruntransLookUpReport2", method = RequestMethod.POST)
+
+	public ModelAndView getLongRunTransLookUpList2(
+
+			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
+
+			HttpServletRequest request) {
+
+		String startTimestamp = longrunTransVO.getStartDate() + " "
+
+				+ longrunTransVO.getStartHrs() + ":"
+
+				+ longrunTransVO.getStartMns() + ":"
+
+				+ longrunTransVO.getStartSecs();
+
+		String endTimestamp = longrunTransVO.getEndDate() + " "
+
+				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
+
+				+ ":" + longrunTransVO.getEndSecs();
+
+		longrunTransVO.setStartTimestamp(startTimestamp);
+
+		longrunTransVO.setEndTimestamp(endTimestamp);
+
+		
+
+		String report = "";
+
+		if (longrunTransVO.getReport().equals("Report1")) {
+
+			longrunTransVO.setModule("");
+
+			longrunTransVO.setMinutesCalc("0");
+
+			report = "Report1";
+
+		}else{
+
+			longrunTransVO.setMinutesCalc("0");
+
+			report = "Report2";
+
+		}
+
+		if(longrunTransVO.getSecondsCalc().equals("")){
+
+			longrunTransVO.setSecondsCalc("0");
+
+		}
+
+		LongRunTransactionDTO longRunTransDTO = RTETranslator
+
+				.toLongRunTransDTO(longrunTransVO);
+
+		try {
+
+			Map<String, Object> longrunTransMap = facade
+
+					.getLongRunTransLookUpList(longRunTransDTO);
+
+			List<LongRunTransactionVO> longrunTransList = (List<LongRunTransactionVO>) longrunTransMap
+
+					.get("longRunTransList");
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+
+			log.warn("-------------------------------------- lookUp - longrunTransList size: "
+
+					+ longrunTransList.size());
+
+			facade.getApplicationState().setLongRunTransList(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP2, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage",
+
+					longrunTransMap.get("longRunTransMessage"));
+
+			mav.addObject("longrunTransList", longrunTransList);
+
+			String securityLevel = "";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+
+
+			mav.addObject("securityLevel", securityLevel);
+
+			mav.addObject("reportNumber", report);
+
+			log.warn("-------------------------------------- lookUp - app state size: "
+
+					+ facade.getApplicationState().getLongRunTransList().size());
+
+			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return errormav;
+
+		}
 
 	}
 
 	
 
-	@RequestMapping(value = "/errors/404")
+	@SuppressWarnings("unchecked")
 
-	public String handle404() {
+	@RequestMapping(value = "/longruntransLookUpReport3", method = RequestMethod.POST)
 
-		return ".notFound";
+	public ModelAndView getLongRunTransLookUpList3(
+
+			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
+
+			HttpServletRequest request) {
+
+		longrunTransVO.setModule("");
+
+		longrunTransVO.setSecondsCalc("0");
+
+		String startTimestamp = longrunTransVO.getStartDate() + " "
+
+				+ longrunTransVO.getStartHrs() + ":"
+
+				+ longrunTransVO.getStartMns() + ":"
+
+				+ longrunTransVO.getStartSecs();
+
+		String endTimestamp = longrunTransVO.getEndDate() + " "
+
+				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
+
+				+ ":" + longrunTransVO.getEndSecs();
+
+		longrunTransVO.setStartTimestamp(startTimestamp);
+
+		longrunTransVO.setEndTimestamp(endTimestamp);
+
+		
+
+		String report = "";
+
+		if (longrunTransVO.getModule().equals("")) {
+
+			report = "Report1";
+
+		} else {
+
+			report = "Report2";
+
+		}
+
+		if(longrunTransVO.getSecondsCalc().equals("")){
+
+			longrunTransVO.setSecondsCalc("0");
+
+		}
+
+		LongRunTransactionDTO longRunTransDTO = RTETranslator
+
+				.toLongRunTransDTO(longrunTransVO);
+
+		try {
+
+			Map<String, Object> longrunTransMap = facade
+
+					.getLongRunTransLookUpList(longRunTransDTO);
+
+			List<LongRunTransReport3VO> longrunTransList = (List<LongRunTransReport3VO>) longrunTransMap
+
+					.get("longRunTransList");
+
+			
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setLongRunTransactionVOList3(longrunTransList);
+
+			log.warn("-------------------------------------- lookUp - longrunTransList size: "
+
+					+ longrunTransList.size());
+
+
+
+			facade.getApplicationState().setLongRunTransList3(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP3, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage",
+
+					longrunTransMap.get("longRunTransMessage"));
+
+			mav.addObject("longrunTransList", longrunTransList);
+
+			String securityLevel = "";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+
+
+			mav.addObject("securityLevel", securityLevel);
+
+			mav.addObject("reportNumber", report);
+
+			log.warn("-------------------------------------- lookUp - app state size: "
+
+					+ facade.getApplicationState().getLongRunTransList().size());
+
+			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return errormav;
+
+		}
+
+	}
+
+
+
+	
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/longruntransLookUpReport4", method = RequestMethod.POST)
+
+	public ModelAndView getLongRunTransLookUpList4(
+
+			@ModelAttribute("longruntransForm") LongRunTransactionVO longrunTransVO,
+
+			HttpServletRequest request) {
+
+		longrunTransVO.setModule("");
+
+		longrunTransVO.setMinutesCalc("0");
+
+		if(longrunTransVO.getSecondsCalc().equals("")){
+
+			longrunTransVO.setSecondsCalc("0");
+
+		}
+
+		String startTimestamp = longrunTransVO.getStartDate() + " "
+
+				+ longrunTransVO.getStartHrs() + ":"
+
+				+ longrunTransVO.getStartMns() + ":"
+
+				+ longrunTransVO.getStartSecs();
+
+		String endTimestamp = longrunTransVO.getEndDate() + " "
+
+				+ longrunTransVO.getEndHrs() + ":" + longrunTransVO.getEndMns()
+
+				+ ":" + longrunTransVO.getEndSecs();
+
+		longrunTransVO.setStartTimestamp(startTimestamp);
+
+		longrunTransVO.setEndTimestamp(endTimestamp);
+
+		
+
+		String report = "";
+
+		if (longrunTransVO.getModule().equals("")) {
+
+			report = "Report1";
+
+		} else {
+
+			report = "Report2";
+
+		}
+
+		LongRunTransactionDTO longRunTransDTO = RTETranslator
+
+				.toLongRunTransDTO(longrunTransVO);
+
+		try {
+
+			Map<String, Object> longrunTransMap = facade
+
+					.getLongRunTransLookUpList(longRunTransDTO);
+
+			List<LongRunTransReport4VO> longrunTransList = (List<LongRunTransReport4VO>) longrunTransMap
+
+					.get("longRunTransList");
+
+			
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setLongRunTransactionVOList4(longrunTransList);
+
+			log.warn("-------------------------------------- lookUp - longrunTransList size: "
+
+					+ longrunTransList.size());
+
+
+
+			facade.getApplicationState().setLongRunTransList4(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP4, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage",
+
+					longrunTransMap.get("longRunTransMessage"));
+
+			mav.addObject("longrunTransList", longrunTransList);
+
+			String securityLevel = "";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+
+
+			mav.addObject("securityLevel", securityLevel);
+
+			mav.addObject("reportNumber", report);
+
+			log.warn("-------------------------------------- lookUp - app state size: "
+
+					+ facade.getApplicationState().getLongRunTransList().size());
+
+			log.warn("-------------------------------------- exit  LongRunTransController - getLongRunTransLookUpList ");
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - getLongRunTransLookUpList() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errormav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errormav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return errormav;
+
+		}
 
 	}
 
 	
+
+	@RequestMapping(value = "/longRunTransExport", method = RequestMethod.POST)
+
+	public ModelAndView longRunTransExport(HttpServletResponse response) {
+
+		List<LongRunTransactionVO> longrunTransList = new LinkedList<LongRunTransactionVO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String adasvctMsg = "";
+
+		try {
+
+			longrunTransList = facade.getApplicationState()
+
+					.getLongRunTransList();
+
+
+
+			if (longrunTransList != null && longrunTransList.size() != 0) {
+
+				// Key map to create header
+
+				// String report = longrunTransList.get(0).getReportNumber();
+
+				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+
+				keyMap.put("convrsnCDResult", "CONVERSATION CODE");
+
+				keyMap.put("vanIDCDResult", "VAN ID");
+
+				keyMap.put("typCDResult", "TYPE CODE");
+
+				/*
+
+				 * if(report.equals("Report2")){ keyMap.put("loadNameResult",
+
+				 * "SBMLETK_LOAD_NM"); }
+
+				 */
+
+				keyMap.put("resultSecondsResult", "TIME IN SECONDS");
+
+
+
+				RteIntranetUtils.exportToExcel(response, longrunTransList,
+
+						keyMap);
+
+				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_DATA;
+
+			}
+
+			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage", adasvctMsg);
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return mav;
+
+		}
+
+	}
+
+
+
+	@RequestMapping(value = "/longRunTransExport2", method = RequestMethod.POST)
+
+	public ModelAndView longRunTransReport2Export(HttpServletResponse response) {
+
+		List<LongRunTransactionVO> longrunTransList = new LinkedList<LongRunTransactionVO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String adasvctMsg = "";
+
+		try {
+
+			longrunTransList = facade.getApplicationState()
+
+					.getLongRunTransList();
+
+
+
+			if (longrunTransList != null && longrunTransList.size() != 0) {
+
+				// Key map to create header
+
+				// String report = longrunTransList.get(0).getReportNumber();
+
+				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+
+				keyMap.put("convrsnCDResult", "CONVERSATION CODE");
+
+				keyMap.put("vanIDCDResult", "VAN ID");
+
+				keyMap.put("typCDResult", "TYPE CODE");
+
+				keyMap.put("loadNameResult", "MODULE NAME");
+
+				keyMap.put("resultSecondsResult", "TIME IN SECONDS");
+
+
+
+				RteIntranetUtils.exportToExcel(response, longrunTransList,
+
+						keyMap);
+
+				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_DATA;
+
+			}
+
+			lookUpTableListVO.setLongRunTransactionVOList(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage", adasvctMsg);
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return mav;
+
+		}
+
+	}
+
+	@RequestMapping(value = "/longRunTransExport3", method = RequestMethod.POST)
+
+	public ModelAndView longRunTransReport3Export(HttpServletResponse response) {
+
+		List<LongRunTransReport3VO> longrunTransList = new LinkedList<LongRunTransReport3VO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String adasvctMsg = "";
+
+		try {
+
+			longrunTransList = facade.getApplicationState()
+
+					.getLongRunTransList3();
+
+
+
+			if (longrunTransList != null && longrunTransList.size() != 0) {
+
+				// Key map to create header
+
+				// String report = longrunTransList.get(0).getReportNumber();
+
+				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+
+				keyMap.put("startDate", "DATE");
+
+				keyMap.put("startTime", "START TIME");
+
+				keyMap.put("endTime", "END TIME");
+
+				keyMap.put("zeroTimeTaken", "0 Second");
+
+				keyMap.put("oneTimeTaken", "1 Second");
+
+				keyMap.put("twoTimeTaken", "2 Seconds");
+
+				keyMap.put("threeTimeTaken", "3 Seconds");
+
+				keyMap.put("fourTimeTaken", "4 Seconds");
+
+				keyMap.put("fiveTimeTaken", "5 Seconds");
+
+				keyMap.put("sixTimeTaken", "6 Seconds");
+
+				keyMap.put("sevenTimeTaken", "7 Seconds and above");
+
+				
+
+				RteIntranetUtils.exportToExcel(response, longrunTransList,
+
+						keyMap);
+
+				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_DATA;
+
+			}
+
+			lookUpTableListVO.setLongRunTransactionVOList3(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage", adasvctMsg);
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return mav;
+
+		}
+
+	}
+
+	
+
+	@RequestMapping(value = "/longRunTransExport4", method = RequestMethod.POST)
+
+	public ModelAndView longRunTransReport4Export(HttpServletResponse response) {
+
+		List<LongRunTransReport4VO> longrunTransList = new LinkedList<LongRunTransReport4VO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String adasvctMsg = "";
+
+		try {
+
+			longrunTransList = facade.getApplicationState()
+
+					.getLongRunTransList4();
+
+
+
+			if (longrunTransList != null && longrunTransList.size() != 0) {
+
+				// Key map to create header
+
+				// String report = longrunTransList.get(0).getReportNumber();
+
+				Map<String, String> keyMap = new LinkedHashMap<String, String>();
+
+				keyMap.put("seconds", "Seconds");
+
+				keyMap.put("dmCount", "DM PROCESS");
+
+				keyMap.put("tradCount", "TRADITIONAL");
+
+				keyMap.put("dentalCount", "DENTAL");
+
+				keyMap.put("hmoCount", "HMO");
+
+				keyMap.put("outBoundCount", "OUTBOUND");
+
+				keyMap.put("providerCount", "PROVIDER");
+
+				keyMap.put("hrpCount", "HRP");
+
+				keyMap.put("asjCount", "ASH/SRC");
+
+				
+
+				RteIntranetUtils.exportToExcel(response, longrunTransList,
+
+						keyMap);
+
+				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_DATA;
+
+			}
+
+			lookUpTableListVO.setLongRunTransactionVOList4(longrunTransList);
+
+			mav = new ModelAndView(LONGRUNTRANS_LOOKUP, "lookUpTableListVO",
+
+					lookUpTableListVO);
+
+			mav.addObject("longRunTransMessage", adasvctMsg);
+
+			return mav;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in LongRunTransController - longRunTransExport() method:"
+
+					+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE
+
+					+ "(LongRunTransController) "
+
+					+ RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			mav = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			mav.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return mav;
+
+		}
+
+	}
 
 }
+
