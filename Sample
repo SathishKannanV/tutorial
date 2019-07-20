@@ -1,5 +1,61 @@
-aefw.environment.name=dev
+<?xml version="1.0" encoding="UTF-8"?>
 
-#aefw.environment.root=/QAAPPS/RTE_INTRANET
+<configuration>
 
-aefw.environment.root=/var/webapps/RteIntranet
+ 
+	<appender name="CA" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="RFA" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/var/webapps/RteIntranet/log/RteIntranet_warn.log</file>
+    		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      			<fileNamePattern>RteIntranet_warn.%i.log.zip</fileNamePattern>
+      			<minIndex>1</minIndex>
+      			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      			<maxFileSize>5MB</maxFileSize>
+    		</triggeringPolicy>
+		<encoder>
+			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+ 
+
+	<!-- CXF request/response logging -->
+	<logger name="com.aetna.aetnainternational.serviceagents.wrapper" level="WARN" additivity="false">
+		<appender-ref ref="RFA"/>
+	</logger>
+	
+	<root level="INFO">
+		<appender-ref ref="RFA"/>
+	</root>
+
+	<appender name="RFAE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/var/webapps/RteIntranet/log/RteIntranet_error.log</file>
+    		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      			<fileNamePattern>RteIntranet_error.%i.log.zip</fileNamePattern>
+      			<minIndex>1</minIndex>
+      			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      			<maxFileSize>5MB</maxFileSize>
+    		</triggeringPolicy>
+		<encoder>
+			<pattern>APPNAME=RteIntranet: %d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+ </appender>
+
+   <root level="ERROR">
+    <appender-ref ref="CA"/>
+   <appender-ref ref="RFAE"/>
+  </root>
+  
+  <root level="WARN">
+		<appender-ref ref="RFA"/>
+	</root>
+</configuration>
