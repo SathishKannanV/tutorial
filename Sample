@@ -4,199 +4,83 @@ package com.aetna.prvrte.rteintranet.vo;
 
 import java.io.Serializable;
 
-
-
-public class SbmsnrVO implements Serializable {
+import java.util.ArrayList;
 
 
 
-	
+public class SrapidtlVO implements  Serializable {
 
-	private String tranType = new String();
+	/**
 
-	private String alphaSearchInd = new String();
+	 * 
 
-	private String sbmtPvdrLastName = new String();
+	 */
 
-	private String sbmtPvdrFirstName = new String();
+	private static final long serialVersionUID = 1L;
 
-	private String sbmtPvdrMidName = new String();
+	private String coverageTypeCd = new String();
 
-	private String sbmtPvdrTitle = new String();
+	private String programName = new String();
 
-	private String sbmtPvdrAddr1 = new String();
+	private String ebsBenefitData = new String();
 
-	private String sbmtPvdrAddr2 = new String();
+	private String convIdCode ="";
 
-	private String sbmtPvdrCity = new String();
+	private String vanIdCd = "";
 
-	private String sbmtPvdrState = new String();
+	private String typeCd = "";
 
-	private String sbmPvdrZipCd = new String();
+	private String postedDt = "";
 
-	private String spCommunication1No = new String();
+	private String tranType ="";
 
-	private String subscriberIdCd = new String();
+	private String seqNo;
 
-	private String memberIdCd = new String();
-
-	private String subsLastName = new String();
-
-	private String subsFirstName = new String();
-
-	private String subsMidName = new String();
-
-	private String subsTitle = new String();
-
-	private String patientLastName = new String();
-
-	private String patientFirstName = new String();
-
-	private String patientMidName = new String();
-
-	private String patientTitle = new String();
-
-	private String patientBirthdate = new String();
-
-	private String relationToSubsCode = new String();
-
-	private String patientSexCode = new String();
-
-	private String assistantPhoneNo = new String();
-
-	private String effDate = new String();
-
-	private String respTime = new String();
-
-	private String respTypeCd = new String();
-
-	private String postedDt = new String();
-
-	private String employerName = new String();
-
-	private String controlNo= new String();
-
-	private String suffixNo= new String();;
-
-	private String accountNo= new String();
-
-	private String claimOfficeCd = new String();
-
-	private String providerTypeCd = new String();
-
-	private String postedTime = new String();
-
-	private String productName = new String();
-
-	private String unitProvideAsst = new String();
-
-	private String networkIdNo= new String();
-
-	private String coverageLevelCode = new String();
-
-	private String sbmsnrTypeCd = new String();
-
-	private String coverageToDate = new String();
-
-	private String groupCd = new String();
-
-	private String insuranceLineCd = new String();
-
-	private String payorCobCd = new String();
-
-	private String planNetworkCd = new String();
-
-	private String siteCd = new String();
-
-	private String subGroupCd = new String();
-
-	private String covgFromDate = new String();
-
-	private String medUnitIdCd = new String();
+	private String controlNo;
 
 	private String benefitIdCd = new String();
 
-	private String pbnfSeqNo = new String();
+	public String getCount() {
 
-	private String planNo = new String();
+		return count;
+
+	}
+
+	public void setCount(String count) {
+
+		this.count = count;
+
+	}
+
+	private String pbnfSeqNo;
+
+	private String planNo;
 
 	private String planSummaryCd = new String();
 
-	private String subsIdQualCd = new String();
-
-	private String depIdQualCode = new String();
-
-	private String transactionTypeCd = new String();
-
-	private String convIdCode = new String();
-
-	private String vanIdCd = new String();
-
-	private String typeCd = new String();
-
-	private String employeeId = new String();
-
-	private String spCommNoQualCd = new String();
-
-	private String subsPhoneNo= new String();
-
-	private String depsPhoneNo= new String();;
-
-	private String patientAddr1 = new String();
-
-	private String patientAddr2 = new String();
-
-	private String patientCity = new String();
-
-	private String patientState = new String();
-
-	private String patientZipCd = new String();
-
-	private String memberTermDate = new String();
-
-	private String depTermDate = new String();
-
 	private String planName = new String();
 
-	private String claimOfficeName = new String();
+	private String apisrtName = new String();
 
-	private String claimOfficeAddr1 = new String();
+	private String count = "";
 
-	private String claimOfficeAddr2 = new String();
+	
 
-	private String claimOffLocationCd = new String();
+	private ArrayList dbEbsBenefitData = new ArrayList();
 
-	private String claimOfficeState = new String();
+	public ArrayList getDbEbsBenefitData() {
 
-	private String claimOfficeZipCd = new String();
+		return dbEbsBenefitData;
 
-	private String cobPrimSecCd = new String();
+	}
 
-	private String lastSvcDate = new String();
+	public void setDbEbsBenefitData(ArrayList dbEbsBenefitData) {
 
-	private String cobInd = new String();
+		this.dbEbsBenefitData = dbEbsBenefitData;
 
-	private String cobCarrierName = new String();
+	}
 
-	private String cobPolicyNo = new String();
-
-	private String cobEffDate = new String();
-
-	private String cobExpDate = new String();
-
-	private String depIdCd = new String();
-
-	private String capLabName = new String();
-
-	private String capXrayName = new String();
-
-	private String capLabPhone = new String();
-
-	private String capXrayPhone = new String();
-
-	private String familyLevelInd = new String();
-
-	public SbmsnrVO() {
+	public SrapidtlVO() {
 
 		super();
 
@@ -204,191 +88,23 @@ public class SbmsnrVO implements Serializable {
 
 	}
 
-	public SbmsnrVO(String tranType, String alphaSearchInd,
+	public SrapidtlVO(String coverageTypeCd, String programName,
 
-			String sbmtPvdrLastName, String sbmtPvdrFirstName,
+			String ebsBenefitData, String convIdCode, String vanIdCd,
 
-			String sbmtPvdrMidName, String sbmtPvdrTitle, String sbmtPvdrAddr1,
+			String typeCd, String postedDt, String tranType, String seqNo,
 
-			String sbmtPvdrAddr2, String sbmtPvdrCity, String sbmtPvdrState,
+			String controlNo, String benefitIdCd, String pbnfSeqNo, String planNo,
 
-			String sbmPvdrZipCd, String spCommunication1No,
-
-			String subscriberIdCd, String memberIdCd, String subsLastName,
-
-			String subsFirstName, String subsMidName, String subsTitle,
-
-			String patientLastName, String patientFirstName,
-
-			String patientMidName, String patientTitle,
-
-			String patientBirthdate, String relationToSubsCode,
-
-			String patientSexCode, String assistantPhoneNo, String effDate,
-
-			String respTime, String respTypeCd, String postedDt,
-
-			String employerName, String controlNo, String suffixNo,
-
-			String accountNo, String claimOfficeCd, String providerTypeCd,
-
-			String postedTime, String productName, String unitProvideAsst,
-
-			String networkIdNo, String coverageLevelCode, String sbmsnrTypeCd,
-
-			String coverageToDate, String groupCd, String insuranceLineCd,
-
-			String payorCobCd, String planNetworkCd, String siteCd,
-
-			String subGroupCd, String covgFromDate, String medUnitIdCd,
-
-			String benefitIdCd, String pbnfSeqNo, String planNo,
-
-			String planSummaryCd, String subsIdQualCd, String depIdQualCode,
-
-			String transactionTypeCd, String convIdCode, String vanIdCd,
-
-			String typeCd, String employeeId, String spCommNoQualCd,
-
-			String subsPhoneNo, String depsPhoneNo, String patientAddr1,
-
-			String patientAddr2, String patientCity, String patientState,
-
-			String patientZipCd, String memberTermDate, String depTermDate,
-
-			String planName, String claimOfficeName, String claimOfficeAddr1,
-
-			String claimOfficeAddr2, String claimOffLocationCd,
-
-			String claimOfficeState, String claimOfficeZipCd,
-
-			String cobPrimSecCd, String lastSvcDate, String cobInd,
-
-			String cobCarrierName, String cobPolicyNo, String cobEffDate,
-
-			String cobExpDate, String depIdCd, String capLabName,
-
-			String capXrayName, String capLabPhone, String capXrayPhone,
-
-			String familyLevelInd) {
+			String planSummaryCd, String planName, String apisrtName) {
 
 		super();
 
-		this.tranType = tranType;
+		this.coverageTypeCd = coverageTypeCd;
 
-		this.alphaSearchInd = alphaSearchInd;
+		this.programName = programName;
 
-		this.sbmtPvdrLastName = sbmtPvdrLastName;
-
-		this.sbmtPvdrFirstName = sbmtPvdrFirstName;
-
-		this.sbmtPvdrMidName = sbmtPvdrMidName;
-
-		this.sbmtPvdrTitle = sbmtPvdrTitle;
-
-		this.sbmtPvdrAddr1 = sbmtPvdrAddr1;
-
-		this.sbmtPvdrAddr2 = sbmtPvdrAddr2;
-
-		this.sbmtPvdrCity = sbmtPvdrCity;
-
-		this.sbmtPvdrState = sbmtPvdrState;
-
-		this.sbmPvdrZipCd = sbmPvdrZipCd;
-
-		this.spCommunication1No = spCommunication1No;
-
-		this.subscriberIdCd = subscriberIdCd;
-
-		this.memberIdCd = memberIdCd;
-
-		this.subsLastName = subsLastName;
-
-		this.subsFirstName = subsFirstName;
-
-		this.subsMidName = subsMidName;
-
-		this.subsTitle = subsTitle;
-
-		this.patientLastName = patientLastName;
-
-		this.patientFirstName = patientFirstName;
-
-		this.patientMidName = patientMidName;
-
-		this.patientTitle = patientTitle;
-
-		this.patientBirthdate = patientBirthdate;
-
-		this.relationToSubsCode = relationToSubsCode;
-
-		this.patientSexCode = patientSexCode;
-
-		this.assistantPhoneNo = assistantPhoneNo;
-
-		this.effDate = effDate;
-
-		this.respTime = respTime;
-
-		this.respTypeCd = respTypeCd;
-
-		this.postedDt = postedDt;
-
-		this.employerName = employerName;
-
-		this.controlNo = controlNo;
-
-		this.suffixNo = suffixNo;
-
-		this.accountNo = accountNo;
-
-		this.claimOfficeCd = claimOfficeCd;
-
-		this.providerTypeCd = providerTypeCd;
-
-		this.postedTime = postedTime;
-
-		this.productName = productName;
-
-		this.unitProvideAsst = unitProvideAsst;
-
-		this.networkIdNo = networkIdNo;
-
-		this.coverageLevelCode = coverageLevelCode;
-
-		this.sbmsnrTypeCd = sbmsnrTypeCd;
-
-		this.coverageToDate = coverageToDate;
-
-		this.groupCd = groupCd;
-
-		this.insuranceLineCd = insuranceLineCd;
-
-		this.payorCobCd = payorCobCd;
-
-		this.planNetworkCd = planNetworkCd;
-
-		this.siteCd = siteCd;
-
-		this.subGroupCd = subGroupCd;
-
-		this.covgFromDate = covgFromDate;
-
-		this.medUnitIdCd = medUnitIdCd;
-
-		this.benefitIdCd = benefitIdCd;
-
-		this.pbnfSeqNo = pbnfSeqNo;
-
-		this.planNo = planNo;
-
-		this.planSummaryCd = planSummaryCd;
-
-		this.subsIdQualCd = subsIdQualCd;
-
-		this.depIdQualCode = depIdQualCode;
-
-		this.transactionTypeCd = transactionTypeCd;
+		this.ebsBenefitData = ebsBenefitData;
 
 		this.convIdCode = convIdCode;
 
@@ -396,763 +112,61 @@ public class SbmsnrVO implements Serializable {
 
 		this.typeCd = typeCd;
 
-		this.employeeId = employeeId;
-
-		this.spCommNoQualCd = spCommNoQualCd;
-
-		this.subsPhoneNo = subsPhoneNo;
-
-		this.depsPhoneNo = depsPhoneNo;
-
-		this.patientAddr1 = patientAddr1;
-
-		this.patientAddr2 = patientAddr2;
-
-		this.patientCity = patientCity;
-
-		this.patientState = patientState;
-
-		this.patientZipCd = patientZipCd;
-
-		this.memberTermDate = memberTermDate;
-
-		this.depTermDate = depTermDate;
-
-		this.planName = planName;
-
-		this.claimOfficeName = claimOfficeName;
-
-		this.claimOfficeAddr1 = claimOfficeAddr1;
-
-		this.claimOfficeAddr2 = claimOfficeAddr2;
-
-		this.claimOffLocationCd = claimOffLocationCd;
-
-		this.claimOfficeState = claimOfficeState;
-
-		this.claimOfficeZipCd = claimOfficeZipCd;
-
-		this.cobPrimSecCd = cobPrimSecCd;
-
-		this.lastSvcDate = lastSvcDate;
-
-		this.cobInd = cobInd;
-
-		this.cobCarrierName = cobCarrierName;
-
-		this.cobPolicyNo = cobPolicyNo;
-
-		this.cobEffDate = cobEffDate;
-
-		this.cobExpDate = cobExpDate;
-
-		this.depIdCd = depIdCd;
-
-		this.capLabName = capLabName;
-
-		this.capXrayName = capXrayName;
-
-		this.capLabPhone = capLabPhone;
-
-		this.capXrayPhone = capXrayPhone;
-
-		this.familyLevelInd = familyLevelInd;
-
-	}
-
-	public String getTranType() {
-
-		return tranType;
-
-	}
-
-	public void setTranType(String tranType) {
+		this.postedDt = postedDt;
 
 		this.tranType = tranType;
 
-	}
-
-	public String getAlphaSearchInd() {
-
-		return alphaSearchInd;
-
-	}
-
-	public void setAlphaSearchInd(String alphaSearchInd) {
-
-		this.alphaSearchInd = alphaSearchInd;
-
-	}
-
-	public String getSbmtPvdrLastName() {
-
-		return sbmtPvdrLastName;
-
-	}
-
-	public void setSbmtPvdrLastName(String sbmtPvdrLastName) {
-
-		this.sbmtPvdrLastName = sbmtPvdrLastName;
-
-	}
-
-	public String getSbmtPvdrFirstName() {
-
-		return sbmtPvdrFirstName;
-
-	}
-
-	public void setSbmtPvdrFirstName(String sbmtPvdrFirstName) {
-
-		this.sbmtPvdrFirstName = sbmtPvdrFirstName;
-
-	}
-
-	public String getSbmtPvdrMidName() {
-
-		return sbmtPvdrMidName;
-
-	}
-
-	public void setSbmtPvdrMidName(String sbmtPvdrMidName) {
-
-		this.sbmtPvdrMidName = sbmtPvdrMidName;
-
-	}
-
-	public String getSbmtPvdrTitle() {
-
-		return sbmtPvdrTitle;
-
-	}
-
-	public void setSbmtPvdrTitle(String sbmtPvdrTitle) {
-
-		this.sbmtPvdrTitle = sbmtPvdrTitle;
-
-	}
-
-	public String getSbmtPvdrAddr1() {
-
-		return sbmtPvdrAddr1;
-
-	}
-
-	public void setSbmtPvdrAddr1(String sbmtPvdrAddr1) {
-
-		this.sbmtPvdrAddr1 = sbmtPvdrAddr1;
-
-	}
-
-	public String getSbmtPvdrAddr2() {
-
-		return sbmtPvdrAddr2;
-
-	}
-
-	public void setSbmtPvdrAddr2(String sbmtPvdrAddr2) {
-
-		this.sbmtPvdrAddr2 = sbmtPvdrAddr2;
-
-	}
-
-	public String getSbmtPvdrCity() {
-
-		return sbmtPvdrCity;
-
-	}
-
-	public void setSbmtPvdrCity(String sbmtPvdrCity) {
-
-		this.sbmtPvdrCity = sbmtPvdrCity;
-
-	}
-
-	public String getSbmtPvdrState() {
-
-		return sbmtPvdrState;
-
-	}
-
-	public void setSbmtPvdrState(String sbmtPvdrState) {
-
-		this.sbmtPvdrState = sbmtPvdrState;
-
-	}
-
-	public String getSbmPvdrZipCd() {
-
-		return sbmPvdrZipCd;
-
-	}
-
-	public void setSbmPvdrZipCd(String sbmPvdrZipCd) {
-
-		this.sbmPvdrZipCd = sbmPvdrZipCd;
-
-	}
-
-	public String getSpCommunication1No() {
-
-		return spCommunication1No;
-
-	}
-
-	public void setSpCommunication1No(String spCommunication1No) {
-
-		this.spCommunication1No = spCommunication1No;
-
-	}
-
-	public String getSubscriberIdCd() {
-
-		return subscriberIdCd;
-
-	}
-
-	public void setSubscriberIdCd(String subscriberIdCd) {
-
-		this.subscriberIdCd = subscriberIdCd;
-
-	}
-
-	public String getMemberIdCd() {
-
-		return memberIdCd;
-
-	}
-
-	public void setMemberIdCd(String memberIdCd) {
-
-		this.memberIdCd = memberIdCd;
-
-	}
-
-	public String getSubsLastName() {
-
-		return subsLastName;
-
-	}
-
-	public void setSubsLastName(String subsLastName) {
-
-		this.subsLastName = subsLastName;
-
-	}
-
-	public String getSubsFirstName() {
-
-		return subsFirstName;
-
-	}
-
-	public void setSubsFirstName(String subsFirstName) {
-
-		this.subsFirstName = subsFirstName;
-
-	}
-
-	public String getSubsMidName() {
-
-		return subsMidName;
-
-	}
-
-	public void setSubsMidName(String subsMidName) {
-
-		this.subsMidName = subsMidName;
-
-	}
-
-	public String getSubsTitle() {
-
-		return subsTitle;
-
-	}
-
-	public void setSubsTitle(String subsTitle) {
-
-		this.subsTitle = subsTitle;
-
-	}
-
-	public String getPatientLastName() {
-
-		return patientLastName;
-
-	}
-
-	public void setPatientLastName(String patientLastName) {
-
-		this.patientLastName = patientLastName;
-
-	}
-
-	public String getPatientFirstName() {
-
-		return patientFirstName;
-
-	}
-
-	public void setPatientFirstName(String patientFirstName) {
-
-		this.patientFirstName = patientFirstName;
-
-	}
-
-	public String getPatientMidName() {
-
-		return patientMidName;
-
-	}
-
-	public void setPatientMidName(String patientMidName) {
-
-		this.patientMidName = patientMidName;
-
-	}
-
-	public String getPatientTitle() {
-
-		return patientTitle;
-
-	}
-
-	public void setPatientTitle(String patientTitle) {
-
-		this.patientTitle = patientTitle;
-
-	}
-
-	public String getPatientBirthdate() {
-
-		return patientBirthdate;
-
-	}
-
-	public void setPatientBirthdate(String patientBirthdate) {
-
-		this.patientBirthdate = patientBirthdate;
-
-	}
-
-	public String getRelationToSubsCode() {
-
-		return relationToSubsCode;
-
-	}
-
-	public void setRelationToSubsCode(String relationToSubsCode) {
-
-		this.relationToSubsCode = relationToSubsCode;
-
-	}
-
-	public String getPatientSexCode() {
-
-		return patientSexCode;
-
-	}
-
-	public void setPatientSexCode(String patientSexCode) {
-
-		this.patientSexCode = patientSexCode;
-
-	}
-
-	public String getAssistantPhoneNo() {
-
-		return assistantPhoneNo;
-
-	}
-
-	public void setAssistantPhoneNo(String assistantPhoneNo) {
-
-		this.assistantPhoneNo = assistantPhoneNo;
-
-	}
-
-	public String getEffDate() {
-
-		return effDate;
-
-	}
-
-	public void setEffDate(String effDate) {
-
-		this.effDate = effDate;
-
-	}
-
-	public String getRespTime() {
-
-		return respTime;
-
-	}
-
-	public void setRespTime(String respTime) {
-
-		this.respTime = respTime;
-
-	}
-
-	public String getRespTypeCd() {
-
-		return respTypeCd;
-
-	}
-
-	public void setRespTypeCd(String respTypeCd) {
-
-		this.respTypeCd = respTypeCd;
-
-	}
-
-	public String getPostedDt() {
-
-		return postedDt;
-
-	}
-
-	public void setPostedDt(String postedDt) {
-
-		this.postedDt = postedDt;
-
-	}
-
-	public String getEmployerName() {
-
-		return employerName;
-
-	}
-
-	public void setEmployerName(String employerName) {
-
-		this.employerName = employerName;
-
-	}
-
-	public String getControlNo() {
-
-		return controlNo;
-
-	}
-
-	public void setControlNo(String controlNo) {
+		this.seqNo = seqNo;
 
 		this.controlNo = controlNo;
 
-	}
-
-	public String getSuffixNo() {
-
-		return suffixNo;
-
-	}
-
-	public void setSuffixNo(String suffixNo) {
-
-		this.suffixNo = suffixNo;
-
-	}
-
-	public String getAccountNo() {
-
-		return accountNo;
-
-	}
-
-	public void setAccountNo(String accountNo) {
-
-		this.accountNo = accountNo;
-
-	}
-
-	public String getClaimOfficeCd() {
-
-		return claimOfficeCd;
-
-	}
-
-	public void setClaimOfficeCd(String claimOfficeCd) {
-
-		this.claimOfficeCd = claimOfficeCd;
-
-	}
-
-	public String getProviderTypeCd() {
-
-		return providerTypeCd;
-
-	}
-
-	public void setProviderTypeCd(String providerTypeCd) {
-
-		this.providerTypeCd = providerTypeCd;
-
-	}
-
-	public String getPostedTime() {
-
-		return postedTime;
-
-	}
-
-	public void setPostedTime(String postedTime) {
-
-		this.postedTime = postedTime;
-
-	}
-
-	public String getProductName() {
-
-		return productName;
-
-	}
-
-	public void setProductName(String productName) {
-
-		this.productName = productName;
-
-	}
-
-	public String getUnitProvideAsst() {
-
-		return unitProvideAsst;
-
-	}
-
-	public void setUnitProvideAsst(String unitProvideAsst) {
-
-		this.unitProvideAsst = unitProvideAsst;
-
-	}
-
-	public String getNetworkIdNo() {
-
-		return networkIdNo;
-
-	}
-
-	public void setNetworkIdNo(String networkIdNo) {
-
-		this.networkIdNo = networkIdNo;
-
-	}
-
-	public String getCoverageLevelCode() {
-
-		return coverageLevelCode;
-
-	}
-
-	public void setCoverageLevelCode(String coverageLevelCode) {
-
-		this.coverageLevelCode = coverageLevelCode;
-
-	}
-
-	public String getSbmsnrTypeCd() {
-
-		return sbmsnrTypeCd;
-
-	}
-
-	public void setSbmsnrTypeCd(String sbmsnrTypeCd) {
-
-		this.sbmsnrTypeCd = sbmsnrTypeCd;
-
-	}
-
-	public String getCoverageToDate() {
-
-		return coverageToDate;
-
-	}
-
-	public void setCoverageToDate(String coverageToDate) {
-
-		this.coverageToDate = coverageToDate;
-
-	}
-
-	public String getGroupCd() {
-
-		return groupCd;
-
-	}
-
-	public void setGroupCd(String groupCd) {
-
-		this.groupCd = groupCd;
-
-	}
-
-	public String getInsuranceLineCd() {
-
-		return insuranceLineCd;
-
-	}
-
-	public void setInsuranceLineCd(String insuranceLineCd) {
-
-		this.insuranceLineCd = insuranceLineCd;
-
-	}
-
-	public String getPayorCobCd() {
-
-		return payorCobCd;
-
-	}
-
-	public void setPayorCobCd(String payorCobCd) {
-
-		this.payorCobCd = payorCobCd;
-
-	}
-
-	public String getPlanNetworkCd() {
-
-		return planNetworkCd;
-
-	}
-
-	public void setPlanNetworkCd(String planNetworkCd) {
-
-		this.planNetworkCd = planNetworkCd;
-
-	}
-
-	public String getSiteCd() {
-
-		return siteCd;
-
-	}
-
-	public void setSiteCd(String siteCd) {
-
-		this.siteCd = siteCd;
-
-	}
-
-	public String getSubGroupCd() {
-
-		return subGroupCd;
-
-	}
-
-	public void setSubGroupCd(String subGroupCd) {
-
-		this.subGroupCd = subGroupCd;
-
-	}
-
-	public String getCovgFromDate() {
-
-		return covgFromDate;
-
-	}
-
-	public void setCovgFromDate(String covgFromDate) {
-
-		this.covgFromDate = covgFromDate;
-
-	}
-
-	public String getMedUnitIdCd() {
-
-		return medUnitIdCd;
-
-	}
-
-	public void setMedUnitIdCd(String medUnitIdCd) {
-
-		this.medUnitIdCd = medUnitIdCd;
-
-	}
-
-	public String getBenefitIdCd() {
-
-		return benefitIdCd;
-
-	}
-
-	public void setBenefitIdCd(String benefitIdCd) {
-
 		this.benefitIdCd = benefitIdCd;
-
-	}
-
-	public String getPbnfSeqNo() {
-
-		return pbnfSeqNo;
-
-	}
-
-	public void setPbnfSeqNo(String pbnfSeqNo) {
 
 		this.pbnfSeqNo = pbnfSeqNo;
 
-	}
-
-	public String getPlanNo() {
-
-		return planNo;
-
-	}
-
-	public void setPlanNo(String planNo) {
-
 		this.planNo = planNo;
-
-	}
-
-	public String getPlanSummaryCd() {
-
-		return planSummaryCd;
-
-	}
-
-	public void setPlanSummaryCd(String planSummaryCd) {
 
 		this.planSummaryCd = planSummaryCd;
 
-	}
+		this.planName = planName;
 
-	public String getSubsIdQualCd() {
-
-		return subsIdQualCd;
+		this.apisrtName = apisrtName;
 
 	}
 
-	public void setSubsIdQualCd(String subsIdQualCd) {
+	public String getCoverageTypeCd() {
 
-		this.subsIdQualCd = subsIdQualCd;
-
-	}
-
-	public String getDepIdQualCode() {
-
-		return depIdQualCode;
+		return coverageTypeCd;
 
 	}
 
-	public void setDepIdQualCode(String depIdQualCode) {
+	public void setCoverageTypeCd(String coverageTypeCd) {
 
-		this.depIdQualCode = depIdQualCode;
-
-	}
-
-	public String getTransactionTypeCd() {
-
-		return transactionTypeCd;
+		this.coverageTypeCd = coverageTypeCd;
 
 	}
 
-	public void setTransactionTypeCd(String transactionTypeCd) {
+	public String getProgramName() {
 
-		this.transactionTypeCd = transactionTypeCd;
+		return programName;
+
+	}
+
+	public void setProgramName(String programName) {
+
+		this.programName = programName;
+
+	}
+
+	public String getEbsBenefitData() {
+
+		return ebsBenefitData;
+
+	}
+
+	public void setEbsBenefitData(String ebsBenefitData) {
+
+		this.ebsBenefitData = ebsBenefitData;
 
 	}
 
@@ -1192,135 +206,41 @@ public class SbmsnrVO implements Serializable {
 
 	}
 
-	public String getEmployeeId() {
+	public String getPostedDt() {
 
-		return employeeId;
-
-	}
-
-	public void setEmployeeId(String employeeId) {
-
-		this.employeeId = employeeId;
+		return postedDt;
 
 	}
 
-	public String getSpCommNoQualCd() {
+	public void setPostedDt(String postedDt) {
 
-		return spCommNoQualCd;
-
-	}
-
-	public void setSpCommNoQualCd(String spCommNoQualCd) {
-
-		this.spCommNoQualCd = spCommNoQualCd;
+		this.postedDt = postedDt;
 
 	}
 
-	public String getSubsPhoneNo() {
+	public String getTranType() {
 
-		return subsPhoneNo;
-
-	}
-
-	public void setSubsPhoneNo(String subsPhoneNo) {
-
-		this.subsPhoneNo = subsPhoneNo;
+		return tranType;
 
 	}
 
-	public String getDepsPhoneNo() {
+	public void setTranType(String tranType) {
 
-		return depsPhoneNo;
-
-	}
-
-	public void setDepsPhoneNo(String depsPhoneNo) {
-
-		this.depsPhoneNo = depsPhoneNo;
+		this.tranType = tranType;
 
 	}
 
-	public String getPatientAddr1() {
+	
 
-		return patientAddr1;
+	public String getPlanSummaryCd() {
 
-	}
-
-	public void setPatientAddr1(String patientAddr1) {
-
-		this.patientAddr1 = patientAddr1;
+		return planSummaryCd;
 
 	}
 
-	public String getPatientAddr2() {
+	public void setPlanSummaryCd(String planSummaryCd) {
 
-		return patientAddr2;
-
-	}
-
-	public void setPatientAddr2(String patientAddr2) {
-
-		this.patientAddr2 = patientAddr2;
-
-	}
-
-	public String getPatientCity() {
-
-		return patientCity;
-
-	}
-
-	public void setPatientCity(String patientCity) {
-
-		this.patientCity = patientCity;
-
-	}
-
-	public String getPatientState() {
-
-		return patientState;
-
-	}
-
-	public void setPatientState(String patientState) {
-
-		this.patientState = patientState;
-
-	}
-
-	public String getPatientZipCd() {
-
-		return patientZipCd;
-
-	}
-
-	public void setPatientZipCd(String patientZipCd) {
-
-		this.patientZipCd = patientZipCd;
-
-	}
-
-	public String getMemberTermDate() {
-
-		return memberTermDate;
-
-	}
-
-	public void setMemberTermDate(String memberTermDate) {
-
-		this.memberTermDate = memberTermDate;
-
-	}
-
-	public String getDepTermDate() {
-
-		return depTermDate;
-
-	}
-
-	public void setDepTermDate(String depTermDate) {
-
-		this.depTermDate = depTermDate;
+		this.planSummaryCd = planSummaryCd;
 
 	}
 
@@ -1336,237 +256,81 @@ public class SbmsnrVO implements Serializable {
 
 	}
 
-	public String getClaimOfficeName() {
+	public String getApisrtName() {
 
-		return claimOfficeName;
-
-	}
-
-	public void setClaimOfficeName(String claimOfficeName) {
-
-		this.claimOfficeName = claimOfficeName;
+		return apisrtName;
 
 	}
 
-	public String getClaimOfficeAddr1() {
+	public void setApisrtName(String apisrtName) {
 
-		return claimOfficeAddr1;
-
-	}
-
-	public void setClaimOfficeAddr1(String claimOfficeAddr1) {
-
-		this.claimOfficeAddr1 = claimOfficeAddr1;
+		this.apisrtName = apisrtName;
 
 	}
 
-	public String getClaimOfficeAddr2() {
+	public String getSeqNo() {
 
-		return claimOfficeAddr2;
-
-	}
-
-	public void setClaimOfficeAddr2(String claimOfficeAddr2) {
-
-		this.claimOfficeAddr2 = claimOfficeAddr2;
+		return seqNo;
 
 	}
 
-	public String getClaimOffLocationCd() {
+	public void setSeqNo(String seqNo) {
 
-		return claimOffLocationCd;
-
-	}
-
-	public void setClaimOffLocationCd(String claimOffLocationCd) {
-
-		this.claimOffLocationCd = claimOffLocationCd;
+		this.seqNo = seqNo;
 
 	}
 
-	public String getClaimOfficeState() {
+	public String getControlNo() {
 
-		return claimOfficeState;
-
-	}
-
-	public void setClaimOfficeState(String claimOfficeState) {
-
-		this.claimOfficeState = claimOfficeState;
+		return controlNo;
 
 	}
 
-	public String getClaimOfficeZipCd() {
+	public void setControlNo(String controlNo) {
 
-		return claimOfficeZipCd;
-
-	}
-
-	public void setClaimOfficeZipCd(String claimOfficeZipCd) {
-
-		this.claimOfficeZipCd = claimOfficeZipCd;
+		this.controlNo = controlNo;
 
 	}
 
-	public String getCobPrimSecCd() {
+	public String getBenefitIdCd() {
 
-		return cobPrimSecCd;
-
-	}
-
-	public void setCobPrimSecCd(String cobPrimSecCd) {
-
-		this.cobPrimSecCd = cobPrimSecCd;
+		return benefitIdCd;
 
 	}
 
-	public String getLastSvcDate() {
+	public void setBenefitIdCd(String benefitIdCd) {
 
-		return lastSvcDate;
-
-	}
-
-	public void setLastSvcDate(String lastSvcDate) {
-
-		this.lastSvcDate = lastSvcDate;
+		this.benefitIdCd = benefitIdCd;
 
 	}
 
-	public String getCobInd() {
+	public String getPbnfSeqNo() {
 
-		return cobInd;
-
-	}
-
-	public void setCobInd(String cobInd) {
-
-		this.cobInd = cobInd;
+		return pbnfSeqNo;
 
 	}
 
-	public String getCobCarrierName() {
+	public void setPbnfSeqNo(String pbnfSeqNo) {
 
-		return cobCarrierName;
-
-	}
-
-	public void setCobCarrierName(String cobCarrierName) {
-
-		this.cobCarrierName = cobCarrierName;
+		this.pbnfSeqNo = pbnfSeqNo;
 
 	}
 
-	public String getCobPolicyNo() {
+	public String getPlanNo() {
 
-		return cobPolicyNo;
-
-	}
-
-	public void setCobPolicyNo(String cobPolicyNo) {
-
-		this.cobPolicyNo = cobPolicyNo;
+		return planNo;
 
 	}
 
-	public String getCobEffDate() {
+	public void setPlanNo(String planNo) {
 
-		return cobEffDate;
-
-	}
-
-	public void setCobEffDate(String cobEffDate) {
-
-		this.cobEffDate = cobEffDate;
-
-	}
-
-	public String getCobExpDate() {
-
-		return cobExpDate;
-
-	}
-
-	public void setCobExpDate(String cobExpDate) {
-
-		this.cobExpDate = cobExpDate;
-
-	}
-
-	public String getDepIdCd() {
-
-		return depIdCd;
-
-	}
-
-	public void setDepIdCd(String depIdCd) {
-
-		this.depIdCd = depIdCd;
-
-	}
-
-	public String getCapLabName() {
-
-		return capLabName;
-
-	}
-
-	public void setCapLabName(String capLabName) {
-
-		this.capLabName = capLabName;
-
-	}
-
-	public String getCapXrayName() {
-
-		return capXrayName;
-
-	}
-
-	public void setCapXrayName(String capXrayName) {
-
-		this.capXrayName = capXrayName;
-
-	}
-
-	public String getCapLabPhone() {
-
-		return capLabPhone;
-
-	}
-
-	public void setCapLabPhone(String capLabPhone) {
-
-		this.capLabPhone = capLabPhone;
-
-	}
-
-	public String getCapXrayPhone() {
-
-		return capXrayPhone;
-
-	}
-
-	public void setCapXrayPhone(String capXrayPhone) {
-
-		this.capXrayPhone = capXrayPhone;
-
-	}
-
-	public String getFamilyLevelInd() {
-
-		return familyLevelInd;
-
-	}
-
-	public void setFamilyLevelInd(String familyLevelInd) {
-
-		this.familyLevelInd = familyLevelInd;
+		this.planNo = planNo;
 
 	}
 
 	
 
-	
 
-	}
+
+}
 
