@@ -1,298 +1,533 @@
 <%@page language="java" contentType="text/html; charset=ISO-8859-1"
+
 	pageEncoding="ISO-8859-1"%>
+
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <%@taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+
 <%@taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
+
+
 <head>
+
 <title>Long Running Transaction Search</title>
+
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
+
 <link rel="stylesheet" type="text/css" href="${context}/css/datepicker.css">
+
 <link rel="stylesheet" type="text/css" href="${context}/css/jquery-ui.css">
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
-<script type="text/javascript" src="${context}/js/jquery/dateValidator.js"></script>
-<script type="text/javascript" src="${context}/js/jquery/jquery-ui.js"></script>
+
 <link rel="stylesheet" type="text/css" href="${context}/css/LongRunTab.css">
+
+<script type="text/javascript" src="${context}/js/jquery/jquery-1.9.1.js"></script>
+
+<script type="text/javascript" src="${context}/js/jquery/dateValidator.js"></script>
+
+<script type="text/javascript" src="${context}/js/jquery/jquery-ui.js"></script>
+
 <script>
+
 $(document).ready( function() {
+
 	var relPath="<%=request.getContextPath()%>";
+
 	var d = new Date();
+
 	var month = d.getMonth()+1;
+
 	var day = d.getDate();
+
 	var output = d.getFullYear() + '-' +(month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;
+
 	$("#endDate").attr("value", output);
+
 	$("#endHrs").attr("value", ((d.getHours()<10?'0':'') + d.getHours()));
+
 	$("#endMns").attr("value", ((d.getMinutes()<10?'0':'') + d.getMinutes()));
+
 	$("#endSecs").attr("value", ((d.getSeconds()<10?'0':'') + d.getSeconds()));
-	$('#checkSecs').click(function() {
-			$('#secondsCalc').val("");
-        	$('#module').val("");
-        if ($(this).is(':checked')) {
-        	$('#secondsCalc').removeAttr('disabled');
-        	$('#secondsCalc').attr("value", "");
-        	$('#module').attr("value", "");
-            $('#module').attr('disabled', 'disabled');
-        } else {
-        	$('#secondsCalc').attr("value", "");
-            $('#secondsCalc').attr('disabled', 'disabled');
-            $('#module').removeAttr('disabled');
-        	$('#module').attr("value", "");            
-        }
-    });
+
 	$('#Lookup').click(function(){
-	
+
 		var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longruntransLookUp';
+
 		var adasvctLookUp3Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport3';
+
 		var adasvctLookUp4Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport4';
-		var adasvctLookUp2Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport2';
+
 		var reportValue = $("#report").val();
+
 		if (($('#startHrs').val() == "")) {
+
    			$("#startHrs").attr("value", "00");
+
    		}if (($('#startMns').val() == "")) {
+
    			$("#startMns").attr("value", "00");
+
    		}if (($('#startSecs').val() == "")) {
+
    			$("#startSecs").attr("value", "00");
-   		}if (($('#secondsCalc').val() == "")) {
-   			$("#secondsCalc").val("00");
+
    		}
-   		  		
+
 		var retVal = validate();
+
 		if(retVal == true){
+
 			if(($("#report").val()=="Report3")){
+
 				$("#longruntransForm").attr('action', adasvctLookUp3Path).submit();
+
 			}else if(($("#report").val()=="Report4")){
+
 				$("#longruntransForm").attr('action', adasvctLookUp4Path).submit();
-			}else if(($("#report").val()=="Report2")){
-				$("#longruntransForm").attr('action', adasvctLookUp2Path).submit();
-			}
-			else{
+
+			}else{
+
 				$("#longruntransForm").attr('action', adasvctLookUpPath).submit();
+
 			}
+
 			
+
 		}
+
 		
+
 	});
+
 	$("#startDate").datepicker( {
+
 						showOn : 'button',
+
 						buttonImageOnly : true,
+
 						buttonImage : relPath+'/images/calendar.gif',
-						dateFormat : 'yy-mm-dd',
-						
-						
-					});
-	$("#endDate").datepicker( {
-						showOn : 'button',
-						buttonImageOnly : true,
-						buttonImage : relPath+'/images/calendar.gif',
+
 						dateFormat : 'yy-mm-dd'
+
 					});
+
+	$("#endDate").datepicker( {
+
+						showOn : 'button',
+
+						buttonImageOnly : true,
+
+						buttonImage : relPath+'/images/calendar.gif',
+
+						dateFormat : 'yy-mm-dd'
+
+					});
+
 	
+
+
 
 $("#module").bind('keyup', function (e) {
+
     if (e.which >= 97 && e.which <= 122) {
+
         var newKey = e.which - 32;
+
         // I have tried setting those
+
         e.keyCode = newKey;
+
         e.charCode = newKey;
+
     }
 
+
+
 $("#module").val(($("#module").val()).toUpperCase());
+
 });
+
+
 
 $("#secondsCalc").bind("keydown", function (event) {
+
 if (event.shiftKey == true) {
+
             event.preventDefault();
+
         }
+
+
 
         if ((event.keyCode >= 48 && event.keyCode <= 57) || 
+
             (event.keyCode >= 96 && event.keyCode <= 105) || 
+
             event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+
             event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
 
+
+
         } else {
+
             event.preventDefault();
+
         }
 
+
+
         if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+
             event.preventDefault(); 
+
         //if a decimal has been added, disable the "."-button
+
 });
+
+
 
 $("#minutesCalc").bind("keydown", function (event) {
+
 if (event.shiftKey == true) {
+
             event.preventDefault();
+
         }
+
+
 
         if ((event.keyCode >= 48 && event.keyCode <= 57) || 
+
             (event.keyCode >= 96 && event.keyCode <= 105) || 
+
             event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37 ||
+
             event.keyCode == 39 || event.keyCode == 46 || event.keyCode == 190) {
 
+
+
         } else {
+
             event.preventDefault();
+
         }
 
+
+
         if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
+
             event.preventDefault(); 
+
         //if a decimal has been added, disable the "."-button
+
 });	
+
 });
+
 function validate()
+
 {
+
    var retVal=true;
+
    var startdate = $('#startDate').val();
+
    var enddate = $('#endDate').val();
+
    var effDate = new Date(startdate);
+
    var expDate = new Date(enddate);
-   if(!($('#checkSecs').is(':checked'))){
-   	$('#secondsCalc').attr("value", "0");
-   }
+
    if(effDate.getTime() > expDate.getTime()) {
+
    			alert("Start Date should be less than or equal to End Date");
+
 			return false;			
+
 		}
+
    var startTime = ($('#startHrs').val())+":"+($('#startMns').val())+":"+($('#startSecs').val());
+
    var endTime = ($('#endHrs').val())+":"+($('#endMns').val())+":"+($('#endSecs').val());
+
    var validStartTime = (startTime.search(/^\d{2}:\d{2}:\d{2}$/) != -1) &&
+
             (startTime.substr(0,2) >= 0 && startTime.substr(0,2) <= 24) &&
+
             (startTime.substr(3,2) >= 0 && startTime.substr(3,2) <= 59) &&
+
             (startTime.substr(6,2) >= 0 && startTime.substr(6,2) <= 59);
+
    var validEndTime = (endTime.search(/^\d{2}:\d{2}:\d{2}$/) != -1) &&
+
             (endTime.substr(0,2) >= 0 && endTime.substr(0,2) <= 24) &&
+
             (endTime.substr(3,2) >= 0 && endTime.substr(3,2) <= 59) &&
+
             (endTime.substr(6,2) >= 0 && endTime.substr(6,2) <= 59);
-   if (($('#startDate').val() == "")) {
+
+      if (($('#startDate').val() == "")) {
+
    		alert("Please enter valid Start time");
+
    		return false;
+
    }
+
    if (($('#endDate').val() == "")) {
+
    		alert("Please enter valid End time");
+
    		return false;
+
    }
+
    if(validStartTime == false){
+
    		alert("Please Enter Valid Start Time");
+
    		return false;
+
    }if(validEndTime == false){
+
    		alert("Please Enter Valid End Time");
+
    		return false;
-   }if(($('#checkSecs').is(':checked')) && (($('#secondsCalc').val() == ""))){
-   		alert("Please Enter Seconds for Report 2");
-   		return false;
+
+   }if((($('#report').val()) == "Report3") && ((($('#minutesCalc').val()) == ""))){
+
+   		$("#minutesCalc").attr("value", "60");
+
+
+
    }
-   if((!($('#checkSecs').is(':checked'))) && ((($('#module').val()) == ""))){
-   		alert("Please Enter the Module for Report 2");
-   		return false;
-   }
+
+      var splitEndDate = enddate.split('-');
+
+		var splitStartDate = startdate.split('-');
+
+		var newStartDate = splitStartDate[1] + "/" + splitStartDate[2] + "/"
+
+				+ splitStartDate[0];
+
+		var newEndDate = splitEndDate[1] + "/" + splitEndDate[2] + "/"
+
+				+ splitEndDate[0];
+
+		var timeStart = Date.parse(newStartDate + " " + startTime);
+
+		var timeEnd = Date.parse(newEndDate + " " + endTime);
+
+		var diffe = timeEnd - timeStart;
+
+		var min = Math.floor((diffe / 1000) / 60);
+
+		if (min > 1440) {
+
+			alert("Start and End time difference should be within 24 hours");
+
+			return false;
+
+		}
+
    return retVal
+
 }
-function ModuleView(){
-var relPath="<%=request.getContextPath()%>";
-var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longRunTransModuleHelp';
-window.open(adasvctLookUpPath,null, "height=600,width=750,scrollbars,resizable");
-	}
+
 </script>
+
 </head>
+
 <BODY bgcolor="#e1eeb9">
+
 	<H1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></H1>
-		<h2 align="center"> <FONT color="black"><nav>			
+
+		<h2 align="center"><FONT color="black"><nav>
+
 				<div class="box"><a
-					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report by Transactions
-					</a></div> <div class="box1"><a
+
+					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
+
+					by Transactions</a></div> <div class="box"><a
+
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
-					by Modules</a></div> <div class="box"><a
+
+					by Modules</a></div> <div class="box1"><a
+
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
+
 					by Minutes</a></div> <div class="box"><a
+
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
+
 					by Category</a></div>
-			</nav></FONT></h2>			<H1 align="center">REPORT BY MODULES</H1>
+
+			</nav></FONT></h2>
+
+	<H1 align="center">REPORT BY MINUTES</H1>
+
 	<P align="center">
-		
+
+	<i><P align="center">
+
+	<FONT style="font-size: 9pt"> Start time and End time difference should be <b>within 24-hours</b>
+
+	</FONT>	
+
+	</P></i>	
+
 	</P>
+
 	<form:form commandName="LongRunTransVO" name="longruntransForm"
+
 		id="longruntransForm" method="POST">
 
+
+
 		<c:if test="${requestScope.isSessionActive }">
+
 			<c:out value="Welcome Session" />
+
 		</c:if>
+
 		<CENTER>
+
 			<TABLE>
+
 				<TBODY>
+
 					<TR>
+
 						<TD>Start Time</TD>
+
 						<TD><form:input path="startDate" id="startDate"
+
 								value="${sessionScope.startDate}" maxlength="11" size="11"
+
 								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
 						<TD></TD>
+
 						<TD><form:input path="startHrs" id="startHrs"
+
 								value="${sessionScope.startHrs}" maxlength="2" size="2"
+
 								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
 						<TD>:</TD>
+
 						<TD><form:input path="startMns" id="startMns"
+
 								value="${sessionScope.startMns}" maxlength="2" size="2"
+
 								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
 						<TD>:</TD>
+
 						<TD><form:input path="startSecs" id="startSecs"
+
 								value="${sessionScope.startSecs}" maxlength="2" size="2"
+
 								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
 						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
-					</TR>
-					<TR>
-						<TD>End Time</TD>
-						<TD><form:input path="endDate" id="endDate"
-								value="${sessionScope.endDate}" maxlength="11" size="11"
-								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
-						<TD></TD>
-						<TD><form:input path="endHrs" id="endHrs"
-								value="${sessionScope.endHrs}" maxlength="2" size="2"
-								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
-						<TD>:</TD>
-						<TD><form:input path="endMns" id="endMns"
-								value="${sessionScope.endMns}" maxlength="2" size="2"
-								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
-						<TD>:</TD>
-						<TD><form:input path="endSecs" id="endSecs"
-								value="${sessionScope.endSecs}" maxlength="2" size="2"
-								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
-						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
-					</TR>
-					<TR>
-						<TD>Seconds *</TD>
-						<TD><form:input path="secondsCalc" id="secondsCalc"
-								value="${sessionScope.secondsCalc}" maxlength="3" size="2"
-								onchange="javascript:this.value=this.value.toUpperCase();" disabled="true"/></TD><td></td>
-						<TD><input type ="checkbox" id="checkSecs" /></TD>
-						<TD></TD>
-						<TD></TD>
-						<TD></TD>
-						<TD></TD>
-						<TD><I>Select the Check box to include Seconds in the input</I></TD>
+
 					</TR>
 
 					<TR>
-					
-						<TD><font color="blue"><u><A href="javascript:ModuleView()">Module</A></u></font> ^</TD>
-						<TD><form:input size="8" path="module" id="module"
-								value="${sessionScope.module}" maxlength="10" /></TD>
+
+						<TD>End Time</TD>
+
+						<TD><form:input path="endDate" id="endDate"
+
+								value="${sessionScope.endDate}" maxlength="11" size="11"
+
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
+						<TD></TD>
+
+						<TD><form:input path="endHrs" id="endHrs"
+
+								value="${sessionScope.endHrs}" maxlength="2" size="2"
+
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
+						<TD>:</TD>
+
+						<TD><form:input path="endMns" id="endMns"
+
+								value="${sessionScope.endMns}" maxlength="2" size="2"
+
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
+						<TD>:</TD>
+
+						<TD><form:input path="endSecs" id="endSecs"
+
+								value="${sessionScope.endSecs}" maxlength="2" size="2"
+
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
+						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
+
 					</TR>
-					<input type="hidden" name="report" id="report" value="Report2" />
+
+					
+
+					<TR>
+
+						<TD>Minutes **</TD>
+
+						<TD><form:input path="minutesCalc" id="minutesCalc"
+
+								value="${sessionScope.minutesCalc}" maxlength="3" size="2"
+
+								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
+
+
+
+					</TR>
+
+					
+
+					<input type="hidden" name="report" id="report" value="Report3" />
+
+
 
 				</TBODY>
 
 
+
+
+
 			</TABLE>
-			<BR> <BR> <INPUT type="button" id="Lookup" name="Submit"
+
+			<BR> <BR> <INPUT type="button" id="Lookup" name="Lookup"
+
 				value="Submit" tabindex="5" style="margin-left: 10px"> <input
+
 				type="hidden" name="start" id="start"
+
 				value="<%=request.getAttribute("longrunValues")%>">
 
 
 
+
+
+
+
 		</CENTER>
+
 	</form:form>
-	<FONT face="ARIAL" style="font-size: 9pt"> * - Transactions
-		taking more than submitted seconds<BR> ^ - Transactions report
-		for the submitted module<BR>
+
+	<FONT face="ARIAL" style="font-size: 9pt"> ** - If Minutes not entered, 60 will be taken as default value
+
 	</FONT>
+
 </BODY>
