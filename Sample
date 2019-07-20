@@ -1,115 +1,111 @@
+<!--Chrome Upgrade- N127627-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!--END-->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
-
 <c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627--><!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>--><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script><!--END-->
+<!--Chrome Upgrade-N127627-->
+<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--END-->
 <HTML>
 <HEAD>
-<META name="GENERATOR" content="IBM WebSphere Studio">
-<TITLE>AddRowRBRCForm</TITLE>
+<TITLE>AddUserAccess</TITLE>
 <SCRIPT>
-var relPath="<%=request.getContextPath()%>";
-$(document).ready( function(e) {
 
-$('#AddNewRbrc').click(function(){
-var action = relPath+'/rbrc/AddRbrc';
-var flag = ValidateInput();
-if(flag){
-	$("#addRbrcForm").attr('action', action).submit();
+var relPath="<%=request.getContextPath()%>";
+
+$(document).ready( function(e) {
+$('#AddNewUser').click(function(){
+	var action = relPath+'/usrsec/AddUser';
+	//alert("invoked action:"+action);
+	var flag = ValidateInput();
+	//alert("invoked flag:"+flag);
+	if(flag==true){
+	$("#addUserForm").attr('action', action).submit();
 	}
 	});
-	
-	});
-	
-	
-function ListSTCs()
-	{
-	window.open(relPath+'/rbrc/stcList', null, "height=550,width=375,status=yes,toolbar=no,menubar=no,location=no,scrollbars")
-	}
+});
+
 
 function ValidateInput(){
-var returnFlag = true;
-	if ($.trim($('#siteCd').val()) == "") { 
-		alert("You must Enter Site Code!");
-		$('#siteCd').focus();
-		returnFlag = false;
+		
+	if ($.trim($('#dbRiderCd').val()) == "") { 
+		alert("You must enter an Aetna Id.");
+		$('#dbRiderCd').focus();
+		return false;
 	} else
-
-	if ($('#siteCd').val().substring(0,1) == " ") {
-		alert("You must not Enter Space as first Character for Site Code!");
-		$('#siteCd').focus();
-		returnFlag = false;
-	} else	
-	if ($.trim($('#riderCd').val()) == "") { 
-		alert("You must Enter Rider Code!");
-		$('#riderCd').focus();
-		returnFlag = false;
-	} else
-	if ($('#riderCd').val().substring(0,1) == " ") {
-		alert("You must not Enter Space as first Character for Rider Code!");
-		$('#riderCd').focus();
-		returnFlag = false;
-	} else	
-	if ($.trim($('#svcTypeCd').val()) == "") {
-		alert("You must select Service Type Code!");
-		$('#svcTypeCd').focus();
-		returnFlag = false;
-	} 
-	return returnFlag;
+	if ((!$.trim($('#dbRiderCd').val()).substring(0,1) == "a") && (!$.trim($('#dbRiderCd').val()).substring(0,1) == "n")) {
+		alert("Aetna Id must have either an 'a' or an 'n' as first Character.");
+		$('#dbRiderCd').focus();
+		return false;
+	}
+	
+	if ((!$('#dbIONtwkCd').val() == "A")
+	 && (!$('#dbIONtwkCd').val() == "B")
+	 && (!$('#dbIONtwkCd').val() == "R")
+	 && (!$('#dbIONtwkCd').val() == "W")) {
+		alert("Security Level must be one of the following values: A, B, C, D, R, or W.");
+		$('#dbIONtwkCd').focus();
+		return false;
+	}
+	return true;
 }
 
 </SCRIPT>
+</HEAD>
+<BODY bgcolor="#e1eeb9" onload=document.addUserForm.userName.focus()>
+<H1 align="center">Add Access Rows to RBRC table</H1>
 
-<BODY bgcolor="#e1eeb9">
-
-<H2 align="center">Add Rows to RBRC Table</H2>
-<form:form commandName="rbrcVO" name="addRbrcForm" id="addRbrcForm"  method="POST">
-<PRE>
-<B>Site Code</B>        * <form:input path="dbSiteCd" size="7" type="text" maxlength="4"
-	id="siteCd" value="USHC" tabindex="1"
-	onchange=" javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>Rider Code</B>       * <form:input path="dbRiderCd" size="7" type="text" maxlength="5"
-	id="riderCd" tabindex="2"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<A href="javascript:ListSTCs()"
-	onmouseover="window.status = 'Display List of Service Types (STC)'; return true;"
-	onmouseout="window.status = '';"><B>Service Type</B></A>     * <INPUT
-	path="dbSvcTypeCd" size="5" type="text" maxlength="5" id="svcTypeCd" tabindex="3"
-	onchange="javascript:this.value=this.value.toUpperCase();"/> <I>     Ex: 98 </I><BR>
-<B>Description</B>        <form:input path="dbDescTxt" size="30" type="text" maxlength="30"
-	id="descTxt" tabindex="4"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>I/O Network Code</B>   <form:input path="dbIONtwkCd" size="1" type="text" maxlength="1"
-	id="ioNtwkCd" tabindex="5"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>TOS Code</B>           <form:input path="dbTOSCd" size="5" type="text" maxlength="3"
-	id="toSCd" tabindex="6"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>True Ben Code Ind</B>   <form:input path="dbHMOSrcBnInd" size="1" type="text" maxlength="1"
-	id="hmoSrcBnInd" tabindex="7"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>Text Send Ind</B>      <form:input path="textSendInd" size="1" type="text" maxlength="1"
-	id="textSendInd" tabindex="8"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>Prev Care Ind</B>      <form:input path="prevCareInd" size="1" type="text" maxlength="1"
-	id="prevCareInd" tabindex="9"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-<B>Gender Code</B>        <form:input path="genderCd" size="1" type="text" maxlength="1"
-	id="genderCd" tabindex="10"
-	onchange="javascript:this.value=this.value.toUpperCase();"/><BR>
-
-<BR><BR></PRE>
-
-<INPUT type="button" id="AddNewRbrc" value="Add" tabindex="4" accesskey="a" 
-													style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm"> 
-<INPUT type="button" id="Cancel" value="Cancel" onclick="history.back();" tabindex="5" accesskey="c"
-													style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
-<BR><BR>
-* required
+<center>
+<FONT FACE="ARIAL">
+<B><U>Note:</U>  *=required field</B>
+</FONT>
+<form:form commandName="rbrcVO" name="addUserForm" id="addUserForm"  method="POST">
+<TABLE >
+	<TBODY>
+		<TR>
+			<TD>First &amp; Last Name</TD>
+			<TD><form:input path="dbDescTxt" id="dbDescTxt" size="30" type="text" maxlength="30" Name="userName" tabindex="1"/></TD>
+		</TR>
+		<TR>
+			<TD>Aetna Id*</TD>
+			<TD><form:input path="dbRiderCd" id="dbRiderCd" size="7" type="text" maxlength="7" name="aetnaId" tabindex="2"
+										onchange="javascript:this.value=this.value.toLowerCase();"/></TD>
+		</TR>
+		<TR>
+			<TD>Security Level*</TD>
+			<TD><form:input path="dbIONtwkCd" id="dbIONtwkCd" size="1" type="text" maxlength="1" name="secLevel" tabindex="3"
+									onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
+		</TR>
+		<TR>
+			<TD>Site Code</TD>
+			<TD><form:input path="dbSiteCd" id="dbSiteCd" size="7" type="text" maxlength="4" name="siteCd" value="ZZZZ" readonly /></TD>
+		</TR>
+		<TR>
+			<TD>Service Type</TD>
+			<TD><form:input path="dbSvcTypeCd" id="dbSvcTypeCd" size="5" type="text" maxlength="5" name="svcTypeCd" value="99999" readonly /></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<BR>
+<INPUT type="button" id="AddNewUser" value="Add" tabindex="4" accesskey="a"
+												style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm">
+<INPUT type="button" id="Cancel" value="Cancel" onclick="history.back();" tabindex="5" accesskey="C"
+												style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
+<BR>
+<FONT face="arial"><BR>
+<p align="center">
+"A" = Read/Write all including the Security tables.<br>
+"B" = Read/Write on BPLVS only.<br>
+"R" = Read only on everything except security tables.<br>
+"W" = Read/Write on everything except security tables.<br>
+</p>
+</FONT>
 </form:form>
+</center>
 </BODY>
-
 </HTML>
