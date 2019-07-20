@@ -1,290 +1,1318 @@
-//To check empty
+$(document).ready( function() {
 
-function isEmpty(strValue){
+	var relPath="<%=request.getContextPath()%>";
 
-	if( strValue == "" || strValue.length <= 0 ){
+						$("#versionRels").attr("value", "RTE_5010");
 
-		return true;
+$("#dependentTable").hide();
 
-	}
+$("#counterService").hide();
 
-	else{
+$("#subscriberTable").show();						
 
-		var charsFound = false;
+$("#NdvEntityID").hide();
 
-		for( idx = 0; idx < strValue.length; idx++ ){
+$("#NdvEntityID1").hide();
 
-			if( strValue.charAt(idx) != ' ' ){
+$("#NdvEntityID2").hide();
 
-				charsFound = true;
+ $("#ndvName").hide();
 
-				break;
+ $("#IndvTitleDesc").show();
 
-			}
+ $("#IndvMiddleName").show();
 
-		}
+ $("#IndvFirstName").show();
 
-		if( !charsFound ){
+ $("#IndvLastName").show();
 
-			return true;
+$("#IndventityId").show();
 
-		}
+$("#IndventityId1").show();
 
-	}	
+$("#IndventityId2").show();
 
-	return false;
+$("#IndventityId3").show();
 
-}
+$("#IndventityId4").show();
 
+$("#IndventityId5").show();
 
+$("#counterDiagShow").hide();
 
-function isLeapYear(year) {
+$("#diagonsisTypeSetTable").show();
 
-	// A leap year occurs every 4 years except years ending in 00, unless divisible by 400.
+$("#serviceTypeSetTable").show();
 
-	// 1900 should NOT be a leap year, but 2000 should.
+$("#counterDiagShow").hide();
 
-	if ((year % 4 == 0 & !(year % 100 == 0)) || (year % 400 == 0)) {
+$("#counterDiaghide").hide();
 
-		return true;
+$("#PlaceOfserviceTitle").hide();
 
-	}
+$("#PlaceOfserviceInner").hide();
 
-	return false;
+$("#procedureInfo").hide();
 
-}
+$("#procedureInfoInner").hide();
 
+$("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
 
+$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
 
-//To check whether the date is in the correct format
+$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
 
-function isDateValid(element, format){
+$("#sizeCheck").hide();
 
-	var invalid = false;
 
-	var errormsg = 'no error';
 
-	var cmpnt = element;
+$('#entityIndicator').change(function() {
 
-	var str = cmpnt.value;
+       
 
-	if(isEmpty(cmpnt.value)) {
+    var selected = $(this).val();
 
-		invalid = true;
+    if (selected == '1') { 
 
-		errormsg = 'This field is required. Please enter a value.';
+    	$("#NdvEntityID").hide();
 
-		return errormsg;
+    	$("#NdvEntityID1").hide();
 
-	}
+    	$("#NdvEntityID2").hide();
 
-	else if(format == 'MM/dd/yyyy'){
+ 		$("#ndvName").hide();
 
-		try {		
+     	$("#IndvTitleDesc").show();
 
-			if(null == str || "" == str || str.length != 10){
+ 		$("#IndvMiddleName").show();
 
-				invalid = true;
+ 		$("#IndvFirstName").show();
 
-				errormsg = 'This field is required. Please enter a value.';
+ 		$("#IndvLastName").show();
 
-				return errormsg;
+  		$("#IndventityId").show(); 
 
-			}
+  		$("#IndventityId1").show();
 
-			var indxValue = str.substr(2,1);
+  		$("#IndventityId2").show();
 
-			// month validation
+  		$("#IndventityId3").show();
 
-			if(indxValue == "\/"){
+  		$("#IndventityId4").show();
 
-				var mm = str.substr(0,2);
+  		$("#IndventityId5").show(); 
 
-				if(mm.substr(0,1) == '0'){
+  		$("#sizeCheck").hide();
 
-					mm = parseInt(mm.substr(1,1));			
+    }
 
-				}else{
+    else if (selected == '2') {
 
-					mm = parseInt(mm);
+    	$("#sizeCheck").show();
 
-				}
+    	$("#NdvEntityID").show();
 
-				if(!(mm > 0 && mm < 13)){
+    	$("#NdvEntityID1").show();
 
-					invalid = true;
+    	$("#NdvEntityID2").show();
 
-				}
+ 		$("#ndvName").show();
 
-				indxValue = str.substr(5,1);
+     	$("#IndvTitleDesc").hide();
 
-				
+ 		$("#IndvMiddleName").hide();
 
-				if(indxValue == "\/"){
+ 		$("#IndvFirstName").hide();
 
-					var dd = str.substr(3,2);
+ 		$("#IndvLastName").hide();
 
-					if(dd.substr(0,1) == '0'){
+  		$("#IndventityId").hide();
 
-						dd = parseInt(dd.substr(1,1));
+  		$("#IndventityId1").hide();
 
-					}else{
+  		$("#IndventityId2").hide();
 
-						dd = parseInt(dd);
+  		$("#IndventityId3").hide();
 
-					}
+  		$("#IndventityId4").hide();
 
-					
+  		$("#IndventityId5").hide();
 
-					if(!(mm > 0 && mm < 32)){
+    }else {$("#NdvEntityID").hide();
 
-						invalid = true;
+$("#NdvEntityID1").hide();
 
-					}					
+$("#NdvEntityID2").hide();
 
-					indxValue = str.substr(6);
+ $("#ndvName").hide();
 
-					var year = parseInt(indxValue);
+ $("#IndvTitleDesc").hide();
 
-					if(year.toString().length!=4 || year.toString().length == 0){
+ $("#IndvMiddleName").hide();
 
-						invalid = true;
+ $("#IndvFirstName").hide();
 
-					}					
+ $("#IndvLastName").hide();
 
-					if ((mm == 2) && (isLeapYear(year)) && (dd > 29)) {
+$("#IndventityId").hide();
 
-						invalid = true;
+$("#IndventityId1").hide();
 
-					}
+$("#IndventityId2").hide();
 
-					if ((mm == 2) && (!isLeapYear(year)) && (dd > 28)) {
+$("#IndventityId3").hide();
 
-						invalid = true;
+$("#IndventityId4").hide();
 
-					}
+$("#IndventityId5").hide();
 
-					/* Validation of other months */
+$("#sizeCheck").hide();
 
-					if ((dd > 31) && ((mm == 1) || (mm == 3) || (mm == 5) || (mm == 7) || (mm == 8) || (mm == 10) || (mm == 12))) {
+    }
 
-						invalid = true;
+    });
 
-					}
+    $('#setType').change(function() {
 
-					if ((dd > 30) && ((mm == 4) || (mm == 6) || (mm == 9) || (mm == 11))) {				
+       
 
-						invalid = true;
+    var selected = $(this).val();
 
-					}
+    if (selected == '1') { 
 
-				}else{
+    	$("#serviceTypeCTR").val("");
 
-					invalid = true;
+    	$("#counterService").hide();
 
-				}
+    	$("#diagonsisTypeSetTable").hide();
 
-			}
+  		$("#serviceTypeSetTable").show(); 
 
-			else {
+  		 $("#counterDiaghide").hide();
 
-				invalid = true;
+  		 $("#PlaceOfserviceTitle").hide();
 
-			}
+		$("#PlaceOfserviceInner").hide();
 
-		}
+		$("#procedureInfo").hide();
 
-		catch(err) {
+		$("#procedureInfoInner").hide();
 
-			invalid = true;
+     $("#counterDiagShow").hide();$("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
 
-			errormsg = "Please enter a valid date in the format MM/dd/yyyy."
+	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
 
-			return errormsg;
+	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
 
-		}		
+    }else if (selected == '2') { 
 
-	}
+    	$("#diganosisCtr").val("");
 
-	else {
+    	$("#counterDiaghide").hide();
 
-		invalid = true;		
+    $("#counterDiagShow").show();
 
-	}
+    	$("#diagonsisTypeSetTable").show();
 
-	
+  		$("#serviceTypeSetTable").hide(); 
 
-	if(invalid){
+  		 $("#PlaceOfserviceTitle").hide();
 
-		errormsg =  "Please enter a valid date in the format MM/dd/yyyy."
+		$("#PlaceOfserviceInner").hide();
 
-		return errormsg;
+     $("#counterDiagShow").show();
 
-	}
+     $("#procedureInfo").hide();
 
-	else {
+		$("#procedureInfoInner").hide();$("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
 
-		return errormsg;
+		$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
 
-	}	
+		$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
 
-}
+  		
 
+    }else if (selected == '3') { 
 
+    	$("#placeOfServiceCtr").val("");
 
-//To validate date against the current date
+    	 $("#PlaceOfserviceInner").hide();
 
-function isDateGtEqCurDate(stDateStr) {
+    	$("#diagonsisTypeSetTable").hide();
 
-	var currentTime = new Date();
+  		$("#serviceTypeSetTable").hide(); 
 
-	var month = currentTime.getMonth() + 1;
+  		 $("#PlaceOfserviceTitle").show();
 
-	var day = currentTime.getDate();
+		$("#PlaceOfserviceInner").hide();
 
-	var year = currentTime.getFullYear();
+     $("#counterDiagShow").hide();
 
-	var newCurrDate = new Date(month+"/"+day+"/"+year);	
+     $("#procedureInfo").hide();
 
-	if((null!=stDateStr || ""!=stDateStr) && stDateStr.length==10){
+		$("#procedureInfoInner").hide();$("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
 
-		stDate = new Date(stDateStr);		
+		$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
 
-		if(stDate.getTime() < newCurrDate.getTime()) {
+		$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
 
-			return false;			
+  		
 
-		}
+    }else if (selected == '4') { 
 
-		else 
+    	$("#procedureInfoCtr").val("");
 
-			return true;
+    	 $("#procedureInfoInner").hide();
 
-	}
+    	$("#diagonsisTypeSetTable").hide();
 
-}
+  		$("#serviceTypeSetTable").hide(); 
 
+  		 $("#PlaceOfserviceTitle").hide();
 
+		$("#PlaceOfserviceInner").hide();
 
-//To validate date against another date 
+     $("#counterDiagShow").hide();
 
-function compareDates(effDateStr,expDateStr) {
+     $("#procedureInfo").show();
 
-		var effDate = new Date(effDateStr);
+		$("#procedureInfoInner").hide();$("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
 
-		var expDate = new Date(expDateStr);
+		$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
 
-		if(effDate.getTime() < expDate.getTime()) {
+		$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
 
-			return true;			
+  		
 
-		}
+    }
 
-		else 
+    });
 
-			return false;	
+$('#subsDept').change(function() {
 
-}
+       
 
+    var selected = $(this).val();
 
+    if (selected == 'Subscriber') { 
+
+    	$("#dependentTable").hide();
+
+  		$("#subscriberTable").show(); 
+
+    }
+
+    else if (selected == 'Dependent') {
+
+    	$("#dependentTable").show();
+
+  		$("#subscriberTable").hide();
+
+    }else {
+
+$("#dependentTable").hide();
+
+$("#subscriberTable").hide();
+
+    }
+
+    });
+
+$('#serviceTypeCTR').change(function() {
+
+       
+
+    var selected = $(this).val();
+
+    if(selected == '0'){
+
+    $("#counterService").hide();
+
+    $("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    }
+
+    else if(selected == '1'){
+
+    	$("#one").show();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").hide();$("#Code3").hide();$("#Code4").hide();$("#Code5").hide();$("#Code6").hide();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").hide();$("#serviceTypeCode3").hide();$("#serviceTypeCode4").hide();$("#serviceTypeCode5").hide();$("#serviceTypeCode6").hide();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '2'){
+
+    	$("#one").show();$("#two").show();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").hide();$("#Code4").hide();$("#Code5").hide();$("#Code6").hide();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").hide();$("#serviceTypeCode4").hide();$("#serviceTypeCode5").hide();$("#serviceTypeCode6").hide();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '3'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").hide();$("#Code5").hide();$("#Code6").hide();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").hide();$("#serviceTypeCode5").hide();$("#serviceTypeCode6").hide();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '4'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").hide();$("#Code6").hide();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").hide();$("#serviceTypeCode6").hide();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '5'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").hide();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").hide();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '6'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").hide();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").hide();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '7'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").hide();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").hide();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '8'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").hide();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").hide();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '9'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").show();$("#Code10").hide();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").show();$("#serviceTypeCode10").hide();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '10'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").show();$("#Code10").show();$("#Code11").hide();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").show();$("#serviceTypeCode10").show();$("#serviceTypeCode11").hide();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '11'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").show();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").show();$("#Code10").show();$("#Code11").show();$("#Code12").hide();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").show();$("#serviceTypeCode10").show();$("#serviceTypeCode11").show();
+
+    $("#serviceTypeCode12").hide();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '12'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").show();$("#twelve").show();$("#thirteen").hide();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").show();$("#Code10").show();$("#Code11").show();$("#Code12").show();$("#Code13").hide();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").show();$("#serviceTypeCode10").show();$("#serviceTypeCode11").show();
+
+    $("#serviceTypeCode12").show();$("#serviceTypeCode13").hide();
+
+    }else if(selected == '13'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").show();$("#twelve").show();$("#thirteen").show();
+
+    $("#counterService").show();$("#serviceTypeCode1").show();
+
+    $("#Code1").show();$("#Code2").show();$("#Code3").show();$("#Code4").show();$("#Code5").show();$("#Code6").show();$("#Code7").show();$("#Code8").show();
+
+    $("#Code9").show();$("#Code10").show();$("#Code11").show();$("#Code12").show();$("#Code13").show();
+
+    $("#serviceTypeCode2").show();$("#serviceTypeCode3").show();$("#serviceTypeCode4").show();$("#serviceTypeCode5").show();$("#serviceTypeCode6").show();
+
+    $("#serviceTypeCode7").show();$("#serviceTypeCode8").show();$("#serviceTypeCode9").show();$("#serviceTypeCode10").show();$("#serviceTypeCode11").show();
+
+    $("#serviceTypeCode12").show();$("#serviceTypeCode13").show();
+
+    
+
+    }
+
+    });
+
+    $('#procedureInfoCtr').change(function() {
+
+       
+
+    var selected = $(this).val();
+
+    if(selected == '0'){
+
+    $("#procedureInfoInner").hide();
+
+    $("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    }
+
+    else if(selected == '1'){
+
+    	$("#one").show();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").hide();$("#codePCq3").hide();$("#codePCq4").hide();$("#codePCq5").hide();$("#codePCq6").hide();$("#codePCq7").hide();$("#codePCq8").hide();
+
+	$("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").hide();$("#codePC3").hide();$("#codePC4").hide();$("#codePC5").hide();$("#codePC6").hide();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").hide();$("#posCodeLast3").hide();$("#posCodeLast4").hide();$("#posCodeLast5").hide();$("#posCodeLast6").hide();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").hide();$("#posCodeLastq3").hide();$("#posCodeLastq4").hide();$("#posCodeLastq5").hide();$("#posCodeLastq6").hide();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '2'){
+
+    	$("#one").show();$("#two").show();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").hide();$("#codePCq4").hide();$("#codePCq5").hide();$("#codePCq6").hide();$("#codePCq7").hide();$("#codePCq8").hide();
+
+	$("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").hide();$("#codePC4").hide();$("#codePC5").hide();$("#codePC6").hide();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").hide();$("#posCodeLast4").hide();$("#posCodeLast5").hide();$("#posCodeLast6").hide();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").hide();$("#posCodeLastq4").hide();$("#posCodeLastq5").hide();$("#posCodeLastq6").hide();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '3'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").hide();$("#codePCq5").hide();$("#codePCq6").hide();$("#codePCq7").hide();$("#codePCq8").hide();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").hide();$("#codePC5").hide();$("#codePC6").hide();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").hide();$("#posCodeLast5").hide();$("#posCodeLast6").hide();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").hide();$("#posCodeLastq5").hide();$("#posCodeLastq6").hide();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '4'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").hide();$("#codePCq6").hide();$("#codePCq7").hide();$("#codePCq8").hide();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").hide();$("#codePC6").hide();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").hide();$("#posCodeLast6").hide();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").hide();$("#posCodeLastq6").hide();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '5'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").hide();$("#codePCq7").hide();$("#codePCq8").hide();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").hide();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").hide();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").hide();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '6'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").show();$("#codePCq7").hide();$("#codePCq8").hide();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").show();$("#codePC7").hide();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").show();
+
+    $("#posCodeLast7").hide();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").show();
+
+	$("#posCodeLastq7").hide();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '7'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").show();$("#codePCq7").show();$("#codePCq8").hide();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").show();$("#codePC7").show();$("#codePC8").hide();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").show();
+
+    $("#posCodeLast7").show();$("#posCodeLast8").hide();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").show();
+
+	$("#posCodeLastq7").show();$("#posCodeLastq8").hide();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '8'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").show();$("#codePCq7").show();$("#codePCq8").show();
+
+    $("#codePCq9").hide();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").show();$("#codePC7").show();$("#codePC8").show();
+
+    $("#codePC9").hide();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").show();
+
+    $("#posCodeLast7").show();$("#posCodeLast8").show();$("#posCodeLast9").hide();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").show();
+
+	$("#posCodeLastq7").show();$("#posCodeLastq8").show();$("#posCodeLastq9").hide();$("#posCodeLastq10").hide();
+
+    }else if(selected == '9'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").show();$("#codePCq7").show();$("#codePCq8").show();
+
+    $("#codePCq9").show();$("#codePCq10").hide();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").show();$("#codePC7").show();$("#codePC8").show();
+
+    $("#codePC9").show();$("#codePC10").hide();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").show();
+
+    $("#posCodeLast7").show();$("#posCodeLast8").show();$("#posCodeLast9").show();$("#posCodeLast10").hide();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").show();
+
+	$("#posCodeLastq7").show();$("#posCodeLastq8").show();$("#posCodeLastq9").show();$("#posCodeLastq10").hide();
+
+    }else if(selected == '10'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#procedureInfoInner").show();$("#codePCq1").show();$("#codePCq2").show();$("#codePCq3").show();$("#codePCq4").show();$("#codePCq5").show();$("#codePCq6").show();$("#codePCq7").show();$("#codePCq8").show();
+
+    $("#codePCq9").show();$("#codePCq10").show();
+
+    $("#codePC1").show();$("#codePC2").show();$("#codePC3").show();$("#codePC4").show();$("#codePC5").show();$("#codePC6").show();$("#codePC7").show();$("#codePC8").show();
+
+    $("#codePC9").show();$("#codePC10").show();$("#posCodeLast1").show();
+
+    $("#posCodeLast2").show();$("#posCodeLast3").show();$("#posCodeLast4").show();$("#posCodeLast5").show();$("#posCodeLast6").show();
+
+    $("#posCodeLast7").show();$("#posCodeLast8").show();$("#posCodeLast9").show();$("#posCodeLast10").show();
+
+    $("#posCodeLastq1").show();$("#posCodeLastq2").show();$("#posCodeLastq3").show();$("#posCodeLastq4").show();$("#posCodeLastq5").show();$("#posCodeLastq6").show();
+
+	$("#posCodeLastq7").show();$("#posCodeLastq8").show();$("#posCodeLastq9").show();$("#posCodeLastq10").show();
+
+    }
+
+    });
+
+    $('#placeOfServiceCtr').change(function() {
+
+       
+
+    var selected = $(this).val();
+
+    if(selected == '0'){
+
+    $("#PlaceOfserviceInner").hide();
+
+    $("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    }
+
+    else if(selected == '1'){
+
+    	$("#one").show();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").hide();$("#Codep3").hide();$("#Codep4").hide();$("#Codep5").hide();$("#Codep6").hide();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").hide();$("#posCode3").hide();$("#posCode4").hide();$("#posCode5").hide();$("#posCode6").hide();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '2'){
+
+    	$("#one").show();$("#two").show();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").hide();$("#Codep4").hide();$("#Codep5").hide();$("#Codep6").hide();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").hide();$("#posCode4").hide();$("#posCode5").hide();$("#posCode6").hide();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '3'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").hide();$("#Codep5").hide();$("#Codep6").hide();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").hide();$("#posCode5").hide();$("#posCode6").hide();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '4'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").hide();$("#Codep6").hide();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").hide();$("#posCode6").hide();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '5'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").hide();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").hide();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '6'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").show();$("#Codep7").hide();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").show();
+
+    $("#posCode7").hide();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '7'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").show();$("#Codep7").show();$("#Codep8").hide();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").show();
+
+    $("#posCode7").show();$("#posCode8").hide();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '8'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").show();$("#Codep7").show();$("#Codep8").show();
+
+    $("#Codep9").hide();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").show();
+
+    $("#posCode7").show();$("#posCode8").show();$("#posCode9").hide();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '9'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").show();$("#Codep7").show();$("#Codep8").show();
+
+    $("#Codep9").show();$("#Codep10").hide();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").show();
+
+    $("#posCode7").show();$("#posCode8").show();$("#posCode9").show();$("#posCode10").hide();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }else if(selected == '10'){
+
+    	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+    	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+    $("#PlaceOfserviceInner").show();$("#posCode1").show();
+
+    $("#Codep1").show();$("#Codep2").show();$("#Codep3").show();$("#Codep4").show();$("#Codep5").show();$("#Codep6").show();$("#Codep7").show();$("#Codep8").show();
+
+    $("#Codep9").show();$("#Codep10").show();$("#Codep11").hide();$("#Codep12").hide();$("#Codep13").hide();
+
+    $("#posCode2").show();$("#posCode3").show();$("#posCode4").show();$("#posCode5").show();$("#posCode6").show();
+
+    $("#posCode7").show();$("#posCode8").show();$("#posCode9").show();$("#posCode10").show();$("#posCode11").hide();
+
+    $("#posCode12").hide();$("#posCode13").hide();
+
+    }
+
+    });
+
+    
+
+    $('#diganosisCtr').change(function() {
+
+        
+
+        var selected = $(this).val();
+
+        if(selected == '0'){
+
+        $("#counterDiaghide").hide();
+
+        $("#one").hide();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+    	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+    	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        
+
+        }
+
+        else if(selected == '1'){
+
+        	$("#one").show();$("#two").hide();$("#three").hide();$("#four").hide();$("#five").hide();
+
+        	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+       $("#counterDiaghide").show(); $("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").hide();$("#Coded3").hide();$("#Coded4").hide();$("#Coded5").hide();$("#Coded6").hide();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").hide();$("#diganosisCode3").hide();$("#diganosisCode4").hide();$("#diganosisCode5").hide();$("#diganosisCode6").hide();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '2'){
+
+        	$("#one").show();$("#two").show();$("#three").hide();$("#four").hide();$("#five").hide();
+
+        	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").hide();$("#Coded4").hide();$("#Coded5").hide();$("#Coded6").hide();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").hide();$("#diganosisCode4").hide();$("#diganosisCode5").hide();$("#diganosisCode6").hide();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '3'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").hide();$("#five").hide();
+
+        	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").hide();$("#Coded5").hide();$("#Coded6").hide();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").hide();$("#diganosisCode5").hide();$("#diganosisCode6").hide();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '4'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").hide();
+
+        	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").hide();$("#Coded6").hide();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").hide();$("#diganosisCode6").hide();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '5'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").hide();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").hide();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").hide();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '6'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").show();$("#seven").hide();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").show();$("#Coded7").hide();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").show();
+
+        $("#diganosisCode7").hide();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '7'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").show();$("#seven").show();$("#eight").hide();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").show();$("#Coded7").show();$("#Coded8").hide();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").show();
+
+        $("#diganosisCode7").show();$("#diganosisCode8").hide();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '8'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").hide();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").show();$("#Coded7").show();$("#Coded8").show();
+
+        $("#Coded9").hide();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").show();
+
+        $("#diganosisCode7").show();$("#diganosisCode8").show();$("#diganosisCode9").hide();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '9'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").hide();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").show();$("#Coded7").show();$("#Coded8").show();
+
+        $("#Coded9").show();$("#Coded10").hide();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").show();
+
+        $("#diganosisCode7").show();$("#diganosisCode8").show();$("#diganosisCode9").show();$("#diganosisCode10").hide();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }else if(selected == '10'){
+
+        	$("#one").show();$("#two").show();$("#three").show();$("#four").show();$("#five").show();
+
+        	$("#six").show();$("#seven").show();$("#eight").show();$("#nine").show();$("#ten").show();
+
+        	$("#eleven").hide();$("#twelve").hide();$("#thirteen").hide();
+
+        $("#counterDiaghide").show();$("#counterDiagShow").show();$("#diganosisCode1").show();
+
+        $("#Coded1").show();$("#Coded2").show();$("#Coded3").show();$("#Coded4").show();$("#Coded5").show();$("#Coded6").show();$("#Coded7").show();$("#Coded8").show();
+
+        $("#Coded9").show();$("#Coded10").show();$("#Coded11").hide();$("#Coded12").hide();$("#Coded13").hide();
+
+        $("#diganosisCode2").show();$("#diganosisCode3").show();$("#diganosisCode4").show();$("#diganosisCode5").show();$("#diganosisCode6").show();
+
+        $("#diganosisCode7").show();$("#diganosisCode8").show();$("#diganosisCode9").show();$("#diganosisCode10").show();$("#diganosisCode11").hide();
+
+        $("#diganosisCode12").hide();$("#diganosisCode13").hide();
+
+        }
+
+        });
+
+});
 
