@@ -1,71 +1,904 @@
-# Compiler Options
+/**
 
-compiler.debug=on
-compiler.optimize=on
-compiler.deprecation=off
+ * 
 
-# Host Name
+ */
 
-host.name=Windows Build on host ${env.COMPUTERNAME}
-
-# WAS Home
-
-#was.home=/opt/IBMWebAS7
-was.home=/opt/IBMWebAS855
-
-# AEFW and Dependencies
-
-framework.version=v3.0.1.RELEASE
-
-shared.lib.home.root=/var/webapps/common/lib/aeframework/aefw
-
-aec.lib.home=/var/webapps/common/lib/aeframework/aec/4.2.1/shared-libs
+package com.aetna.prvrte.rteintranet.web.controller;
 
 
-shared.lib.home=${shared.lib.home.root}/${framework.version}
 
-# Project-specific Libraries
+import java.util.LinkedHashMap;
 
-project.libs.dir=lib
+import java.util.LinkedList;
 
-# Project Source Code
+import java.util.List;
 
-src.java.dir=src/main/java
-src.resources.dir=src/main/resources
+import java.util.Map;
 
-# Web-Specific
 
-web.root.dir=src/main/webapp
 
-web.inf=WEB-INF
+import javax.servlet.http.HttpServletRequest;
 
-web.inf.dir=${web.root.dir}/${web.inf}
+import javax.servlet.http.HttpServletResponse;
 
-web.third.party.dir=${web.inf.dir}/lib
 
-# Working Directory for Build
 
-build.dir=build
-build.classes.dir=${build.dir}/classes
-build.instrumented.dir=${build.dir}/instrumented
+import org.apache.commons.collections.map.HashedMap;
 
-# Working Directory for Test
+import org.apache.commons.lang.SerializationUtils;
 
-test.java.dir=src/test/java
-test.resources.dir=src/test/resources
-test.build.dir=build/test
-test.build.classes.dir=${test.build.dir}/classes
+import org.apache.commons.logging.Log;
 
-# Destination for Documentation
+import org.apache.commons.logging.LogFactory;
 
-docs.dir=docs
-docs.junit.dir=${docs.dir}/junit
-docs.coverage.dir=${docs.dir}/coverage
-docs.working.dir=report.work
-docs.javadoc.dir=${docs.dir}/javadoc
+import org.springframework.beans.factory.annotation.Autowired;
 
-# Destination for Distribution
+import org.springframework.stereotype.Controller;
 
-dist.dir=dist
+import org.springframework.web.bind.annotation.ModelAttribute;
 
-master.dist.dir=../RteIntranet-build/dist
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
+import org.springframework.web.servlet.ModelAndView;
+
+
+
+import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
+
+import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+
+import com.aetna.prvrte.rteintranet.facade.Facade;
+
+import com.aetna.prvrte.rteintranet.translator.RTETranslator;
+
+import com.aetna.prvrte.rteintranet.util.ApplicationConstants;
+
+import com.aetna.prvrte.rteintranet.util.RteIntranetUtils;
+
+import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
+
+import com.aetna.prvrte.rteintranet.vo.LookUpTableListVO;
+
+
+
+
+
+/**
+
+ * <h1>Adasvct Controller</h1> The Adasvct Controller is responsible for handling
+
+ * ModelAndView the request and return a ModelAndView object which the
+
+ * DispatcherServlet will render as view
+
+ * 
+
+ * 
+
+ * @version 0.0.0
+
+ * @since November 04, 2014
+
+ * @author N726899
+
+ * 
+
+ * Cognizant_Offshore
+
+ */
+
+@Controller
+
+@RequestMapping(value = "/adasvct/*")
+
+public class AdasvctController {
+
+	/*
+
+	 * Instance of logger for AdasvctController.
+
+	 */
+
+	private static final Log log = LogFactory.getLog(AdasvctController.class);
+
+	/*
+
+	 * Tile name of the adasvct home view.
+
+	 */
+
+	public static final String ADASVCT_HOME = ".adasvctHome";
+
+	/*
+
+	 * Tile name of the adasvct display view.
+
+	 */
+
+	public static final String ADASVCT_DISPLAY = ".adasvctDisplay";
+
+	/*
+
+	 * Tile name of the  add new adasvct form view.
+
+	 */
+
+	public static final String ADASVCT_ADD_NEW = ".addAdasvct";
+
+	/*
+
+	 * Instance of Facade.
+
+	 */
+
+	@Autowired(required = true)
+
+	private Facade facade;
+
+	/*
+
+	 * Model and view of success operation.
+
+	 */
+
+	private ModelAndView modelAndView;
+
+	/*
+
+	 * Model and view of failure operation.
+
+	 */
+
+	private ModelAndView errorModelAndView;
+
+
+
+	/**
+
+	 * Method to display adasvctLookup view.
+
+	 * 
+
+	 * @return view of adasvctLookUp, if fails return error page
+
+	 */
+
+	@RequestMapping(value = "/adasvctHome", method = {RequestMethod.GET,RequestMethod.POST})
+
+	public ModelAndView getAdasvctLookUp(HttpServletRequest request) {
+
+		try {
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView = new ModelAndView(ADASVCT_HOME, "adasvctVO", new AdasvctVO());
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			return modelAndView;
+
+		} catch (Exception e) {
+
+			log.error("Exception occured in AdasvctController - getAdasvctLookUp() method:"	+ e.getMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_LOOKUP_VIEW + RteIntranetUtils.getTrimmedString(e.getMessage());
+
+			errorModelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errorModelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
+
+			return errorModelAndView;
+
+		}
+
+	}
+
+	
+
+
+
+	/**
+
+	 * Method to get the adasvctLookUp List from data store.
+
+	 * 
+
+	 * @param adasvctVO
+
+	 *            form view object of adasvct.
+
+	 * @return view of adasvctDisplay, if fails return error page
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/adasvctLookUp", method = RequestMethod.POST)
+
+	public ModelAndView getAdasvctLookUpList(@ModelAttribute("adasvctForm") AdasvctVO adasvctVO,HttpServletRequest request) {
+
+		try {
+
+			AdasvctDTO adasvctDTO = RTETranslator.toAdasvctDTO(adasvctVO);
+
+			
+
+			Map<String, Object> adasvctMap = facade.getAdasvctLookUpList(adasvctDTO);
+
+			//set AvasvctVOList in application state.
+
+			List<AdasvctVO> adasvctList = (List<AdasvctVO>) adasvctMap.get("adasvctList");
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setAdasvctVOList(adasvctList);
+
+			log.warn("-------------------------------------- lookUp - adasvctList size: "+ adasvctList.size());
+
+			facade.getApplicationState().setAdasvctList(adasvctList);
+
+			modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+			modelAndView.addObject("adasvctMsg",adasvctMap.get("adasvctMsg"));
+
+			modelAndView.addObject("adasvctList", adasvctList);
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			log.warn("-------------------------------------- lookUp - app state size: "+ facade.getApplicationState().getAdasvctList().size());
+
+			log.warn("-------------------------------------- exit  AdasvctController - getAdasvctLookUpList ");
+
+			return modelAndView;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in AdasvctController - getAdasvctLookUpList() method:"	+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errorModelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errorModelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
+
+			return errorModelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to display get add new Adasvct form home view.
+
+	 * 
+
+	 * @return view of addAdasvctForm, if fails return error page
+
+	 */
+
+	@RequestMapping(value = "/addAdasvctForm", method = RequestMethod.POST)
+
+	public ModelAndView getAddNewAdasvctFormHome(HttpServletRequest request) {
+
+		try {
+
+			modelAndView = new ModelAndView(ADASVCT_ADD_NEW, "adasvctVO", new AdasvctVO());
+
+			String securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			return modelAndView;
+
+		} catch (Exception e) {
+
+			log.error("Exception occured in AdasvctController - getAddNewAdasvctFormHome() method:"	+ e.getMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_ADD_VIEW + "(AdasvctController) " + e.toString();
+
+			errorModelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errorModelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
+
+			return errorModelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to get the adasvctLookUp List from data store.
+
+	 * 
+
+	 * @param adasvctVO
+
+	 *            form view object of adasvct.
+
+	 * @return view of adasvctDisplay, if fails return error page
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/addAdasvct", method = RequestMethod.POST)
+
+	public ModelAndView addAdasvct(final HttpServletRequest request, @ModelAttribute("addAdasvctForm") AdasvctVO adasvctVO) {
+
+		try {
+
+			AdasvctDTO adasvctDTO = RTETranslator.toAdasvctDTO(adasvctVO);
+
+			Map<String, Object> adasvctMap = facade.addAdasvctToDb(adasvctDTO);
+
+			
+
+			//set AvasvctVOList in application state.
+
+			List<AdasvctVO> adasvctList = (List<AdasvctVO>) adasvctMap.get("adasvctList");
+
+			facade.getApplicationState().setAdasvctList(adasvctList);
+
+			LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+			lookUpTableListVO.setAdasvctVOList(adasvctList);
+
+			modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+			modelAndView.addObject("adasvctMsg",adasvctMap.get("adasvctMsg"));
+
+			modelAndView.addObject("adasvctList",adasvctList);
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			return modelAndView;
+
+		} catch (ApplicationException e) {
+
+			log.error("Exception occured in AdasvctController - addAdasvct() method:"+ e.getErrorMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_ADD_ROW + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+			errorModelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			errorModelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE,errorMsg);
+
+			return errorModelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to get the adasvctLookUp List from data store.
+
+	 * @param request
+
+	 *            request object from view
+
+	 * @param takeAction
+
+	 * 			List of selected index.
+
+	 * @return view of adasvctDisplay, if fails return error page
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/deleteAdasvct", method = RequestMethod.POST)
+
+	public ModelAndView deleteAdasvct(@RequestParam(required = false) String[] takeAction,
+
+		HttpServletRequest request,	@ModelAttribute("adasvctDisplay")LookUpTableListVO lookUpTableListVO) {
+
+		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
+
+		try {
+
+			int index;
+
+			boolean isAdasvcDeleted = true;
+
+			Map<String, Object> adasvctMap = new HashedMap();
+
+			String adasvctMsg = "";
+
+			adasvctList = lookUpTableListVO.getAdasvctVOList();
+
+			if(takeAction != null && takeAction.length != 0){
+
+				if (adasvctList != null && adasvctList.size() != 0) {
+
+					List<AdasvctDTO> updatedAdasvctList = RTETranslator.toAdasvctDTOList(adasvctList);
+
+					for (int j = takeAction.length - 1; j >= 0; j--) {
+
+						index = Integer.parseInt(takeAction[j]);
+
+						AdasvctDTO existingAdasvct = (AdasvctDTO) updatedAdasvctList.get(index);
+
+						if (existingAdasvct.getUpdatedInd() != ApplicationConstants.COPY) {
+
+							String adaCd = existingAdasvct.getAdaCd();
+
+							String effDate = existingAdasvct.getEffDate();
+
+							adasvctMap = facade.deleteAdasvct(adaCd, effDate);
+
+							adasvctMsg = (String) adasvctMap.get("adasvctMsg");
+
+							isAdasvcDeleted = (Boolean) adasvctMap.get("isAdasvctDeleted");
+
+							
+
+							if(isAdasvcDeleted == true){
+
+								adasvctList.remove(index);
+
+							}else{
+
+								j = 0;
+
+							}
+
+						} else{
+
+							adasvctList.remove(index);
+
+						}
+
+						
+
+					}
+
+					if(isAdasvcDeleted == true)
+
+					adasvctMsg = ApplicationConstants.ROWS_DELETED;
+
+				
+
+				}
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_ACTION_TAKEN;
+
+			}
+
+			//update AvasvctVOList in application state.
+
+			facade.getApplicationState().setAdasvctList(adasvctList);
+
+			modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+			modelAndView.addObject("adasvctMsg",adasvctMsg);
+
+			modelAndView.addObject("adasvctList",adasvctList);
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			return modelAndView;
+
+		} catch (ApplicationException e){
+
+            log.error("Exception occured in AdasvctController - deleteAdasvct() method:"+e.getErrorMessage());
+
+            String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+            modelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);                 
+
+            modelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);                
+
+            return modelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to get the adasvctLookUp List from data store.
+
+	 * 
+
+	 * @param adasvctVO
+
+	 *            form view object of adasvct.
+
+	 * @param takeAction
+
+	 *          List of takeAction to copy the row
+
+	 * @return view of adasvctDisplay, if fails return error page
+
+	 */
+
+	@RequestMapping(value = "/copyAdasvct", method = RequestMethod.POST)
+
+	public ModelAndView copyAdasvct(@RequestParam(required = false) String[] takeAction,
+
+		HttpServletRequest request,	@ModelAttribute("adasvctDisplay")LookUpTableListVO lookUpTableListVO) {
+
+		int index;
+
+		String adasvctMsg ="";
+
+		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
+
+		try {
+
+			adasvctList = lookUpTableListVO.getAdasvctVOList();
+
+			if(takeAction != null && takeAction.length != 0){
+
+				if(adasvctList != null && adasvctList.size() != 0){
+
+					for (int j = 0; j < takeAction.length; j++) {
+
+						index = Integer.parseInt(takeAction[j]);
+
+						AdasvctVO existingAdasvct = (AdasvctVO) adasvctList.get(index);
+
+						AdasvctVO copiedAdasvctVO =  (AdasvctVO) SerializationUtils.clone(existingAdasvct);
+
+						String postedDate = RteIntranetUtils.getTodaysDate();
+
+						copiedAdasvctVO.setUpdatedInd(ApplicationConstants.COPY);
+
+						copiedAdasvctVO.setPostedDate(postedDate);
+
+						adasvctList.add(copiedAdasvctVO);
+
+					}
+
+					adasvctMsg = ApplicationConstants.ROWS_COPIED;
+
+				}
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_ACTION_TAKEN;
+
+			}
+
+			//update AvasvctVOList in application state.
+
+			facade.getApplicationState().setAdasvctList(adasvctList);
+
+			lookUpTableListVO.setAdasvctVOList(adasvctList);
+
+			modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+			modelAndView.addObject("adasvctMsg",adasvctMsg);
+
+			modelAndView.addObject("adasvctList",adasvctList);
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			return modelAndView;
+
+		} catch (Exception e) {
+
+			log.error("Exception occured in AdasvctController - copyAdasvct() method:" + e.getMessage());
+
+			String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getMessage());
+
+			modelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);
+
+			modelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);
+
+			return modelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to get the adasvctLookUp List from data store.
+
+	 * 
+
+	 * @param takeAction
+
+	 *            list of selected indexes from view.
+
+	 * @param request
+
+	 *            request object.
+
+	 * @return view of adasvctDisplay, if fails return error page
+
+	 */
+
+	@SuppressWarnings("unchecked")
+
+	@RequestMapping(value = "/addUpdateAdasvct", method = RequestMethod.POST)
+
+	public ModelAndView addUpdateAdasvct(@RequestParam(required = false) String[] takeAction,
+
+			HttpServletRequest request, @ModelAttribute("adasvctDisplay")LookUpTableListVO lookUpTableListVO) {
+
+		boolean isAddorUpdateCleanUp = false;
+
+		int i;
+
+		String adasvctMsg ="";
+
+		List<AdasvctVO> modifiedAdasvctList = new LinkedList<AdasvctVO>();
+
+		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
+
+		try {
+
+			modifiedAdasvctList = lookUpTableListVO.getAdasvctVOList();
+
+			adasvctList = facade.getApplicationState().getAdasvctList();
+
+			if(adasvctList != null && adasvctList.size() != 0){
+
+				for(AdasvctVO adasvctVO : adasvctList){
+
+					if(adasvctVO.getUpdatedInd() == ApplicationConstants.UPDATE_IND_Y){
+
+						adasvctVO.setUpdatedInd(ApplicationConstants.UPDATE_IND_N);
+
+					}
+
+				}
+
+			}
+
+			if(takeAction != null && takeAction.length != 0){
+
+				if(adasvctList != null && adasvctList.size() != 0 
+
+						&& modifiedAdasvctList!= null && modifiedAdasvctList.size() != 0){
+
+					Map<String, Object> adasvctMap = new HashedMap();
+
+					List<AdasvctDTO> adasvctDTOList = RTETranslator.toAdasvctDTOList(adasvctList);
+
+					for (int j = 0; j < takeAction.length; j++) {
+
+						i = Integer.parseInt(takeAction[j]);
+
+						AdasvctDTO updatedAdasvctDTO =  RTETranslator.toAdasvctDTO(modifiedAdasvctList.get(i));
+
+						adasvctMap = facade.addUpdateAdasvct(updatedAdasvctDTO, adasvctDTOList, i);
+
+						List<AdasvctDTO> adasvctDtoList = (List<AdasvctDTO>) adasvctMap.get("adasvctList");
+
+						adasvctList = RTETranslator.toAdasvctVOList(adasvctDtoList);
+
+						boolean isAdasvctAddorUpdated = (Boolean) adasvctMap.get("isAdasvctAddorUpdated");
+
+						isAddorUpdateCleanUp = (Boolean) adasvctMap.get("isAddUpdateCleanUp");
+
+						adasvctMsg = (String) adasvctMap.get("adasvctMsg") ;
+
+						if(isAdasvctAddorUpdated){
+
+							j = takeAction.length;
+
+						} 
+
+					}
+
+					if(isAddorUpdateCleanUp) {
+
+						adasvctMsg = ApplicationConstants.ADD_UPDATE_ROWS;
+
+						
+
+						String xSvcTypeCd, ySvcTypeCd, xEffDate, yEffDate;
+
+						for (int x = adasvctList.size() - 1 ; x > 0;  x--) {
+
+							AdasvctVO xAdasvct = (AdasvctVO) adasvctList.get(x);
+
+							xSvcTypeCd= xAdasvct.getSvcTypeCd();
+
+							xEffDate= xAdasvct.getEffDate();
+
+							if (xAdasvct.getUpdatedInd() != ApplicationConstants.COPY) {
+
+								for (int y = x - 1; y > -1; y--) {
+
+									AdasvctVO aAdasvct = (AdasvctVO) adasvctList.get(y);
+
+									ySvcTypeCd= aAdasvct.getSvcTypeCd();
+
+									yEffDate= aAdasvct.getEffDate();
+
+									if (xSvcTypeCd.equals(ySvcTypeCd) && xEffDate.equals(yEffDate)) {
+
+										adasvctList.remove(y); 
+
+										x--;
+
+									}
+
+								}
+
+							}
+
+						}
+
+					}
+
+				} else {
+
+					throw new ApplicationException(ApplicationConstants.SESSION_EXPIRED);
+
+				}
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_ACTION_TAKEN;
+
+			}
+
+			//update AvasvctVOList in application state.
+
+			facade.getApplicationState().setAdasvctList(adasvctList);
+
+			lookUpTableListVO.setAdasvctVOList(adasvctList);
+
+			String securityLevel ="";
+
+			securityLevel = RteIntranetUtils.getUserSecurityLevel(request);
+
+			modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+			modelAndView.addObject("adasvctMsg",adasvctMsg);
+
+			modelAndView.addObject("adasvctList",adasvctList);
+
+			modelAndView.addObject("securityLevel", securityLevel);
+
+			log.warn("-------------------------------------- end of addUpdateAdasvct " + adasvctList.size());
+
+			return modelAndView;
+
+		} catch (ApplicationException e){
+
+            log.error("Exception occured in AdasvctController - addUpdateAdasvct() method:"+e.getErrorMessage());
+
+            String errorMsg = ApplicationConstants.ERROR_GET_LOOKUP + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+            modelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);                 
+
+            modelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);                
+
+            return modelAndView;
+
+		}
+
+	}
+
+
+
+	/**
+
+	 * Method to export Adasvct look up table to excel work book
+
+	 * 
+
+	 * @param lookUpTableListVO
+
+	 *            list of adasvct object.
+
+	 * @param response
+
+	 *            response object to return
+
+	 * @return exported file to view.
+
+	 */
+
+	@RequestMapping(value = "/adasvctExport", method = RequestMethod.POST)
+
+	public ModelAndView adasvctExport(HttpServletResponse response){
+
+		List<AdasvctVO> adasvctList = new LinkedList<AdasvctVO>();
+
+		LookUpTableListVO lookUpTableListVO = new LookUpTableListVO();
+
+		String adasvctMsg="";
+
+		try{
+
+			adasvctList = facade.getApplicationState().getAdasvctList();
+
+			if(adasvctList != null && adasvctList.size() != 0){
+
+				// Key map to create header
+
+				Map<String,String> keyMap = new LinkedHashMap<String,String>();
+
+				keyMap.put("adaCd", "ADA Code");
+
+				keyMap.put("svcTypeCd", "Svc Type CD");
+
+				keyMap.put("effDate", "Effective Date");
+
+				keyMap.put("expDate", "Expiration Date");
+
+				keyMap.put("postedDate", "Posted Date");
+
+				
+
+				RteIntranetUtils.exportToExcel(response, adasvctList, keyMap);
+
+				adasvctMsg = ApplicationConstants.EXPORT_SUCCESS;
+
+			} else {
+
+				adasvctMsg = ApplicationConstants.NO_DATA;;
+
+			}
+
+			lookUpTableListVO.setAdasvctVOList(adasvctList);
+
+	        modelAndView = new ModelAndView(ADASVCT_DISPLAY,"lookUpTableListVO", lookUpTableListVO);
+
+	        modelAndView.addObject("adasvctMsg",adasvctMsg);
+
+		    return modelAndView;
+
+		} catch (ApplicationException e){
+
+            log.error("Exception occured in AdasvctController - adasvctExport() method:"+e.getErrorMessage());
+
+            String errorMsg = ApplicationConstants.ERROR_EXPOT_TABLE + "(AdasvctController) " + RteIntranetUtils.getTrimmedString(e.getErrorMessage());
+
+            modelAndView = new ModelAndView(ApplicationConstants.ERROR_PAGE);                 
+
+            modelAndView.addObject(ApplicationConstants.EXCP_ERR_MESSAGE, errorMsg);                
+
+            return modelAndView;
+
+       }
+
+	}
+
+}
+
