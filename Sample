@@ -28,9 +28,13 @@ $(document).ready( function() {
 	$("#endSecs").attr("value", ((d.getSeconds()<10?'0':'') + d.getSeconds()));
 	$('#Lookup').click(function(){
 		var adasvctLookUpPath = relPath+'/eventtrack/longruntrans/longruntransLookUp';
+		var adasvctLookUp2Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport2';
 		var adasvctLookUp3Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport3';
 		var adasvctLookUp4Path = relPath+'/eventtrack/longruntrans/longruntransLookUpReport4';
 		var reportValue = $("#report").val();
+		if (($('#secondsCalc').val() == "")) {
+   			$("#secondsCalc").attr("value", "00");
+   		}
 		if (($('#startHrs').val() == "")) {
    			$("#startHrs").attr("value", "00");
    		}if (($('#startMns').val() == "")) {
@@ -44,7 +48,10 @@ $(document).ready( function() {
 				$("#longruntransForm").attr('action', adasvctLookUp3Path).submit();
 			}else if(($("#report").val()=="Report4")){
 				$("#longruntransForm").attr('action', adasvctLookUp4Path).submit();
-			}else{
+			}else if(($("#report").val()=="Report2")){
+				$("#longruntransForm").attr('action', adasvctLookUp2Path).submit();
+			}
+			else{
 				$("#longruntransForm").attr('action', adasvctLookUpPath).submit();
 			}
 			
@@ -112,8 +119,7 @@ if (event.shiftKey == true) {
         if($(this).val().indexOf('.') !== -1 && event.keyCode == 190)
             event.preventDefault(); 
         //if a decimal has been added, disable the "."-button
-});
-	
+});	
 });
 function validate()
 {
@@ -136,7 +142,7 @@ function validate()
             (endTime.substr(0,2) >= 0 && endTime.substr(0,2) <= 24) &&
             (endTime.substr(3,2) >= 0 && endTime.substr(3,2) <= 59) &&
             (endTime.substr(6,2) >= 0 && endTime.substr(6,2) <= 59);
-     if (($('#startDate').val() == "")) {
+      if (($('#startDate').val() == "")) {
    		alert("Please enter valid Start time");
    		return false;
    }
@@ -150,22 +156,17 @@ function validate()
    }if(validEndTime == false){
    		alert("Please Enter Valid End Time");
    		return false;
+   }if(($('#report').val()) == "select"){
+   		alert("Please Select the report");
+   		return false;
+   }if((($('#report').val()) == "Report2") && ((($('#module').val()) == ""))){
+   		alert("Please Enter the Module for Report 2");
+   		return false;
+   }if((($('#report').val()) == "Report3") && ((($('#minutesCalc').val()) == ""))){
+   		alert("Please Enter the Minutes Split for Report 3");
+   		return false;
    }
-   var splitEndDate = enddate.split('-');
-		var splitStartDate = startdate.split('-');
-		var newStartDate = splitStartDate[1] + "/" + splitStartDate[2] + "/"
-				+ splitStartDate[0];
-		var newEndDate = splitEndDate[1] + "/" + splitEndDate[2] + "/"
-				+ splitEndDate[0];
-		var timeStart = Date.parse(newStartDate + " " + startTime);
-		var timeEnd = Date.parse(newEndDate + " " + endTime);
-		var diffe = timeEnd - timeStart;
-		var min = Math.floor((diffe / 1000) / 60);
-		if (min > 1440) {
-			alert("Start and End time difference should be within 24 hours");
-			return false;
-		}
-   return retVal
+      return retVal
 }
 </script>
 </head>
@@ -173,21 +174,21 @@ function validate()
 
 	<H1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LONG RUNNING TRANSACTION REPORT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/images/Long Running Transaction Reports Documentation.docx"><font size="3" color="black"><u>Help</u></font></a></H1>
 		<h2 align="center"><FONT color="black"><nav>
-				<div class="box"><a
+				<div class="box1"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome">Report
 					by Transactions</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome2">Report
 					by Modules</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome3">Report
-					by Minutes</a></div> <div class="box1"><a
+					by Minutes</a></div> <div class="box"><a
 					href="<%=request.getContextPath()%>/eventtrack/longruntrans/longRunTransHome4">Report
 					by Category</a></div>
 			</nav></FONT></h2>
-	<H1 align="center">REPORT BY CATEGORY</H1>
-	<i><P align="center">
-	<FONT style="font-size: 9pt"> Start time and End time difference should be <b>within 24-hours</b>
-	</FONT>	
-	</P></i>
+	<H1 align="center">REPORT BY TRANSACTIONS</H1>
+	<P align="center">
+		
+	</P>
+	
 	<form:form commandName="LongRunTransVO" name="longruntransForm"
 		id="longruntransForm" method="POST">
 
@@ -235,8 +236,14 @@ function validate()
 								onchange="javascript:this.value=this.value.toUpperCase();" /></TD>
 						<TD><I>Time should be entered in 24 hour format - HR:MM:SS</I></TD>
 					</TR>
-					
-					<input type="hidden" name="report" id="report" value="Report4" />
+					<TR>
+						<TD>Seconds *</TD>
+						<TD><form:input path="secondsCalc" id="secondsCalc"
+								value="${sessionScope.secondsCalc}" maxlength="3" size="2"
+								onchange="javascript:this.value=this.value.toUpperCase();"/></TD>
+
+					</TR>
+					<input type="hidden" name="report" id="report" value="Report1" />
 
 				</TBODY>
 
@@ -251,5 +258,7 @@ function validate()
 
 		</CENTER>
 	</form:form>
-
+	<FONT face="ARIAL" style="font-size: 9pt"> * - Transactions
+		taking more than submitted seconds<BR> 
+	</FONT>
 </BODY>
