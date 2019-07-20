@@ -1,95 +1,25 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-
-
-
-<link rel="stylesheet" type="text/css" href="${context}/themes/blue/rteintranet.css">
-
-
-
-
-
-
-
-
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<head>
+<title>Chrome Logout</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-	<head>
+</head>
+<body>
+<!-- Customer Brand -->
+<IMG alt=Logo src="https://www.aetna.com/assets/graphics/chrome_logo.gif">
+<!-- Comment-->
+<div align="center">
 
-		<%-- <title>
 
-			<c:choose>
+<!-- outer table with border -->
+<table width="50%" height=200 border=1 cellpadding=0 cellspacing=0 >
+  <tr> 
+    <td>
+		 <h2 align="center"> You are successfully logged out of the session</h2>
+	 </td>
+	</tr>	
+</table>
 
-				<c:when test="${title ne null}"><c:out value="${title}"/></c:when>
-
-				<c:otherwise>
-
-					<c:set var="titleCode"><tiles:getAsString name="title"/></c:set>
-
-					<fmt:message key="${titleCode}"/>
-
-				</c:otherwise>
-
-			</c:choose>
-
-		</title> --%>
-
-		 <tiles:importAttribute name="title" />
-
-		<title>
-
-			<spring:message code="${title}"></spring:message>
-
-		</title>
-
-		
-
-	</head>
-
-	<body>
-
-	<div id="container">
-
-		<div id="header">
-
-			<tiles:insertAttribute name="header" />
-
-		</div>
-
-		<div id="bodyContent">
-
-			<div id="menu">
-
-				<tiles:insertAttribute name="menu" />
-
-			</div>
-
-			<div id="content">
-
-				<tiles:insertAttribute name="body" />
-
-			</div>
-
-		</div>
-
-		<div id="footer">
-
-			<tiles:insertAttribute name="footer" />
-
-		</div>
-
-	</div>
-
-	</body>
-
+</body>
 </html>
