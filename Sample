@@ -14,6 +14,14 @@ import java.util.Map;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+
+
+import com.aetna.prvrte.rteintranet.dao.RbrcDAO;
+
 import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
@@ -28,23 +36,61 @@ import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
  */
 
-public interface RbrcService {
+
+
+@Service
+
+public class RbrcServiceImpl implements RbrcService {
 
 
 
-	Map getRbrcLookUp(RbrcDTO rbrcDTO) throws ApplicationException;;
+	@Autowired(required=true)
+
+	private RbrcDAO rbrcDAO;
 
 
 
-	Map addNewRbrc(RbrcDTO rbrcDTO)throws ApplicationException ;
+	@Override
+
+	public Map getRbrcLookUp(RbrcDTO rbrcDTO) throws ApplicationException {
+
+		return rbrcDAO.getRbrcLookUp(rbrcDTO);
+
+	}
 
 
 
-	Map deleteRbrc(RbrcDTO rbrcDTO) throws ApplicationException ;
+	@Override
+
+	public Map addNewRbrc(RbrcDTO rbrcDTO) throws ApplicationException {
+
+		return rbrcDAO.addNewRbrc(rbrcDTO);
+
+	}
 
 
 
-	Map addUpdateRbrc(RbrcDTO existRbrcDTO, List<RbrcDTO> rbrcDtoList, int index, char updateInd) throws ApplicationException ;
+	@Override
+
+	public Map deleteRbrc(RbrcDTO rbrcDTO)
+
+			throws ApplicationException {
+
+		return rbrcDAO.deleteRbrc(rbrcDTO);
+
+	}
+
+
+
+	@Override
+
+	public Map addUpdateRbrc(RbrcDTO existRbrcDTO, List<RbrcDTO> rbrcDtoList,
+
+			int index, char updateInd) throws ApplicationException {
+
+		return rbrcDAO.addUpdateRbrc(existRbrcDTO,rbrcDtoList, index, updateInd);
+
+	}
 
 }
 
