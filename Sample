@@ -1,9 +1,3 @@
-/**
-
- * 
-
- */
-
 package com.aetna.prvrte.rteintranet.service;
 
 
@@ -11,6 +5,14 @@ package com.aetna.prvrte.rteintranet.service;
 import java.util.Map;
 
 
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+
+
+import com.aetna.prvrte.rteintranet.dao.RteSecurityDAO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
@@ -24,11 +26,57 @@ import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
  */
 
-public interface RteSecurityService {
+@Service
+
+public class RteSecurityServiceImpl implements RteSecurityService {
+
+	@Autowired(required=true)
+
+	private  RteSecurityDAO rteSecurityDAO;	
+
+	
+
+	/**
+
+	 * @return the rteSecurityDAO
+
+	 */
+
+	public RteSecurityDAO getRteSecurityDAO() {
+
+		return rteSecurityDAO;
+
+	}
 
 
 
-	Map getUserSecurityLevel(String userId)throws ApplicationException;
+
+
+
+
+	/**
+
+	 * @param rteSecurityDAO the rteSecurityDAO to set
+
+	 */
+
+	public void setRteSecurityDAO(RteSecurityDAO rteSecurityDAO) {
+
+		this.rteSecurityDAO = rteSecurityDAO;
+
+	}
+
+
+
+
+
+	@Override
+
+	public Map getUserSecurityLevel(String userId) throws ApplicationException {
+
+		return rteSecurityDAO.getUserSecurityLevel(userId);
+
+	}
 
 
 
