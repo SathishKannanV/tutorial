@@ -1,10 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application id="Application_ID" version="6" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd">
-	<display-name>RteIntranet-ear</display-name>
-	<module id="WebModule_1243630871431">
-		<web>
-			<web-uri>RteIntranet-web.war</web-uri>
-			<context-root>RteIntranet</context-root>
-		</web>
-	</module>
-</application>
+<security:Security xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:security="http://www.ibm.com/websphere/appserver/schemas/5.0/security.xmi" xmi:id="Security_1243628518993"/>
