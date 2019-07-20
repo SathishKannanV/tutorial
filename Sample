@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-bnd
+<web-ext
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://websphere.ibm.com/xml/ns/javaee"
-    xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-bnd_1_1.xsd" version="1.1">
-  <virtual-host name="default_host"/>
-  <resource-ref name="jms/aefw.log.qcfRef" binding-name="jms/PROD_aefw.log_QCF"/>
-  <resource-ref name="jms/aefw.log.qRef" binding-name="jms/PROD_aefw.log_Q"/>
-  <resource-ref name="url/aefw.log.urlRef" binding-name="url/PROD_RteIntranet_logback_URL"/>
-  <resource-ref name="url/environment.properties" binding-name="url/PROD_RteIntranet_environment.properties"/>
-  <resource-ref name="jdbc/evtTrkRef" binding-name="jdbc/PROD_evtTrkRef_DS"/>
-  <resource-ref name="jdbc/tableRef" binding-name="jdbc/PROD_tableRef_DS"/>
-</web-bnd> 
+    xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-ext_1_1.xsd" version="1.1">
+  <reload-interval value="3"/>
+  <enable-directory-browsing value="false"/>
+  <enable-file-serving value="true"/>
+  <enable-reloading value="true"/>
+  <enable-serving-servlets-by-class-name value="true"/>
+</web-ext>
+
