@@ -1,226 +1,71 @@
-<?xml version="1.0"?>
-<project name="RteIntranet-web"
-         default="main"
-         basedir=".">
-  <!-- Import properties from properties files -->
-  <property file="${user.home}/build.properties" />
-  <property file="build.properties" />
-  <property file="project.properties" />
-  <property environment="env" />
-  <property name="clover.home"
-            value="${shared.lib.home}/test-libs" />
-  <!-- Create the classpath -->
-  <path id="clover.classpath">
-    <fileset dir="${clover.home}">
-      <include name="clover*.jar" />
-    </fileset>
-  </path>
-  <path id="project.classpath">
-    <!-- All of WAS, including Java -->
-    <fileset dir="${was.home}/lib">
-      <include name="**/*.jar" />
-    </fileset>
-    <!-- All framework libs -->
-    <fileset dir="${shared.lib.home}">
-      <include name="**/*.jar" />
-    </fileset>
-    
-    
-	<fileset dir="${aec.lib.home}">
-      <include name="**/*.jar" />
-    </fileset>
-    
-    
-    <!-- Project specific libraries -->
-    <fileset dir="${web.third.party.dir}">
-      <include name="**/*.jar" />
-    </fileset>
-    <!-- JARs from Associated Projects -->
-    <fileset dir="${master.dist.dir}">
-      <include name="**/*.jar" />
-    </fileset>
-    <fileset dir="${was.home}/plugins">
-      <include name="**/*.jar" />
-    </fileset>
-  	<!-- Project specific libraries -->
-  		<fileset dir="src/main/webapp/WEB-INF/lib">
-  			<include name="**/*.jar"/>
-  		</fileset>
-  </path>
-  <taskdef resource="cloverlib.xml"
-           classpathref="clover.classpath" />
-  <!-- ================================================================ -->
-  <!-- M A I N                                                          -->
-  <!-- ================================================================ -->
-  <target name="main">
-    <antcall target="dist" />
-  </target>
-  <target name="coverage.setup"
-          unless="no.coverage">
-    <echo>Enabling coverage!...</echo>
-    <clover-env />
-    <clover-clean />
-  </target>
-  <!-- ================================================================ -->
-  <!-- B A N N E R                                                      -->
-  <!-- ================================================================ -->
-  <target name="banner"
-          depends="coverage.setup">
-    <echo message="================================================= " />
-    <echo message="     Project :  ${project}               " />
-    <echo message="================================================= " />
-  	<echo message="shared.lib.home = ${shared.lib.home}" />  	
-    <echo message="Build Host = ${host.name}" />
-    <echo message="USER_HOME = ${user.home}" />
-    <echo message="Base Directory = ${basedir}" />
-    <echo message="Build Directory = ${build.dir}" />
-    <echo message="ANT_HOME   = ${env.ANT_HOME}" />
-    <echo message="ANT Version = ${ant.version}" />
-    <echo message="ANT File = ${ant.file}" />
-    <echo message="WAS_HOME = ${was.home}" />
-    <echo message="JAVA_HOME  = ${env.JAVA_HOME}" />
-    <echo message="JavaVersion = ${java.version}" />
-  </target>
-  <!-- =================================================================== -->
-  <!-- C O M P I L E                                                       -->
-  <!-- =================================================================== -->
-  <target name="compile"
-          depends="banner">
-    <delete dir="${build.dir}"
-            failonerror="no"
-            includeemptydirs="true" />
-    <mkdir dir="${build.classes.dir}" />
-    <echo message="Copying resources from ${src.resources.dir} to ${build.classes.dir}" />
-    <copy todir="${build.classes.dir}"
-          overwrite="true">
-      <fileset dir="${src.resources.dir}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-    <echo message="Compiling from ${src.java.dir} to ${build.classes.dir}" />
-    <javac destdir="${build.classes.dir}"
-	   encoding="iso-8859-1" 
-           debug="${compiler.debug}"
-           deprecation="${compiler.deprecation}"
-           optimize="${compiler.optimize}">
-      <src path="${src.java.dir}" />
-      <classpath refid="project.classpath" />
-    </javac>
-  </target>
-  <!-- =================================================================== -->
-  <!-- T E S T                                                             -->
-  <!-- =================================================================== -->
-  <target name="test"
-          depends="compile">
-    <delete dir="${docs.junit.dir}"
-            failonerror="no"
-            includeemptydirs="true" />
-    <delete dir="${test.build.dir}"
-            failonerror="no"
-            includeemptydirs="true" />
-    <mkdir dir="${docs.working.dir}" />
-    <mkdir dir="${docs.junit.dir}" />
-    <mkdir dir="${test.build.classes.dir}" />
-    <echo message="Copying resources from ${test.resources.dir} to ${test.build.classes.dir}" />
-    <copy todir="${test.build.classes.dir}"
-          overwrite="true">
-      <fileset dir="${test.resources.dir}">
-        <include name="**/*" />
-      </fileset>
-    </copy>
-    <echo message="Compiling from ${test.java.dir} to ${test.build.classes.dir}" />
-    <clover-instr destdir="coverage">
-      <fileset dir="${src.java.dir}">
-        <include name="**/*.java" />
-      </fileset>
-      <fileset dir="${test.java.dir}">
-        <include name="**/*.java" />
-      </fileset>
-    </clover-instr>
-    <javac srcdir="coverage"
-           destdir="${test.build.classes.dir}">
-      <classpath refid="project.classpath" />
-    </javac>
-    <junit printsummary="withOutAndErr"
-           fork="no"
-           haltonfailure="no"
-           failureproperty="junit.fail">
-      <classpath>
-        <pathelement location="${test.build.classes.dir}" />
-      </classpath>
-      <classpath refid="project.classpath" />
-      <classpath refid="clover.classpath" />
-      <formatter type="xml" />
-      <batchtest fork="no"
-                 todir="${docs.working.dir}">
-        <fileset dir="${test.java.dir}">
-          <include name="**/*Test*.java" />
-          <exclude name="**/Abstract*.java" />
-        </fileset>
-      </batchtest>
-    </junit>
-    <junitreport todir="${docs.working.dir}">
-      <fileset dir="${docs.working.dir}">
-        <include name="TEST-*.xml" />
-      </fileset>
-      <report format="frames"
-              todir="${docs.junit.dir}" />
-    </junitreport>
-  	
-  	<fail message="Unit test failed" if="junit.fail"/>
-  	
-  </target>
-  <!-- =================================================================== -->
-  <!-- W A R (What is it good for?)                                        -->
-  <!-- =================================================================== -->
-  <target name="war"
-          depends="test">
-    <war warfile="${build.dir}/${project}.war"
-         webxml="${web.inf.dir}/web.xml">
-  	  <manifest>
-  		  <attribute name="Built-By" value="${user.name}"/>
-  		  <attribute name="Specification-Title" value="${project}"/>
-  		  <attribute name="Specification-Version" value="${version}"/>
-  		  <attribute name="Implementation-Title" value="${project}"/>
-  		  <attribute name="Implementation-Vendor" value="Aetna"/>
-  		  <!-- @todo need to substitute the build label from CC -->
-  		  <attribute name="Implementation-Version" value="${version}"/> 
-  		  <attribute name="Java-Version" value="${java.version}"/>
-  	  	  <attribute name="Class-Path" value="commons-net-1.4.0.jar RteIntranet.jar "/>
+# Compiler Options
 
-  	  </manifest>
-         
-      <fileset dir="${web.root.dir}">
-        <exclude name="${web.inf}/**" />
-        <exclude name="META-INF/MANIFEST.MF" />
-      </fileset>
-      <classes dir="${build.classes.dir}" />
-      <webinf dir="${web.inf.dir}">
-        <exclude name="web.xml" />
-        <exclude name="classes/**" />
-      </webinf>
-    </war>
-  </target>
-  <!-- =================================================================== -->
-  <!-- D I S T                                                             -->
-  <!-- =================================================================== -->
-  <target name="dist"
-          depends="war">
-    <delete dir="${dist.dir}"
-            failonerror="no"
-            includeemptydirs="true" />
-    <mkdir dir="${dist.dir}" />
-    <copy todir="${dist.dir}"
-          overwrite="true">
-      <fileset dir="${build.dir}">
-        <include name="*.war" />
-      </fileset>
-    </copy>
-    <copy todir="${master.dist.dir}"
-          overwrite="true">
-      <fileset dir="${build.dir}">
-        <include name="*.war" />
-      </fileset>
-    </copy>
-  </target>
-</project>
+compiler.debug=on
+compiler.optimize=on
+compiler.deprecation=off
+
+# Host Name
+
+host.name=Windows Build on host ${env.COMPUTERNAME}
+
+# WAS Home
+
+#was.home=/opt/IBMWebAS7
+was.home=/opt/IBMWebAS855
+
+# AEFW and Dependencies
+
+framework.version=v3.0.1.RELEASE
+
+shared.lib.home.root=/var/webapps/common/lib/aeframework/aefw
+
+aec.lib.home=/var/webapps/common/lib/aeframework/aec/4.2.1/shared-libs
+
+
+shared.lib.home=${shared.lib.home.root}/${framework.version}
+
+# Project-specific Libraries
+
+project.libs.dir=lib
+
+# Project Source Code
+
+src.java.dir=src/main/java
+src.resources.dir=src/main/resources
+
+# Web-Specific
+
+web.root.dir=src/main/webapp
+
+web.inf=WEB-INF
+
+web.inf.dir=${web.root.dir}/${web.inf}
+
+web.third.party.dir=${web.inf.dir}/lib
+
+# Working Directory for Build
+
+build.dir=build
+build.classes.dir=${build.dir}/classes
+build.instrumented.dir=${build.dir}/instrumented
+
+# Working Directory for Test
+
+test.java.dir=src/test/java
+test.resources.dir=src/test/resources
+test.build.dir=build/test
+test.build.classes.dir=${test.build.dir}/classes
+
+# Destination for Documentation
+
+docs.dir=docs
+docs.junit.dir=${docs.dir}/junit
+docs.coverage.dir=${docs.dir}/coverage
+docs.working.dir=report.work
+docs.javadoc.dir=${docs.dir}/javadoc
+
+# Destination for Distribution
+
+dist.dir=dist
+
+master.dist.dir=../RteIntranet-build/dist
