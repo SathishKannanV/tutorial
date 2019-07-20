@@ -1,14 +1,5 @@
-#  -------------------- DEV Path1 starts ------------------------------
+aefw.environment.name=dev
 
-security.ldapServerUrl=ldap://adldap.aethq.aetnaq.com
-security.ldapServiceAccountDn=cn=S016366,ou=it,ou=internal,dc=aethq,dc=aetnaq,dc=com
-security.ldapServiceAccountPassword=scrypto:Y9Q4ytoAuUY0+4OaarI=
-security.ldapSearchBase=ou=internal,dc=aethq,dc=aetnaq,dc=com
+#aefw.environment.root=/QAAPPS/RTE_INTRANET
 
-#Resource_Type_Infosys_Offshore
-#Resource_Id_N630587
-#10/06/2014 Requirement New
-#A82-1464  - RTE - AEFW 3.0.1  migration
-
-
-
+aefw.environment.root=/var/webapps/RteIntranet
