@@ -1,84 +1,249 @@
-<?xml version="1.0"?>
+##############################################################
 
-<project name="RteIntranet-ear" default="main" basedir=".">
+# aefw-setup.jy
 
-	<!-- Import properties from properties files -->
+#
 
-	<property file="${user.home}/build.properties"/>
-	<property file="build.properties"/>
-	<property file="project.properties"/>
+#  1) Create WebSphere variable AEFW_SHARED_LIBS
 
-	<property environment="env"/>
+#  2) Set custom web container property com.ibm.ws.webcontainer.invokefilterscompatibility = true
+
+#  3) Create QueueConnectionFactory for AEFW logging
+
+#  4) Create Queue for AEFW logging
+
+#  5) Create QueueConnectionFactory for AEFW event support
+
+#  6) Create Queue for AEFW event support
+
+#  7) Create JVM arguments required by AEFW
+
+#
+
+##############################################################
+
+
+
+import sys
+
+
+
+global AdminConfig
+
+
+
+def readProperties():
+
+	propsFileName = "aefw-setup.properties"
+
+	propsFile = open(propsFileName, 'r')
+
+	for line in propsFile.readlines():
+
+		if (line.find(":=") != -1):
+
+			(key, val) = line.split(":=")
+
+			props[key.strip()] = val.strip()
+
+	propsFile.close()
+
 	
-	<!-- ================================================================ -->
-	<!-- M A I N                                                          -->
-	<!-- ================================================================ -->
 
-	<target name="main">
-		<antcall target="dist"/>
-	</target>
+def setupWebSphereVar():
 
-	<!-- ================================================================ -->
-	<!-- B A N N E R                                                      -->
-	<!-- ================================================================ -->
+	print "Defining WebSphere variables..."
 
-	<target name="banner">
-		<echo message=""/>
-		<echo message="================================================= "/>
-		<echo message=""/>
-		<echo message="     Project :  ${project}               "/>
-		<echo message=""/>
-		<echo message="================================================= "/>
-		<echo message=""/>
-		<echo message="ANT_HOME   = ${env.ANT_HOME}"/>
-		<echo message="JAVA_HOME  = ${env.JAVA_HOME}"/>
-		<echo message="Build Host = ${host.name}"/>
-		<echo message="user.home = ${user.home}"/>
-		<echo message="was.home = ${was.home}"/>
-		<echo message="ANT Version = ${ant.version}"/>
-		<echo message="ANT File = ${ant.file}"/>
-		<echo message="JVM = ${ant.java.version}"/>
-		<echo message="java version = ${java.version}"/>
-		<echo message="basedir = ${basedir}"/>
-		<echo message="build.dir = ${build.dir}"/>
-		<echo message=""/>
-	</target>
+	varMap = AdminConfig.getid(serverKey + '/VariableMap:/')
 
-	<!-- =================================================================== -->
-	<!-- E A R                                                               -->
-	<!-- =================================================================== -->
+	key = ['symbolicName', props['sharedLibHome']]
 
-	<target name="ear" depends="banner">
-		<delete dir="${build.dir}" failonerror="no" includeemptydirs="true"/>
-		<mkdir dir="${build.dir}"/>
-		<ear earfile="${build.dir}/${ear.name}.ear" appxml="${ear.meta.inf.dir}/application.xml">
-			<fileset dir="${master.dist.dir}">
-				<include name="*.jar"/>
-				<include name="*.war"/>
-			</fileset>
-			<fileset dir="${ear.libs.dir}" erroronmissingdir="false">
-							<include name="**/*.jar"/>
-						</fileset>
-		</ear>
-	</target>
+	val = ['value', props['sharedLibHomeValue']]
 
-	<!-- =================================================================== -->
-	<!-- D I S T                                                             -->
-	<!-- =================================================================== -->
+	entry = [key,val]
 
-	<target name="dist" depends="ear">
-		<delete dir="${dist.dir}" failonerror="no" includeemptydirs="true"/>
-		<mkdir dir="${dist.dir}"/>
-		<copy todir="${dist.dir}" overwrite="true">
-			<fileset dir="${build.dir}">
-				<include name="*.ear"/>
-			</fileset>
-		</copy>
-		<copy todir="${master.dist.dir}" overwrite="true">
-			<fileset dir="${build.dir}">
-				<include name="*.ear"/>
-			</fileset>
-		</copy>
-	</target>
+	entries = [entry]
 
-</project>
+	allEntries = ['entries', entries]
+
+	entrylist = AdminConfig.showAttribute(varMap, 'entries')
+
+	arrayModules = entrylist[1:len(entrylist)-1].split(" ")
+
+	found = "false"
+
+	for module in arrayModules:
+
+		varname = AdminConfig.showAttribute(module, 'symbolicName')
+
+		if (varname == props['sharedLibHome']):
+
+			print "Variable " + props['sharedLibHome'] + " is already defined. Redefining it..."
+
+			AdminConfig.modify(module, entry)
+
+			print "WebSphere variable setup complete"
+
+			return
+
+	print "Variable " + props['sharedLibHome'] + " is not defined. Defining it..."
+
+	AdminConfig.modify(varMap, [allEntries])
+
+	print "WebSphere variable setup complete."
+
+	
+
+def setWebContainerProperties():
+
+	wcid = AdminConfig.getid(serverKey + '/ApplicationServer:/WebContainer:/')
+
+	wcattrs = [["name", "com.ibm.ws.webcontainer.invokefilterscompatibility"],["value", "true"]]
+
+	AdminConfig.create("Property", wcid, wcattrs, "properties")
+
+	print "WebContainer property set complete. (com.ibm.ws.webcontainer.invokefilterscompatibility)"
+
+	
+
+def createQcf(name, jndiName, channel, host, queueManager, transportType, port, displayName):
+
+	print 'Defining QueueConnectionFactory resource for ' + displayName + '...'
+
+	qcfAttrs = [['name', name], ['jndiName', jndiName], ['channel', channel], ['host', host], ['queueManager', queueManager], ['transportType', transportType], ['port', port]]
+
+	qcf = AdminConfig.getid(serverKey + '/JMSProvider:WebSphere MQ JMS Provider/MQQueueConnectionFactory:' + name + '/')
+
+	if (len(qcf) == 0):
+
+		print 'QueueConnectionFactory resource for ' + displayName + ' is not defined.  Defining it...'
+
+		jmsPid = AdminConfig.getid(serverKey + '/JMSProvider:WebSphere MQ JMS Provider')
+
+		lineseparator = java.lang.System.getProperty('line.separator')
+
+		template = AdminConfig.listTemplates('MQQueueConnectionFactory').split(lineseparator)[0]
+
+		AdminConfig.createUsingTemplate('MQQueueConnectionFactory', jmsPid, qcfAttrs, template)
+
+	else:
+
+		print 'QueueConnectionFactory resource for ' + displayName + ' is already defined.  Redefining it...'
+
+		AdminConfig.modify(qcf, qcfAttrs)
+
+	print "Queue connection factory setup for AEFW logging complete."
+
+
+
+def createQueue(name, jndiName, baseQueueName, targetClient, displayName):
+
+	print 'Defining Queue resource for ' + displayName + '...'
+
+	qAttrs = [['name', name], ['jndiName', jndiName], ['baseQueueName', baseQueueName], ['targetClient', targetClient]]
+
+	q = AdminConfig.getid(serverKey + '/JMSProvider:WebSphere MQ JMS Provider/MQQueue:' + name + '/')
+
+	if (len(q) == 0):
+
+		print 'Queue resource for ' + displayName + ' is not defined.  Defining it...'
+
+		lineseparator = java.lang.System.getProperty('line.separator')
+
+		jmsPid = AdminConfig.getid(serverKey + '/JMSProvider:WebSphere MQ JMS Provider')
+
+		template = AdminConfig.listTemplates('MQQueue').split(lineseparator)[0]
+
+		AdminConfig.createUsingTemplate('MQQueue', jmsPid, qAttrs, template)
+
+	else:
+
+		print 'Queue resource for ' + displayName + ' is already defined.  Redefining it...'
+
+		AdminConfig.modify(q, qAttrs)
+
+	print 'Queue resource setup for ' + displayName + ' complete.'
+
+
+
+def createJVMArgs():
+
+	print "Defining JVM arguments..."
+
+	jvm = AdminConfig.list('JavaVirtualMachine', server)
+
+	AdminConfig.modify(jvm,[['genericJvmArguments', props['jvmArgs']]])
+
+	print "JVM arguments defined."
+
+
+
+#########   Main     ##########
+
+
+
+print "Setting up AEFW on the test server..."
+
+    
+
+# Dictionary for the properties
+
+props = {}
+
+
+
+# Read the properties
+
+readProperties()
+
+                
+
+# Get the server id
+
+serverKey = '/Server:' + props['serverName']
+
+server = AdminConfig.getid(serverKey + '/')
+
+
+
+try:
+
+	# Setup WebSphere variable for AEFW_SHARED_LIBS
+
+	setupWebSphereVar()
+
+	# Set custom web container property com.ibm.ws.webcontainer.invokefilterscompatibility = true
+
+	setWebContainerProperties()
+
+	# Create logging QueueConnectionFactory
+
+	createQcf(props['logging.qcfName'], props['logging.qcfJndiName'], props['logging.qcfChannelName'], props['logging.qcfHost'], props['logging.qcfManager'], props['logging.qcfTransportType'], props['logging.qcfPort'], 'AEFW logging')
+
+	# Define logging Queue
+
+	createQueue(props['logging.qName'], props['logging.qJndiName'], props['logging.qBaseQName'], props['logging.qTargetClient'], 'AEFW logging')
+
+	# Create event QueueConnectionFactory
+
+	createQcf(props['event.qcfName'], props['event.qcfJndiName'], props['event.qcfChannelName'], props['event.qcfHost'], props['event.qcfManager'], props['event.qcfTransportType'], props['event.qcfPort'], 'AEFW event support')
+
+	# Define event Queue
+
+	createQueue(props['event.qName'], props['event.qJndiName'], props['event.qBaseQName'], props['event.qTargetClient'], 'AEFW event support')
+
+	# Create JVM arguments
+
+	createJVMArgs()
+
+	# Save the config
+
+	AdminConfig.save()
+
+	print "Finished setting up AEFW on the test server."
+
+except:
+
+	print "Exception occured ", sys.exc_type, sys.exc_value
+
+	print "Stopping script execution.  Nothing saved."
