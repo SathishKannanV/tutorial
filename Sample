@@ -1,11 +1,673 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-ext
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://websphere.ibm.com/xml/ns/javaee"
-    xsi:schemaLocation="http://websphere.ibm.com/xml/ns/javaee http://websphere.ibm.com/xml/ns/javaee/ibm-web-ext_1_1.xsd" version="1.1">
-  <reload-interval value="3"/>
-  <enable-directory-browsing value="false"/>
-  <enable-file-serving value="true"/>
-  <enable-reloading value="true"/>
-  <enable-serving-servlets-by-class-name value="true"/>
-</web-ext>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN" "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
 
+<tiles-definitions>
+
+	<definition name=".mainLayout" template="/WEB-INF/views/layouts/mainLayout.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" />
+		<put-attribute name="menu" value="/WEB-INF/views/tiles/menu.jsp" />
+		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" />
+	</definition>
+
+	<definition name=".rteHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/Welcome.jsp" />
+	</definition>
+
+	<definition name=".home" template="/WEB-INF/views/rte/home.jsp">
+	</definition>
+
+	<definition name=".errorMsgDisplay" template="/WEB-INF/views/rte/ErrorMsgDisplay.jsp">
+	</definition>
+	<!-- ADASVCT start -->
+	<definition name=".adasvctHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AdasvctLookup.jsp" />
+	</definition>
+	<definition name=".adasvctDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AdasvctDisplay.jsp" />
+	</definition>
+	<definition name=".addAdasvct" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddAdasvct.jsp" />
+	</definition>
+	<!-- ADASVCT end -->
+	
+	<!-- BENAFRQ start -->
+	<definition name=".benafrqHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/BenafrqLookup.jsp" />
+	</definition>
+	<definition name=".benafrqDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/BenafrqDisplay.jsp" />
+	</definition>
+	<definition name=".addBenafrq" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/Addbenafrq.jsp" />
+	</definition>
+	<!-- BENAFRQ end -->
+	
+	<!-- AETCTLS start -->
+	<definition name=".aetCtlsHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AetCtlsLookupForm.jsp" />
+	</definition>
+	<definition name=".aetCtlsDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AetCtlsDisplay.jsp" />
+	</definition>
+	<!-- AETCTLS end -->
+	<!-- AUTHTRX start -->
+	<definition name=".authTrxHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AuthTrxLookupForm.jsp" />
+	</definition>
+	<definition name=".authTrxDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body"
+			value="/WEB-INF/views/rte/AuthTrxDisplay.jsp" />
+	</definition>
+	<!-- AUTHTRX end -->
+	<!-- BPLVRP start -->
+	<definition name=".bplvrpHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/BplvrpLookupForm.jsp" />
+	</definition>
+	<definition name=".bplvrpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/BplvrpDisplay.jsp" />
+	</definition>
+	<definition name=".addBplvrp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowBplvrpForm.jsp" />
+	</definition>
+	<definition name=".bicList" template="/WEB-INF/views/rte/BICList.jsp">
+	</definition>
+	<!-- BPLVRP end -->
+	<!-- DEDACSR start -->
+	<definition name=".dedacsrHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/DedacsrLookupForm.jsp" />
+	</definition>
+	<definition name=".dedacsrDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/DedacsrDisplay.jsp" />
+	</definition>
+	<definition name=".addDedacsr" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowDedacsrForm.jsp" />
+	</definition>
+	<!-- DEDACSR end -->
+	<!-- ERSPMSG start -->
+	<definition name=".erspmsgHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/ErspmsgLookup.jsp" />
+	</definition>
+	<definition name=".erspmsgDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/ErspmsgDisplay.jsp" />
+	</definition>
+	<definition name=".addErspmsg" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddErspmsg.jsp" />
+	</definition>
+	<!-- ERSPMSG end -->
+	<!-- INDMNTRP start -->
+	<definition name=".indmntrpHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/IndmntrpLookupForm.jsp" />
+	</definition>
+	<definition name=".indmntrpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/IndmntrpDisplay.jsp" />
+	</definition>
+	<definition name=".addIndmntrp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowIndmntrpForm.jsp" />
+	</definition>
+	<!-- INDMNTRP end -->
+	<!-- PLNLMEX start -->
+	<definition name=".plnlmEXHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/PlnlmExLookupForm.jsp" />
+	</definition>
+	<definition name=".plnlmEXDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/PlnlmEXDisplay.jsp" />
+	</definition>
+	<definition name=".addPlnlmEX" extends=".mainLayout">
+		<put-attribute name="title" value="home.title" />
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowPlnlmEXForm.jsp" />
+	</definition>
+	<!-- PLNLMEX end -->
+	<!-- Procex starts here -->
+	<definition name=".procexHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/ProcexLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".procexHelp" template="/WEB-INF/views/rte/ProcexHelp.jsp">
+	</definition>
+	<definition name=".stcList" template="/WEB-INF/views/rte/STCList.jsp">
+	</definition>
+	
+	<definition name=".procexLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/ProcexDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".procexAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowProcexForm.jsp"/>
+	</definition>
+	<!-- Procex ends here -->
+	
+	
+	<definition name=".rtetpbrHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtetpbrLookup.jsp"/>
+	</definition>
+	
+	<definition name=".rtetpbrLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtetpbrDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rtetpbrAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRtetpbr.jsp"/>
+	</definition>
+	
+	<definition name=".sitemsgHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SiteMsgLookupForm.jsp"/>
+	</definition>
+	
+	
+	<definition name=".sitemsgHelp" template="/WEB-INF/views/rte/SiteMsgHelp.jsp">
+	</definition>
+	
+	<definition name=".sitemsgLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SiteMsgDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".sitemsgAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowSiteMsgForm.jsp"/>
+	</definition>
+	
+	
+	<definition name=".rtetprlHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtetprlLookup.jsp"/>
+	</definition>
+	
+	<definition name=".rtetprlLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtetprlDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rtetprlAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRtetprl.jsp"/>
+	</definition>
+	
+	<definition name=".tierdmsgHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TierdMsgLookup.jsp"/>
+	</definition>
+	
+	<definition name=".tierdmsgLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TierdMsgDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".tierdmsgAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddTierdMsg.jsp"/>
+	</definition>
+	
+	<definition name=".sstypaHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SstypaLookup.jsp"/>
+	</definition>
+	
+	<definition name=".sstypaLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SstypaDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".sstypaAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddSstypa.jsp"/>
+	</definition>
+
+	<definition name=".ststypaHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/StstypaLookup.jsp"/>
+	</definition>
+	
+	<definition name=".ststypaLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/StstypaDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".ststypaAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddStstypa.jsp"/>
+	</definition>
+
+
+	<definition name=".tosctHelp" template="/WEB-INF/views/rte/TosctHelp.jsp">
+	</definition>
+
+	<definition name=".tosctHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TosctLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".tosctLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TosctDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".tosctAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowTosctForm.jsp"/>
+	</definition>
+
+
+	<definition name=".tosHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TOSLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".tosLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TOSDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".tosAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowTOSForm.jsp"/>
+	</definition>
+
+	<definition name=".userHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/UserLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".userLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/UserDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".userAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddUserAccess.jsp"/>
+	</definition>
+	<!-- RBBC starts here -->
+	
+	<definition name=".rbbcHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RBBCLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".rbbcHelp" template="/WEB-INF/views/rte/RBBCHelp.jsp">
+	</definition>
+	
+	<definition name=".rbbcList" template="/WEB-INF/views/rte/RBBCList.jsp">
+	</definition>
+	
+	<definition name=".stcList" template="/WEB-INF/views/rte/STCList.jsp">
+	</definition>
+	
+	<definition name=".bicList" template="/WEB-INF/views/rte/BICList.jsp">
+	</definition>
+	
+	<definition name=".rbbcLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RBBCDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rbbcAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowRBBCForm.jsp"/>
+	</definition>
+				<!-- RBBC ends here -->
+
+				<!-- RBRC starts here -->
+	
+	<definition name=".rbrcHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RBRCLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".rbrcHelp" template="/WEB-INF/views/rte/RBRCHelp.jsp">
+	</definition>
+
+	<definition name=".stcList" template="/WEB-INF/views/rte/STCList.jsp">
+	</definition>
+	
+	<definition name=".rbrcLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RbrcDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rbrcAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRowRBRCForm.jsp"/>
+	</definition>
+
+
+				<!-- RBRC ends here -->
+
+				<!-- RTESTYP starts here -->
+	
+	<definition name=".rtestypHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtestypLookupForm.jsp"/>
+	</definition>
+	
+	<definition name=".rtestypList" template="/WEB-INF/views/rte/PLNSVCTList.jsp">
+	</definition>
+	
+	<definition name=".rtestypLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtestypDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rtestypAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRtestyp.jsp"/>
+	</definition>
+				<!-- RTESTYP ends here -->
+				
+			
+
+				<!-- RTEBEPLM starts here -->
+	
+	<definition name=".rtebeplmHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtebeplmLookup.jsp"/>
+	</definition>
+	
+	<definition name=".rtebeplmLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtebeplmDisplay.jsp"/>
+	</definition>
+				<!-- RTEBEPLM ends here -->
+				
+				<!-- RTEDICTR starts here -->
+	
+	<definition name=".rtedictrHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtedictrLookup.jsp"/>
+	</definition>
+	
+	<definition name=".rtedictrLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtedictrDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".rtedictrAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddRtedictr.jsp"/>
+	</definition>
+				<!-- RTEDICTR ends here -->
+				
+				<!-- RTERBAC starts here -->
+
+<definition name=".rterbacHome" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/RterbacLookup.jsp"/>
+</definition>
+
+<definition name=".rterbacLookUp" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/RterbacDisplay.jsp"/>
+</definition>
+
+<definition name=".rterbacAdd" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/AddRterbac.jsp"/>
+</definition>
+
+			<!-- RTERBAC ends here -->
+
+			<!-- RTESTSC starts here -->
+
+	<definition name=".rtestscHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtestscLookup.jsp"/>
+	</definition>
+
+	<definition name=".rtestscLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/RtestscDisplay.jsp"/>
+	</definition>
+<definition name=".rtestscAddNew" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/Addrtestsc.jsp"/>
+</definition>
+				<!-- RTESTSC ends here -->
+				
+<!-- RTETIER starts here -->
+
+<definition name=".rtetierHome" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/RtetierLookup.jsp"/>
+</definition>
+
+<definition name=".rtetierLookUp" extends=".mainLayout">
+	<put-attribute name="title" value="home.title"/>
+	<put-attribute name="body" value="/WEB-INF/views/rte/RtetierDisplay.jsp"/>
+</definition>
+<definition name=".rtetierAddNew" extends=".mainLayout">
+<put-attribute name="title" value="home.title"/>
+<put-attribute name="body" value="/WEB-INF/views/rte/Addrtetier.jsp"/>
+</definition>
+			<!-- RTETIER ends here -->
+
+			<!-- HRP_Rule starts here -->
+	
+	<definition name=".hrpruleHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/HrpRuleLookup.jsp"/>
+	</definition>
+	
+	<definition name=".hrpruleLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/HrpRuleDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".hrpruleAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddHrpRule.jsp"/>
+	</definition>
+
+			<!-- HRP_Rule ends here -->
+			
+	<definition name=".error" extends=".mainLayout">
+		<put-attribute name="title" value="error.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/error/error.jsp"/>
+	</definition>
+	
+	<definition name=".notFound" extends=".mainLayout">
+		<put-attribute name="title" value="notFound.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/error/404.jsp"/>
+	</definition>
+	
+	<definition name=".unauthorized" extends=".mainLayout">
+		<put-attribute name="title" value="unauthorized.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/error/403.jsp"/>
+	</definition>
+	<!-- BPLVS starts here -->
+		<definition name=".bplvsHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/BplvsLookupForm.jsp"/>
+	</definition>
+	<definition name=".bplvsHelp" template="/WEB-INF/views/rte/BplvsHelp.jsp">
+	</definition>
+	
+	<definition name=".bplvsLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/BplvsDisplay.jsp"/>
+	</definition>
+	<definition name=".bplvsAdd" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/AddBplvs.jsp"/>
+	</definition>
+<!-- BPLVS Ends here -->
+
+<!-- SBMLETK STARTS here -->
+<definition name=".sbmletkHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmletkLookupForm.jsp"/>
+	</definition>
+	<definition name=".sbmletkLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmletkDisplay.jsp"/>
+	</definition>
+<!-- SBMLETK ENDS here -->
+
+<!-- SRCHDTL STARTS here -->
+<definition name=".srchdtlHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrchdtlLookup.jsp"/>
+	</definition>
+	<definition name=".srchdtlLookUpDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrchdtlDisplay.jsp"/>
+	</definition>
+	<definition name=".srchcolDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrchcolDisplay.jsp"/>
+	</definition>
+	<definition name=".srchscDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrchscDisplay.jsp"/>
+	</definition>
+	<definition name=".srcherrDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrcherrDisplay.jsp"/>
+	</definition>
+	<definition name=".srchresDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SrchresDisplay.jsp"/>
+	</definition>
+	
+	<definition name=".srchcolDisplayLink" template="/WEB-INF/views/rte/SrchcolView.jsp">
+	</definition>
+	<definition name=".srchscDisplayLink" template="/WEB-INF/views/rte/SrchscView.jsp">
+	</definition>
+	<definition name=".srcherrDisplayLink" template="/WEB-INF/views/rte/SrcherrView.jsp">
+	</definition>
+	<definition name=".srchresDisplayLink" template="/WEB-INF/views/rte/SrchresView.jsp">
+	</definition>
+<!-- SRCHDTL ENDS here -->
+<!-- EVENT TRACKING STARTS -->
+<definition name=".eventtrackHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/EventTrackingSearch.jsp"/>
+	</definition>
+	<definition name=".sbrsrxbDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbrsrxbEvntTrckDisplay.jsp"/>
+	</definition>
+	<definition name=".sbmrdepDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmrdepEvntTrckDisplay.jsp"/>
+	</definition>
+	<definition name=".spntprvDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SpntprvEvntTrckDisplay.jsp"/>
+	</definition>
+	<definition name=".submsnDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SubmsnEvntTrck.jsp"/>
+	</definition>
+	<definition name=".srapidtlDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmrstSrapidtlDisplay.jsp"/>
+	</definition>
+	<definition name=".sbmsnrDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmsnrEvntTrck.jsp"/>
+	</definition>
+	<definition name=".sbmrplnDisplay" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmrplnEvntTrck.jsp"/>
+	</definition>
+	<definition name=".sbmrplnDisplayDtl" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/SbmrplnDtlEvntTrck.jsp"/>
+	</definition>
+<!-- EVENT TRACKING ENDS -->
+
+<!-- LONG RUNNING TRANSACTION REPORT STARTS -->
+
+<definition name=".longRunTransHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransSearch.jsp"/>
+	</definition>
+<definition name=".longRunTransHome2" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransSearch2.jsp"/>
+	</definition>
+<definition name=".longRunHelpLink" template="/WEB-INF/views/rte/LongrunTransModuleHelpScreen.jsp">
+</definition>
+<definition name=".longRunTransHome3" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransSearch3.jsp"/>
+	</definition>
+<definition name=".longRunTransHome4" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransSearch4.jsp"/>
+	</definition>
+<definition name=".longruntransLookUp" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransLookup.jsp"/>
+	</definition>
+	<definition name=".longruntransLookUpReport2" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransReport2Lookup.jsp"/>
+	</definition>
+	<definition name=".longruntransLookUpReport3" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransReport3Lookup.jsp"/>
+	</definition>
+	<definition name=".longruntransLookUpReport4" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/LongRunningTransReport4Lookup.jsp"/>
+	</definition>
+<!-- LONG RUNNING TRANSACTION REPORT ENDS -->
+<!-- 270 TESTING TOOL CHANGES STARTS -->
+<definition name=".testingtoolHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TestingTool.jsp"/>
+</definition>
+<definition name=".editestingtoolHome" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/EdiTestingTool.jsp"/>
+</definition>
+<definition name=".testingtoolResult" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/TestingToolResult.jsp"/>
+</definition>
+<definition name=".editestingtoolResult" extends=".mainLayout">
+		<put-attribute name="title" value="home.title"/>
+		<put-attribute name="body" value="/WEB-INF/views/rte/EdiTestingToolResult.jsp"/>
+</definition>
+<!-- 270 TESTING TOOL CHANGES  ENDS -->
+</tiles-definitions>
