@@ -4,43 +4,33 @@ package com.aetna.prvrte.rteintranet.vo;
 
 
 
-
-
 import java.io.Serializable;
 
-
-
-public class LongRunTransReport3VO implements Serializable {
+public class LongRunTransReport4VO implements Serializable {
 
 
 
 	private static final long serialVersionUID = 1L;
 
-	private String startDate = "";
+	private String seconds = "";
 
-	private String startTime = "";
+	private String dmCount = "";
 
-	private String endTime = "";
+	private String tradCount = "";
 
-	private String zeroTimeTaken ="";
+	private String dentalCount = "";
 
-	private String oneTimeTaken="";
+	private String hmoCount = "";
 
-	private String twoTimeTaken ="";
+	private String outBoundCount = "";
 
-	private String threeTimeTaken="";
+	private String providerCount = "";
 
-	private String fourTimeTaken ="";
+	private String hrpCount = "";
 
-	private String fiveTimeTaken="";
+	private String asjCount= "";
 
-	private String sixTimeTaken="";
-
-	private String sevenTimeTaken="";
-
-	
-
-	public LongRunTransReport3VO() {
+	public LongRunTransReport4VO() {
 
 		super();
 
@@ -48,251 +38,145 @@ public class LongRunTransReport3VO implements Serializable {
 
 	}
 
-	
+	public LongRunTransReport4VO(String seconds, String dmCount,
 
+			String tradCount, String dentalCount, String hmoCount,
 
+			String outBoundCount, String providerCount, String hrpCount,
 
-
-
-	public LongRunTransReport3VO(String startDate, String startTime,
-
-			String endTime, String zeroTimeTaken, String oneTimeTaken,
-
-			String twoTimeTaken, String threeTimeTaken, String fourTimeTaken,
-
-			String fiveTimeTaken, String sixTimeTaken, String sevenTimeTaken) {
+			String asjCount) {
 
 		super();
 
-		this.startDate = startDate;
+		this.seconds = seconds;
 
-		this.startTime = startTime;
+		this.dmCount = dmCount;
 
-		this.endTime = endTime;
+		this.tradCount = tradCount;
 
-		this.zeroTimeTaken = zeroTimeTaken;
+		this.dentalCount = dentalCount;
 
-		this.oneTimeTaken = oneTimeTaken;
+		this.hmoCount = hmoCount;
 
-		this.twoTimeTaken = twoTimeTaken;
+		this.outBoundCount = outBoundCount;
 
-		this.threeTimeTaken = threeTimeTaken;
+		this.providerCount = providerCount;
 
-		this.fourTimeTaken = fourTimeTaken;
+		this.hrpCount = hrpCount;
 
-		this.fiveTimeTaken = fiveTimeTaken;
-
-		this.sixTimeTaken = sixTimeTaken;
-
-		this.sevenTimeTaken = sevenTimeTaken;
+		this.asjCount = asjCount;
 
 	}
 
+	public String getSeconds() {
 
-
-	public String getStartDate() {
-
-		return startDate;
+		return seconds;
 
 	}
 
+	public void setSeconds(String seconds) {
 
-
-	public void setStartDate(String startDate) {
-
-		this.startDate = startDate;
+		this.seconds = seconds;
 
 	}
 
+	public String getDmCount() {
 
-
-	public String getEndTime() {
-
-		return endTime;
+		return dmCount;
 
 	}
 
+	public void setDmCount(String dmCount) {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public void setEndTime(String endTime) {
-
-		this.endTime = endTime;
+		this.dmCount = dmCount;
 
 	}
 
+	public String getTradCount() {
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public String getStartTime() {
-
-		return startTime;
+		return tradCount;
 
 	}
 
-	public void setStartTime(String startTime) {
+	public void setTradCount(String tradCount) {
 
-		this.startTime = startTime;
-
-	}
-
-
-
-	public String getZeroTimeTaken() {
-
-		return zeroTimeTaken;
+		this.tradCount = tradCount;
 
 	}
 
+	public String getDentalCount() {
 
-
-	public void setZeroTimeTaken(String zeroTimeTaken) {
-
-		this.zeroTimeTaken = zeroTimeTaken;
+		return dentalCount;
 
 	}
 
+	public void setDentalCount(String dentalCount) {
 
-
-	public String getOneTimeTaken() {
-
-		return oneTimeTaken;
+		this.dentalCount = dentalCount;
 
 	}
 
+	public String getHmoCount() {
 
-
-	public void setOneTimeTaken(String oneTimeTaken) {
-
-		this.oneTimeTaken = oneTimeTaken;
+		return hmoCount;
 
 	}
 
+	public void setHmoCount(String hmoCount) {
 
-
-	public String getTwoTimeTaken() {
-
-		return twoTimeTaken;
+		this.hmoCount = hmoCount;
 
 	}
 
+	public String getOutBoundCount() {
 
-
-	public void setTwoTimeTaken(String twoTimeTaken) {
-
-		this.twoTimeTaken = twoTimeTaken;
+		return outBoundCount;
 
 	}
 
+	public void setOutBoundCount(String outBoundCount) {
 
-
-	public String getThreeTimeTaken() {
-
-		return threeTimeTaken;
+		this.outBoundCount = outBoundCount;
 
 	}
 
+	public String getProviderCount() {
 
-
-	public void setThreeTimeTaken(String threeTimeTaken) {
-
-		this.threeTimeTaken = threeTimeTaken;
+		return providerCount;
 
 	}
 
+	public void setProviderCount(String providerCount) {
 
-
-	public String getFourTimeTaken() {
-
-		return fourTimeTaken;
+		this.providerCount = providerCount;
 
 	}
 
+	public String getHrpCount() {
 
-
-	public void setFourTimeTaken(String fourTimeTaken) {
-
-		this.fourTimeTaken = fourTimeTaken;
+		return hrpCount;
 
 	}
 
+	public void setHrpCount(String hrpCount) {
 
-
-	public String getFiveTimeTaken() {
-
-		return fiveTimeTaken;
+		this.hrpCount = hrpCount;
 
 	}
 
+	public String getAsjCount() {
 
-
-	public void setFiveTimeTaken(String fiveTimeTaken) {
-
-		this.fiveTimeTaken = fiveTimeTaken;
+		return asjCount;
 
 	}
 
+	public void setAsjCount(String asjCount) {
 
-
-	public String getSixTimeTaken() {
-
-		return sixTimeTaken;
+		this.asjCount = asjCount;
 
 	}
-
-
-
-	public void setSixTimeTaken(String sixTimeTaken) {
-
-		this.sixTimeTaken = sixTimeTaken;
-
-	}
-
-
-
-	public String getSevenTimeTaken() {
-
-		return sevenTimeTaken;
-
-	}
-
-
-
-	public void setSevenTimeTaken(String sevenTimeTaken) {
-
-		this.sevenTimeTaken = sevenTimeTaken;
-
-	}
-
-
-
-	
 
 	
 
 }
-
-
 
