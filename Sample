@@ -1,22 +1,675 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
-<beans>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jee="http://www.springframework.org/schema/jee"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   					   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	   					   http://www.springframework.org/schema/jee
+	   					   http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	   					   
+	   <!-- <jee:jndi-lookup id="policyUrl" jndi-name="url/policyUrl" resource-ref="true" />
+	   <jee:jndi-lookup id="libraryPath" jndi-name="url/libraryPath" resource-ref="true" /> -->
 
-	<bean id="aefw.application" parent="aefw.applicationBase">
-		<property name="configId" value="RteIntranet"/>
-		<property name="configRoot" value="${environment.root}/${configId}/config"/>
-	</bean>
+
+
+	<bean class="com.aetna.framework.context.BeanResolver"/>
 
 	<bean id="aefw.propertyValues" parent="aefw.props">
 		<property name="locations">
 			<list>
-				
-			<value>${configRoot}/application.${environment.name}.properties</value>				
-				
-			
+				<value>${configRoot}/application.${environment.name}.properties</value>
 			</list>
 		</property>
+		<!-- Needed in order for unresolved placeholders to be deferred to configurers defined after this one. -->
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
 	</bean>
 
+	<bean id="userSecurityAdapter" class="com.aetna.prvrte.rteintranet.adapter.UserSecurityAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR1" />
+	</bean>
+	<!-- PROCEX starts here -->
+	<bean id="procexAdapter" class="com.aetna.prvrte.rteintranet.adapter.ProcexAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107PRX1" />
+	</bean>
+	
+	<bean id="procexPRX2Adapter" class="com.aetna.prvrte.rteintranet.adapter.ProcexPRX2Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107PRX2" />
+	</bean>
+	
+	<bean id="procexPRX3Adapter" class="com.aetna.prvrte.rteintranet.adapter.ProcexPRX3Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107PRX3" />
+	</bean>
+	<!-- PROCEX ends here -->
+	<!-- ADASVCT start -->
+	<bean id="adasvctDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.AdasvctDisplayAdapter">
+	<constructor-arg ref="dataSource" />
+	<constructor-arg name="storedProc" value="${database.schema}.S107ADA1" />
+	</bean>
+	<bean id="adasvctAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.AdasvctAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107ADA2" />
+	</bean>
+
+	<bean id="VanAdapter" class="com.aetna.prvrte.rteintranet.adapter.VanIdAdapter">
+	<constructor-arg ref="dataSource" />
+	<constructor-arg value="${database.schema}.S107RGNL" />
+	</bean>	
+	<bean id="adasvctDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.AdasvctDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107ADA3" />
+	</bean>
+	<!-- ADASVCT end -->
+	<!-- BENAFRQ start -->
+	<bean id="benafrqDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.BenafrqDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107BEN1" />
+	</bean>
+	<bean id="benafrqAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.BenafrqAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107BEN2" />
+	</bean>
+	<bean id="benafrqDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.BenafrqDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107BEN3" />
+	</bean>
+	<!-- BENAFRQ end -->
+	<!-- RTETPBR start -->
+	
+		<bean id="rtetpbrAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetpbrAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPR1" />
+	</bean>
+	
+	<bean id="rtetpbrTPR2Adapter" class="com.aetna.prvrte.rteintranet.adapter.RtetpbrTPR2Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPR2" />
+	</bean>
+	
+	<bean id="rtetpbrTPR3Adapter" class="com.aetna.prvrte.rteintranet.adapter.RtetpbrTPR3Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPR3" />
+	</bean>
+	
+	<!-- RTETPBR end -->
+	<!-- AETCTLS start -->
+	<bean id="aetCtlsDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.AetCtlsDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AC01" />
+	</bean>
+	<bean id="aetCtlsAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.AetCtlsAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AC02" />
+	</bean>
+	<bean id="aetCtlsDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.AetCtlsDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AC03" />
+	</bean>
+	<!-- AETCTLS start -->
+	<!-- AUTHTRX start -->
+	<bean id="authTrxDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.AuthTrxDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AT01" />
+	</bean>
+	<bean id="authTrxAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.AuthTrxAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AT02" />
+	</bean>
+	<bean id="authTrxDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.AuthTrxDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107AT03" />
+	</bean>
+	<!-- AUTHTRX start -->
+	<!-- BPLVRP start -->
+	<bean id="bplvrpDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.BplvrpDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107BPL4" />
+	</bean>
+	<bean id="bplvrpAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.BplvrpAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107BPL5" />
+	</bean>
+	
+	<bean id="bplvrpDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.BplvrpDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107BPL6" />
+	</bean>
+	<!-- BPLVRP end -->
+	<!-- DEDACSR start -->
+	 <bean id="dedacsrDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.DedacsrDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107DAC1" />
+	</bean>
+	<bean id="dedacsrAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.DedacsrAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107DAC2" />
+	</bean>
+	
+	<bean id="dedacsrDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.DedacsrDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107DAC3" />
+	</bean>
+	<!-- DEDACSR end -->
+	<!-- ERSPMSG start -->
+	 <bean id="erspmsgDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.ErspmsgDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107ERS1" />
+	</bean>
+	<bean id="erspmsgAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.ErspmsgAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107ERS2" />
+	</bean>
+	
+	<bean id="erspmsgDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.ErspmsgDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107ERS3" />
+	</bean>
+	<!-- ERSPMSG end -->
+	<!-- INDMNTRP start -->
+	 <bean id="indmntrpDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.IndmntrpDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107IND1" />
+	</bean>
+	<bean id="indmntrpAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.IndmntrpAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107IND2" />
+	</bean>
+	
+	<bean id="indmntrpDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.IndmntrpDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107IND3" />
+	</bean>
+	<!-- INDMNTRP end -->
+	<!-- PLNLMEX start -->
+	 <bean id="plnlmEXDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.PlnlmEXDisplayAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107PEX1" />
+	</bean>
+	<bean id="plnlmEXAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.PlnlmEXAddAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107PEX2" />
+	</bean>
+	
+	<bean id="plnlmEXDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.PlnlmEXDeleteAdapter">
+		<constructor-arg ref="dataSource" />
+		<constructor-arg value="${database.schema}.S107PEX3" />
+	</bean>
+	<!-- PLNLMEX end -->
+	<bean id="sitemsgDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.SitemsgDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SM01" />
+	</bean>
+	
+	<bean id="sitemsgAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.SitemsgAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SM02" />
+	</bean>
+	
+	<bean id="sitemsgDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SitemsgDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SM03" />
+	</bean>
+	
+	<bean id="rtetprlDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetprlDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPL1" />
+	</bean>
+	
+	<bean id="rtetprlAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetprlAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPL2" />
+	</bean>
+	
+		<bean id="rtetprlDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetprlDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TPL3" />
+	</bean>
+	
+	<!-- TIERDMSG  Starts -->
+	
+	<bean id="tierdMsgDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.TierdMsgDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema.TIERDMSG}.S107TDM1" />
+	</bean>
+	
+	<bean id="tierdMsgAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.TierdMsgAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema.TIERDMSG}.S107TDM2" />
+	</bean>
+	
+	<bean id="tierdMsgDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.TierdMsgDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema.TIERDMSG}.S107TDM3" />
+	</bean>
+	
+<!-- 	TIERDMSG Ends  -->
+	
+	<bean id="sstypaDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.SstypaDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SST1" />
+	</bean>
+	
+	<bean id="sstypaAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.SstypaAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SST2" />
+	</bean>
+	
+	<bean id="sstypaDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SstypaDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SST3" />
+	</bean>
+	
+	<bean id="ststypaDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.StstypaDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107STS1" />
+	</bean>
+		
+	<bean id="ststypaAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.StstypaAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107STS2" />
+	</bean>
+	
+	<bean id="ststypaDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.StstypaDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107STS3" />
+	</bean>
+	
+	<bean id="tosctDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.TosctDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TOS1" />
+	</bean>
+	
+	
+	 <bean id="tosctAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.TosctAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TOS2" />
+	</bean>
+	
+	<bean id="tosctDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.TosctDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TOS3" />
+	</bean>
+	
+	<bean id="tosDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.TOSDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TXT1" />
+	</bean>
+	
+	<bean id="tosAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.TOSAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TXT2" />
+	</bean>
+	
+	<bean id="tosDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.TOSDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107TXT3" />
+	</bean>
+	
+	<bean id="userDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.UserDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR1" />
+	</bean>
+	
+	 <bean id="userAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.UserAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR2" />
+	</bean>
+	
+	<bean id="userDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.UserDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR3" />
+	</bean>
+	
+	<!-- RBBC starts here -->
+	<bean id="rbbcLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbbcRBB1Adapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBB1" />
+	</bean>
+	
+	<bean id="rbbcAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbbcAddAdapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBB2" />
+	</bean>
+	
+	<bean id="rbbcDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbbcDeleteAdapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBB3" />
+	</bean>
+	<!-- RBBC ends here -->
+	
+	<!-- RBRC starts here -->
+	<bean id="rbrcLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbrcLookUpAdapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR1" />
+	</bean>
+	
+	<bean id="rbrcAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbrcAddAdapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR2" />
+	</bean>
+	
+	<bean id="rbrcDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RbrcDeleteAdapter" >
+			<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107RBR3" />
+	</bean>
+	<!-- RBRC ends here -->
+	
+	
+	<!-- RTESTYP starts here -->
+<bean id="rtestypLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestypLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107SVT1" />
+</bean>
+
+<bean id="rtestypAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestypAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107SVT2" />
+</bean>
+
+<bean id="rtestypDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestypDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107SVT3" />
+</bean>
+<!-- RTESTYP ends here -->
+
+
+<!-- RTEBEPLM starts here -->
+<bean id="rtebeplmLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtebeplmLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107RBP1" />
+</bean>
+
+<bean id="rtebeplmAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtebeplmAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107RBP2" />
+</bean>
+
+<bean id="rtebeplmDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtebeplmDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107RBP3" />
+</bean>
+<!-- RTEBEPLM ends here -->
+
+<!-- RTEDICTR starts here -->
+<bean id="rtedictrLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtedictrLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107DCT1" />
+</bean>
+
+<bean id="rtedictrAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtedictrAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107DCT2" />
+</bean>
+
+<bean id="rtedictrDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtedictrDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema}.S107DCT3" />
+</bean>
+<!-- RTEDICTR ends here -->
+
+<!-- RTERBAC starts here -->
+ <bean id="rterbacLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RterbacLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema1.RTERBAC}.S107RBC1" />
+</bean> 
+
+<bean id="rterbacAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RterbacAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema1.RTERBAC}.S107RBC2" />
+</bean>
+
+<bean id="rterbacDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RterbacDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${database.schema1.RTERBAC}.S107RBC3" />
+</bean> 
+<!-- RTERBAC ends here -->
+
+
+<!-- RTESTSC starts here -->
+<bean id="rtestscLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestscLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107SCM1" />
+</bean> 
+
+<bean id="rtestscAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestscAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107SCM2" />
+</bean>
+
+<bean id="rtestscDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtestscDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107SCM3" />
+</bean> 
+<!-- RTESTSC ends here -->
+
+<!-- RTETIER starts here -->
+<bean id="rtetierLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetierLookUpAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107TIR1" />
+</bean> 
+
+<bean id="rtetierAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetierAddAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107TIR2" />
+</bean>
+
+<bean id="rtetierDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.RtetierDeleteAdapter" >
+		<constructor-arg name="datasource" ref="dataSource" />
+		<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107TIR3" />
+</bean> 
+<!-- RTETIER ends here -->
+
+<!-- HRPRULE  Starts -->
+	
+	<bean id="hrpRuleDisplayAdapter" class="com.aetna.prvrte.rteintranet.adapter.HrpRuleDisplayAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107HRL1" />
+	</bean>
+	
+	<bean id="hrpRuleAddAdapter" class="com.aetna.prvrte.rteintranet.adapter.HrpRuleAddAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107HRL2" />
+	</bean>
+	
+	<bean id="hrpRuleDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.HrpRuleDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${rtedatabase.schema}.S107HRL3" />
+	</bean>
+	
+<!-- 	HRPRULE Ends  -->
+
+<!-- BPLVS starts here -->
+	<bean id="bplvsAdapter" class="com.aetna.prvrte.rteintranet.adapter.BplvsAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107BPL1" />
+	</bean>
+	<bean id="bplvsbpl2Adapter" class="com.aetna.prvrte.rteintranet.adapter.BplvsBPL2Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107BPL2" />
+	</bean>
+	<bean id="bplvsbpl3Adapter" class="com.aetna.prvrte.rteintranet.adapter.BplvsBPL3Adapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107BPL3" />
+	</bean>
+
+	<!-- BPLVS ends here -->
+	
+	<!-- SBMLETK starts here -->
+	<bean id="sbmletkAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmletkAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SD01" />
+	</bean>	
+	<!-- SBMLETK Ends here -->	
+		<!-- SRCHDTL starts here -->
+	<bean id="srchdtlAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchdtlAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SDL1" />
+	</bean>	
+	<bean id="srchdtlUpdateAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchdtlUpdateAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SDL2" />
+	</bean>	
+	<bean id="srchdtlDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchdtlDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SDL3" />
+	</bean>	
+	<bean id="srchcolAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchcolAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SCL1" />
+	</bean>	
+		<bean id="srchscAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchscAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SSC1" />
+	</bean>	
+	<bean id="srcherrAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrcherrAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SER1" />
+	</bean>	
+	<bean id="srchresAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchresAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SRS1" />
+	</bean>	
+	
+	<bean id="srchcolDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchcolDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SCL3" />
+	</bean>	
+	<bean id="srchscDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchscDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SSC3" />
+	</bean>	
+	<bean id="srcherrDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrcherrDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SER3" />
+	</bean>	
+		<bean id="srchresDeleteAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchresDeleteAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SRS3" />
+	</bean>	
+	
+		<bean id="srchrcolUpdateAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchcolUpdateAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SCL2" />
+	</bean>	
+	
+	<bean id="srchrscUpdateAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchscUpdateAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SSC2" />
+	</bean>	
+	
+		<bean id="srchrerrUpdateAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrcherrUpdateAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SER2" />
+	</bean>
+	<bean id="srchresUpdateAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrchresUpdateAdapter" >
+	<constructor-arg name="datasource" ref="dataSource" />
+			<constructor-arg name="storedProc" value="${database.schema}.S107SRS2" />
+	</bean>	
+	
+	<!-- SRCHDTL Ends here -->	
+		<!-- EVENT TRACKING STARTS here -->
+	<bean id="sbrsrxbAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbrsrxbAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EX01" />
+	</bean>	
+	<bean id="spntprvAdapter" class="com.aetna.prvrte.rteintranet.adapter.SpntprvAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EP01" />
+	</bean>	
+	<bean id="sbmrdepAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmrdepAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EE01" />
+	</bean>	
+	
+	<bean id="submsnAdapter" class="com.aetna.prvrte.rteintranet.adapter.SubmsnAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EU01" />
+	</bean>	
+		<bean id="srapidtlAdapter" class="com.aetna.prvrte.rteintranet.adapter.SrapidtlAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EA01" />
+	</bean>	
+	<bean id="sbmletkEvntAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmletkEventTrackAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107ED01" />
+	</bean>	
+	<bean id="sbmsnrAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmsnrAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EB01" />
+	</bean>
+	<bean id="smrplnAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmrplnAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107EP05" />
+	</bean>
+	<bean id="smrplnSbmsnrAdapter" class="com.aetna.prvrte.rteintranet.adapter.SbmrplnSbmsnrAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107ER01" />
+	</bean>
+	<bean id="smrplnSbmsnr2Adapter" class="com.aetna.prvrte.rteintranet.adapter.SbmrplnSbmsnr2Adapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107ER01" />
+	</bean>
+	
+	<!-- EVENT TRACKING ENDS here -->
+	<!-- LONG RUN TRANSACTION STARTS HERE -->	
+	<bean id="longRunTransLookUpAdapter" class="com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpAdapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107RPT1" />
+	</bean>	
+	<bean id="longRunTransLookUpReport2Adapter" class="com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport2Adapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107RPT1" />
+	</bean>	
+	<bean id="longRunTransLookUpReport3Adapter" class="com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport3Adapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107RPT1" />
+	</bean>	
+	<bean id="longRunTransLookUpReport4Adapter" class="com.aetna.prvrte.rteintranet.adapter.LongRunTransLookUpReport4Adapter" >
+	<constructor-arg name="datasource" ref="dataSourceEvt" />
+			<constructor-arg name="storedProc" value="${databaseEvt.schema}.S107RPT1" />
+	</bean>	
+	<!-- LONG RUN TRANSACTION ENDS HERE -->	
+	
+		
+	<!-- VOLTAGE API COFIGURATION STARTS HERE -->	
+	<bean class="com.aetna.fs.enterprise.crypto.AetnaEnterpriseCrypto" init-method="init">
+		<!-- <property name="policyUrl" ref=	"policyUrl"/> -->
+	    <!-- <property name="libraryPath" ref="libraryPath"/> -->
+		<property name="policyUrl" value="${volt.policyurl}"/>
+	    <property name="libraryPath" value="file:///var/webapps/common/lib/aeframework/aec/4.2.1/shared-libs"/>
+	    <!-- <property name="libraryName" value="vibesimplejava"/> -->
+	    <property name="identity" value="SSNHICN@CRYPTO.AETNA.COM"/>
+	    <property name="username" value="${volt.username}"/>
+	    <property name="password" value="${volt.password}"/>
+	</bean>
+	<!-- VOLTAGE API COFIGURATION ENDS HERE -->
+	
+	
+	<!-- 270 TESTING TOOL CHANGES STARTS HERE -->
+	<bean id="testingToolFTP" class="com.aetna.prvrte.rteintranet.util.FTPUtil">
+	<property name="hostName" value="${ftp.host}"/>
+	<property name="userName" value="${ftp.userName}"/>
+	<property name="password" value="${ftp.password}"/>
+	<property name="fileLocation" value="${ftp.fileLocation}"/>
+	<property name="gdgLocation" value="${ftp.GDGLocation}"/>
+	<property name="ftpBaseLocation" value="${ftp.baseGDGLocation}"/>
+	<property name="edihostName" value="${ftp.edihost}"/>
+	<property name="ediuserName" value="${ftp.ediuserName}"/>
+	<property name="edipassword" value="${ftp.edipassword}"/>
+	</bean>
+	<bean id="testingToolController" class="com.aetna.prvrte.rteintranet.web.controller.TestingToolController">
+	<property name="fileLocation" value="${ftp.storeFile}"/>
+	<property name="mailGroup" value="${message.mailGroup}"/>
+	<property name="edimailGroup" value="${message.edimailGroup}"/>
+	<property name="ftpUtil" ref="testingToolFTP"/>
+	<property name="edifileLocation" value="${ftp.storeediFile}"/>
+	<property name="isasegment" value="${isasegment}"/>
+	<property name="filenamepattern" value="${filenamepattern}"></property>
+	</bean>
+	<!-- 270 TESTING TOOL CHANGES ENDS HERE -->		
 </beans>
+
