@@ -1,7 +1,3 @@
-<!--Chrome Upgrade-N127627-->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
-<!--END-->
-<!--Chrome Upgrade-N127627-->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
@@ -9,74 +5,143 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/security/tags"
 	prefix="security"%>
-<html>
 <head>
-<title>AdasvcLookup</title>
+<title>AddAdasvct</title>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta name="GENERATOR" content="Rational Application Developer">
-<c:set var="context" value="${pageContext.request.contextPath}"></c:set>
-<!--Chrome Upgrade-N127627-->
-<!--<script type="text/javascript" src="${context}/js/jquery/jquery-1.7.2.js"></script>-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--END-->
-<script>
+<script language="JavaScript">
 $(document).ready( function(e) {
 	var relPath="<%=request.getContextPath()%>";
-	$('#adasvctLookUp').click(function(){
-		var adasvctLookUpPath = relPath+'/adasvct/adasvctLookUp';
-		$("#adasvctForm").attr('action', adasvctLookUpPath).submit();
-	});
-	
-	$('#adasvctAdd').click(function(){
-		var adasvctAction = relPath+'/adasvct/addAdasvctForm';
-		$("#adasvctForm").attr('action', adasvctAction).submit();	
+	$('#adasvctAddNew').click(function(){
+		var action = relPath+'/adasvct/addAdasvct';
+		$("#addAdasvctForm").attr('action',action).submit();
 	});
 });
+function ValidateDate(dateVal) {
+	if (dateVal.value == "" ||
+		dateVal.value.substring(0,1) == " ") { 
+		alert("You must Enter a Valid Date");
+		//Chrome Upgrade-N127627 --add to break recursive call in Chrome
+		//dateVal.focus();
+		
+		window.setTimeout(function () { 
+           dateVal.focus(); 
+            }, 0);  	
+       //End
+
+		return false;
+	} else
+	 var dateToVal = dateVal.value;
+	 var dateValYY = dateToVal.substring(0,4);
+	 var dateValMM = dateToVal.substring(5,7);
+	 var dateValDD = dateToVal.substring(8,10);
+		var lastDay = "00";
+		numYr = parseInt(dateValYY);
+		liftYear = numYr % 4;
+		switch (dateValMM) {
+			case "01":
+			case "03":
+			case "05":
+			case "07":
+			case "08":
+			case "10":
+			case "12":
+				lastDay = "31"
+				break
+			case "04":
+			case "06":
+			case "09":
+			case "11":
+				lastDay = "30"
+				break
+			case "02":
+				if (liftYear == 0) {
+					lastDay = "29"
+				} else {
+					lastDay = "28"
+				}
+				break
+		}
+	 var validDate = true
+	 var numCheck = "" + numYr
+	 var num = parseInt(dateValYY, 10); 
+	 if (dateToVal.charAt(4) != '-' || 
+	 	dateToVal.charAt(7) != '-' ||  
+	 	dateValMM < "01" ||
+	 	dateValMM > 12 ||
+	 	dateValDD < "01" ||
+	 	dateValDD > lastDay ||
+	 	numCheck != dateValYY ||
+	 	isNaN(num) ||
+	 	num < 1970) {
+	 	alert("Invalid Date Entry. \nPlease Enter valid Date with Correct Format, \nor CTL-Z to undo change!.")
+	 	//Chrome Upgrade-N127627 --add to break recursive call in Chrome
+		//dateVal.focus();
+		
+		window.setTimeout(function () { 
+           dateVal.focus(); 
+            }, 0);  	
+       //End
+
+		validDate = false
+		return false;
+	}
+}
 </script>
 </head>
 <body bgcolor="#e1eeb9">
-	<h1 align="center">ADASVCT</h1>
-	<p align="center">
-		<i>Enter an ADA Code or a Service Type Code<br>or a partial
-			value and '%' in either field<br>or leave blank to find all.<BR>
-			Then click LookUp.</i>
-	</p>
-	<br>
-	<br>
-
-	<form:form modelAttribute="adasvctVO" name="adasvctForm" id="adasvctForm" method="POST">
-
-		<div align="center">
-			<table align="center">
+	<H1 align="CENTER">Add Rows to ADASVCT Table</H1>
+	<center>
+		<%-- <form name="form1" method="POST" action="ProcessRequest"> --%>
+		<form:form modelAttribute="adasvctVO" id="addAdasvctForm"
+			name="addAdasvctForm" method="POST">
+			<table>
 				<tbody>
 					<tr>
-						<td>ADA Code</td>
-						<td><form:input path="adaCd" type="text" id="adaCd"
-								size="6" tabindex="1" maxlength="5"
-								onchange="javascript:this.value=this.value.toUpperCase();" /></td>
+						<td>ADA Code *</td>
+						<td><form:input size="6" type="text" maxlength="5"
+								name="AdaCd" path="adaCd"
+								onChange="javascript:this.value=this.value.toUpperCase();" /></td>
 					</tr>
 					<tr>
-						<td>Service Type Code</td>
-						<td><form:input type="text" path = "svcTypeCd"
-								size="3" tabindex="2" maxlength="2"
-								onchange="javascript:this.value=this.value.toUpperCase();" />
+						<td>Service Type *</td>
+						<td><form:input size="5" type="text" maxlength="2"
+								path="svcTypeCd" name="SvcTypeCd"
+								onChange="javascript:this.value=this.value.toUpperCase();" /></td>
 						</td>
+					<tr>
+						<td>Effective Date *</td>
+						<td><form:input size="12" type="text" maxlength="10"
+								path="effDate" name="EffDate" onblur="ValidateDate(this)" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>(yyyy-mm-dd)</td>
+					</tr>
+					<tr>
+						<td>Expiration Date *</td>
+						<td><form:input size="12" type="text" maxlength="10"
+								path="expDate" name="ExpDate" value="9999-12-31" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>-------</td>
+					</tr>
+					<tr>
+						<td><input type="button" name="Add" value="Add" id="adasvctAddNew"
+								style="margin-left: 5pc; padding-left: 3mm; padding-right: 3mm">
+						</td>
+						<td><input type="button" onclick="history.back();"
+								name="Cancel" value="Cancel"
+								style="margin-left: 2mm; padding-left: 1mm; padding-right: 1mm">
+						</td>
+					</tr>
+					<tr>
+						<td>*required</td>
 					</tr>
 				</tbody>
 			</table>
-		</DIV>
-		<p align="center">
-			<input type="button" name="LookUp" value="LookUp" tabindex="4" id="adasvctLookUp" style="margin-left: 20px" >
-			 <c:choose>
-				<c:when test="${(securityLevel ne 'RW')}">
-					<input type="button" name="Add" value="Add New" id="adasvctAdd" style="margin-left: 20px" tabindex="5" disabled="disabled">
-				</c:when>
-				<c:otherwise>
-					<input type="button" name="Add" value="Add New" id="adasvctAdd" style="margin-left: 20px" tabindex="5" >
-				</c:otherwise>
-			</c:choose>
 			<br>
-		</p>
-	</form:form>
+		</form:form>
+	</center>
 </body>
-</html>
