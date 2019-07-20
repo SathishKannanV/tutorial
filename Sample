@@ -1,46 +1,50 @@
+/**
+
+ * 
+
+ */
+
 package com.aetna.prvrte.rteintranet.service;
 
 
+
+import java.util.List;
 
 import java.util.Map;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
-
-
-import com.aetna.prvrte.rteintranet.dao.LongRunTransLookUpDAO;
-
-import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
+import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
 
 import com.aetna.prvrte.rteintranet.exception.ApplicationException;
 
 
 
-@Service
+/**
 
-public class LongRunTransLookUpServiceImpl implements LongRunTransLookUpService{
+ * @author N657186
 
+ * Cognizant_Offshore
 
+ */
 
-	@Autowired(required=true)
-
-	private LongRunTransLookUpDAO longrunTransDAO;
-
-	@Override
-
-	public Map getLongRunTransLookUpList(LongRunTransactionDTO longrunTransDTO)
-
-			throws ApplicationException {
-
-		return longrunTransDAO.getLongRunTransLookUpList(longrunTransDTO);
-
-	}
+public interface RbrcService {
 
 
+
+	Map getRbrcLookUp(RbrcDTO rbrcDTO) throws ApplicationException;;
+
+
+
+	Map addNewRbrc(RbrcDTO rbrcDTO)throws ApplicationException ;
+
+
+
+	Map deleteRbrc(RbrcDTO rbrcDTO) throws ApplicationException ;
+
+
+
+	Map addUpdateRbrc(RbrcDTO existRbrcDTO, List<RbrcDTO> rbrcDtoList, int index, char updateInd) throws ApplicationException ;
 
 }
 
