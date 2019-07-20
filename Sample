@@ -1,158 +1,2594 @@
 /**
-
  * 
-
  */
+package com.aetna.prvrte.rteintranet.translator;
 
-package com.aetna.prvrte.rteintranet.service;
-
-
-
+import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedList;
 import java.util.List;
 
-import java.util.Map;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-
-
-
-import com.aetna.prvrte.rteintranet.dao.ProcexDAO;
-
-import com.aetna.prvrte.rteintranet.dao.UserDAO;
-
+import com.aetna.prvrte.rteintranet.dto.AdasvctDTO;
+import com.aetna.prvrte.rteintranet.dto.BenafrqDTO;
+import com.aetna.prvrte.rteintranet.dto.BplvrpDTO;
+import com.aetna.prvrte.rteintranet.dto.BplvsDTO;
+import com.aetna.prvrte.rteintranet.dto.BsplDTO;
+import com.aetna.prvrte.rteintranet.dto.BspprDTO;
+import com.aetna.prvrte.rteintranet.dto.DedacsrDTO;
+import com.aetna.prvrte.rteintranet.dto.ErspmsgDTO;
+import com.aetna.prvrte.rteintranet.dto.IndmntrpDTO;
+import com.aetna.prvrte.rteintranet.dto.LongRunTransactionDTO;
+import com.aetna.prvrte.rteintranet.dto.PlnlmEXDTO;
 import com.aetna.prvrte.rteintranet.dto.ProcexDTO;
-
+import com.aetna.prvrte.rteintranet.dto.RbbcDTO;
 import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetpbrDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetprlDTO;
+import com.aetna.prvrte.rteintranet.dto.SitemsgDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchcolDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchdtlDTO;
+import com.aetna.prvrte.rteintranet.dto.SrcherrDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchresDTO;
+import com.aetna.prvrte.rteintranet.dto.SrchscDTO;
+import com.aetna.prvrte.rteintranet.dto.SstypaDTO;
+import com.aetna.prvrte.rteintranet.dto.StstypaDTO;
+import com.aetna.prvrte.rteintranet.dto.TOSDTO;
+import com.aetna.prvrte.rteintranet.dto.TierdMsgDTO;
+import com.aetna.prvrte.rteintranet.dto.TosctDTO;
+import com.aetna.prvrte.rteintranet.dto.UserDTO;
+import com.aetna.prvrte.rteintranet.dto.RtebeplmDTO;
+import com.aetna.prvrte.rteintranet.dto.RtedictrDTO;
+import com.aetna.prvrte.rteintranet.dto.RterbacDTO;
+import com.aetna.prvrte.rteintranet.dto.RtestscDTO;
+import com.aetna.prvrte.rteintranet.dto.RtestypDTO;
+import com.aetna.prvrte.rteintranet.dto.RtetierDTO;
 
-import com.aetna.prvrte.rteintranet.dto.RbrcDTO;
+import com.aetna.prvrte.rteintranet.dto.HrpRuleDTO;
 
-import com.aetna.prvrte.rteintranet.exception.ApplicationException;
+import com.aetna.prvrte.rteintranet.vo.AdasvctVO;
+import com.aetna.prvrte.rteintranet.vo.BenafrqVO;
+import com.aetna.prvrte.rteintranet.vo.BplvrpVO;
+import com.aetna.prvrte.rteintranet.vo.BplvsVO;
+import com.aetna.prvrte.rteintranet.vo.BsplVO;
+import com.aetna.prvrte.rteintranet.vo.BspprVO;
+import com.aetna.prvrte.rteintranet.vo.DedacsrVO;
+import com.aetna.prvrte.rteintranet.vo.ErspmsgVO;
+import com.aetna.prvrte.rteintranet.vo.IndmntrpVO;
+import com.aetna.prvrte.rteintranet.vo.LongRunTransactionVO;
+import com.aetna.prvrte.rteintranet.vo.PlnlmEXVO;
+import com.aetna.prvrte.rteintranet.vo.ProcexVO;
+import com.aetna.prvrte.rteintranet.vo.RbbcVO;
+import com.aetna.prvrte.rteintranet.vo.RbrcVO;
+import com.aetna.prvrte.rteintranet.vo.RtetpbrVO;
+import com.aetna.prvrte.rteintranet.vo.RtetprlVO;
+import com.aetna.prvrte.rteintranet.vo.SitemsgVO;
+import com.aetna.prvrte.rteintranet.vo.SrchcolVO;
+import com.aetna.prvrte.rteintranet.vo.SrchdtlVO;
+import com.aetna.prvrte.rteintranet.vo.SrcherrVO;
+import com.aetna.prvrte.rteintranet.vo.SrchresVO;
+import com.aetna.prvrte.rteintranet.vo.SrchscVO;
+import com.aetna.prvrte.rteintranet.vo.SstypaVO;
+import com.aetna.prvrte.rteintranet.vo.StstypaVO;
+import com.aetna.prvrte.rteintranet.vo.TOSVO;
+import com.aetna.prvrte.rteintranet.vo.TierdMsgVO;
+import com.aetna.prvrte.rteintranet.vo.TosctVO;
+import com.aetna.prvrte.rteintranet.vo.UserVO;
+import com.aetna.prvrte.rteintranet.vo.RtebeplmVO;
+import com.aetna.prvrte.rteintranet.vo.RtedictrVO;
+import com.aetna.prvrte.rteintranet.vo.RterbacVO;
+import com.aetna.prvrte.rteintranet.vo.RtestscVO;
+import com.aetna.prvrte.rteintranet.vo.RtestypVO;
+import com.aetna.prvrte.rteintranet.vo.RtetierVO;
 
-
+import com.aetna.prvrte.rteintranet.vo.HrpRuleVO;
 
 /**
-
- * @author N624926
-
- * Cognizant_Offshore
-
+ * This class to convert the view object of to dt object.
+ * 
+ * @author N726899
+ * 
  */
+public class RTETranslator {
 
-@Service
+	/**
+	 * Instance of logger for RTETranslator.
+	 */
+	private final static Log logger = LogFactory.getLog(RTETranslator.class);
 
-public class UserServiceImpl implements UserService {
+	/**
+	 * Method to convert AdasvctDTO to Adasvct view object.
+	 * 
+	 * @param adasvctvo
+	 *            view object of adavct
+	 * @return adasvctDTO
+	 */
+	public static AdasvctDTO toAdasvctDTO(AdasvctVO adasvctVO) {
+		AdasvctDTO adasvctDTO = new AdasvctDTO();
+		try {
+			BeanUtils.copyProperties(adasvctDTO, adasvctVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toAdasvctDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toAdasvctDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return adasvctDTO;
+	}
+	/**
+	 * Method to convert AdasvctDTO to Adasvct view object.
+	 * 
+	 * @param adasvctvo
+	 *            view object of adavct
+	 * @return adasvctDTO
+	 */
+	public static List<AdasvctDTO> toAdasvctDTOList(List<AdasvctVO> adasvctVOList) {
+		List<AdasvctDTO> adasvctDTOList = new LinkedList<AdasvctDTO>();
+		try {
+			for (int i = 0; i < adasvctVOList.size(); i++) {
+				AdasvctVO adasvctVO = adasvctVOList.get(i);
+				AdasvctDTO adasvctDTO = new AdasvctDTO();
+				BeanUtils.copyProperties(adasvctDTO, adasvctVO);
+				adasvctDTOList.add(adasvctDTO);
+			}
+			
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toAdasvctDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toAdasvctDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return adasvctDTOList;
+	}
 
-	@Autowired(required=true)
+	/**
+	 * Method to convert Benafrq DT Object to Benafrq view object.
+	 * 
+	 * @param benafrqVO
+	 *            view object of benafrq
+	 * @return benafrqDTO
+	 */
+	public static BenafrqDTO toBenafrqDTO(BenafrqVO benafrqVO) {
+		BenafrqDTO benafrqDTO = new BenafrqDTO();
+		try {
+			BeanUtils.copyProperties(benafrqDTO, benafrqVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBenafrqDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBenafrqDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return benafrqDTO;
+	}
 
-	private UserDAO userDAO;
+	/**
+	 * Method to convert Bplvrp DT Object to Bplvrp view object.
+	 * 
+	 * @param benafrqVO
+	 *            view object of bplvrp
+	 * @return bplvrpDTO
+	 */
+	public static BplvrpDTO toBplvrpDTO(BplvrpVO bplvrpVO) {
+		BplvrpDTO bplvrpDTO = new BplvrpDTO();
+		try {
+			BeanUtils.copyProperties(bplvrpDTO, bplvrpVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBplvrpDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBplvrpDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return bplvrpDTO;
+	}
+	/**
+	 * Method to convert BplvrpVOList to BplvrpDTOList view object.
+	 * 
+	 * @param bplvrpVOList
+	 *            list of view object
+	 * @return adasvctDTOList
+	 */
+	public static List<BplvrpDTO> toBplvrpDTOList(List<BplvrpVO> bplvrpVOList) {
+		List<BplvrpDTO> bplvrpDTOList = new LinkedList<BplvrpDTO>();
+		try {
+			for (int i = 0; i < bplvrpVOList.size(); i++) {
+				BplvrpVO bplvrpVO = bplvrpVOList.get(i);
+				BplvrpDTO bplvrpDTO = new BplvrpDTO();
+				BeanUtils.copyProperties(bplvrpDTO, bplvrpVO);
+				bplvrpDTOList.add(bplvrpDTO);
+			}
+			
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBplvrpDTOList "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBplvrpDTOList "
+					+ invocationTargetException.getMessage());
+		}
+		return bplvrpDTOList;
+	}
+
+	/**
+	 * Method to convert bplvrpDTOList to bplvrpVOList
+	 * 
+	 * @param bplvrpDtoList
+	 *            list of bplvrpDTO
+	 * @return bplvrpVOList
+	 */
+	public static List<BplvrpVO> toBplvrpVOList(List<BplvrpDTO> bplvrpDtoList) {
+		List<BplvrpVO> bplvrpVOList = new LinkedList<BplvrpVO>();
+		try {
+			for (int i = 0; i < bplvrpDtoList.size(); i++) {
+				BplvrpDTO  bplvrpDTO  = bplvrpDtoList.get(i);
+				BplvrpVO  bplvrpVO = new BplvrpVO();
+				BeanUtils.copyProperties(bplvrpVO, bplvrpDTO);
+				bplvrpVOList.add(bplvrpVO);
+			}
+			
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBenafrqVOList "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBenafrqVOList "
+					+ invocationTargetException.getMessage());
+		}
+		return bplvrpVOList;
+	}
+	/**
+	 * Method to convert Bplvs DT Object to Bplvs view object.
+	 * 
+	 * @param BplvsVO
+	 *            view object of bplvs
+	 * @return bplvs DT object
+	 */
+	
+	/**
+	 * Method to convert bspl DT Object to bspl view object.
+	 * 
+	 * @param bsplVO
+	 *            view object of bspl
+	 * @return bspl DT object
+	 */
+	public static BsplDTO toBsplDTO(BsplVO bsplVO) {
+		BsplDTO bsplDTO = new BsplDTO();
+		try {
+			BeanUtils.copyProperties(bsplDTO, bsplVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBsplDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBsplDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return bsplDTO;
+	}
+	
+	/**
+	 * Method to convert Bsppr DT Object to Bsppr view object.
+	 * 
+	 * @param BspprVO
+	 *            view object of Bsppr
+	 * @return Bsppr DT object
+	 */
+	public static BspprDTO toBspprDTO(BspprVO bspprVO) {
+		BspprDTO bspprDTO = new BspprDTO();
+		try {
+			BeanUtils.copyProperties(bspprDTO, bspprVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBspprDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBspprDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return bspprDTO;
+	}
+	/**
+	 * Method to convert user DT Object to user view object.
+	 * 
+	 * @param userVO
+	 *            view object of user
+	 * @return userDTO
+	 */
+	public static UserDTO toUserDTO(UserVO userVO) {
+		UserDTO userDTO = new UserDTO();
+		try {
+			BeanUtils.copyProperties(userDTO, userVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toUserDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toUserDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return userDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user procexVO Object to procexDTO object.
+	 * 
+	 * @param procexVO
+	 *            view object of procex
+	 * @return procexDTO
+	 */
+	public static ProcexDTO toProcexDTO(ProcexVO procexVO) {
+		ProcexDTO procexDTO = new ProcexDTO();
+		try {
+			BeanUtils.copyProperties(procexDTO, procexVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toProcexDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toProcexDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return procexDTO;
+	}
+	
+	
+	public static ProcexVO toProcexVO(ProcexDTO procexDTO) {
+		ProcexVO procexVO = new ProcexVO();
+		try {
+			BeanUtils.copyProperties(procexVO, procexDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toProcexDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toProcexDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return procexVO;
+	}
+	
+	
+	/* Translator implementation for Rtetpbr */
+	
+	/**
+	 * Method to convert user rtetpbrVO Object to rtetpbrDTO object.
+	 * 
+	 * @param rtetpbrVO
+	 *            view object of rtetpbr
+	 * @return rtetpbrDTO
+	 */
+	public static RtetpbrDTO toRtetpbrDTO(RtetpbrVO rtetpbrVO) {
+		RtetpbrDTO rtetpbrDTO = new RtetpbrDTO();
+		try {
+			BeanUtils.copyProperties(rtetpbrDTO, rtetpbrVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRtetpbrDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRtetpbrDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtetpbrDTO;
+	}
+	
+	
+	public static RtetpbrVO toRtetpbrVO(RtetpbrDTO rtetpbrDTO) {
+		RtetpbrVO rtetpbrVO = new RtetpbrVO();
+		try {
+			BeanUtils.copyProperties(rtetpbrVO, rtetpbrDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRtetpbrVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRtetpbrVO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtetpbrVO;
+	}
+	
+	
+		public static List<ProcexDTO> toProcexDTOList(List<ProcexVO> procexVoList){
+		List<ProcexDTO> procexDtoList = new LinkedList<ProcexDTO>();
+		for(ProcexVO procexVO : procexVoList){			
+			ProcexDTO procexDTO = new ProcexDTO();
+			procexDTO.setDbProcexCd(procexVO.getDbProcexCd());
+			procexDTO.setDbSvcTypeCd(procexVO.getDbSvcTypeCd());
+			procexDTO.setDbDescTxt(procexVO.getDbDescTxt());
+			procexDTO.setDbPostedDate(procexVO.getDbPostedDate());
+			procexDTO.setDbUpdatedInd(procexVO.getDbUpdatedInd());
+			procexDtoList.add(procexDTO);
+		}		
+		return procexDtoList;
+	}
+	
+	
+	public static List<ProcexVO> toProcexVOList(List<ProcexDTO> procexDtoList){
+		List<ProcexVO> procexVoList = new LinkedList<ProcexVO>();
+		for(ProcexDTO procexDTO : procexDtoList){			
+			ProcexVO procexVO = new ProcexVO();
+			procexVO.setDbProcexCd(procexDTO.getDbProcexCd());
+			procexVO.setDbSvcTypeCd(procexDTO.getDbSvcTypeCd());
+			procexVO.setDbDescTxt(procexDTO.getDbDescTxt());
+			procexVO.setDbPostedDate(procexDTO.getDbPostedDate());
+			procexVO.setDbUpdatedInd(procexDTO.getDbUpdatedInd());
+			procexVoList.add(procexVO);
+		}		
+		return procexVoList;
+	}
+	
+	public static List<RtetpbrDTO> toRtetpbrDTOList(List<RtetpbrVO> rtetpbrVoList){
+	List<RtetpbrDTO> rtetpbrDtoList = new LinkedList<RtetpbrDTO>();
+	for(RtetpbrVO rtetpbrVO : rtetpbrVoList){			
+		RtetpbrDTO rtetpbrDTO = new RtetpbrDTO();
+		  rtetpbrDTO.setIdNo(rtetpbrVO.getIdNo());
+		  rtetpbrDTO.setBenrlCd(rtetpbrVO.getBenrlCd());
+		  rtetpbrDTO.setSvctypCd(rtetpbrVO.getSvctypCd());
+		  rtetpbrDTO.setAcastosCd(rtetpbrVO.getAcastosCd());
+		  rtetpbrDTO.setAcasposCd(rtetpbrVO.getAcasposCd());
+		  rtetpbrDTO.setEffDate(rtetpbrVO.getEffDate());
+		  rtetpbrDTO.setExpDate(rtetpbrVO.getExpDate());
+		  rtetpbrDTO.setPostedDate(rtetpbrVO.getPostedDate());
+		  rtetpbrDTO.setUserId(rtetpbrVO.getUserId());
+		  rtetpbrDTO.setValueTxt(rtetpbrVO.getValueTxt());
+		  rtetpbrDTO.setUpdatedInd(rtetpbrVO.getUpdatedInd());
+		  rtetpbrDtoList.add(rtetpbrDTO);
+		}		
+		return rtetpbrDtoList;
+	}
+
+
+	public static List<RtetpbrVO> toRtetpbrVOList(List<RtetpbrDTO> rtetpbrDtoList){
+	List<RtetpbrVO> rtetpbrVoList = new LinkedList<RtetpbrVO>();
+		for(RtetpbrDTO rtetpbrDTO : rtetpbrDtoList){			
+			RtetpbrVO rtetpbrVO = new RtetpbrVO();
+			  rtetpbrVO.setIdNo(rtetpbrDTO.getIdNo());
+			  rtetpbrVO.setBenrlCd(rtetpbrDTO.getBenrlCd());
+			  rtetpbrVO.setSvctypCd(rtetpbrDTO.getSvctypCd());
+			  rtetpbrVO.setAcastosCd(rtetpbrDTO.getAcastosCd());
+			  rtetpbrVO.setAcasposCd(rtetpbrDTO.getAcasposCd());
+			  rtetpbrVO.setEffDate(rtetpbrDTO.getEffDate());
+			  rtetpbrVO.setExpDate(rtetpbrDTO.getExpDate());
+			  rtetpbrVO.setPostedDate(rtetpbrDTO.getPostedDate());
+			  rtetpbrVO.setUserId(rtetpbrDTO.getUserId());
+			  rtetpbrVO.setValueTxt(rtetpbrDTO.getValueTxt());
+			  rtetpbrVO.setUpdatedInd(rtetpbrDTO.getUpdatedInd());
+			  rtetpbrVoList.add(rtetpbrVO);
+		}		
+		return rtetpbrVoList;
+	}
+	/**
+	 * 
+	 * @param adasvctDtoList
+	 * @return
+	 */
+	public static List<AdasvctVO> toAdasvctVOList(List<AdasvctDTO> adasvctDtoList) {
+		List<AdasvctVO> adasvctVOList = new LinkedList<AdasvctVO>();
+		try {
+			for (int i = 0; i < adasvctDtoList.size(); i++) {
+				AdasvctDTO  adasvctDTO  = adasvctDtoList.get(i);
+				AdasvctVO  adasvctVO = new AdasvctVO();
+				BeanUtils.copyProperties(adasvctVO, adasvctDTO);
+				adasvctVOList.add(adasvctVO);
+			}
+			
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toAdasvctDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toAdasvctDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return adasvctVOList;
+	}
+
+	/**
+	 * Method to convert BenafrqDTO to Benafrq view object.
+	 * 
+	 * @param benafrqvo
+	 *            view object of Benafrq
+	 * @return benafrqDTOList
+	 */
+	public static List<BenafrqDTO> toBenafrqDTOList(List<BenafrqVO> benafrqVOList) {
+		List<BenafrqDTO> benafrqDTOList = new LinkedList<BenafrqDTO>();
+		try {
+			for (int i = 0; i < benafrqVOList.size(); i++) {
+				BenafrqVO benafrqVO = benafrqVOList.get(i);
+				BenafrqDTO benafrqDTO = new BenafrqDTO();
+				BeanUtils.copyProperties(benafrqDTO, benafrqVO);
+				benafrqDTOList.add(benafrqDTO);
+			}
+
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBenafrqDTOList "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBenafrqDTOList "
+					+ invocationTargetException.getMessage());
+		}
+		return benafrqDTOList;
+	}
+	
+	/**
+	 * 
+	 * @param adasvctDtoList
+	 * @return
+	 */
+	public static List<BenafrqVO> toBenafrqVOList(List<BenafrqDTO> benafrqDtoList) {
+		List<BenafrqVO> benafrqVOList = new LinkedList<BenafrqVO>();
+		try {
+			for (int i = 0; i < benafrqDtoList.size(); i++) {
+				BenafrqDTO  benafrqDTO  = benafrqDtoList.get(i);
+				BenafrqVO  benafrqVO = new BenafrqVO();
+				BeanUtils.copyProperties(benafrqVO, benafrqDTO);
+				benafrqVOList.add(benafrqVO);
+			}
+			
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBenafrqVOList "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBenafrqVOList "
+					+ invocationTargetException.getMessage());
+		}
+		return benafrqVOList;
+	}
+	/**
+	 * Method to convert Dedacsr DT Object to Dedacsr view object.
+	 * 
+	 * @param DedacsrVO
+	 *            view object of dedacsr
+	 * @return dedacsr DT object
+	 */
+	public static DedacsrDTO toDedacsrDTO(DedacsrVO dedacsrVO) {
+		DedacsrDTO dedacsrDTO = new DedacsrDTO();
+		try {
+			BeanUtils.copyProperties(dedacsrDTO, dedacsrVO);
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toDedacsrDTO "
+					+ exception.getMessage());
+		}
+		return dedacsrDTO;
+	}
+	/**
+	 * Method to convert list of Dedacsr DT Object to list Dedacsr view object.
+	 * 
+	 * @param DedacsrVO
+	 *            view object of dedacsr
+	 * @return dedacsr DT object
+	 */
+	public static List<DedacsrDTO> toDedacsrDTOList(List<DedacsrVO> dedacsrVOList) {
+		List<DedacsrDTO> dedacsrDTOList = new LinkedList<DedacsrDTO>();
+		try {
+			for (int i = 0; i < dedacsrVOList.size(); i++) {
+				DedacsrVO  dedacsrVO  = dedacsrVOList.get(i);
+				DedacsrDTO  dedacsrDTO = new DedacsrDTO();
+				BeanUtils.copyProperties(dedacsrDTO, dedacsrVO);
+				dedacsrDTOList.add(dedacsrDTO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toDedacsrDTOList "
+					+ exception.getMessage());
+		}
+		return dedacsrDTOList;
+	}
+	/**
+	 * Method to convert list of Dedacsr vo Object to list Dedacsr dto object.
+	 * 
+	 * @param DedacsrVO
+	 *            view object of dedacsr
+	 * @return dedacsr DT object
+	 */
+	public static List<DedacsrVO> toDedacsrVOList(List<DedacsrDTO> dedacsrDTOList) {
+		List<DedacsrVO> dedacsrVOList = new LinkedList<DedacsrVO>();
+		try {
+			for (int i = 0; i < dedacsrDTOList.size(); i++) {
+				DedacsrDTO  dedacsrDTO  = dedacsrDTOList.get(i);
+				DedacsrVO  dedacsrVO = new DedacsrVO();
+				BeanUtils.copyProperties(dedacsrVO, dedacsrDTO);
+				dedacsrVOList.add(dedacsrVO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toDedacsrVOList "
+					+ exception.getMessage());
+		}
+		return dedacsrVOList;
+	}
+	/**
+	 * Method to convert Erspmsg DT Object to Erspmsg view object.
+	 * 
+	 * @param ErspmsgVO
+	 *            view object of erspmsg
+	 * @return erspmsg DT object
+	 */
+	public static ErspmsgDTO toErspmsgDTO(ErspmsgVO erspmsgVO) {
+		ErspmsgDTO erspmsgDTO = new ErspmsgDTO();
+		try {
+			BeanUtils.copyProperties(erspmsgDTO, erspmsgVO);
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toErspmsgDTO "
+					+ exception.getMessage());
+		}
+		return erspmsgDTO;
+	}
+	/**
+	 * Method to convert list of Erspmsg DT Object to list Erspmsg view object.
+	 * 
+	 * @param ErspmsgVO
+	 *            view object of erspmsg
+	 * @return erspmsg DT object
+	 */
+	public static List<ErspmsgDTO> toErspmsgDTOList(List<ErspmsgVO> erspmsgVOList) {
+		List<ErspmsgDTO> erspmsgDTOList = new LinkedList<ErspmsgDTO>();
+		try {
+			for (int i = 0; i < erspmsgVOList.size(); i++) {
+				ErspmsgVO  erspmsgVO  = erspmsgVOList.get(i);
+				ErspmsgDTO  erspmsgDTO = toErspmsgDTO( erspmsgVO);
+				erspmsgDTOList.add(erspmsgDTO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toErspmsgDTOList "
+					+ exception.getMessage());
+		}
+		return erspmsgDTOList;
+	}
+	/**
+	 * Method to convert list of Erspmsg vo Object to list Erspmsg dto object.
+	 * 
+	 * @param ErspmsgVO
+	 *            view object of erspmsg
+	 * @return erspmsg DT object
+	 */
+	public static List<ErspmsgVO> toErspmsgVOList(List<ErspmsgDTO> erspmsgDTOList) {
+		List<ErspmsgVO> erspmsgVOList = new LinkedList<ErspmsgVO>();
+		try {
+			for (int i = 0; i < erspmsgDTOList.size(); i++) {
+				ErspmsgDTO  erspmsgDTO  = erspmsgDTOList.get(i);
+				ErspmsgVO  erspmsgVO = new ErspmsgVO();
+				erspmsgVO.setFullText(erspmsgDTO.getFullText());
+				erspmsgVO.setMessageId(erspmsgDTO.getMessageId());
+				erspmsgVO.setMessageTypeCd(erspmsgDTO.getMessageTypeCd());
+				erspmsgVO.setPostedDateTimeStamp(erspmsgDTO.getPostedDateTimeStamp());
+				erspmsgVO.setShortText(erspmsgDTO.getShortText());
+				erspmsgVO.setUserId(erspmsgDTO.getUserId());
+				erspmsgVO.setUpdatedInd(erspmsgDTO.getUpdatedInd());
+				erspmsgVOList.add(erspmsgVO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toErspmsgVOList "
+					+ exception.getMessage());
+		}
+		return erspmsgVOList;
+	}
+	/**
+	 * Method to convert Indmntrp DT Object to Indmntrp view object.
+	 * 
+	 * @param indmntrpVO
+	 *            view object of indmntrp
+	 * @return indmntrp DT object
+	 */
+	public static IndmntrpDTO toIndmntrpDTO(IndmntrpVO indmntrpVO) {
+		IndmntrpDTO indmntrpDTO = new IndmntrpDTO();
+		try {
+			//BeanUtils.copyProperties(indmntrpDTO, indmntrpVO);
+			
+			indmntrpDTO.setDbIndmntyCd(indmntrpVO.getDbIndmntyCd());
+			indmntrpDTO.setDbIndmntyNm(indmntrpVO.getDbIndmntyNm());
+			indmntrpDTO.setDbIndmntyPRCRTInd(indmntrpVO.getDbIndmntyPRCRTInd());
+			indmntrpDTO.setDbIndmntyRFRLInd(indmntrpVO.getDbIndmntyRFRLInd());
+			indmntrpDTO.setDbIndmntyShrtNm(indmntrpVO.getDbIndmntyShrtNm());
+			indmntrpDTO.setDbPcpSelReqInd(indmntrpVO.getDbPcpSelReqInd());
+			indmntrpDTO.setDbUpdatedInd(indmntrpVO.getDbUpdatedInd());
+			
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toIndmntrpDTO "
+					+ exception.getMessage());
+		}
+		return indmntrpDTO;
+	}
+	/**
+	 * Method to convert list of Indmntrp DT Object to list Indmntrp view object.
+	 * 
+	 * @param IndmntrpVO
+	 *            view object of indmntrp
+	 * @return indmntrp DT object
+	 */
+	public static List<IndmntrpDTO> toIndmntrpDTOList(List<IndmntrpVO> indmntrpVOList) {
+		List<IndmntrpDTO> indmntrpDTOList = new LinkedList<IndmntrpDTO>();
+		try {
+			for (int i = 0; i < indmntrpVOList.size(); i++) {
+				IndmntrpVO  indmntrpVO  = indmntrpVOList.get(i);
+				IndmntrpDTO  indmntrpDTO = toIndmntrpDTO( indmntrpVO);
+				indmntrpDTOList.add(indmntrpDTO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toIndmntrpDTOList "
+					+ exception.getMessage());
+		}
+		return indmntrpDTOList;
+	}
+	/**
+	 * Method to convert list of Indmntrp vo Object to list Indmntrp dto object.
+	 * 
+	 * @param IndmntrpVO
+	 *            view object of indmntrp
+	 * @return indmntrp DT object
+	 */
+	public static List<IndmntrpVO> toIndmntrpVOList(List<IndmntrpDTO> indmntrpDTOList) {
+		List<IndmntrpVO> indmntrpVOList = new LinkedList<IndmntrpVO>();
+		try {
+			for (int i = 0; i < indmntrpDTOList.size(); i++) {
+				IndmntrpDTO  indmntrpDTO  = indmntrpDTOList.get(i);
+				IndmntrpVO  indmntrpVO = new IndmntrpVO();
+				indmntrpVO.setDbIndmntyCd(indmntrpDTO.getDbIndmntyCd());
+				indmntrpVO.setDbIndmntyNm(indmntrpDTO.getDbIndmntyNm());
+				indmntrpVO.setDbIndmntyPRCRTInd(indmntrpDTO.getDbIndmntyPRCRTInd());
+				indmntrpVO.setDbIndmntyRFRLInd(indmntrpDTO.getDbIndmntyRFRLInd());
+				indmntrpVO.setDbIndmntyShrtNm(indmntrpDTO.getDbIndmntyShrtNm());
+				indmntrpVO.setDbPcpSelReqInd(indmntrpDTO.getDbPcpSelReqInd());
+				indmntrpVO.setDbUpdatedInd(indmntrpDTO.getDbUpdatedInd());
+				indmntrpVOList.add(indmntrpVO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toIndmntrpVOList "
+					+ exception.getMessage());
+		}
+		return indmntrpVOList;
+	}
+	/**
+	 * Method to convert PlnlmEX DT Object to PlnlmEX view object.
+	 * 
+	 * @param plnlmEXVO
+	 *            view object of plnlmEX
+	 * @return plnlmEX DT object
+	 */
+	public static PlnlmEXDTO toPlnlmEXDTO(PlnlmEXVO plnlmEXVO) {
+		PlnlmEXDTO plnlmEXDTO = new PlnlmEXDTO();
+		try {
+			//BeanUtils.copyProperties(plnlmEXDTO, plnlmEXVO);
+			
+			plnlmEXDTO.setDbEligPerLmtCd(plnlmEXVO.getDbEligPerLmtCd());
+			plnlmEXDTO.setDbExplntCd(plnlmEXVO.getDbExplntCd());
+			plnlmEXDTO.setDbFdbInd(plnlmEXVO.getDbFdbInd());
+			plnlmEXDTO.setDbPlnLvlInd(plnlmEXVO.getDbPlnLvlInd());
+			plnlmEXDTO.setDbQlfrCd(plnlmEXVO.getDbQlfrCd());
+			plnlmEXDTO.setDbRspnstpCd(plnlmEXVO.getDbRspnstpCd());
+			plnlmEXDTO.setDbRspnstpTxt(plnlmEXVO.getDbRspnstpTxt());
+			plnlmEXDTO.setDbTxtSndCd(plnlmEXVO.getDbTxtSndCd());
+			plnlmEXDTO.setDbUpdatedInd(plnlmEXVO.getDbUpdatedInd());
+			
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toPlnlmEXDTO "
+					+ exception.getMessage());
+		}
+		return plnlmEXDTO;
+	}
+	/**
+	 * Method to convert list of PlnlmEX DT Object to list PlnlmEX view object.
+	 * 
+	 * @param PlnlmEXVO
+	 *            view object of plnlmEX
+	 * @return plnlmEX DT object
+	 */
+	public static List<PlnlmEXDTO> toPlnlmEXDTOList(List<PlnlmEXVO> plnlmEXVOList) {
+		List<PlnlmEXDTO> plnlmEXDTOList = new LinkedList<PlnlmEXDTO>();
+		try {
+			for (int i = 0; i < plnlmEXVOList.size(); i++) {
+				PlnlmEXVO  plnlmEXVO  = plnlmEXVOList.get(i);
+				PlnlmEXDTO  plnlmEXDTO = toPlnlmEXDTO( plnlmEXVO);
+				plnlmEXDTOList.add(plnlmEXDTO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toPlnlmEXDTOList "
+					+ exception.getMessage());
+		}
+		return plnlmEXDTOList;
+	}
+	/**
+	 * Method to convert list of PlnlmEX vo Object to list PlnlmEX dto object.
+	 * 
+	 * @param PlnlmEXVO
+	 *            view object of plnlmEX
+	 * @return plnlmEX DT object
+	 */
+	public static List<PlnlmEXVO> toPlnlmEXVOList(List<PlnlmEXDTO> plnlmEXDTOList) {
+		List<PlnlmEXVO> plnlmEXVOList = new LinkedList<PlnlmEXVO>();
+		try {
+			for (int i = 0; i < plnlmEXDTOList.size(); i++) {
+				PlnlmEXDTO  plnlmEXDTO  = plnlmEXDTOList.get(i);
+				PlnlmEXVO  plnlmEXVO = new PlnlmEXVO();
+				
+				plnlmEXVO.setDbEligPerLmtCd(plnlmEXDTO.getDbEligPerLmtCd());
+				plnlmEXVO.setDbExplntCd(plnlmEXDTO.getDbExplntCd());
+				plnlmEXVO.setDbFdbInd(plnlmEXDTO.getDbFdbInd());
+				plnlmEXVO.setDbPlnLvlInd(plnlmEXDTO.getDbPlnLvlInd());
+				plnlmEXVO.setDbQlfrCd(plnlmEXDTO.getDbQlfrCd());
+				plnlmEXVO.setDbRspnstpCd(plnlmEXDTO.getDbRspnstpCd());
+				plnlmEXVO.setDbRspnstpTxt(plnlmEXDTO.getDbRspnstpTxt());
+				plnlmEXVO.setDbTxtSndCd(plnlmEXDTO.getDbTxtSndCd());
+				plnlmEXVO.setDbUpdatedInd(plnlmEXDTO.getDbUpdatedInd());
+				
+				plnlmEXVOList.add(plnlmEXVO);
+			}
+		} catch (Exception exception) {
+			logger.info("Error while convering dto to vo in RTETranslator - toPlnlmEXVOList "
+					+ exception.getMessage());
+		}
+		return plnlmEXVOList;
+	}
+	/**
+	 * Method to convert user sitemsgVO Object to sitemsgDTO object.
+	 * 
+	 * @param sitemsgVO
+	 *            view object of sitemsg
+	 * @return sitemsgDTO
+	 */
+	public static SitemsgDTO toSitemsgDTO(SitemsgVO sitemsgVO) {
+		SitemsgDTO sitemsgDTO = new SitemsgDTO();
+		try {
+			BeanUtils.copyProperties(sitemsgDTO, sitemsgVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSitemsgDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSitemsgDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return sitemsgDTO;
+	}
+	
+	
+	public static SitemsgVO toSitemsgVO(SitemsgDTO sitemsgDTO) {
+		SitemsgVO sitemsgVO = new SitemsgVO();
+		try {
+			BeanUtils.copyProperties(sitemsgVO, sitemsgDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSitemsgVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSitemsgVO "
+					+ invocationTargetException.getMessage());
+		}
+		return sitemsgVO;
+	}
+	
+	public static List<SitemsgDTO> toSitemsgDTOList(List<SitemsgVO> sitemsgVoList){
+		List<SitemsgDTO> sitemsgDtoList = new LinkedList<SitemsgDTO>();
+		for(SitemsgVO sitemsgVO : sitemsgVoList){			
+			SitemsgDTO sitemsgDTO = new SitemsgDTO();
+			sitemsgDTO.setDbAuthCertCd(sitemsgVO.getDbAuthCertCd());
+			sitemsgDTO.setDbCompanyCd(sitemsgVO.getDbCompanyCd());
+			sitemsgDTO.setDbCustServText(sitemsgVO.getDbCustServText());
+			sitemsgDTO.setDbInOutNetInd(sitemsgVO.getDbInOutNetInd());
+			sitemsgDTO.setDbNetworkIdNo(sitemsgVO.getDbNetworkIdNo());
+			sitemsgDTO.setDbPCPInd(sitemsgVO.getDbPCPInd());
+			sitemsgDTO.setDbPlanNtwkCd(sitemsgVO.getDbPlanNtwkCd());
+			sitemsgDTO.setDbPlanTypeCd(sitemsgVO.getDbPlanTypeCd());
+			sitemsgDTO.setDbPostedDate(sitemsgVO.getDbPostedDate());
+			sitemsgDTO.setDbPrvdrText(sitemsgVO.getDbPrvdrText());
+			sitemsgDTO.setDbResponseCd(sitemsgVO.getDbResponseCd());
+			sitemsgDTO.setDbSeqNo(sitemsgVO.getDbSeqNo());
+			sitemsgDTO.setDbSiteCd(sitemsgVO.getDbSiteCd());
+			sitemsgDTO.setDbSvcTypeCd(sitemsgVO.getDbSvcTypeCd());
+			sitemsgDTO.setDbUpdatedInd(sitemsgVO.getDbUpdatedInd());
+			sitemsgDtoList.add(sitemsgDTO);
+		}		
+		return sitemsgDtoList;
+	}
+	
+	public static List<SitemsgVO> toSitemsgVOList(List<SitemsgDTO> sitemsgDtoList){
+		List<SitemsgVO> sitemsgVoList = new LinkedList<SitemsgVO>();
+		for(SitemsgDTO sitemsgDTO : sitemsgDtoList){			
+			SitemsgVO sitemsgVO = new SitemsgVO();
+			sitemsgVO.setDbAuthCertCd(sitemsgDTO.getDbAuthCertCd());
+			sitemsgVO.setDbCompanyCd(sitemsgDTO.getDbCompanyCd());
+			sitemsgVO.setDbCustServText(sitemsgDTO.getDbCustServText());
+			sitemsgVO.setDbInOutNetInd(sitemsgDTO.getDbInOutNetInd());
+			sitemsgVO.setDbNetworkIdNo(sitemsgDTO.getDbNetworkIdNo());
+			sitemsgVO.setDbPCPInd(sitemsgDTO.getDbPCPInd());
+			sitemsgVO.setDbPlanNtwkCd(sitemsgDTO.getDbPlanNtwkCd());
+			sitemsgVO.setDbPlanTypeCd(sitemsgDTO.getDbPlanTypeCd());
+			sitemsgVO.setDbPostedDate(sitemsgDTO.getDbPostedDate());
+			sitemsgVO.setDbPrvdrText(sitemsgDTO.getDbPrvdrText());
+			sitemsgVO.setDbResponseCd(sitemsgDTO.getDbResponseCd());
+			sitemsgVO.setDbSeqNo(sitemsgDTO.getDbSeqNo());
+			sitemsgVO.setDbSiteCd(sitemsgDTO.getDbSiteCd());
+			sitemsgVO.setDbSvcTypeCd(sitemsgDTO.getDbSvcTypeCd());
+			sitemsgVO.setDbUpdatedInd(sitemsgDTO.getDbUpdatedInd());
+			sitemsgVoList.add(sitemsgVO);
+		}		
+		return sitemsgVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user rtetprlVO Object to rtetprlDTO object.
+	 * 
+	 * @param rtetprlVO
+	 *            view object of rtetprl
+	 * @return rtetprlDTO
+	 */
+	public static RtetprlDTO toRtetprlDTO(RtetprlVO rtetprlVO) {
+		RtetprlDTO rtetprlDTO = new RtetprlDTO();
+		try {
+			BeanUtils.copyProperties(rtetprlDTO, rtetprlVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRtetprlDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRtetprlDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtetprlDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user rtetprlDTO Object to rtetprlVO object.
+	 * 
+	 * @param rtetprlDTO
+	 *            view object of rtetprl
+	 * @return rtetprlVO
+	 */
+	public static RtetprlVO toRtetprlVO(RtetprlDTO rtetprlDTO) {
+		RtetprlVO rtetprlVO = new RtetprlVO();
+		try {
+			BeanUtils.copyProperties(rtetprlVO, rtetprlDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRtetprlVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRtetprlVO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtetprlVO;
+	}
+	
+	/**
+	 * Method to convert  rtetprlVoList Object to rtetprlDtoList object.
+	 * @param rtetprlVoList
+	 * @return rtetprlDtoList
+	 */
+	public static List<RtetprlDTO> toRtetprlDTOList(List<RtetprlVO> rtetprlVoList){
+		List<RtetprlDTO> rtetprlDtoList = new LinkedList<RtetprlDTO>();
+		for(RtetprlVO rtetprlVO : rtetprlVoList){			
+			RtetprlDTO rtetprlDTO = new RtetprlDTO();
+			rtetprlDTO.setEffDate(rtetprlVO.getEffDate());
+			rtetprlDTO.setExpDate(rtetprlVO.getExpDate());
+			rtetprlDTO.setGroupCd(rtetprlVO.getGroupCd());
+			rtetprlDTO.setOrderNo(rtetprlVO.getOrderNo());
+			rtetprlDTO.setPosCd(rtetprlVO.getPosCd());
+			rtetprlDTO.setPostedDate(rtetprlVO.getPostedDate());
+			rtetprlDTO.setRuleCd(rtetprlVO.getRuleCd());
+			rtetprlDTO.setStcCd(rtetprlVO.getStcCd());
+			rtetprlDTO.setTosCd(rtetprlVO.getTosCd());
+			rtetprlDTO.setUpdatedInd(rtetprlVO.getUpdatedInd());
+			rtetprlDTO.setUserId(rtetprlVO.getUserId());
+			rtetprlDtoList.add(rtetprlDTO);
+		}		
+		return rtetprlDtoList;
+	}	
+	
+	/**
+	 * Method to convert  rtetprlDtoList Object to rtetprlVoList object.
+	 * @param rtetprlDtoList
+	 * @return rtetprlVoList
+	 */
+	
+	public static List<RtetprlVO> toRtetprlVOList(List<RtetprlDTO> rtetprlDtoList){
+		List<RtetprlVO> rtetprlVoList = new LinkedList<RtetprlVO>();
+		for(RtetprlDTO rtetprlDTO : rtetprlDtoList){			
+			RtetprlVO rtetprlVO = new RtetprlVO();
+			rtetprlVO.setEffDate(rtetprlDTO.getEffDate());
+			rtetprlVO.setExpDate(rtetprlDTO.getExpDate());
+			rtetprlVO.setGroupCd(rtetprlDTO.getGroupCd());
+			rtetprlVO.setOrderNo(rtetprlDTO.getOrderNo());
+			rtetprlVO.setPosCd(rtetprlDTO.getPosCd());
+			rtetprlVO.setPostedDate(rtetprlDTO.getPostedDate());
+			rtetprlVO.setRuleCd(rtetprlDTO.getRuleCd());
+			rtetprlVO.setStcCd(rtetprlDTO.getStcCd());
+			rtetprlVO.setTosCd(rtetprlDTO.getTosCd());
+			rtetprlVO.setUpdatedInd(rtetprlDTO.getUpdatedInd());
+			rtetprlVO.setUserId(rtetprlDTO.getUserId());
+			rtetprlVoList.add(rtetprlVO);
+		}		
+		return rtetprlVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user tierdmsgVO Object to tierdmsgDTO object.
+	 * 
+	 * @param tierdmsgVO
+	 *            view object of tierdmsg
+	 * @return tierdmsgDTO
+	 */
+	public static TierdMsgDTO toTierdMsgDTO(TierdMsgVO tierdmsgVO) {
+		TierdMsgDTO tierdmsgDTO = new TierdMsgDTO();
+		try {
+			BeanUtils.copyProperties(tierdmsgDTO, tierdmsgVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTierdMsgDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTierdMsgDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return tierdmsgDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user tierdmsgDTO Object to tierdmsgVO object.
+	 * 
+	 * @param tierdmsgDTO
+	 *            view object of tierdmsg
+	 * @return tierdmsgVO
+	 */
+	public static TierdMsgVO toTierdMsgVO(TierdMsgDTO tierdmsgDTO) {
+		TierdMsgVO tierdmsgVO = new TierdMsgVO();
+		try {
+			BeanUtils.copyProperties(tierdmsgVO, tierdmsgDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTierdMsgVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTierdMsgVO "
+					+ invocationTargetException.getMessage());
+		}
+		return tierdmsgVO;
+	}
+	
+	/**
+	 * Method to convert  tierdmsgVoList Object to tierdmsgDtoList object.
+	 * @param tierdmsgVoList
+	 * @return tierdmsgDtoList
+	 */
+	
+	public static List<TierdMsgDTO> toTierdMsgDTOList(List<TierdMsgVO> tierdmsgVoList){
+		List<TierdMsgDTO> tierdmsgDtoList = new LinkedList<TierdMsgDTO>();
+		for(TierdMsgVO tierdmsgVO : tierdmsgVoList){			
+			TierdMsgDTO tierdmsgDTO = new TierdMsgDTO();
+			tierdmsgDTO.setEffDt(tierdmsgVO.getEffDt());
+			tierdmsgDTO.setExpDt(tierdmsgVO.getExpDt());
+			tierdmsgDTO.setFullText(tierdmsgVO.getFullText());
+			tierdmsgDTO.setMessageId(tierdmsgVO.getMessageId());
+			tierdmsgDTO.setPostedDateTimeStamp(tierdmsgVO.getPostedDateTimeStamp());
+			tierdmsgDTO.setShortText(tierdmsgVO.getShortText());
+			tierdmsgDTO.setTierdMsgtypCd(tierdmsgVO.getTierdMsgtypCd());
+			tierdmsgDTO.setTierdTierstCd(tierdmsgVO.getTierdTierstCd());
+			tierdmsgDTO.setUpdatedInd(tierdmsgVO.getUpdatedInd());
+			tierdmsgDTO.setUserId(tierdmsgVO.getUserId());
+			tierdmsgDTO.setMessageTypeCd(tierdmsgVO.getMessageTypeCd());
+			tierdmsgDtoList.add(tierdmsgDTO);
+		}		
+		return tierdmsgDtoList;
+	}	
+	
+	/**
+	 * Method to convert  tierdmsgVoList Object to tierdmsgDtoList object.
+	 * @param tierdmsgDtoList
+	 * @return tierdmsgVoList
+	 */
+	
+	public static List<TierdMsgVO> toTierdMsgVOList(List<TierdMsgDTO> tierdmsgDtoList){
+		List<TierdMsgVO> tierdmsgVoList = new LinkedList<TierdMsgVO>();
+		for(TierdMsgDTO tierdmsgDTO : tierdmsgDtoList){			
+			TierdMsgVO tierdmsgVO = new TierdMsgVO();
+			tierdmsgVO.setEffDt(tierdmsgDTO.getEffDt());
+			tierdmsgVO.setExpDt(tierdmsgDTO.getExpDt());
+			tierdmsgVO.setFullText(tierdmsgDTO.getFullText());
+			tierdmsgVO.setMessageId(tierdmsgDTO.getMessageId());
+			tierdmsgVO.setPostedDateTimeStamp(tierdmsgDTO.getPostedDateTimeStamp());
+			tierdmsgVO.setShortText(tierdmsgDTO.getShortText());
+			tierdmsgVO.setTierdMsgtypCd(tierdmsgDTO.getTierdMsgtypCd());
+			tierdmsgVO.setTierdTierstCd(tierdmsgDTO.getTierdTierstCd());
+			tierdmsgVO.setUpdatedInd(tierdmsgDTO.getUpdatedInd());
+			tierdmsgVO.setUserId(tierdmsgDTO.getUserId());
+			tierdmsgVO.setMessageTypeCd(tierdmsgDTO.getMessageTypeCd());
+			
+			tierdmsgVoList.add(tierdmsgVO);
+		}		
+		return tierdmsgVoList;
+	}
+	
+	/**
+	 * Method to convert user sstypaVO Object to sstypaDTO object.
+	 * 
+	 * @param sstypaVO
+	 *            view object of sstypa
+	 * @return sstypaDTO
+	 */
+	public static SstypaDTO toSstypaDTO(SstypaVO sstypaVO) {
+		SstypaDTO sstypaDTO = new SstypaDTO();
+		try {
+			BeanUtils.copyProperties(sstypaDTO, sstypaVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSstypaDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSstypaDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return sstypaDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user sstypaDTO Object to sstypaVO object.
+	 * 
+	 * @param sstypaDTO
+	 *            view object of sstypa
+	 * @return sstypaVO
+	 */
+	public static SstypaVO toSstypaVO(SstypaDTO sstypaDTO) {
+		SstypaVO sstypaVO = new SstypaVO();
+		try {
+			BeanUtils.copyProperties(sstypaVO, sstypaDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSstypaVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSstypaVO "
+					+ invocationTargetException.getMessage());
+		}
+		return sstypaVO;
+	}
+	
+	/**
+	 * Method to convert  sstypaVoList Object to sstypaDtoList object.
+	 * @param sstypaVoList
+	 * @return sstypaDtoList
+	 */
+	
+	public static List<SstypaDTO> toSstypaDTOList(List<SstypaVO> sstypaVoList){
+		List<SstypaDTO> sstypaDtoList = new LinkedList<SstypaDTO>();
+		for(SstypaVO sstypaVO : sstypaVoList){			
+			SstypaDTO sstypaDTO = new SstypaDTO();
+			sstypaDTO.setCollectionCode(sstypaVO.getCollectionCode());
+			sstypaDTO.setEffDate(sstypaVO.getEffDate());
+			sstypaDTO.setExpDate(sstypaVO.getExpDate());
+			sstypaDTO.setId(sstypaVO.getId());
+			sstypaDTO.setIndividualCode(sstypaVO.getIndividualCode());
+			sstypaDTO.setPostedDate(sstypaVO.getPostedDate());
+			sstypaDTO.setUpdatedInd(sstypaVO.getUpdatedInd());
+			sstypaDTO.setVersionReleaseCode(sstypaVO.getVersionReleaseCode());
+			sstypaDtoList.add(sstypaDTO);
+		}		
+		return sstypaDtoList;
+	}	
+	
+	/**
+	 * Method to convert  sstypaVoList Object to sstypaDtoList object.
+	 * @param sstypaDtoList
+	 * @return sstypaVoList
+	 */
+	
+	public static List<SstypaVO> toSstypaVOList(List<SstypaDTO> sstypaDtoList){
+		List<SstypaVO> sstypaVoList = new LinkedList<SstypaVO>();
+		for(SstypaDTO sstypaDTO : sstypaDtoList){			
+			SstypaVO sstypaVO = new SstypaVO();
+			sstypaVO.setCollectionCode(sstypaDTO.getCollectionCode());
+			sstypaVO.setEffDate(sstypaDTO.getEffDate());
+			sstypaVO.setExpDate(sstypaDTO.getExpDate());
+			sstypaVO.setId(sstypaDTO.getId());
+			sstypaVO.setIndividualCode(sstypaDTO.getIndividualCode());
+			sstypaVO.setPostedDate(sstypaDTO.getPostedDate());
+			sstypaVO.setUpdatedInd(sstypaDTO.getUpdatedInd());
+			sstypaVO.setVersionReleaseCode(sstypaDTO.getVersionReleaseCode());
+			sstypaVoList.add(sstypaVO);
+		}		
+		return sstypaVoList;
+	}
 
 	
+	/**
+	 * Method to convert user ststypaVO Object to ststypaDTO object.
+	 * 
+	 * @param ststypaVO
+	 *            view object of ststypa
+	 * @return ststypaDTO
+	 */
+	public static StstypaDTO toStstypaDTO(StstypaVO ststypaVO) {
+		StstypaDTO ststypaDTO = new StstypaDTO();
+		try {
+			BeanUtils.copyProperties(ststypaDTO, ststypaVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toStstypaDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toStstypaDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return ststypaDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user ststypaDTO Object to ststypaVO object.
+	 * 
+	 * @param ststypaDTO
+	 *            view object of ststypa
+	 * @return ststypaVO
+	 */
+	public static StstypaVO toStstypaVO(StstypaDTO ststypaDTO) {
+		StstypaVO ststypaVO = new StstypaVO();
+		try {
+			BeanUtils.copyProperties(ststypaVO, ststypaDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toStstypaVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toStstypaVO "
+					+ invocationTargetException.getMessage());
+		}
+		return ststypaVO;
+	}
+	
+	/**
+	 * Method to convert  ststypaVoList Object to ststypaDtoList object.
+	 * @param ststypaVoList
+	 * @return ststypaDtoList
+	 */
+	
+	public static List<StstypaDTO> toStstypaDTOList(List<StstypaVO> ststypaVoList){
+		List<StstypaDTO> ststypaDtoList = new LinkedList<StstypaDTO>();
+		for(StstypaVO ststypaVO : ststypaVoList){			
+			StstypaDTO ststypaDTO = new StstypaDTO();
+			ststypaDTO.setCollectionCode(ststypaVO.getCollectionCode());
+			ststypaDTO.setEffDate(ststypaVO.getEffDate());
+			ststypaDTO.setExpDate(ststypaVO.getExpDate());
+			ststypaDTO.setId(ststypaVO.getId());
+			ststypaDTO.setIndividualCode(ststypaVO.getIndividualCode());
+			ststypaDTO.setPostedDate(ststypaVO.getPostedDate());
+			ststypaDTO.setStateCd(ststypaVO.getStateCd());
+			ststypaDTO.setUpdatedInd(ststypaVO.getUpdatedInd());
+			ststypaDTO.setVersionReleaseCode(ststypaVO.getVersionReleaseCode());
+			ststypaDtoList.add(ststypaDTO);
+		}		
+		return ststypaDtoList;
+	}	
+	
+	/**
+	 * Method to convert  ststypaVoList Object to ststypaDtoList object.
+	 * @param ststypaDtoList
+	 * @return ststypaVoList
+	 */
+	
+	public static List<StstypaVO> toStstypaVOList(List<StstypaDTO> ststypaDtoList){
+		List<StstypaVO> ststypaVoList = new LinkedList<StstypaVO>();
+		for(StstypaDTO ststypaDTO : ststypaDtoList){			
+			StstypaVO ststypaVO = new StstypaVO();
+			ststypaVO.setCollectionCode(ststypaDTO.getCollectionCode());
+			ststypaVO.setEffDate(ststypaDTO.getEffDate());
+			ststypaVO.setExpDate(ststypaDTO.getExpDate());
+			ststypaVO.setId(ststypaDTO.getId());
+			ststypaVO.setIndividualCode(ststypaDTO.getIndividualCode());
+			ststypaVO.setPostedDate(ststypaDTO.getPostedDate());
+			ststypaVO.setStateCd(ststypaDTO.getStateCd());
+			ststypaVO.setUpdatedInd(ststypaDTO.getUpdatedInd());
+			ststypaVO.setVersionReleaseCode(ststypaDTO.getVersionReleaseCode());
+			ststypaVoList.add(ststypaVO);
+		}		
+		return ststypaVoList;
+	}
 
+	
+	/**
+	 * Method to convert user tosctVO Object to tosctDTO object.
+	 * 
+	 * @param tosctVO
+	 *            view object of tosct
+	 * @return tosctDTO
+	 */
+	public static TosctDTO toTosctDTO(TosctVO tosctVO) {
+		TosctDTO tosctDTO = new TosctDTO();
+		try {
+			BeanUtils.copyProperties(tosctDTO, tosctVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTosctDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTosctDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return tosctDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user tosctDTO Object to tosctVO object.
+	 * 
+	 * @param tosctDTO
+	 *            view object of tosct
+	 * @return tosctVO
+	 */
+	public static TosctVO toTosctVO(TosctDTO tosctDTO) {
+		TosctVO tosctVO = new TosctVO();
+		try {
+			BeanUtils.copyProperties(tosctVO, tosctDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTosctVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTosctVO "
+					+ invocationTargetException.getMessage());
+		}
+		return tosctVO;
+	}
+	
+	/**
+	 * Method to convert  tosctVoList Object to tosctDtoList object.
+	 * @param tosctVoList
+	 * @return tosctDtoList
+	 */
+	
+	public static List<TosctDTO> toTosctDTOList(List<TosctVO> tosctVoList){
+		List<TosctDTO> tosctDtoList = new LinkedList<TosctDTO>();
+		for(TosctVO tosctVO : tosctVoList){			
+			TosctDTO tosctDTO = new TosctDTO();
+			tosctDTO.setDbADACd(tosctVO.getDbADACd());
+			tosctDTO.setDbAxcelInd(tosctVO.getDbAxcelInd());
+			tosctDTO.setDbPatientsxCd(tosctVO.getDbPatientsxCd());
+			tosctDTO.setDbPcpcovInd(tosctVO.getDbPcpcovInd());
+			tosctDTO.setDbPntfrmageNo(tosctVO.getDbPntfrmageNo());
+			tosctDTO.setDbPnttoageNo(tosctVO.getDbPnttoageNo());
+			tosctDTO.setDbPosCd(tosctVO.getDbPosCd());
+			tosctDTO.setDbSpclcovgCd(tosctVO.getDbSpclcovgCd());
+			tosctDTO.setDbSvcTypeCd(tosctVO.getDbSvcTypeCd());
+			tosctDTO.setDbToscatCd(tosctDTO.getDbToscatCd());
+			tosctDTO.setDbTosCd(tosctVO.getDbTosCd());
+			tosctDTO.setDbUpdatedInd(tosctVO.getDbUpdatedInd());
+			tosctDTO.setDbUsageCode(tosctVO.getDbUsageCode());
+			tosctDtoList.add(tosctDTO);
+		}		
+		return tosctDtoList;
+	}	
+	
+	/**
+	 * Method to convert  tosctVoList Object to tosctDtoList object.
+	 * @param tosctDtoList
+	 * @return tosctVoList
+	 */
+	
+	public static List<TosctVO> toTosctVOList(List<TosctDTO> tosctDtoList){
+		List<TosctVO> tosctVoList = new LinkedList<TosctVO>();
+		for(TosctDTO tosctDTO : tosctDtoList){			
+			TosctVO tosctVO = new TosctVO();
+			tosctVO.setDbADACd(tosctDTO.getDbADACd());
+			tosctVO.setDbAxcelInd(tosctDTO.getDbAxcelInd());
+			tosctVO.setDbPatientsxCd(tosctDTO.getDbPatientsxCd());
+			tosctVO.setDbPcpcovInd(tosctDTO.getDbPcpcovInd());
+			tosctVO.setDbPntfrmageNo(tosctDTO.getDbPntfrmageNo());
+			tosctVO.setDbPnttoageNo(tosctDTO.getDbPnttoageNo());
+			tosctVO.setDbPosCd(tosctDTO.getDbPosCd());
+			tosctVO.setDbSpclcovgCd(tosctDTO.getDbSpclcovgCd());
+			tosctVO.setDbSvcTypeCd(tosctDTO.getDbSvcTypeCd());
+			tosctVO.setDbToscatCd(tosctDTO.getDbToscatCd());
+			tosctVO.setDbTosCd(tosctDTO.getDbTosCd());
+			tosctVO.setDbUpdatedInd(tosctDTO.getDbUpdatedInd());
+			tosctVO.setDbUsageCode(tosctDTO.getDbUsageCode());
+			tosctVoList.add(tosctVO);
+		}		
+		return tosctVoList;
+	}
+
+
+	
+	/**
+	 * Method to convert user tosVO Object to tosDTO object.
+	 * 
+	 * @param tosVO
+	 *            view object of tos
+	 * @return tosDTO
+	 */
+	public static TOSDTO toTOSDTO(TOSVO tosVO) {
+		TOSDTO tosDTO = new TOSDTO();
+		try {
+			BeanUtils.copyProperties(tosDTO, tosVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTOSDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTOSDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return tosDTO;
+	}
+	
+	
+	/**
+	 * Method to convert user tosDTO Object to tosVO object.
+	 * 
+	 * @param tosDTO
+	 *            view object of tos
+	 * @return tosVO
+	 */
+	public static TOSVO toTOSVO(TOSDTO tosDTO) {
+		TOSVO tosVO = new TOSVO();
+		try {
+			BeanUtils.copyProperties(tosVO, tosDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toTOSVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toTOSVO "
+					+ invocationTargetException.getMessage());
+		}
+		return tosVO;
+	}
+	
+	
+	/**
+	 * Method to convert  tosVoList Object to tosDtoList object.
+	 * @param tosVoList
+	 * @return tosDtoList
+	 */
+	
+	public static List<TOSDTO> toTOSDTOList(List<TOSVO> tosVoList){
+		List<TOSDTO> tosDtoList = new LinkedList<TOSDTO>();
+		for(TOSVO tosVO : tosVoList){			
+			TOSDTO tosDTO = new TOSDTO();
+			tosDTO.setDbApprovalCd(tosVO.getDbApprovalCd());
+			tosDTO.setDbDisplayName(tosVO.getDbDisplayName());
+			tosDTO.setDbEffDate(tosVO.getDbEffDate());
+			tosDTO.setDbExpDate(tosVO.getDbExpDate());
+			tosDTO.setDbLastUpdtDate(tosVO.getDbLastUpdtDate());
+			tosDTO.setDbPostedDate(tosVO.getDbPostedDate());
+			tosDTO.setDbShortName(tosVO.getDbShortName());
+			tosDTO.setDbStatusCd(tosVO.getDbStatusCd());
+			tosDTO.setDbTosCd(tosVO.getDbTosCd());
+			tosDTO.setDbTosComments(tosVO.getDbTosComments());
+			tosDTO.setDbTosName(tosVO.getDbTosName());
+			tosDTO.setDbUpdateReason(tosVO.getDbUpdateReason());
+			tosDTO.setDbUpdatedInd(tosVO.getDbUpdatedInd());
+			tosDTO.setDbUserId(tosVO.getDbUserId());
+			tosDtoList.add(tosDTO);
+		}		
+		return tosDtoList;
+	}	
+	
+	/**
+	 * Method to convert  tosVoList Object to tosDtoList object.
+	 * @param tosDtoList
+	 * @return tosVoList
+	 */
+	
+	public static List<TOSVO> toTOSVOList(List<TOSDTO> tosDtoList){
+		List<TOSVO> tosVoList = new LinkedList<TOSVO>();
+		for(TOSDTO tosDTO : tosDtoList){			
+			TOSVO tosVO = new TOSVO();
+			tosVO.setDbApprovalCd(tosDTO.getDbApprovalCd());
+			tosVO.setDbDisplayName(tosDTO.getDbDisplayName());
+			tosVO.setDbEffDate(tosDTO.getDbEffDate());
+			tosVO.setDbExpDate(tosDTO.getDbExpDate());
+			tosVO.setDbLastUpdtDate(tosDTO.getDbLastUpdtDate());
+			tosVO.setDbPostedDate(tosDTO.getDbPostedDate());
+			tosVO.setDbShortName(tosDTO.getDbShortName());
+			tosVO.setDbStatusCd(tosDTO.getDbStatusCd());
+			tosVO.setDbTosCd(tosDTO.getDbTosCd());
+			tosVO.setDbTosComments(tosDTO.getDbTosComments());
+			tosVO.setDbTosName(tosDTO.getDbTosName());
+			tosVO.setDbUpdateReason(tosDTO.getDbUpdateReason());
+			tosVO.setDbUpdatedInd(tosDTO.getDbUpdatedInd());
+			tosVO.setDbUserId(tosDTO.getDbUserId());
+			tosVoList.add(tosVO);
+		}		
+		return tosVoList;
+	}
+	
+	/**
+	 * Method to convert user rbbcVO Object to rbbcDTO object.
+	 * 
+	 * @param rbbcVO
+	 *            view object of rbbcVO
+	 * @return rbbcDTO
+	 */
+	public static RbbcDTO toRbbcDTO(RbbcVO rbbcVO) {
+		RbbcDTO rbbcDTO = new RbbcDTO();
+		try {
+			BeanUtils.copyProperties(rbbcDTO, rbbcVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbbcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbbcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rbbcDTO;
+	}
+	
+	public static List<RbbcDTO> toRbbcDTOList(List<RbbcVO> rbbcVoList) {
+		List<RbbcDTO> rbbcDtoList = new LinkedList<RbbcDTO>();
+		for(RbbcVO rbbcVO : rbbcVoList){
+			RbbcDTO rbbcDTO = new RbbcDTO();
+			rbbcDTO.setDbRBBCCd(rbbcVO.getDbRBBCCd());
+			rbbcDTO.setDbEffDate(rbbcVO.getDbEffDate());
+			rbbcDTO.setDbPostedDate(rbbcVO.getDbPostedDate());
+			rbbcDTO.setDbBnftIdCd(rbbcVO.getDbBnftIdCd());
+			rbbcDTO.setDbSvcTypeCd(rbbcVO.getDbSvcTypeCd());
+			rbbcDTO.setDbUpdatedInd(rbbcVO.getDbUpdatedInd());
+			rbbcDtoList.add(rbbcDTO);
+		}
+		return rbbcDtoList;
+	}
+	
+	
+	public static List<RbbcVO> toRbbcVOList(List<RbbcDTO> rbbcDtoList) {
+		List<RbbcVO> rbbcVoList = new LinkedList<RbbcVO>();
+		for(RbbcDTO rbbcDTO : rbbcDtoList){
+			RbbcVO rbbcVO = new RbbcVO();
+			rbbcVO.setDbRBBCCd(rbbcDTO.getDbRBBCCd());
+			rbbcVO.setDbEffDate(rbbcDTO.getDbEffDate());
+			rbbcVO.setDbPostedDate(rbbcDTO.getDbPostedDate());
+			rbbcVO.setDbBnftIdCd(rbbcDTO.getDbBnftIdCd());
+			rbbcVO.setDbSvcTypeCd(rbbcDTO.getDbSvcTypeCd());
+			rbbcVO.setDbUpdatedInd(rbbcDTO.getDbUpdatedInd());
+			rbbcVoList.add(rbbcVO);
+		}
+		return rbbcVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user rbrcVO Object to RbrcDTO object.
+	 * 
+	 * @param rbrcVO
+	 *            view object of rbbcVO
+	 * @return RbrcDTO
+	 */
+	public static RbrcDTO toRbrcDTO(RbrcVO rbrcVO) {
+		RbrcDTO rbrcDTO = new RbrcDTO();
+		try {
+			BeanUtils.copyProperties(rbrcDTO, rbrcVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rbrcDTO;
+	}
 	
 
 	/**
-
+	 * Method to convert user rbrcDTO Object to rbrcVO object.
 	 * 
-
 	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
-
+	 *            view object of rbrc
+	 * @return rbrcVO
 	 */
-
-	@Override
-
-	public Map getUserLookUpTable(RbrcDTO rbrcDTO)
-
-			throws ApplicationException {
-
-		
-
-		return userDAO.getUserLookUpTable(rbrcDTO);
-
+	public static RbrcVO toRbrcVO(RbrcDTO rbrcDTO) {
+		RbrcVO rbrcVO = new RbrcVO();
+		try {
+			BeanUtils.copyProperties(rbrcVO, rbrcDTO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcVO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcVO "
+					+ invocationTargetException.getMessage());
+		}
+		return rbrcVO;
 	}
-
-
-
+	
 	/**
-
-	 * 
-
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
-
+	 * Method to convert  rbrcVoList Object to rbrcDtoList object.
+	 * @param rbrcVoList
+	 * @return rbrcDtoList
 	 */
-
-	@Override
-
-	public Map addNewUser(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return userDAO.addNewUser(rbrcDTO);
-
+	
+	public static List<RbrcDTO> toRbrcDTOList(List<RbrcVO> rbrcVoList) {
+		List<RbrcDTO> rbrcDtoList = new LinkedList<RbrcDTO>();
+		for(RbrcVO rbrcVO : rbrcVoList){
+			RbrcDTO rbrcDTO = new RbrcDTO();
+			rbrcDTO.setDbSiteCd(rbrcVO.getDbSiteCd());
+			rbrcDTO.setDbRiderCd(rbrcVO.getDbRiderCd());
+			rbrcDTO.setDbDescTxt(rbrcVO.getDbDescTxt());
+			rbrcDTO.setDbHMOSrcBnInd(rbrcVO.getDbHMOSrcBnInd());
+			rbrcDTO.setDbIONtwkCd(rbrcVO.getDbIONtwkCd());
+			rbrcDTO.setDbPostedDate(rbrcVO.getDbPostedDate());
+			rbrcDTO.setDbSvcTypeCd(rbrcVO.getDbSvcTypeCd());
+			rbrcDTO.setDbTOSCd(rbrcVO.getDbTOSCd());
+			rbrcDTO.setDbUpdatedInd(rbrcVO.getDbUpdatedInd());
+			rbrcDTO.setGenderCd(rbrcVO.getGenderCd());
+			rbrcDTO.setPrevCareInd(rbrcVO.getPrevCareInd());
+			rbrcDTO.setTextSendInd(rbrcVO.getTextSendInd());
+			rbrcDtoList.add(rbrcDTO);
+		}
+		return rbrcDtoList;
 	}
-
-
-
+	
 	/**
-
-	 * 
-
-	 * @param rbrcDTO
-
-	 * @return
-
-	 * @throws ApplicationException
-
-	 */
-
-	@Override
-
-	public Map deleteUser(RbrcDTO rbrcDTO) throws ApplicationException {
-
-		return userDAO.deleteUser(rbrcDTO);
-
-	}
-
-
-
-
-
-	/**
-
-	 * @param editedRbrcDTO
-
+	 * Method to convert  rbrcDtoList Object to rbrcVoList object.
 	 * @param rbrcDtoList
-
-	 * @param index
-
-	 * @param dbUpdatedInd
-
-	 * @return
-
-	 * @throws ApplicationException
-
+	 * @return rbrcVoList
 	 */
+	
+	public static List<RbrcVO> toRbrcVOList(List<RbrcDTO> rbrcDtoList) {
+		List<RbrcVO> rbrcVoList = new LinkedList<RbrcVO>();
+		for(RbrcDTO rbrcDTO : rbrcDtoList){
+			RbrcVO rbrcVO = new RbrcVO();
+			rbrcVO.setDbSiteCd(rbrcDTO.getDbSiteCd());
+			rbrcVO.setDbRiderCd(rbrcDTO.getDbRiderCd());
+			rbrcVO.setDbDescTxt(rbrcDTO.getDbDescTxt());
+			rbrcVO.setDbHMOSrcBnInd(rbrcDTO.getDbHMOSrcBnInd());
+			rbrcVO.setDbIONtwkCd(rbrcDTO.getDbIONtwkCd());
+			rbrcVO.setDbPostedDate(rbrcDTO.getDbPostedDate());
+			rbrcVO.setDbSvcTypeCd(rbrcDTO.getDbSvcTypeCd());
+			rbrcVO.setDbTOSCd(rbrcDTO.getDbTOSCd());
+			rbrcVO.setDbUpdatedInd(rbrcDTO.getDbUpdatedInd());
+			rbrcVO.setGenderCd(rbrcDTO.getGenderCd());
+			rbrcVO.setPrevCareInd(rbrcDTO.getPrevCareInd());
+			rbrcVO.setTextSendInd(rbrcDTO.getTextSendInd());
+			rbrcVoList.add(rbrcVO);
+		}
+		return rbrcVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user rtestypVO Object to rtestypDTO object.
+	 * 
+	 * @param rtestypVO
+	 *            view object of rtestypVO
+	 * @return rtestypDTO
+	 */
+	public static RtestypDTO toRtestypDTO(RtestypVO rtestypVO) {
+		RtestypDTO rtestypDTO = new RtestypDTO();
+		try {
+			BeanUtils.copyProperties(rtestypDTO, rtestypVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbbcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbbcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtestypDTO;
+	}
+	
+	public static List<RtestypDTO> toRtesypDTOList(List<RtestypVO> rtestypVoList) {
+		List<RtestypDTO> rtestypDtoList = new LinkedList<RtestypDTO>();
+		for(RtestypVO rtestypVO : rtestypVoList){
+			RtestypDTO rtestypDTO = new RtestypDTO();
+			rtestypDTO.setAshInd(rtestypVO.getAshInd());
+			rtestypDTO.setBenTypeCd(rtestypVO.getBenTypeCd());
+			rtestypDTO.setCatCd(rtestypVO.getCatCd());
+			rtestypDTO.setDescription(rtestypVO.getDescription());
+			rtestypDTO.setEffDate(rtestypVO.getEffDate());
+			rtestypDTO.setExpDate(rtestypVO.getExpDate());
+			rtestypDTO.setGenderCd(rtestypVO.getGenderCd());
+			rtestypDTO.setPcpEligInd(rtestypVO.getPcpEligInd());
+			rtestypDTO.setPlnsvctCd(rtestypVO.getPlnsvctCd());
+			rtestypDTO.setPostedDate(rtestypVO.getPostedDate());
+			rtestypDTO.setSrcInd(rtestypVO.getSrcInd());
+			rtestypDTO.setSvcTypeCd(rtestypVO.getSvcTypeCd());
+			rtestypDTO.setUpdatedInd(rtestypVO.getUpdatedInd());
+			rtestypDtoList.add(rtestypDTO);
+		}
+		return rtestypDtoList;
+	}
+	
+	
+	public static List<RtestypVO> toRtestypVOList(List<RtestypDTO> rtestypDtoList) {
+		List<RtestypVO> rtestypVoList = new LinkedList<RtestypVO>();
+		for(RtestypDTO rtestypDTO : rtestypDtoList){
+			RtestypVO rtestypVO = new RtestypVO();
+			rtestypVO.setAshInd(rtestypDTO.getAshInd());
+			rtestypVO.setBenTypeCd(rtestypDTO.getBenTypeCd());
+			rtestypVO.setCatCd(rtestypDTO.getCatCd());
+			rtestypVO.setDescription(rtestypDTO.getDescription());
+			rtestypVO.setEffDate(rtestypDTO.getEffDate());
+			rtestypVO.setExpDate(rtestypDTO.getExpDate());
+			rtestypVO.setGenderCd(rtestypDTO.getGenderCd());
+			rtestypVO.setPcpEligInd(rtestypDTO.getPcpEligInd());
+			rtestypVO.setPlnsvctCd(rtestypDTO.getPlnsvctCd());
+			rtestypVO.setPostedDate(rtestypDTO.getPostedDate());
+			rtestypVO.setSrcInd(rtestypDTO.getSrcInd());
+			rtestypVO.setSvcTypeCd(rtestypDTO.getSvcTypeCd());
+			rtestypVO.setUpdatedInd(rtestypDTO.getUpdatedInd());
+			rtestypVoList.add(rtestypVO);
+		}
+		return rtestypVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user rtebeplmVO Object to RtebeplmDTO object.
+	 * 
+	 * @param rtebeplmVO
+	 *            view object of rtebeplmVO
+	 * @return RtebeplmDTO
+	 */
+	public static RtebeplmDTO toRtebeplmDTO(RtebeplmVO rtebeplmVO) {
+		RtebeplmDTO rtebeplmDTO = new RtebeplmDTO();
+		try {
+			BeanUtils.copyProperties(rtebeplmDTO, rtebeplmVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtebeplmDTO;
+	}
+	
+	public static List<RtebeplmDTO> toRtebeplmDTOList(List<RtebeplmVO> rtebeplmVoList) {
+		List<RtebeplmDTO> rtebeplmDtoList = new LinkedList<RtebeplmDTO>();
+		for(RtebeplmVO rtebeplmVO : rtebeplmVoList){
+			RtebeplmDTO rtebeplmDTO = new RtebeplmDTO();
+			rtebeplmDTO.setEffDate(rtebeplmVO.getEffDate());
+			rtebeplmDTO.setEligPerLimitCd(rtebeplmVO.getEligPerLimitCd());
+			rtebeplmDTO.setExpDate(rtebeplmVO.getExpDate());
+			rtebeplmDTO.setFrequencyInd(rtebeplmVO.getFrequencyInd());
+			rtebeplmDTO.setHmoBenefitCd(rtebeplmVO.getHmoBenefitCd());
+			rtebeplmDTO.setPostedDateTimestamp(rtebeplmVO.getPostedDateTimestamp());
+			rtebeplmDTO.setUpdatedInd(rtebeplmVO.getUpdatedInd());
+			rtebeplmDtoList.add(rtebeplmDTO);
+		}
+		return rtebeplmDtoList;
+	
+	}
+	
+	public static List<RtebeplmVO> toRtebeplmVOList(List<RtebeplmDTO> rtebeplmDtoList) {
+		List<RtebeplmVO> rtebeplmVoList = new LinkedList<RtebeplmVO>();
+		for(RtebeplmDTO rtebeplmDTO : rtebeplmDtoList){
+			RtebeplmVO rtebeplmVO = new RtebeplmVO();
+			rtebeplmVO.setEffDate(rtebeplmDTO.getEffDate());
+			rtebeplmVO.setEligPerLimitCd(rtebeplmDTO.getEligPerLimitCd());
+			rtebeplmVO.setExpDate(rtebeplmDTO.getExpDate());
+			rtebeplmVO.setFrequencyInd(rtebeplmDTO.getFrequencyInd());
+			rtebeplmVO.setHmoBenefitCd(rtebeplmDTO.getHmoBenefitCd());
+			rtebeplmVO.setPostedDateTimestamp(rtebeplmDTO.getPostedDateTimestamp());
+			rtebeplmVO.setUpdatedInd(rtebeplmDTO.getUpdatedInd());
+			rtebeplmVoList.add(rtebeplmVO);
+		}
+		return rtebeplmVoList;
+	}
+	
+	/**
+	 * Method to convert user rtedictrVO Object to RtedictrDTO object.
+	 * 
+	 * @param rtedictrVO
+	 *            view object of rtedictrVO
+	 * @return RtedictrDTO
+	 */
+	public static RtedictrDTO toRtedictrDTO(RtedictrVO rtedictrVO) {
+		RtedictrDTO rtedictrDTO = new RtedictrDTO();
+		try {
+			BeanUtils.copyProperties(rtedictrDTO, rtedictrVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return rtedictrDTO;
+	}
 
-	@Override
-
-	public Map addUpdateUser(RbrcDTO editedRbrcDTO, List<RbrcDTO> rbrcDtoList, int index,char dbUpdatedInd)
-
-			throws ApplicationException {
-
-		return userDAO.addUpdateUser( editedRbrcDTO, rbrcDtoList,  index, dbUpdatedInd);
+	public static List<RtedictrDTO> toRtedictrDTOList(List<RtedictrVO> rtedictrVoList) {
+		List<RtedictrDTO> rtedictrDtoList = new LinkedList<RtedictrDTO>();
+		for(RtedictrVO rtedictrVO : rtedictrVoList){
+			RtedictrDTO rtedictrDTO = new RtedictrDTO();
+			rtedictrDTO.setRtestypCd(rtedictrVO.getRtestypCd());
+			rtedictrDTO.setDictCd(rtedictrVO.getDictCd());
+			rtedictrDTO.setDitemCd(rtedictrVO.getDitemCd());
+			rtedictrDTO.setEffDt(rtedictrVO.getEffDt());
+			rtedictrDTO.setExpDt(rtedictrVO.getExpDt());
+			rtedictrDTO.setPostedDateTimeStamp(rtedictrVO.getPostedDateTimeStamp());
+			rtedictrDTO.setMessageId(rtedictrVO.getMessageId());
+			rtedictrDTO.setMessageTypeCd(rtedictrVO.getMessageTypeCd());
+			rtedictrDTO.setShortText(rtedictrVO.getShortText());
+			rtedictrDTO.setFullText(rtedictrVO.getFullText());
+			rtedictrDTO.setUserId(rtedictrVO.getUserId());
+			rtedictrDTO.setUpdatedInd(rtedictrVO.getUpdatedInd());
+			rtedictrDtoList.add(rtedictrDTO);
+		}
+		return rtedictrDtoList;
 
 	}
 
+	public static List<RtedictrVO> toRtedictrVOList(List<RtedictrDTO> rtedictrDtoList) {
+		List<RtedictrVO> rtedictrVoList = new LinkedList<RtedictrVO>();
+		for(RtedictrDTO rtedictrDTO : rtedictrDtoList){
+			RtedictrVO rtedictrVO = new RtedictrVO();
+			rtedictrVO.setRtestypCd(rtedictrDTO.getRtestypCd());
+			rtedictrVO.setDictCd(rtedictrDTO.getDictCd());
+			rtedictrVO.setDitemCd(rtedictrDTO.getDitemCd());
+			rtedictrVO.setEffDt(rtedictrDTO.getEffDt());
+			rtedictrVO.setExpDt(rtedictrDTO.getExpDt());
+			rtedictrVO.setPostedDateTimeStamp(rtedictrDTO.getPostedDateTimeStamp());
+			rtedictrVO.setMessageId(rtedictrDTO.getMessageId());
+			rtedictrVO.setMessageTypeCd(rtedictrDTO.getMessageTypeCd());
+			rtedictrVO.setShortText(rtedictrDTO.getShortText());
+			rtedictrVO.setFullText(rtedictrDTO.getFullText());
+			rtedictrVO.setUserId(rtedictrDTO.getUserId());
+			rtedictrVO.setUpdatedInd(rtedictrDTO.getUpdatedInd());
+			
+			rtedictrVoList.add(rtedictrVO);
+		}
+		return rtedictrVoList;
+	}
+	
+	
+	
+	/**
+	 * Method to convert user RterbacVO Object to RterbacDTO object.
+	 * 
+	 * @param RterbacVO
+	 *            view object of RterbacVO
+	 * @return RterbacDTO
+	 */
+	public static RterbacDTO toRterbacDTO(RterbacVO RterbacVO) {
+		RterbacDTO RterbacDTO = new RterbacDTO();
+		try {
+			BeanUtils.copyProperties(RterbacDTO, RterbacVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return RterbacDTO;
+	}
 
+	public static List<RterbacDTO> toRterbacDTOList(List<RterbacVO> RterbacVoList) {
+		List<RterbacDTO> RterbacDtoList = new LinkedList<RterbacDTO>();
+		for(RterbacVO RterbacVO : RterbacVoList){
+			RterbacDTO RterbacDTO = new RterbacDTO();
+			RterbacDTO.setAccuCd(RterbacVO.getAccuCd());
+			RterbacDTO.setBenCd(RterbacVO.getBenCd());
+			RterbacDTO.setResInd(RterbacVO.getResInd());
+			RterbacDTO.setEffDt(RterbacVO.getEffDt());
+			RterbacDTO.setExpDt(RterbacVO.getExpDt());
+			RterbacDTO.setPostedDateTimeStamp(RterbacVO.getPostedDateTimeStamp());
+			RterbacDTO.setUserId(RterbacVO.getUserId());
+			RterbacDTO.setMessageId(RterbacVO.getMessageId());
+			RterbacDTO.setMessageTypeCd(RterbacVO.getMessageTypeCd());
+			RterbacDTO.setShortText(RterbacVO.getShortText());
+			RterbacDTO.setFullText(RterbacVO.getFullText());
+			RterbacDTO.setUpdatedInd(RterbacVO.getUpdatedInd());
+			RterbacDtoList.add(RterbacDTO);
+		}
+		return RterbacDtoList;
 
+	}
+
+	public static List<RterbacVO> toRterbacVOList(List<RterbacDTO> RterbacDtoList) {
+		List<RterbacVO> RterbacVoList = new LinkedList<RterbacVO>();
+		for(RterbacDTO RterbacDTO : RterbacDtoList){
+			RterbacVO RterbacVO = new RterbacVO();
+			RterbacVO.setAccuCd(RterbacDTO.getAccuCd());
+			RterbacVO.setBenCd(RterbacDTO.getBenCd());
+			RterbacVO.setResInd(RterbacDTO.getResInd());
+			RterbacVO.setEffDt(RterbacDTO.getEffDt());
+			RterbacVO.setExpDt(RterbacDTO.getExpDt());
+			RterbacVO.setPostedDateTimeStamp(RterbacDTO.getPostedDateTimeStamp());
+			RterbacVO.setUserId(RterbacDTO.getUserId());
+			RterbacVO.setMessageId(RterbacDTO.getMessageId());
+			RterbacVO.setMessageTypeCd(RterbacDTO.getMessageTypeCd());
+			RterbacVO.setShortText(RterbacDTO.getShortText());
+			RterbacVO.setFullText(RterbacDTO.getFullText());
+			RterbacVO.setUpdatedInd(RterbacDTO.getUpdatedInd());
+			
+			RterbacVoList.add(RterbacVO);
+		}
+		return RterbacVoList;
+	}
+	
+	
+	/**
+	 * Method to convert user RtestscVO Object to RtestscDTO object.
+	 * 
+	 * @param RtestscVO
+	 *            view object of RtestscVO
+	 * @return RtestscDTO
+	 */
+	public static RtestscDTO toRtestscDTO(RtestscVO RtestscVO) {
+		RtestscDTO RtestscDTO = new RtestscDTO();
+		try {
+			BeanUtils.copyProperties(RtestscDTO, RtestscVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return RtestscDTO;
+	}
+
+	public static List<RtestscDTO> toRtestscDTOList(List<RtestscVO> RtestscVoList) {
+		List<RtestscDTO> RtestscDtoList = new LinkedList<RtestscDTO>();
+		for(RtestscVO RtestscVO : RtestscVoList){
+			RtestscDTO RtestscDTO = new RtestscDTO();
+			RtestscDTO.setEffDate(RtestscVO.getEffDate());
+			RtestscDTO.setExpDate(RtestscVO.getExpDate());
+			RtestscDTO.setPostedDateTimestamp(RtestscVO.getPostedDateTimestamp());
+			RtestscDTO.setScsrServiceCd(RtestscVO.getScsrServiceCd());
+			RtestscDTO.setScsrSvcTypeCd(RtestscVO.getScsrSvcTypeCd());
+			RtestscDTO.setStscDescTxt(RtestscVO.getStscDescTxt());
+			RtestscDTO.setSvcTypeCd(RtestscVO.getSvcTypeCd());
+			RtestscDTO.setUserId(RtestscVO.getUserId());
+			RtestscDTO.setUpdatedInd(RtestscVO.getUpdatedInd());
+			RtestscDtoList.add(RtestscDTO);
+		}
+		return RtestscDtoList;
+
+	}
+
+	public static List<RtestscVO> toRtestscVOList(List<RtestscDTO> RtestscDtoList) {
+		List<RtestscVO> RtestscVoList = new LinkedList<RtestscVO>();
+		for(RtestscDTO RtestscDTO : RtestscDtoList){
+			RtestscVO RtestscVO = new RtestscVO();
+			RtestscVO.setEffDate(RtestscDTO.getEffDate());
+			RtestscVO.setExpDate(RtestscDTO.getExpDate());
+			RtestscVO.setPostedDateTimestamp(RtestscDTO.getPostedDateTimestamp());
+			RtestscVO.setScsrServiceCd(RtestscDTO.getScsrServiceCd());
+			RtestscVO.setScsrSvcTypeCd(RtestscDTO.getScsrSvcTypeCd());
+			RtestscVO.setStscDescTxt(RtestscDTO.getStscDescTxt());
+			RtestscVO.setSvcTypeCd(RtestscDTO.getSvcTypeCd());
+			RtestscVO.setUserId(RtestscDTO.getUserId());
+			RtestscVO.setUpdatedInd(RtestscDTO.getUpdatedInd());
+			
+			RtestscVoList.add(RtestscVO);
+		}
+		return RtestscVoList;
+	}
+	
+	/**
+	 * Method to convert user RtetierVO Object to RtetierDTO object.
+	 * 
+	 * @param RtetierVO
+	 *            view object of RtetierVO
+	 * @return RtetierDTO
+	 */
+	public static RtetierDTO toRtetierDTO(RtetierVO RtetierVO) {
+		RtetierDTO RtetierDTO = new RtetierDTO();
+		try {
+			BeanUtils.copyProperties(RtetierDTO, RtetierVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toRbrcDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toRbrcDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return RtetierDTO;
+	}
+
+	public static List<RtetierDTO> toRtetierDTOList(List<RtetierVO> RtetierVoList) {
+		List<RtetierDTO> RtetierDtoList = new LinkedList<RtetierDTO>();
+		for(RtetierVO RtetierVO : RtetierVoList){
+			RtetierDTO RtetierDTO = new RtetierDTO();
+			RtetierDTO.setEffDate(RtetierVO.getEffDate());
+			RtetierDTO.setExpDate(RtetierVO.getExpDate());
+			RtetierDTO.setPostedDateTimestamp(RtetierVO.getPostedDateTimestamp());
+			RtetierDTO.setRtetierCd(RtetierVO.getRtetierCd());
+			RtetierDTO.setRtetierDescTxt(RtetierVO.getRtetierDescTxt());
+			RtetierDTO.setRtetierSavingsCd(RtetierVO.getRtetierSavingsCd());
+			RtetierDTO.setUpdatedInd(RtetierVO.getUpdatedInd());
+			RtetierDTO.setUserId(RtetierVO.getUserId());
+			
+			RtetierDtoList.add(RtetierDTO);
+		}
+		return RtetierDtoList;
+
+	}
+
+	public static List<RtetierVO> toRtetierVOList(List<RtetierDTO> RtetierDtoList) {
+		List<RtetierVO> RtetierVoList = new LinkedList<RtetierVO>();
+		for(RtetierDTO RtetierDTO : RtetierDtoList){
+			RtetierVO RtetierVO = new RtetierVO();
+			RtetierVO.setEffDate(RtetierDTO.getEffDate());
+			RtetierVO.setExpDate(RtetierDTO.getExpDate());
+			RtetierVO.setPostedDateTimestamp(RtetierDTO.getPostedDateTimestamp());
+			RtetierVO.setRtetierCd(RtetierDTO.getRtetierCd());
+			RtetierVO.setRtetierDescTxt(RtetierDTO.getRtetierDescTxt());
+			RtetierVO.setRtetierSavingsCd(RtetierDTO.getRtetierSavingsCd());
+			RtetierVO.setUpdatedInd(RtetierDTO.getUpdatedInd());
+			RtetierVO.setUserId(RtetierDTO.getUserId());
+			
+			
+			RtetierVoList.add(RtetierVO);
+		}
+		return RtetierVoList;
+	}
+	public static List<BplvsVO> toBplvsVOList(List<BplvsDTO> bplvsDtoList){
+		List<BplvsVO> bplvsVoList = new LinkedList<BplvsVO>();
+		for(BplvsDTO bplvsDTO : bplvsDtoList){			
+			BplvsVO bplvsVO = new BplvsVO();
+			bplvsVO.setReqBenCd(bplvsDTO.getReqBenCd());
+			bplvsVO.setdSeqNo(bplvsDTO.getdSeqNo());
+			bplvsVO.setPostedDt(bplvsDTO.getPostedDt());
+			bplvsVO.setdNoQlfrCd(bplvsDTO.getdNoQlfrCd());
+			bplvsVO.setdNo(bplvsDTO.getdNo());
+			bplvsVO.setdDiscTxt(bplvsDTO.getdDiscTxt());
+			bplvsVO.setdElpDlmtCd(bplvsDTO.getdElpDlmtCd());
+			bplvsVO.setdTypeCd(bplvsDTO.getdTypeCd());
+			bplvsVO.setBic(bplvsDTO.getBic());
+			bplvsVO.setProv(bplvsDTO.getProv());
+			bplvsVO.setLineVal(bplvsDTO.getLineVal());
+			bplvsVO.setAuthCertCd(bplvsDTO.getAuthCertCd());
+			bplvsVO.setIoNtwkCd(bplvsDTO.getIoNtwkCd());
+			bplvsVO.setSvcType(bplvsDTO.getSvcType());
+			bplvsVO.setUserTxt(bplvsDTO.getUserTxt());
+			bplvsVoList.add(bplvsVO);
+		}		
+		return bplvsVoList;
+	}
+	
+	public static List<BplvsDTO> toBplvsDTOList(List<BplvsVO> bplvsVoList){
+		List<BplvsDTO> bplvsDtoList = new LinkedList<BplvsDTO>();
+		for(BplvsVO bplvsVO : bplvsVoList){			
+			BplvsDTO bplvsDTO = new BplvsDTO();
+			bplvsDTO.setReqBenCd(bplvsVO.getReqBenCd());
+			bplvsDTO.setdSeqNo(bplvsVO.getdSeqNo());
+			bplvsDTO.setPostedDt(bplvsVO.getPostedDt());
+			bplvsDTO.setdNoQlfrCd(bplvsVO.getdNoQlfrCd());
+			bplvsDTO.setdNo(bplvsVO.getdNo());
+			bplvsDTO.setdDiscTxt(bplvsVO.getdDiscTxt());
+			bplvsDTO.setdElpDlmtCd(bplvsVO.getdElpDlmtCd());
+			bplvsDTO.setdTypeCd(bplvsVO.getdTypeCd());
+			bplvsDTO.setBic(bplvsVO.getBic());
+			bplvsDTO.setProv(bplvsVO.getProv());
+			bplvsDTO.setLineVal(bplvsVO.getLineVal());
+			bplvsDTO.setAuthCertCd(bplvsVO.getAuthCertCd());
+			bplvsDTO.setIoNtwkCd(bplvsVO.getIoNtwkCd());
+			bplvsDTO.setSvcType(bplvsVO.getSvcType());
+			bplvsDTO.setUserTxt(bplvsVO.getUserTxt());
+			bplvsDtoList.add(bplvsDTO);
+		}		
+		return bplvsDtoList;
+	}
+	
+	public static List<SrchdtlVO> toSrchdtlVOList(List<SrchdtlDTO> srchdtlDtoList){
+		List<SrchdtlVO> srchdtlVoList = new LinkedList<SrchdtlVO>();
+		for(SrchdtlDTO srchdtlDTO : srchdtlDtoList){			
+			SrchdtlVO srchdtlVO = new SrchdtlVO();
+			srchdtlVO.setSrchscFirstId(srchdtlDTO.getSrchscFirstId());
+			srchdtlVO.setSrchcolCd(srchdtlDTO.getSrchcolCd());
+			srchdtlVO.setSrchresCd(srchdtlDTO.getSrchresCd());
+			srchdtlVO.setSrchscSecondId(srchdtlDTO.getSrchscSecondId());
+			srchdtlVO.setSrchdtlStCd(srchdtlDTO.getSrchdtlStCd());
+			srchdtlVO.setSrcherrCd(srchdtlDTO.getSrcherrCd());
+			srchdtlVO.setCmRollCode(srchdtlDTO.getcmRollCode());
+			srchdtlVO.setEffDate(srchdtlDTO.getEffDate());
+			srchdtlVO.setExpDate(srchdtlDTO.getExpDate());
+			srchdtlVO.setPostedDate(srchdtlDTO.getPostedDate());
+			srchdtlVO.setSrchdtlId(srchdtlDTO.getSrchdtlId());
+			srchdtlVO.setUpdatedInd(srchdtlDTO.getUpdatedInd());
+			srchdtlVoList.add(srchdtlVO);
+		}		
+		return srchdtlVoList;
+	}
+	
+	public static List<SrchdtlDTO> toSrchdtlDTOList(List<SrchdtlVO> srchdtlVoList){
+		List<SrchdtlDTO> srchdtlDtoList = new LinkedList<SrchdtlDTO>();
+		for(SrchdtlVO srchdtlVO : srchdtlVoList){			
+			SrchdtlDTO srchdtlDTO = new SrchdtlDTO();
+			srchdtlDTO.setSrchscFirstId(srchdtlVO.getSrchscFirstId());
+			srchdtlDTO.setSrchcolCd(srchdtlVO.getSrchcolCd());
+			srchdtlDTO.setSrchresCd(srchdtlVO.getSrchresCd());
+			srchdtlDTO.setSrchscSecondId(srchdtlVO.getSrchscSecondId());
+			srchdtlDTO.setSrchdtlStCd(srchdtlVO.getSrchdtlStCd());
+			srchdtlDTO.setSrcherrCd(srchdtlVO.getSrcherrCd());
+			srchdtlDTO.setCmRollCode(srchdtlVO.getcmRollCode());
+			srchdtlDTO.setEffDate(srchdtlVO.getEffDate());
+			srchdtlDTO.setExpDate(srchdtlVO.getExpDate());
+			srchdtlDTO.setPostedDate(srchdtlVO.getPostedDate());
+			srchdtlDTO.setSrchdtlId(srchdtlVO.getSrchdtlId());
+			srchdtlDTO.setUpdatedInd(srchdtlVO.getUpdatedInd());
+				srchdtlDtoList.add(srchdtlDTO);
+		}		
+		return srchdtlDtoList;
+	}
+	
+	public static List<SrchcolDTO> toSrchcolDTOList(List<SrchcolVO> srchcolVoList){
+		List<SrchcolDTO> srchcolDtoList = new LinkedList<SrchcolDTO>();
+		for(SrchcolVO srchcolVO : srchcolVoList){			
+			SrchcolDTO srchcolDTO = new SrchcolDTO();
+			srchcolDTO.setSrchcolCd(srchcolVO.getSrchcolCd());
+			srchcolDTO.setSrchcolDesc(srchcolVO.getSrchcolDesc());
+			srchcolDTO.setEffDate(srchcolVO.getEffDate());
+			srchcolDTO.setExpDate(srchcolVO.getExpDate());
+			srchcolDTO.setPostedDate(srchcolVO.getPostedDate());
+			srchcolDTO.setUpdatedInd(srchcolVO.getUpdatedInd());
+			srchcolDtoList.add(srchcolDTO);
+		}		
+		return srchcolDtoList;
+	}	
+	
+
+	
+	public static List<SrchcolVO> toSrchcolVOList(List<SrchcolDTO> srchcolDtoList){
+		List<SrchcolVO> srchcolVoList = new LinkedList<SrchcolVO>();
+		for(SrchcolDTO srchcolDTO : srchcolDtoList){			
+			SrchcolVO srchcolVO = new SrchcolVO();
+			srchcolVO.setSrchcolCd(srchcolDTO.getSrchcolCd());
+			srchcolVO.setSrchcolDesc(srchcolDTO.getSrchcolDesc());
+			srchcolVO.setEffDate(srchcolDTO.getEffDate());
+			srchcolVO.setExpDate(srchcolDTO.getExpDate());
+			srchcolVO.setPostedDate(srchcolDTO.getPostedDate());
+			srchcolVO.setUpdatedInd(srchcolDTO.getUpdatedInd());
+			
+			srchcolVoList.add(srchcolVO);
+		}		
+		return srchcolVoList;
+	}
+	
+	public static List<SrchscDTO> toSrchscDTOList(List<SrchscVO> srchscVoList){
+		List<SrchscDTO> srchscDtoList = new LinkedList<SrchscDTO>();
+		for(SrchscVO srchscVO : srchscVoList){			
+			SrchscDTO srchscDTO = new SrchscDTO();
+			srchscDTO.setSrchscId(srchscVO.getSrchscId());
+			srchscDTO.setSrchscDesc(srchscVO.getSrchscDesc());
+			srchscDTO.setEffDate(srchscVO.getEffDate());
+			srchscDTO.setExpDate(srchscVO.getExpDate());
+			srchscDTO.setPostedDate(srchscVO.getPostedDate());
+			srchscDTO.setUpdatedInd(srchscVO.getUpdatedInd());
+			srchscDtoList.add(srchscDTO);
+		}		
+		return srchscDtoList;
+	}	
+	
+
+	
+	public static List<SrchscVO> toSrchscVOList(List<SrchscDTO> srchscDtoList){
+		List<SrchscVO> srchscVoList = new LinkedList<SrchscVO>();
+		for(SrchscDTO srchscDTO : srchscDtoList){			
+			SrchscVO srchscVO = new SrchscVO();
+			srchscVO.setSrchscId(srchscDTO.getSrchscId());
+			srchscVO.setSrchscDesc(srchscDTO.getSrchscDesc());
+			srchscVO.setEffDate(srchscDTO.getEffDate());
+			srchscVO.setExpDate(srchscDTO.getExpDate());
+			srchscVO.setPostedDate(srchscDTO.getPostedDate());
+			srchscVO.setUpdatedInd(srchscDTO.getUpdatedInd());
+			
+			srchscVoList.add(srchscVO);
+		}		
+		return srchscVoList;
+	}
+	
+	public static List<SrcherrDTO> toSrcherrDTOList(List<SrcherrVO> srcherrVoList){
+		List<SrcherrDTO> srcherrDtoList = new LinkedList<SrcherrDTO>();
+		for(SrcherrVO srcherrVO : srcherrVoList){			
+			SrcherrDTO srcherrDTO = new SrcherrDTO();
+			srcherrDTO.setSrcherrCd(srcherrVO.getSrcherrCd());
+			srcherrDTO.setSrcherrCustInd(srcherrVO.getSrcherrCustInd());
+			srcherrDTO.setSrcherrDesc(srcherrVO.getSrcherrDesc());
+			srcherrDTO.setEffDate(srcherrVO.getEffDate());
+			srcherrDTO.setExpDate(srcherrVO.getExpDate());
+			srcherrDTO.setPostedDate(srcherrVO.getPostedDate());
+			srcherrDTO.setUpdatedInd(srcherrVO.getUpdatedInd());
+			srcherrDtoList.add(srcherrDTO);
+		}		
+		return srcherrDtoList;
+	}	
+	
+
+	
+	public static List<SrcherrVO> toSrcherrVOList(List<SrcherrDTO> srcherrDtoList){
+		List<SrcherrVO> srcherrVoList = new LinkedList<SrcherrVO>();
+		for(SrcherrDTO srcherrDTO : srcherrDtoList){			
+			SrcherrVO srcherrVO = new SrcherrVO();
+			srcherrVO.setSrcherrCd(srcherrDTO.getSrcherrCd());
+			srcherrVO.setSrcherrCustInd(srcherrDTO.getSrcherrCustInd());
+			srcherrVO.setSrcherrDesc(srcherrDTO.getSrcherrDesc());
+			srcherrVO.setEffDate(srcherrDTO.getEffDate());
+			srcherrVO.setExpDate(srcherrDTO.getExpDate());
+			srcherrVO.setPostedDate(srcherrDTO.getPostedDate());
+			srcherrVO.setUpdatedInd(srcherrDTO.getUpdatedInd());
+			
+			srcherrVoList.add(srcherrVO);
+		}		
+		return srcherrVoList;
+	}
+
+	public static List<SrchresDTO> toSrchresDTOList(List<SrchresVO> srchresVoList){
+		List<SrchresDTO> srchresDtoList = new LinkedList<SrchresDTO>();
+		for(SrchresVO srchresVO : srchresVoList){			
+			SrchresDTO srchresDTO = new SrchresDTO();
+			srchresDTO.setSrchresCd(srchresVO.getSrchresCd());
+			srchresDTO.setSrchresDesc(srchresVO.getSrchresDesc());
+			srchresDTO.setEffDate(srchresVO.getEffDate());
+			srchresDTO.setExpDate(srchresVO.getExpDate());
+			srchresDTO.setPostedDate(srchresVO.getPostedDate());
+			srchresDTO.setUpdatedInd(srchresVO.getUpdatedInd());
+			srchresDtoList.add(srchresDTO);
+		}		
+		return srchresDtoList;
+	}	
+	
+
+	
+	public static List<SrchresVO> toSrchresVOList(List<SrchresDTO> srchresDtoList){
+		List<SrchresVO> srchresVoList = new LinkedList<SrchresVO>();
+		for(SrchresDTO srchresDTO : srchresDtoList){			
+			SrchresVO srchresVO = new SrchresVO();
+			srchresVO.setSrchresCd(srchresDTO.getSrchresCd());
+			srchresVO.setSrchresDesc(srchresDTO.getSrchresDesc());
+			srchresVO.setEffDate(srchresDTO.getEffDate());
+			srchresVO.setExpDate(srchresDTO.getExpDate());
+			srchresVO.setPostedDate(srchresDTO.getPostedDate());
+			srchresVO.setUpdatedInd(srchresDTO.getUpdatedInd());
+			
+			srchresVoList.add(srchresVO);
+		}		
+		return srchresVoList;
+	}
+	public static BplvsDTO toBplvsDTO(BplvsVO bplvsVO) {
+		BplvsDTO bplvsDTO = new BplvsDTO();
+		try {
+			BeanUtils.copyProperties(bplvsDTO, bplvsVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toBplvsDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toBplvsDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return bplvsDTO;
+	}
+	
+	public static SrchdtlDTO toSrchdtlDTO(SrchdtlVO srchdtlVO) {
+		SrchdtlDTO srchdtlDTO = new SrchdtlDTO();
+		try {
+			BeanUtils.copyProperties(srchdtlDTO, srchdtlVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSrchdtlDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSrchdtlDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return srchdtlDTO;
+	}
+	/**
+	 * Method to convert bspl DT Object to bspl view object.
+	 * 
+	 * @param bsplVO
+	 *            view object of bspl
+	 * @return bspl DT object
+	 */
+	
+	public static SrchcolDTO toSrchcolDTO(SrchcolVO srchcolVO) {
+		SrchcolDTO srchcolDTO = new SrchcolDTO();
+		try {
+			BeanUtils.copyProperties(srchcolDTO, srchcolVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSrchcolDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSrchcolDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return srchcolDTO;
+	}
+	public static SrchscDTO toSrchscDTO(SrchscVO srchscVO) {
+		SrchscDTO srchscDTO = new SrchscDTO();
+		try {
+			BeanUtils.copyProperties(srchscDTO, srchscVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSrchscDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSrchscDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return srchscDTO;
+	}
+	
+	public static SrcherrDTO toSrcherrDTO(SrcherrVO srcherrVO) {
+		SrcherrDTO srcherrDTO = new SrcherrDTO();
+		try {
+			BeanUtils.copyProperties(srcherrDTO, srcherrVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSrcherrDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSrcherrDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return srcherrDTO;
+	}
+
+	public static SrchresDTO toSrchresDTO(SrchresVO srchresVO) {
+		SrchresDTO srchresDTO = new SrchresDTO();
+		try {
+			BeanUtils.copyProperties(srchresDTO, srchresVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toSrchresDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toSrchresDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return srchresDTO;
+	}
+	
+	public static LongRunTransactionDTO toLongRunTransDTO(LongRunTransactionVO longrunVO) {
+		LongRunTransactionDTO longRunTransDTO = new LongRunTransactionDTO();
+		try {
+			BeanUtils.copyProperties(longRunTransDTO, longrunVO);
+		} catch (IllegalAccessException illegalAccessException) {
+			logger.info("Error while convering dto to vo in  RTETranslator - toLongRunTransDTO "
+					+ illegalAccessException.getMessage());
+		} catch (InvocationTargetException invocationTargetException) {
+			logger.info("Error while convering dto to vo in RTETranslator - toLongRunTransDTO "
+					+ invocationTargetException.getMessage());
+		}
+		return longRunTransDTO;
+	}
+	
+	/**
+
+	 * Method to convert user hrpruleVO Object to hrpruleDTO object.
+
+	 * 
+
+	 * @param hrpruleVO
+
+	 *            view object of hrprule
+
+	 * @return hrpruleDTO
+
+	 */
+
+	public static HrpRuleDTO toHrpRuleDTO(HrpRuleVO hrpruleVO) {
+
+		HrpRuleDTO hrpruleDTO = new HrpRuleDTO();
+
+		try {
+
+			BeanUtils.copyProperties(hrpruleDTO, hrpruleVO);
+
+		} catch (IllegalAccessException illegalAccessException) {
+
+			logger.info("Error while convering dto to vo in  RTETranslator - toHrpRuleDTO "
+
+					+ illegalAccessException.getMessage());
+
+		} catch (InvocationTargetException invocationTargetException) {
+
+			logger.info("Error while convering dto to vo in RTETranslator - toHrpRuleDTO "
+
+					+ invocationTargetException.getMessage());
+
+		}
+
+		return hrpruleDTO;
+
+	}
+
+	
+
+	
+
+	/**
+
+	 * Method to convert user hrpruleDTO Object to hrpruleVO object.
+
+	 * 
+
+	 * @param hrpruleDTO
+
+	 *            view object of hrprule
+
+	 * @return hrpruleVO
+
+	 */
+
+	public static HrpRuleVO toHrpRuleVO(HrpRuleDTO hrpruleDTO) {
+
+		HrpRuleVO hrpruleVO = new HrpRuleVO();
+
+		try {
+
+			BeanUtils.copyProperties(hrpruleVO, hrpruleDTO);
+
+		} catch (IllegalAccessException illegalAccessException) {
+
+			logger.info("Error while convering dto to vo in  RTETranslator - toHrpRuleVO "
+
+					+ illegalAccessException.getMessage());
+
+		} catch (InvocationTargetException invocationTargetException) {
+
+			logger.info("Error while convering dto to vo in RTETranslator - toHrpRuleVO "
+
+					+ invocationTargetException.getMessage());
+
+		}
+
+		return hrpruleVO;
+
+	}
+
+	
+
+	/**
+
+	 * Method to convert  hrpruleVoList Object to hrpruleDtoList object.
+
+	 * @param hrpruleVoList
+
+	 * @return hrpruleDtoList
+
+	 */
+
+	
+
+	public static List<HrpRuleDTO> toHrpRuleDTOList(List<HrpRuleVO> hrpruleVoList){
+
+		List<HrpRuleDTO> hrpruleDtoList = new LinkedList<HrpRuleDTO>();
+
+		for(HrpRuleVO hrpruleVO : hrpruleVoList){			
+
+			HrpRuleDTO hrpruleDTO = new HrpRuleDTO();
+
+			hrpruleDTO.setHrprlSvcTyp(hrpruleVO.getHrprlSvcTyp());
+
+			hrpruleDTO.setHrprlRulecd(hrpruleVO.getHrprlRulecd());
+
+			hrpruleDTO.setHrprlEffdt(hrpruleVO.getHrprlEffdt());
+
+			hrpruleDTO.setHrprlTermdt(hrpruleVO.getHrprlTermdt());
+
+			hrpruleDTO.setHrprlRuledesc(hrpruleVO.getHrprlRuledesc());
+
+			hrpruleDTO.setHrprlCondspec(hrpruleVO.getHrprlCondspec());
+
+			hrpruleDTO.setHrprlRulectgry(hrpruleVO.getHrprlRulectgry());
+
+			hrpruleDTO.setHrprlCovgind(hrpruleVO.getHrprlCovgind());
+
+			hrpruleDTO.setHrprlTextsnd(hrpruleVO.getHrprlTextsnd());
+
+			hrpruleDTO.setHrprlPosTob(hrpruleVO.getHrprlPosTob());
+
+			hrpruleDTO.setHrprlTobcd(hrpruleVO.getHrprlTobcd());
+
+			hrpruleDTO.setHrprlPoscd(hrpruleVO.getHrprlPoscd());
+
+			hrpruleDTO.setHrprlStatecd(hrpruleVO.getHrprlStatecd());
+
+			hrpruleDTO.setHrprlAmntrfmt(hrpruleVO.getHrprlAmntrfmt());
+
+			hrpruleDTO.setHrprlBus01(hrpruleVO.getHrprlBus01());
+
+			hrpruleDTO.setHrprlBus02(hrpruleVO.getHrprlBus02());
+
+			hrpruleDTO.setHrprlBus03(hrpruleVO.getHrprlBus03());
+
+			hrpruleDTO.setHrprlBus04(hrpruleVO.getHrprlBus04());
+
+			hrpruleDTO.setHrprlBus05(hrpruleVO.getHrprlBus05());
+
+			hrpruleDTO.setHrprlBus06(hrpruleVO.getHrprlBus06());
+
+			hrpruleDTO.setHrprlBus07(hrpruleVO.getHrprlBus07());
+
+			hrpruleDTO.setHrprlBus08(hrpruleVO.getHrprlBus08());
+
+			hrpruleDTO.setHrprlBus09(hrpruleVO.getHrprlBus09());
+
+			hrpruleDTO.setHrprlBus10(hrpruleVO.getHrprlBus10());
+
+			hrpruleDTO.setHrprlBus11(hrpruleVO.getHrprlBus11());
+
+			hrpruleDTO.setHrprlBus12(hrpruleVO.getHrprlBus12());
+
+			hrpruleDTO.setHrprlBus13(hrpruleVO.getHrprlBus13());
+
+			hrpruleDTO.setHrprlBus14(hrpruleVO.getHrprlBus14());
+
+			hrpruleDTO.setHrprlBus15(hrpruleVO.getHrprlBus15());
+
+			hrpruleDTO.setUpdatedInd(hrpruleVO.getUpdatedInd());
+
+			hrpruleDtoList.add(hrpruleDTO);
+
+		}		
+
+		return hrpruleDtoList;
+
+	}	
+
+	
+
+	/**
+
+	 * Method to convert  hrpruleVoList Object to hrpruleDtoList object.
+
+	 * @param hrpruleDtoList
+
+	 * @return hrpruleVoList
+
+	 */
+
+	
+
+	public static List<HrpRuleVO> toHrpRuleVOList(List<HrpRuleDTO> hrpruleDtoList){
+
+		List<HrpRuleVO> hrpruleVoList = new LinkedList<HrpRuleVO>();
+
+		for(HrpRuleDTO hrpruleDTO : hrpruleDtoList){			
+
+			HrpRuleVO hrpruleVO = new HrpRuleVO();
+
+			hrpruleVO.setHrprlSvcTyp(hrpruleDTO.getHrprlSvcTyp());
+
+			hrpruleVO.setHrprlRulecd(hrpruleDTO.getHrprlRulecd());
+
+			hrpruleVO.setHrprlEffdt(hrpruleDTO.getHrprlEffdt());
+
+			hrpruleVO.setHrprlTermdt(hrpruleDTO.getHrprlTermdt());
+
+			hrpruleVO.setHrprlRuledesc(hrpruleDTO.getHrprlRuledesc());
+
+			hrpruleVO.setHrprlCondspec(hrpruleDTO.getHrprlCondspec());
+
+			hrpruleVO.setHrprlRulectgry(hrpruleDTO.getHrprlRulectgry());
+
+			hrpruleVO.setHrprlCovgind(hrpruleDTO.getHrprlCovgind());
+
+			hrpruleVO.setHrprlTextsnd(hrpruleDTO.getHrprlTextsnd());
+
+			hrpruleVO.setHrprlPosTob(hrpruleDTO.getHrprlPosTob());
+
+			hrpruleVO.setHrprlTobcd(hrpruleDTO.getHrprlTobcd());
+
+			hrpruleVO.setHrprlPoscd(hrpruleDTO.getHrprlPoscd());
+
+			hrpruleVO.setHrprlStatecd(hrpruleDTO.getHrprlStatecd());
+
+			hrpruleVO.setHrprlAmntrfmt(hrpruleDTO.getHrprlAmntrfmt());
+
+			hrpruleVO.setHrprlBus01(hrpruleDTO.getHrprlBus01());
+
+			hrpruleVO.setHrprlBus02(hrpruleDTO.getHrprlBus02());
+
+			hrpruleVO.setHrprlBus03(hrpruleDTO.getHrprlBus03());
+
+			hrpruleVO.setHrprlBus04(hrpruleDTO.getHrprlBus04());
+
+			hrpruleVO.setHrprlBus05(hrpruleDTO.getHrprlBus05());
+
+			hrpruleVO.setHrprlBus06(hrpruleDTO.getHrprlBus06());
+
+			hrpruleVO.setHrprlBus07(hrpruleDTO.getHrprlBus07());
+
+			hrpruleVO.setHrprlBus08(hrpruleDTO.getHrprlBus08());
+
+			hrpruleVO.setHrprlBus09(hrpruleDTO.getHrprlBus09());
+
+			hrpruleVO.setHrprlBus10(hrpruleDTO.getHrprlBus10());
+
+			hrpruleVO.setHrprlBus11(hrpruleDTO.getHrprlBus11());
+
+			hrpruleVO.setHrprlBus12(hrpruleDTO.getHrprlBus12());
+
+			hrpruleVO.setHrprlBus13(hrpruleDTO.getHrprlBus13());
+
+			hrpruleVO.setHrprlBus14(hrpruleDTO.getHrprlBus14());
+
+			hrpruleVO.setHrprlBus15(hrpruleDTO.getHrprlBus15());
+
+			hrpruleVO.setUpdatedInd(hrpruleDTO.getUpdatedInd());
+
+			hrpruleVoList.add(hrpruleVO);
+
+		}		
+
+		return hrpruleVoList;
+
+	}
+
+	
+	
 }
-
